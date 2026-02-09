@@ -1,0 +1,58 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+build.properties
+
+# IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Flutter
+.metadata
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+.dart_tool/
+
+# Android
+/android/app/src/main/assets/flutter_assets/
+/android/app/build
+/android/.gradle
+/android/gradle
+/android/local.properties
+/android/key.properties
+
+# iOS
+/ios/Flutter/App.framework
+/ios/Flutter/flutter_assets/
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/Debug.xcconfig
+/ios/Flutter/Release.xcconfig
+/ios/Pods/
+/ios/Podfile.lock
+/ios/build/
+/ios/.symlinks/
+/ios/Runner/GeneratedPluginRegistrant.h
+/ios/Runner/GeneratedPluginRegistrant.m
+
+# Web
+/web/build/
+
+# Windows
+/windows/build/
+
+# Linux
+/linux/build/
+
+# macOS
+/macos/build/
