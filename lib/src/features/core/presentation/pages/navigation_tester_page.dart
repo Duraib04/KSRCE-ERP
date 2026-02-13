@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../config/routes.dart';
-import '../../../services/auth_service.dart';
-import '../../../services/navigation_service.dart';
+import '../../../../config/routes.dart';
+import '../../../../services/auth_service.dart';
+import '../../../../services/navigation_service.dart';
 
 /// Navigation Tester Page - Use for testing all routes
 /// Remove this page before production

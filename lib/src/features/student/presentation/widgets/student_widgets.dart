@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../domain/models.dart';
+import '../../domain/models.dart';
 
 /// StudentProfileCard - Displays a student's profile information in a card format
 class StudentProfileCard extends StatelessWidget {

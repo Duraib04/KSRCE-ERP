@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../domain/models.dart';
+import '../../domain/models.dart';
 
 /// FacultyProfileCard - Displays a faculty member's profile
 class FacultyProfileCard extends StatelessWidget {

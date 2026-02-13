@@ -187,23 +187,26 @@ class _LoginFormState extends State<LoginForm> {
               constraints: const BoxConstraints(maxWidth: 400),
               child: Card(
                 elevation: 8.0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-              clipBehavior: Clip.antiAlias,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildHeader(theme),
-                  Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: _buildForm(theme, isDisabled, isLocked),
-                  ),
-                ],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildHeader(theme),
+                    Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: _buildForm(theme, isDisabled, isLocked),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      );
-    }
+      ),
+    );
   }
 
   Widget _buildHeader(ThemeData theme) {
@@ -219,7 +222,7 @@ class _LoginFormState extends State<LoginForm> {
             backgroundColor: Colors.white,
             child: Padding(
               padding: const EdgeInsets.all(4.0),
-              child: Image.asset('assets/ksrce-logo.png'), // Make sure to add this asset
+              child: Image.asset('assets/images/ksrce-icon.png'),
             ),
           ),
           const SizedBox(height: 16),
