@@ -1,0 +1,1 @@
+ C:\\Users\\durai\\KSRCE-ERP\\build\\web\\manifest.json:  C:\\Users\\durai\\KSRCE-ERP\\web\\index.html C:\\Users\\durai\\KSRCE-ERP\\web\\manifest.json

@@ -1,0 +1,28 @@
+{
+    "name": "KSRCE ERP",
+    "short_name": "KSRCE ERP",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#0175C2",
+    "theme_color": "#0175C2",
+    "description": "K.S.R. College of Engineering ERP System",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/favicon.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/ksrce-logo-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/ksrce-logo-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
