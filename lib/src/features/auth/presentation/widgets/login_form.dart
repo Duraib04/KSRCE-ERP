@@ -43,6 +43,7 @@ class _LoginFormState extends State<LoginForm> {
   int? _lockDuration;
   int? _remainingAttempts;
   Timer? _lockTimer;
+  String? _selectedRole; // Track selected role
 
   @override
   void initState() {
@@ -239,6 +240,9 @@ class _LoginFormState extends State<LoginForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Role Selection Buttons
+          _buildRoleSelector(theme),
+          const SizedBox(height: 24),
           if (_error != null)
             _Alert(type: _AlertType.destructive, message: _error!),
           if (isLocked)
@@ -320,6 +324,15 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   Widget _buildDemoCredentials(ThemeData theme) {
+    // Get credentials for the selected role only
+    List<DemoCredential> filteredCredentials = _selectedRole != null
+        ? widget.demoCredentials.where((c) => c.label.toUpperCase() == _selectedRole).toList()
+        : widget.demoCredentials;
+
+    if (filteredCredentials.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -330,7 +343,9 @@ class _LoginFormState extends State<LoginForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Demo Credentials:",
+            _selectedRole != null 
+                ? "$_selectedRole Demo Credentials:"
+                : "Demo Credentials:",
             style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
@@ -339,18 +354,101 @@ class _LoginFormState extends State<LoginForm> {
               0: IntrinsicColumnWidth(),
               1: FlexColumnWidth(),
             },
-            children: widget.demoCredentials.map((c) => TableRow(
+            children: filteredCredentials.map((c) => TableRow(
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 16.0, top: 2, bottom: 2),
                   child: Text("${c.label}:", style: theme.textTheme.bodySmall),
                 ),
-                Text("${c.id} / ${c.password}", style: theme.textTheme.bodySmall),
+                GestureDetector(
+                  onTap: () {
+                    _userIdController.text = c.id;
+                    _passwordController.text = c.password;
+                  },
+                  child: Text(
+                    "${c.id} / ${c.password}",
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
               ],
             )).toList(),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildRoleSelector(ThemeData theme) {
+    final roles = ['Student', 'Faculty', 'Admin'];
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Select Your Role:',
+          style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: roles.map((role) {
+            final isSelected = _selectedRole == role.toUpperCase();
+            return Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _selectedRole = role.toUpperCase();
+                      _userIdController.clear();
+                      _passwordController.clear();
+                      _error = null;
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isSelected 
+                        ? theme.colorScheme.primary 
+                        : theme.colorScheme.surface,
+                    foregroundColor: isSelected 
+                        ? theme.colorScheme.onPrimary 
+                        : theme.colorScheme.onSurface,
+                    side: BorderSide(
+                      color: isSelected 
+                          ? theme.colorScheme.primary 
+                          : theme.colorScheme.outline,
+                      width: 2,
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        role == 'Student' 
+                            ? Icons.person_outline
+                            : role == 'Faculty'
+                                ? Icons.school_outlined
+                                : Icons.admin_panel_settings_outlined,
+                        size: 24,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        role,
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 }
