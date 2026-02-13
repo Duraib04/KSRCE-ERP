@@ -199,124 +199,132 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       ),
     ];
 
-    if (isMobile) {
-      return Column(
+    // Create a more modern card-based layout with better styling
+    return Container(
+      padding: EdgeInsets.all(AppSpacing.xl),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(AppRadius.xl),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.1),
+          width: 1.5,
+        ),
+      ),
+      child: Column(
         children: List.generate(
           features.length,
           (index) => Padding(
-            padding: EdgeInsets.only(bottom: AppSpacing.md),
-            child: _buildAnimatedFeatureCard(index, features[index], context),
-          ),
-        ),
-      );
-    } else {
-      return Row(
-        children: List.generate(
-          features.length,
-          (index) => Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-              child: _buildAnimatedFeatureCard(index, features[index], context),
+            padding: EdgeInsets.only(
+              bottom: index < features.length - 1 ? AppSpacing.lg : 0,
             ),
+            child: _buildModernFeatureCard(index, features[index], context, theme),
           ),
         ),
-      );
-    }
+      ),
+    );
   }
 
-  Widget _buildAnimatedFeatureCard(int index, _FeatureData feature, BuildContext context) {
+  Widget _buildModernFeatureCard(
+    int index,
+    _FeatureData feature,
+    BuildContext context,
+    ThemeData theme,
+  ) {
     return ScaleTransition(
       scale: _cardAnimations[index],
       child: FadeTransition(
         opacity: _cardAnimations[index],
-        child: MouseRegion(
-          onEnter: (_) {},
-          onExit: (_) {},
-          child: AnimatedContainer(
-            duration: AppDuration.medium,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: feature.gradient,
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: AppRadius.radiusLg,
-              boxShadow: [
-                BoxShadow(
-                  color: feature.color.withOpacity(0.3),
-                  blurRadius: 20,
-                  spreadRadius: 2,
-                  offset: const Offset(0, 8),
-                ),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                feature.color.withOpacity(0.15),
+                feature.color.withOpacity(0.05),
               ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            child: Container(
-              padding: EdgeInsets.all(AppSpacing.xl),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Icon Container
-                  Container(
-                    padding: EdgeInsets.all(AppSpacing.md),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: AppRadius.radiusMd,
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.3),
-                        width: 1.5,
-                      ),
+            borderRadius: AppRadius.radiusLg,
+            border: Border.all(
+              color: feature.color.withOpacity(0.3),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: feature.color.withOpacity(0.2),
+                blurRadius: 15,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(AppSpacing.lg),
+            child: Row(
+              children: [
+                // Icon with gradient background
+                Container(
+                  padding: EdgeInsets.all(AppSpacing.md),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: feature.gradient,
                     ),
-                    child: Icon(
-                      feature.icon,
-                      size: AppIconSize.lg,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: AppSpacing.lg),
-
-                  // Title
-                  Text(
-                    feature.title,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                  SizedBox(height: AppSpacing.sm),
-
-                  // Description
-                  Text(
-                    feature.description,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.white.withOpacity(0.9),
-                      height: 1.5,
-                      letterSpacing: 0.2,
-                    ),
-                  ),
-
-                  SizedBox(height: AppSpacing.lg),
-
-                  // Learn More Arrow
-                  Row(
-                    children: [
-                      Text(
-                        'Learn More',
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(width: AppSpacing.sm),
-                      Icon(
-                        Icons.arrow_forward_rounded,
-                        color: Colors.white,
-                        size: 18,
+                    borderRadius: AppRadius.radiusMd,
+                    boxShadow: [
+                      BoxShadow(
+                        color: feature.color.withOpacity(0.4),
+                        blurRadius: 10,
+                        spreadRadius: 1,
                       ),
                     ],
                   ),
-                ],
-              ),
+                  child: Icon(
+                    feature.icon,
+                    size: AppIconSize.lg,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(width: AppSpacing.lg),
+                
+                // Title and description
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        feature.title,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                      SizedBox(height: AppSpacing.xs),
+                      Text(
+                        feature.description,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Colors.white.withOpacity(0.8),
+                          height: 1.4,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                // Arrow icon
+                Container(
+                  padding: EdgeInsets.all(AppSpacing.sm),
+                  decoration: BoxDecoration(
+                    color: feature.color.withOpacity(0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.arrow_forward_rounded,
+                    color: Colors.white,
+                    size: AppIconSize.md,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
