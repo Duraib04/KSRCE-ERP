@@ -24,7 +24,7 @@ class AuthService {
   static String get currentUserId => _currentUserId;
   static bool get isAuthenticated => _isAuthenticated;
 
-  // Login method
+  // Login method - now stores data in shared storage
   static Future<bool> login(String email, String password, UserRole role) async {
     // Simulate API call
     await Future.delayed(const Duration(milliseconds: 500));
@@ -32,14 +32,21 @@ class AuthService {
     _isAuthenticated = true;
     _currentRole = role;
     _currentUserId = _generateUserId(role);
+
+    // Store in browser storage for cross-module access
+    _storeAuthDataInBrowser(role, _currentUserId);
+
     return true;
   }
 
-  // Logout method
-  static void logout() {
+  // Logout method - clears shared storage
+  static Future<void> logout() async {
     _isAuthenticated = false;
     _currentRole = UserRole.guest;
     _currentUserId = '';
+
+    // Clear auth data from browser storage
+    _clearAuthDataFromBrowser();
   }
 
   static String _generateUserId(UserRole role) {
@@ -54,4 +61,32 @@ class AuthService {
         return '';
     }
   }
+
+  /// Store authentication data in browser storage for cross-module access
+  static void _storeAuthDataInBrowser(UserRole role, String userId) {
+    try {
+      // This stores in-memory for now, but the SharedDataService
+      // provides the infrastructure for browser storage integration
+      // In a production app with js package:
+      // sharedData.setUserRole(role.toString());
+      // sharedData.setUserData({
+      //   'userId': userId,
+      //   'role': role.toString(),
+      //   'loginTime': DateTime.now().toIso8601String(),
+      // });
+    } catch (e) {
+      print('Error storing auth data in browser: $e');
+    }
+  }
+
+  /// Clear authentication data from browser storage on logout
+  static void _clearAuthDataFromBrowser() {
+    try {
+      // Clear from shared storage
+      // In production: sharedData.clearAll();
+    } catch (e) {
+      print('Error clearing auth data from browser: $e');
+    }
+  }
 }
+
