@@ -148,7 +148,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
                 ),
                 Chip(
                   label: Text(complaint.status),
-                  backgroundColor: statusColor.shade100,
+                  backgroundColor: statusColor.withValues(alpha: 0.15),
                   labelStyle: TextStyle(color: statusColor),
                 ),
               ],

@@ -189,7 +189,7 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> {
                   ),
                   Chip(
                     label: Text(assignment.status),
-                    backgroundColor: _getStatusColor(assignment.status).shade100,
+                    backgroundColor: _getStatusColor(assignment.status).withValues(alpha: 0.15),
                     labelStyle:
                         TextStyle(color: _getStatusColor(assignment.status)),
                   ),
@@ -225,9 +225,9 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.red.shade50,
+                      color: Colors.red.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: Colors.red.shade200),
+                      border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
                     ),
                     child: const Text(
                       'Overdue - Submit immediately',

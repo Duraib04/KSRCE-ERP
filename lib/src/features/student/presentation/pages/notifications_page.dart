@@ -188,7 +188,7 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
                               label: Text(notification.category),
                               backgroundColor:
                                   _getCategoryColor(notification.category)
-                                      .shade100,
+                                       .withValues(alpha: 0.15),
                               labelStyle: TextStyle(
                                 fontSize: 11,
                                 color:
@@ -276,7 +276,7 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
                 Chip(
                   label: Text(notification.category),
                   backgroundColor:
-                      _getCategoryColor(notification.category).shade100,
+                       _getCategoryColor(notification.category).withValues(alpha: 0.15),
                 ),
                 Text(
                   _formatTime(notification.timestamp),

@@ -75,9 +75,9 @@ class _AdministrationDashboardPageState
     return Card(
       child: Container(
         decoration: BoxDecoration(
-          color: color.shade50,
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.shade200),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -163,9 +163,9 @@ class _AdministrationDashboardPageState
         },
         child: Container(
           decoration: BoxDecoration(
-            color: color.shade50,
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: color.shade200),
+            border: Border.all(color: color.withValues(alpha: 0.3)),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

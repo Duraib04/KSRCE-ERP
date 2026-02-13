@@ -160,11 +160,13 @@ class _FacultySchedulePageState extends State<FacultySchedulePage> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.blue.shade50,
+        color: Colors.blue.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.left(
-          color: Colors.blue.shade500,
-          width: 4,
+        border: Border(
+          left: BorderSide(
+            color: Colors.blue,
+            width: 4,
+          ),
         ),
       ),
       child: Column(
