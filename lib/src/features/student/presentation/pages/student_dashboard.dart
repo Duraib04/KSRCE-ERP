@@ -3,6 +3,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes.dart';
 import '../../../../services/auth_service.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/design_tokens.dart';
+import '../../../../core/presentation/core_widgets.dart';
 
 class StudentDashboard extends StatefulWidget {
   final String userId;
@@ -15,6 +18,23 @@ class StudentDashboard extends StatefulWidget {
 
 class _StudentDashboardState extends State<StudentDashboard> {
   int _selectedIndex = 0;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    // Simulate loading data
+    await Future.delayed(const Duration(seconds: 1));
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   void _navigateTo(String route) {
     context.push(route);
@@ -172,21 +192,43 @@ class _StudentDashboardState extends State<StudentDashboard> {
   }
 
   Widget _buildBody() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+    if (_isLoading) {
+      return Padding(
+        padding: AppSpacing.paddingLg,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Welcome, ${widget.userId}!',
-              style: Theme.of(context).textTheme.headlineSmall,
+            LoadingShimmer(height: 32, width: 200),
+            SizedBox(height: AppSpacing.xl),
+            LoadingShimmer.compact(count: 4),
+            SizedBox(height: AppSpacing.xxl),
+            LoadingShimmer.list(count: 3),
+          ],
+        ),
+      );
+    }
+
+    return SingleChildScrollView(
+      child: Padding(
+        padding: AppSpacing.paddingLg,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Welcome header
+            PageHeaderCompact(
+              title: 'Welcome, ${widget.userId}!',
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: AppSpacing.xl),
+            
+            // Quick stats with responsive grid
             _buildQuickStats(),
-            const SizedBox(height: 32),
+            SizedBox(height: AppSpacing.xxl),
+            
+            // Upcoming classes
             _buildUpcomingClasses(),
-            const SizedBox(height: 32),
+            SizedBox(height: AppSpacing.xxl),
+            
+            // Announcements
             _buildAnnouncements(),
           ],
         ),
@@ -195,36 +237,54 @@ class _StudentDashboardState extends State<StudentDashboard> {
   }
 
   Widget _buildQuickStats() {
-    return GridView.count(
-      crossAxisCount: 2,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisSpacing: 16,
-      mainAxisSpacing: 16,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _StatCard(
-          icon: Icons.trending_up,
-          value: '3.85',
-          label: 'GPA',
-          color: Colors.blue,
+        Text(
+          'Quick Stats',
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
         ),
-        _StatCard(
-          icon: Icons.check_circle,
-          value: '92%',
-          label: 'Attendance',
-          color: Colors.green,
-        ),
-        _StatCard(
-          icon: Icons.class_,
-          value: '5',
-          label: 'Courses',
-          color: Colors.purple,
-        ),
-        _StatCard(
-          icon: Icons.pending_actions,
-          value: '3',
-          label: 'Pending Tasks',
-          color: Colors.orange,
+        SizedBox(height: AppSpacing.md),
+        ResponsiveGrid(
+          minItemWidth: 150,
+          spacing: AppSpacing.sm,
+          childAspectRatio: 1.1,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            StatCard(
+              icon: Icons.trending_up,
+              value: '3.85',
+              title: 'GPA',
+              subtitle: 'Overall',
+              color: AppColors.student,
+              trendIcon: Icons.trending_up,
+            ),
+            StatCard(
+              icon: Icons.check_circle,
+              value: '92%',
+              title: 'Attendance',
+              subtitle: '+2% this month',
+              color: AppColors.success,
+              trendIcon: Icons.trending_up,
+            ),
+            StatCard(
+              icon: Icons.class_,
+              value: '5',
+              title: 'Courses',
+              subtitle: 'This semester',
+              color: AppColors.info,
+            ),
+            StatCard(
+              icon: Icons.pending_actions,
+              value: '3',
+              title: 'Pending Tasks',
+              subtitle: 'Due this week',
+              color: AppColors.warning,
+            ),
+          ],
         ),
       ],
     );
@@ -396,58 +456,6 @@ class _StudentDashboardState extends State<StudentDashboard> {
             child: const Text('Logout'),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _StatCard extends StatelessWidget {
-  final IconData icon;
-  final String value;
-  final String label;
-  final Color color;
-
-  const _StatCard({
-    required this.icon,
-    required this.value,
-    required this.label,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(icon, color: color, size: 28),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey[600],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
