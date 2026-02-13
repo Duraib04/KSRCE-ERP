@@ -16,13 +16,36 @@ class StudentDashboard extends StatefulWidget {
   State<StudentDashboard> createState() => _StudentDashboardState();
 }
 
-class _StudentDashboardState extends State<StudentDashboard> {
+class _StudentDashboardState extends State<StudentDashboard>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   bool _isLoading = true;
+  late AnimationController _animationController;
+  late List<Animation<double>> _cardAnimations;
 
   @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    );
+
+    // Create staggered animations for cards
+    _cardAnimations = List.generate(
+      4,
+      (index) => Tween<double>(begin: 0, end: 1).animate(
+        CurvedAnimation(
+          parent: _animationController,
+          curve: Interval(
+            index * 0.1,
+            0.6 + (index * 0.1),
+            curve: Curves.easeOut,
+          ),
+        ),
+      ),
+    );
+
     _loadData();
   }
 
@@ -33,7 +56,14 @@ class _StudentDashboardState extends State<StudentDashboard> {
       setState(() {
         _isLoading = false;
       });
+      _animationController.forward();
     }
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   void _navigateTo(String route) {
@@ -44,20 +74,8 @@ class _StudentDashboardState extends State<StudentDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Student Dashboard'),
-        centerTitle: true,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: _showLogoutDialog,
-            tooltip: 'Logout',
-          ),
-        ],
-      ),
-      drawer: _buildDrawer(),
       body: _buildBody(),
+      drawer: _buildDrawer(),
       bottomNavigationBar: _buildBottomNavBar(),
     );
   }
@@ -67,127 +85,150 @@ class _StudentDashboardState extends State<StudentDashboard> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          DrawerHeader(
+          // Modern drawer header
+          Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  AppColors.student,
+                  AppColors.info,
+                ],
+              ),
+            ),
+            padding: EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              AppSpacing.xl,
+              AppSpacing.lg,
+              AppSpacing.lg,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                const CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.person, size: 40),
+                Container(
+                  padding: EdgeInsets.all(AppSpacing.sm),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.student.withOpacity(0.3),
+                        blurRadius: 10,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.person_rounded,
+                    size: AppIconSize.lg,
+                    color: AppColors.student,
+                  ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: AppSpacing.md),
                 Text(
                   widget.userId,
-                  style: const TextStyle(
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: Colors.white,
-                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  'Student',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
-                    fontSize: 12,
+                  'B.Tech Computer Science',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Colors.white.withOpacity(0.85),
                   ),
                 ),
               ],
             ),
           ),
-          ListTile(
-            leading: const Icon(Icons.dashboard),
-            title: const Text('Dashboard'),
-            selected: _selectedIndex == 0,
-            onTap: () {
-              setState(() => _selectedIndex = 0);
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.class_),
-            title: const Text('My Courses'),
-            selected: _selectedIndex == 1,
-            onTap: () {
-              _navigateTo(StudentRoutes.courses);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.assignment),
-            title: const Text('Assignments'),
-            selected: _selectedIndex == 2,
-            onTap: () {
-              _navigateTo(StudentRoutes.assignments);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.grade),
-            title: const Text('Grades & Results'),
-            selected: _selectedIndex == 3,
-            onTap: () {
-              _navigateTo(StudentRoutes.results);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.event),
-            title: const Text('Time Table'),
-            selected: _selectedIndex == 4,
-            onTap: () {
-              _navigateTo(StudentRoutes.timeTable);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.calendar_today),
-            title: const Text('Attendance'),
-            selected: _selectedIndex == 5,
-            onTap: () {
-              _navigateTo(StudentRoutes.attendance);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.notification_important),
-            title: const Text('Notifications'),
-            selected: _selectedIndex == 6,
-            onTap: () {
-              _navigateTo(StudentRoutes.notifications);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.message),
-            title: const Text('Complaints'),
-            selected: _selectedIndex == 7,
-            onTap: () {
-              _navigateTo(StudentRoutes.complaints);
-            },
-          ),
+          SizedBox(height: AppSpacing.lg),
+          _buildDrawerSection('ACADEMICS', [
+            ('Dashboard', Icons.dashboard_rounded, StudentRoutes.dashboard),
+            ('My Courses', Icons.class_rounded, StudentRoutes.courses),
+            ('Assignments', Icons.assignment_rounded, StudentRoutes.assignments),
+            ('Grades & Results', Icons.grade_rounded, StudentRoutes.results),
+            ('Time Table', Icons.event_rounded, StudentRoutes.timeTable),
+          ]),
+          SizedBox(height: AppSpacing.md),
+          _buildDrawerSection('ATTENDANCE', [
+            ('Attendance', Icons.calendar_today_rounded, StudentRoutes.attendance),
+          ]),
+          SizedBox(height: AppSpacing.md),
+          _buildDrawerSection('COMMUNICATION', [
+            ('Notifications', Icons.notifications_rounded, StudentRoutes.notifications),
+            ('Complaints', Icons.message_rounded, StudentRoutes.complaints),
+          ]),
+          SizedBox(height: AppSpacing.md),
+          _buildDrawerSection('ACCOUNT', [
+            ('My Profile', Icons.person_rounded, StudentRoutes.profile),
+            ('Settings', Icons.settings_rounded, ''),
+          ]),
           const Divider(),
-          ListTile(
-            leading: const Icon(Icons.person),
-            title: const Text('My Profile'),
-            onTap: () {
-              _navigateTo(StudentRoutes.profile);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Settings'),
-            onTap: () => Navigator.pop(context),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text('Logout', style: TextStyle(color: Colors.red)),
-            onTap: () {
-              Navigator.pop(context);
-              _showLogoutDialog();
-            },
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+            child: SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: _showLogoutDialog,
+                icon: const Icon(Icons.logout_rounded),
+                label: const Text('Logout'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.error,
+                  side: BorderSide(color: AppColors.error.withOpacity(0.5)),
+                ),
+              ),
+            ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDrawerSection(
+    String title,
+    List<(String, IconData, String)> items,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: AppColors.textSecondaryLight,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ),
+        SizedBox(height: AppSpacing.sm),
+        ...items
+            .map((item) => _buildDrawerTile(item.$1, item.$2, item.$3))
+            .toList(),
+      ],
+    );
+  }
+
+  Widget _buildDrawerTile(String title, IconData icon, String route) {
+    return ListTile(
+      leading: Icon(icon, color: AppColors.student, size: AppIconSize.md),
+      title: Text(
+        title,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.xs,
+      ),
+      onTap: route.isEmpty
+          ? null
+          : () {
+              _navigateTo(route);
+            },
     );
   }
 
@@ -198,7 +239,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            LoadingShimmer(height: 32, width: 200),
+            LoadingShimmer(height: 120, width: double.infinity),
             SizedBox(height: AppSpacing.xl),
             LoadingShimmer.compact(count: 4),
             SizedBox(height: AppSpacing.xxl),
@@ -208,31 +249,144 @@ class _StudentDashboardState extends State<StudentDashboard> {
       );
     }
 
-    return SingleChildScrollView(
-      child: Padding(
-        padding: AppSpacing.paddingLg,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Welcome header
-            PageHeaderCompact(
-              title: 'Welcome, ${widget.userId}!',
+    return CustomScrollView(
+      slivers: [
+        // Beautiful gradient header
+        SliverAppBar(
+          expandedHeight: 240,
+          floating: false,
+          pinned: true,
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          flexibleSpace: FlexibleSpaceBar(
+            background: _buildGradientHeader(),
+          ),
+        ),
+        // Main content
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: AppSpacing.paddingLg,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Quick stats with 3D animations
+                _buildQuickStats(),
+                SizedBox(height: AppSpacing.xxl),
+
+                // Upcoming classes
+                _buildUpcomingClasses(),
+                SizedBox(height: AppSpacing.xxl),
+
+                // Announcements
+                _buildAnnouncements(),
+                SizedBox(height: AppSpacing.xl),
+              ],
             ),
-            SizedBox(height: AppSpacing.xl),
-            
-            // Quick stats with responsive grid
-            _buildQuickStats(),
-            SizedBox(height: AppSpacing.xxl),
-            
-            // Upcoming classes
-            _buildUpcomingClasses(),
-            SizedBox(height: AppSpacing.xxl),
-            
-            // Announcements
-            _buildAnnouncements(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGradientHeader() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.student,
+            AppColors.info,
+            AppColors.student.withOpacity(0.7),
           ],
         ),
       ),
+      child: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(AppSpacing.lg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Welcome Back! 👋',
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      SizedBox(height: AppSpacing.xs),
+                      Text(
+                        widget.userId,
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: Colors.white.withOpacity(0.9),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(AppSpacing.md),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.3),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.logout_rounded),
+                      color: Colors.white,
+                      onPressed: _showLogoutDialog,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: AppSpacing.lg),
+              // Quick info
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildHeaderInfo('Credits', '120 / 150'),
+                  _buildHeaderInfo('GPA', '3.85'),
+                  _buildHeaderInfo('Attendance', '92%'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeaderInfo(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+            color: Colors.white.withOpacity(0.8),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        SizedBox(height: AppSpacing.xs),
+        Text(
+          value,
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
     );
   }
 
@@ -241,48 +395,77 @@ class _StudentDashboardState extends State<StudentDashboard> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Quick Stats',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          'Your Performance',
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.3,
+          ),
         ),
         SizedBox(height: AppSpacing.md),
-        ResponsiveGrid(
-          minItemWidth: 150,
-          spacing: AppSpacing.sm,
-          childAspectRatio: 1.1,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
+        _AnimatedStatCard(
+          animation: _cardAnimations[0],
+          child: _buildStatCardItem(
+            icon: Icons.trending_up,
+            value: '3.85',
+            title: 'GPA',
+            subtitle: 'Excellent Progress',
+            color: AppColors.student,
+            gradient: [AppColors.student, AppColors.info],
+          ),
+        ),
+        SizedBox(height: AppSpacing.md),
+        Row(
           children: [
-            StatCard(
-              icon: Icons.trending_up,
-              value: '3.85',
-              title: 'GPA',
-              subtitle: 'Overall',
-              color: AppColors.student,
-              trendIcon: Icons.trending_up,
+            Expanded(
+              child: _AnimatedStatCard(
+                animation: _cardAnimations[1],
+                child: _buildCompactStatCard(
+                  icon: Icons.check_circle,
+                  value: '92%',
+                  title: 'Attendance',
+                  color: AppColors.success,
+                ),
+              ),
             ),
-            StatCard(
-              icon: Icons.check_circle,
-              value: '92%',
-              title: 'Attendance',
-              subtitle: '+2% this month',
-              color: AppColors.success,
-              trendIcon: Icons.trending_up,
+            SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: _AnimatedStatCard(
+                animation: _cardAnimations[2],
+                child: _buildCompactStatCard(
+                  icon: Icons.class_,
+                  value: '5',
+                  title: 'Courses',
+                  color: AppColors.info,
+                ),
+              ),
             ),
-            StatCard(
-              icon: Icons.class_,
-              value: '5',
-              title: 'Courses',
-              subtitle: 'This semester',
-              color: AppColors.info,
+          ],
+        ),
+        SizedBox(height: AppSpacing.md),
+        Row(
+          children: [
+            Expanded(
+              child: _AnimatedStatCard(
+                animation: _cardAnimations[3],
+                child: _buildCompactStatCard(
+                  icon: Icons.pending_actions,
+                  value: '3',
+                  title: 'Tasks Due',
+                  color: AppColors.warning,
+                ),
+              ),
             ),
-            StatCard(
-              icon: Icons.pending_actions,
-              value: '3',
-              title: 'Pending Tasks',
-              subtitle: 'Due this week',
-              color: AppColors.warning,
+            SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: _AnimatedStatCard(
+                animation: _cardAnimations[3],
+                child: _buildCompactStatCard(
+                  icon: Icons.assignment,
+                  value: '12',
+                  title: 'Assignments',
+                  color: AppColors.student,
+                ),
+              ),
             ),
           ],
         ),
@@ -290,41 +473,307 @@ class _StudentDashboardState extends State<StudentDashboard> {
     );
   }
 
+  Widget _buildStatCardItem({
+    required IconData icon,
+    required String value,
+    required String title,
+    required String subtitle,
+    required Color color,
+    required List<Color> gradient,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: gradient,
+        ),
+        borderRadius: AppRadius.radiusLg,
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.3),
+            blurRadius: 20,
+            spreadRadius: 5,
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(AppSpacing.md),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: AppRadius.radiusMd,
+            ),
+            child: Icon(
+              icon,
+              color: Colors.white,
+              size: AppIconSize.lg,
+            ),
+          ),
+          SizedBox(width: AppSpacing.lg),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  value,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                SizedBox(height: AppSpacing.xs),
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: Colors.white.withOpacity(0.9),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Colors.white.withOpacity(0.7),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCompactStatCard({
+    required IconData icon,
+    required String value,
+    required String title,
+    required Color color,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.lg,
+      ),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        border: Border.all(color: color.withOpacity(0.3), width: 1.5),
+        borderRadius: AppRadius.radiusMd,
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.1),
+            blurRadius: 12,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.all(AppSpacing.sm),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.2),
+              borderRadius: AppRadius.radiusSm,
+            ),
+            child: Icon(
+              icon,
+              color: color,
+              size: AppIconSize.md,
+            ),
+          ),
+          SizedBox(height: AppSpacing.md),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              color: color,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          SizedBox(height: AppSpacing.xs),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: AppColors.textSecondaryLight,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildUpcomingClasses() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Upcoming Classes',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        const SizedBox(height: 12),
-        Card(
-          child: ListTile(
-            leading: const CircleAvatar(
-              child: Icon(Icons.school, color: Colors.white),
-              backgroundColor: Colors.blue,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Upcoming Classes',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.3,
+              ),
             ),
-            title: const Text('Mathematics 101'),
-            subtitle: const Text('Today • 10:00 AM'),
-            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-            onTap: () {},
-          ),
-        ),
-        const SizedBox(height: 8),
-        Card(
-          child: ListTile(
-            leading: const CircleAvatar(
-              child: Icon(Icons.science, color: Colors.white),
-              backgroundColor: Colors.green,
+            TextButton(
+              onPressed: () => _navigateTo(StudentRoutes.courses),
+              child: Text(
+                'See All',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: AppColors.student,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
-            title: const Text('Physics Lab'),
-            subtitle: const Text('Tomorrow • 2:00 PM'),
-            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-            onTap: () {},
-          ),
+          ],
+        ),
+        SizedBox(height: AppSpacing.md),
+        _buildClassCard(
+          subject: 'Mathematics 101',
+          instructor: 'Dr. John Smith',
+          time: 'Today • 10:00 AM',
+          room: 'Lecture Hall A-5',
+          icon: Icons.calculate,
+          color: AppColors.student,
+          gradient: [AppColors.student, AppColors.info],
+        ),
+        SizedBox(height: AppSpacing.md),
+        _buildClassCard(
+          subject: 'Physics Lab',
+          instructor: 'Dr. Sarah Wilson',
+          time: 'Tomorrow • 2:00 PM',
+          room: 'Lab 3',
+          icon: Icons.science,
+          color: AppColors.info,
+          gradient: [AppColors.info, AppColors.success],
+        ),
+        SizedBox(height: AppSpacing.md),
+        _buildClassCard(
+          subject: 'English Literature',
+          instructor: 'Prof. Emily Brown',
+          time: 'Tomorrow • 4:30 PM',
+          room: 'Seminar Room 2',
+          icon: Icons.menu_book,
+          color: AppColors.warning,
+          gradient: [AppColors.warning, AppColors.student],
         ),
       ],
+    );
+  }
+
+  Widget _buildClassCard({
+    required String subject,
+    required String instructor,
+    required String time,
+    required String room,
+    required IconData icon,
+    required Color color,
+    required List<Color> gradient,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: gradient),
+        borderRadius: AppRadius.radiusMd,
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.2),
+            blurRadius: 15,
+            spreadRadius: 3,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {},
+          borderRadius: AppRadius.radiusMd,
+          child: Padding(
+            padding: EdgeInsets.all(AppSpacing.lg),
+            child: Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(AppSpacing.md),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.15),
+                    borderRadius: AppRadius.radiusMd,
+                  ),
+                  child: Icon(
+                    icon,
+                    color: Colors.white,
+                    size: AppIconSize.lg,
+                  ),
+                ),
+                SizedBox(width: AppSpacing.lg),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        subject,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(height: AppSpacing.xs),
+                      Text(
+                        instructor,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Colors.white.withOpacity(0.85),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: AppSpacing.sm),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.access_time,
+                            color: Colors.white.withOpacity(0.7),
+                            size: 14,
+                          ),
+                          SizedBox(width: AppSpacing.xs),
+                          Text(
+                            time,
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: Colors.white.withOpacity(0.7),
+                              fontSize: 11,
+                            ),
+                          ),
+                          SizedBox(width: AppSpacing.lg),
+                          Icon(
+                            Icons.location_on,
+                            color: Colors.white.withOpacity(0.7),
+                            size: 14,
+                          ),
+                          SizedBox(width: AppSpacing.xs),
+                          Text(
+                            room,
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: Colors.white.withOpacity(0.7),
+                              fontSize: 11,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: AppSpacing.md),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: Colors.white.withOpacity(0.6),
+                  size: 16,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -332,61 +781,188 @@ class _StudentDashboardState extends State<StudentDashboard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Recent Announcements',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        const SizedBox(height: 12),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Semester Results Published',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Your 2nd semester results are now available in the grades section',
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Today at 9:30 AM',
-                  style: TextStyle(fontSize: 11, color: Colors.grey[400]),
-                ),
-              ],
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Latest Announcements',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.3,
+              ),
             ),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Assignment Deadline Extended',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSpacing.sm,
+                vertical: AppSpacing.xs,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.error.withOpacity(0.15),
+                borderRadius: AppRadius.radiusSm,
+              ),
+              child: Text(
+                '2 New',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: AppColors.error,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  'The deadline for DSA assignment has been extended to Friday',
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Yesterday at 3:15 PM',
-                  style: TextStyle(fontSize: 11, color: Colors.grey[400]),
-                ),
-              ],
+              ),
             ),
-          ),
+          ],
+        ),
+        SizedBox(height: AppSpacing.md),
+        _buildAnnouncementCard(
+          title: 'Semester Results Published 🎓',
+          description: 'Your 2nd semester results are now available in the grades section. Check your performance and progress.',
+          icon: Icons.celebration_rounded,
+          color: AppColors.success,
+          timestamp: 'Today at 9:30 AM',
+          priority: 'high',
+        ),
+        SizedBox(height: AppSpacing.md),
+        _buildAnnouncementCard(
+          title: 'Assignment Deadline Extended ⏰',
+          description: 'The deadline for DSA assignment has been extended to Friday. Don\'t miss this opportunity!',
+          icon: Icons.schedule_rounded,
+          color: AppColors.warning,
+          timestamp: 'Yesterday at 3:15 PM',
+          priority: 'medium',
+        ),
+        SizedBox(height: AppSpacing.md),
+        _buildAnnouncementCard(
+          title: 'Campus Event: Tech Fest 2026 🚀',
+          description: 'Join us for the Annual Tech Fest! Register now for exciting competitions and workshops.',
+          icon: Icons.event_rounded,
+          color: AppColors.student,
+          timestamp: '2 days ago',
+          priority: 'low',
         ),
       ],
+    );
+  }
+
+  Widget _buildAnnouncementCard({
+    required String title,
+    required String description,
+    required IconData icon,
+    required Color color,
+    required String timestamp,
+    required String priority,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: AppRadius.radiusMd,
+        border: Border.all(color: color.withOpacity(0.2), width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.08),
+            blurRadius: 12,
+            spreadRadius: 2,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.all(AppSpacing.md),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.12),
+                  borderRadius: AppRadius.radiusMd,
+                ),
+                child: Icon(
+                  icon,
+                  color: color,
+                  size: AppIconSize.lg,
+                ),
+              ),
+              SizedBox(width: AppSpacing.lg),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        height: 1.3,
+                      ),
+                    ),
+                    SizedBox(height: AppSpacing.xs),
+                    Text(
+                      timestamp,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: AppColors.textSecondaryLight,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xs,
+                ),
+                decoration: BoxDecoration(
+                  color: (priority == 'high'
+                      ? AppColors.error
+                      : priority == 'medium'
+                          ? AppColors.warning
+                          : AppColors.success)
+                      .withOpacity(0.15),
+                  borderRadius: AppRadius.radiusSm,
+                ),
+                child: Text(
+                  priority.toUpperCase(),
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: priority == 'high'
+                        ? AppColors.error
+                        : priority == 'medium'
+                            ? AppColors.warning
+                            : AppColors.success,
+                    fontSize: 9,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.3,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: AppSpacing.md),
+          Text(
+            description,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: AppColors.textSecondaryLight,
+              height: 1.5,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          SizedBox(height: AppSpacing.md),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton.icon(
+              onPressed: () {},
+              icon: Icon(Icons.read_more_rounded, size: 16, color: color),
+              label: Text(
+                'Read More',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -394,45 +970,45 @@ class _StudentDashboardState extends State<StudentDashboard> {
     return BottomNavigationBar(
       currentIndex: _selectedIndex,
       type: BottomNavigationBarType.fixed,
+      backgroundColor: Colors.white,
+      elevation: 8,
+      selectedItemColor: AppColors.student,
+      unselectedItemColor: AppColors.textSecondaryLight,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home_rounded),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.class_rounded),
+          label: 'Courses',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.assignment_rounded),
+          label: 'Tasks',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.more_horiz_rounded),
+          label: 'More',
+        ),
+      ],
       onTap: (index) {
         setState(() => _selectedIndex = index);
         switch (index) {
           case 0:
-            // Home/Dashboard
             setState(() => _selectedIndex = 0);
             break;
           case 1:
-            // Courses
             _navigateTo(StudentRoutes.courses);
             break;
           case 2:
-            // Assignments
             _navigateTo(StudentRoutes.assignments);
             break;
           case 3:
-            // More
             Scaffold.of(context).openDrawer();
             break;
         }
       },
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.class_),
-          label: 'Courses',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.assignment),
-          label: 'Assignments',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.more_horiz),
-          label: 'More',
-        ),
-      ],
     );
   }
 
@@ -460,3 +1036,32 @@ class _StudentDashboardState extends State<StudentDashboard> {
     );
   }
 }
+
+/// Animated card wrapper for staggered animations
+class _AnimatedStatCard extends StatelessWidget {
+  final Animation<double> animation;
+  final Widget child;
+
+  const _AnimatedStatCard({
+    required this.animation,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, _) {
+        return Transform.translate(
+          offset: Offset(0, (1 - animation.value) * 30),
+          child: Opacity(
+            opacity: animation.value,
+            child: Transform.scale(
+              scale: 0.9 + (animation.value * 0.1),
+              child: child,
+            ),
+          ),
+        );
+      },
+    );
+  }
