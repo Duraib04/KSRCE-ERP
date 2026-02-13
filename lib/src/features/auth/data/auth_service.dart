@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/config/security_flags.dart';
+import '../../../../core/config/security_flags.dart';
 
 // A data class for the result of a login attempt.
 @immutable
@@ -120,3 +120,4 @@ class AuthService {
     await prefs.remove(_lockoutUntilKey);
   }
 }
+
