@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import 'src/config/routes.dart';
 import 'src/core/theme/app_theme.dart';
+import 'src/features/home/presentation/pages/home_page.dart';
 import 'src/features/auth/presentation/pages/login_page.dart';
 import 'src/features/student/presentation/pages/student_dashboard.dart';
 import 'src/features/student/presentation/pages/profile_page.dart';
@@ -47,24 +48,31 @@ class KsrceErpApp extends StatelessWidget {
 
 /// App router configuration using go_router.
 final GoRouter _router = GoRouter(
-  initialLocation: AuthService.isAuthenticated ? _getInitialRoute() : AuthRoutes.login,
+  initialLocation: AuthService.isAuthenticated ? _getInitialRoute() : HomeRoutes.home,
   redirect: (context, state) {
+    final isHome = state.matchedLocation == HomeRoutes.home;
     final isLoggingIn = state.matchedLocation == AuthRoutes.login;
     final isAuthenticated = AuthService.isAuthenticated;
 
-    // If not authenticated and not on login page, send to login
-    if (!isAuthenticated && !isLoggingIn) {
-      return AuthRoutes.login;
+    // If authenticated and on home or login page, send to appropriate dashboard
+    if (isAuthenticated && (isHome || isLoggingIn)) {
+      return _getInitialRoute();
     }
 
-    // If authenticated and on login page, send to appropriate dashboard
-    if (isAuthenticated && isLoggingIn) {
-      return _getInitialRoute();
+    // If not authenticated and trying to access protected routes, send to home
+    if (!isAuthenticated && !isHome && !isLoggingIn) {
+      return HomeRoutes.home;
     }
 
     return null;
   },
   routes: [
+    // Home Route
+    GoRoute(
+      path: HomeRoutes.home,
+      builder: (context, state) => const HomePage(),
+    ),
+
     // Auth Routes
     GoRoute(
       path: AuthRoutes.login,
