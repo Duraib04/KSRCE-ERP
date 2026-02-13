@@ -1065,3 +1065,4 @@ class _AnimatedStatCard extends StatelessWidget {
       },
     );
   }
+}

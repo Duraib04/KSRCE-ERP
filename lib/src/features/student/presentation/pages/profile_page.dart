@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/design_tokens.dart';
-import '../../../../core/presentation/core_widgets.dart';
 
 class StudentProfilePage extends StatefulWidget {
   final String userId;

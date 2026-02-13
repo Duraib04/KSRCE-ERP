@@ -1,16 +1,14 @@
-/// Usage Examples: Browser Storage for Cross-Module Data Sharing
+/// BROWSER_STORAGE_USAGE.dart - Examples for usage of browser storage services
 ///
-/// The SharedDataService provides a singleton instance for storing and retrieving
-/// temporary data that persists across page navigations and module changes.
-/// 
-/// This is particularly useful for:
-/// - Storing form data across multiple pages
-/// - Sharing filters and search results between modules
-/// - Passing user preferences/selected items without deep linking
-/// - Maintaining navigation history/breadcrumbs
-/// - Temporary user-related metadata
+/// Author: [Your Name]
+/// Last Updated: [Date]
+///
+/// This file demonstrates various use cases for browser storage using the
+/// SharedDataService. These examples should be referenced when implementing
+/// cross-component data sharing in your application.
+///
+/// IMPORTANT: Remove this file before production deployment.
 
-import 'package:flutter/material.dart';
 import '../services/shared_data_service.dart';
 
 /// EXAMPLE 1: Store and retrieve user role across modules
@@ -44,7 +42,9 @@ class FilterSharingExample {
     // In another page of student dashboard
     final filters = await sharedData.getFilters();
     if (filters != null) {
+      // ignore: unused_local_variable
       final semester = filters['semester'];
+      // ignore: unused_local_variable
       final branch = filters['branch'];
       // Use these values to populate the page
     }
@@ -75,6 +75,7 @@ class FormDataExample {
 
   static Future<void> submitFormStep3() async {
     // Page 3 - get complete form data
+    // ignore: unused_local_variable
     final completeData = await sharedData.getFormData('complaint_form');
     // Submit to API
     await sharedData.clearFormData('complaint_form');
@@ -97,6 +98,7 @@ class NavigationStateExample {
   static Future<void> getBreadcrumbs() async {
     final state = await sharedData.getNavigationState();
     if (state != null) {
+      // ignore: unused_local_variable
       final breadcrumbs = state['breadcrumbs'] as List;
       // Display breadcrumbs in app bar
     }
