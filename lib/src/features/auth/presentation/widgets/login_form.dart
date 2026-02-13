@@ -202,9 +202,8 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
         ),
-        ),
       );
-    );
+    }
   }
 
   Widget _buildHeader(ThemeData theme) {
