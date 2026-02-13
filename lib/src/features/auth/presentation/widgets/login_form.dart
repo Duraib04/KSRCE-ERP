@@ -32,11 +32,23 @@ class LoginForm extends StatefulWidget {
   State<LoginForm> createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _userIdController = TextEditingController();
   final _passwordController = TextEditingController();
   final _localAuthService = local_auth.AuthService();
+
+  // Background image rotation
+  late AnimationController _backgroundAnimationController;
+  int _currentBackgroundIndex = 0;
+  late Timer _backgroundTimer;
+  final List<String> _backgroundImages = [
+    'assets/images/a-block.jpeg',
+    'assets/images/b-block.jpeg',
+    'assets/images/c-block.jpeg',
+    'assets/images/d-block.jpeg',
+    'assets/images/f-block.jpeg',
+  ];
 
   bool _showPassword = false;
   bool _rememberMe = false;
@@ -51,6 +63,22 @@ class _LoginFormState extends State<LoginForm> {
   void initState() {
     super.initState();
     _loadRememberedUser();
+    
+    // Initialize background animation
+    _backgroundAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    
+    // Start background rotation timer (change every 5 seconds)
+    _backgroundTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      if (mounted) {
+        setState(() {
+          _currentBackgroundIndex = (_currentBackgroundIndex + 1) % _backgroundImages.length;
+        });
+        _backgroundAnimationController.forward(from: 0.0);
+      }
+    });
   }
 
   @override
@@ -58,6 +86,8 @@ class _LoginFormState extends State<LoginForm> {
     _userIdController.dispose();
     _passwordController.dispose();
     _lockTimer?.cancel();
+    _backgroundTimer.cancel();
+    _backgroundAnimationController.dispose();
     super.dispose();
   }
 
@@ -171,39 +201,58 @@ class _LoginFormState extends State<LoginForm> {
     final isDisabled = _isSubmitting || isLocked;
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: const AssetImage('assets/images/a-block.jpeg'),
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-              Colors.black.withValues(alpha: 0.3),
-              BlendMode.darken,
-            ),
-          ),
-        ),
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 400),
-              child: Card(
-                elevation: 8.0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildHeader(theme),
-                    Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: _buildForm(theme, isDisabled, isLocked),
-                    ),
-                  ],
+      body: Stack(
+        children: [
+          // Animated rotating background
+          _buildAnimatedBackground(),
+          // Content on top
+          Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Card(
+                  elevation: 8.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildHeader(theme),
+                      Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: _buildForm(theme, isDisabled, isLocked),
+                      ),
+                    ],
+                  ),
                 ),
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAnimatedBackground() {
+    return AnimatedBuilder(
+      animation: _backgroundAnimationController,
+      builder: (context, child) {
+        return Opacity(
+          opacity: 1.0 - (_backgroundAnimationController.value * 0.2),
+          child: child,
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(_backgroundImages[_currentBackgroundIndex]),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+              Colors.black.withValues(alpha: 0.5),
+              BlendMode.darken,
             ),
           ),
         ),
