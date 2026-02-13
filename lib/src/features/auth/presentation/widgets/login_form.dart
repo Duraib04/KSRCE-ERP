@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../data/auth_service.dart';
+import '../../../../config/routes.dart';
+import '../../../../services/auth_service.dart';
+import '../../data/auth_service.dart' as local_auth;
 import '../../domain/models.dart';
 
 // TODO: Create dedicated Alert widget
@@ -32,7 +34,7 @@ class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   final _userIdController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _authService = AuthService();
+  final _localAuthService = local_auth.AuthService();
 
   bool _showPassword = false;
   bool _rememberMe = false;
@@ -57,7 +59,7 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   Future<void> _loadRememberedUser() async {
-    final rememberedId = await _authService.getRememberedUser();
+    final rememberedId = await _localAuthService.getRememberedUser();
     if (rememberedId != null) {
       final prefix = rememberedId.replaceAll(RegExp(r'\d+$'), '').toUpperCase();
       if (widget.allowedPrefixes.contains(prefix)) {
@@ -98,14 +100,45 @@ class _LoginFormState extends State<LoginForm> {
     });
 
     try {
-      final result = await _authService.login(
+      final result = await _localAuthService.login(
         _userIdController.text,
         _passwordController.text,
         _rememberMe,
       );
 
       if (result.success) {
-        if (mounted) context.go('/dashboard');
+        if (mounted) {
+          final userId = _userIdController.text;
+          final userPrefix = userId.replaceAll(RegExp(r'\d+$'), '').toUpperCase();
+          
+          // Determine user role and call auth service
+          UserRole role;
+          if (userPrefix == 'S') {
+            role = UserRole.student;
+          } else if (userPrefix == 'FAC' || userPrefix == 'FA') {
+            role = UserRole.faculty;
+          } else if (userPrefix == 'ADM') {
+            role = UserRole.admin;
+          } else {
+            role = UserRole.student;
+          }
+          
+          // Login through main auth service
+          await AuthService.login(
+            _userIdController.text,
+            _passwordController.text,
+            role,
+          );
+
+          // Navigate to appropriate dashboard
+          if (role == UserRole.student) {
+            context.go(StudentRoutes.dashboard);
+          } else if (role == UserRole.faculty) {
+            context.go(FacultyRoutes.dashboard);
+          } else if (role == UserRole.admin) {
+            context.go(AdminRoutes.dashboard);
+          }
+        }
       } else {
         setState(() {
           _error = result.message;
