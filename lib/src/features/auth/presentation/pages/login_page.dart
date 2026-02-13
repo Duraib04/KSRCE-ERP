@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/config/security_flags.dart';
+import '../../../core/config/security_flags.dart';
 import '../../domain/models.dart';
 import '../widgets/login_form.dart';
 
@@ -39,4 +39,5 @@ class LoginPage extends StatelessWidget {
     );
   }
 }
+
 

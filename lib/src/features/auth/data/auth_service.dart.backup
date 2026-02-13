@@ -1,7 +1,7 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/config/security_flags.dart';
+import '../../../../core/config/security_flags.dart';
 
 // A data class for the result of a login attempt.
 @immutable
@@ -57,14 +57,14 @@ class AuthService {
     final allowDemo = kEnableDemoAuth || kDebugMode;
 
     // In a real app, you would make an HTTP request here.
-    // This is placeholder logic to mimic the React component's behavior.
-    if (allowDemo && normalizedUserId.startsWith('S') && password == "demo123") {
+    // This is placeholder logic to mimic the React component''s behavior.
+    if (allowDemo && normalizedUserId.startsWith(''S'') && password == "demo123") {
       await _handleSuccessfulLogin(normalizedUserId, rememberMe, prefs);
       return const LoginResult(success: true);
-    } else if (allowDemo && normalizedUserId.startsWith('FAC') && password == "demo123") {
+    } else if (allowDemo && normalizedUserId.startsWith(''FAC'') && password == "demo123") {
       await _handleSuccessfulLogin(normalizedUserId, rememberMe, prefs);
       return const LoginResult(success: true);
-    } else if (allowDemo && normalizedUserId.startsWith('ADM') && password == "admin123") {
+    } else if (allowDemo && normalizedUserId.startsWith(''ADM'') && password == "admin123") {
       await _handleSuccessfulLogin(normalizedUserId, rememberMe, prefs);
       return const LoginResult(success: true);
     } else {
@@ -101,7 +101,7 @@ class AuthService {
       await prefs.remove(_failedAttemptsKey);
       return const LoginResult(
         success: false,
-        message: 'Too many attempts. Try again later.',
+        message: ''Too many attempts. Try again later.'',
         lockDuration: _lockoutSeconds,
         remainingAttempts: 0,
       );
@@ -110,7 +110,7 @@ class AuthService {
     await prefs.setInt(_failedAttemptsKey, attempts);
     return LoginResult(
       success: false,
-      message: 'Invalid credentials provided.',
+      message: ''Invalid credentials provided.'',
       remainingAttempts: remainingAttempts,
     );
   }

@@ -44,6 +44,28 @@
       ]
     },
     {
+      "name": "connectivity_plus",
+      "version": "5.0.2",
+      "dependencies": [
+        "connectivity_plus_platform_interface",
+        "flutter",
+        "flutter_web_plugins",
+        "js",
+        "meta",
+        "nm"
+      ]
+    },
+    {
+      "name": "http",
+      "version": "1.6.0",
+      "dependencies": [
+        "async",
+        "http_parser",
+        "meta",
+        "web"
+      ]
+    },
+    {
       "name": "shared_preferences",
       "version": "2.5.4",
       "dependencies": [
@@ -169,6 +191,59 @@
       ]
     },
     {
+      "name": "nm",
+      "version": "0.5.0",
+      "dependencies": [
+        "dbus"
+      ]
+    },
+    {
+      "name": "js",
+      "version": "0.6.7",
+      "dependencies": [
+        "meta"
+      ]
+    },
+    {
+      "name": "connectivity_plus_platform_interface",
+      "version": "1.2.4",
+      "dependencies": [
+        "flutter",
+        "meta",
+        "plugin_platform_interface"
+      ]
+    },
+    {
+      "name": "flutter_web_plugins",
+      "version": "0.0.0",
+      "dependencies": [
+        "flutter"
+      ]
+    },
+    {
+      "name": "web",
+      "version": "1.1.1",
+      "dependencies": []
+    },
+    {
+      "name": "http_parser",
+      "version": "4.1.2",
+      "dependencies": [
+        "collection",
+        "source_span",
+        "string_scanner",
+        "typed_data"
+      ]
+    },
+    {
+      "name": "async",
+      "version": "2.13.0",
+      "dependencies": [
+        "collection",
+        "meta"
+      ]
+    },
+    {
       "name": "shared_preferences_windows",
       "version": "2.4.1",
       "dependencies": [
@@ -232,13 +307,6 @@
       "dependencies": []
     },
     {
-      "name": "flutter_web_plugins",
-      "version": "0.0.0",
-      "dependencies": [
-        "flutter"
-      ]
-    },
-    {
       "name": "sky_engine",
       "version": "0.0.0",
       "dependencies": []
@@ -254,14 +322,6 @@
       "name": "characters",
       "version": "1.4.1",
       "dependencies": []
-    },
-    {
-      "name": "async",
-      "version": "2.13.0",
-      "dependencies": [
-        "collection",
-        "meta"
-      ]
     },
     {
       "name": "leak_tracker_testing",
@@ -313,6 +373,30 @@
       ]
     },
     {
+      "name": "dbus",
+      "version": "0.7.12",
+      "dependencies": [
+        "args",
+        "ffi",
+        "meta",
+        "xml"
+      ]
+    },
+    {
+      "name": "plugin_platform_interface",
+      "version": "2.1.8",
+      "dependencies": [
+        "meta"
+      ]
+    },
+    {
+      "name": "typed_data",
+      "version": "1.4.0",
+      "dependencies": [
+        "collection"
+      ]
+    },
+    {
       "name": "path_provider_windows",
       "version": "2.3.0",
       "dependencies": [
@@ -340,18 +424,6 @@
       ]
     },
     {
-      "name": "web",
-      "version": "1.1.1",
-      "dependencies": []
-    },
-    {
-      "name": "plugin_platform_interface",
-      "version": "2.1.8",
-      "dependencies": [
-        "meta"
-      ]
-    },
-    {
       "name": "path_provider_linux",
       "version": "2.2.1",
       "dependencies": [
@@ -368,8 +440,22 @@
       "dependencies": []
     },
     {
+      "name": "xml",
+      "version": "6.6.1",
+      "dependencies": [
+        "collection",
+        "meta",
+        "petitparser"
+      ]
+    },
+    {
       "name": "ffi",
       "version": "2.2.0",
+      "dependencies": []
+    },
+    {
+      "name": "args",
+      "version": "2.7.0",
       "dependencies": []
     },
     {
@@ -386,98 +472,12 @@
       ]
     },
     {
-      "name": "connectivity_plus",
-      "version": "5.0.2",
-      "dependencies": [
-        "connectivity_plus_platform_interface",
-        "flutter",
-        "flutter_web_plugins",
-        "js",
-        "meta",
-        "nm"
-      ]
-    },
-    {
-      "name": "nm",
-      "version": "0.5.0",
-      "dependencies": [
-        "dbus"
-      ]
-    },
-    {
-      "name": "connectivity_plus_platform_interface",
-      "version": "1.2.4",
-      "dependencies": [
-        "flutter",
-        "meta",
-        "plugin_platform_interface"
-      ]
-    },
-    {
-      "name": "js",
-      "version": "0.6.7",
-      "dependencies": [
-        "meta"
-      ]
-    },
-    {
-      "name": "http",
-      "version": "1.6.0",
-      "dependencies": [
-        "async",
-        "http_parser",
-        "meta",
-        "web"
-      ]
-    },
-    {
-      "name": "http_parser",
-      "version": "4.1.2",
-      "dependencies": [
-        "collection",
-        "source_span",
-        "string_scanner",
-        "typed_data"
-      ]
-    },
-    {
-      "name": "typed_data",
-      "version": "1.4.0",
-      "dependencies": [
-        "collection"
-      ]
-    },
-    {
-      "name": "dbus",
-      "version": "0.7.12",
-      "dependencies": [
-        "args",
-        "ffi",
-        "meta",
-        "xml"
-      ]
-    },
-    {
-      "name": "xml",
-      "version": "6.6.1",
-      "dependencies": [
-        "collection",
-        "meta",
-        "petitparser"
-      ]
-    },
-    {
       "name": "petitparser",
       "version": "7.0.1",
       "dependencies": [
         "collection",
         "meta"
       ]
-    },
-    {
-      "name": "args",
-      "version": "2.7.0",
-      "dependencies": []
     }
   ],
   "configVersion": 1
