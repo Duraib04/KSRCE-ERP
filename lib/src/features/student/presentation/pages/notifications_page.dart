@@ -132,7 +132,7 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
                     height: 48,
                     decoration: BoxDecoration(
                       color: _getCategoryColor(notification.category)
-                          .shade100,
+                          .withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Center(
