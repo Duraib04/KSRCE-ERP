@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/design_tokens.dart';
 import '../../../../services/auth_service.dart';
 import '../../data/auth_service.dart' as local_auth;
 import '../../domain/models.dart';
@@ -211,35 +213,67 @@ class _LoginFormState extends State<LoginForm> {
 
   Widget _buildHeader(ThemeData theme) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
+      padding: EdgeInsets.fromLTRB(AppSpacing.xl, AppSpacing.xl, AppSpacing.xl, AppSpacing.lg),
       width: double.infinity,
-      color: theme.colorScheme.primary,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.student,
+            AppColors.info,
+          ],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.student.withOpacity(0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
       child: Column(
         children: [
-          // KSRCE Logo
-          CircleAvatar(
-            radius: 32,
-            backgroundColor: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Image.asset('assets/images/ksrce-icon.jpeg'),
+          // KSRCE Logo with glow
+          Container(
+            padding: EdgeInsets.all(AppSpacing.md),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.white.withOpacity(0.3),
+                  blurRadius: 20,
+                  spreadRadius: 5,
+                ),
+              ],
+            ),
+            child: ClipOval(
+              child: Image.asset(
+                'assets/images/ksrce-icon.jpeg',
+                width: AppIconSize.lg,
+                height: AppIconSize.lg,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: AppSpacing.lg),
           Text(
             widget.title,
             textAlign: TextAlign.center,
-            style: theme.textTheme.titleLarge?.copyWith(
-              color: theme.colorScheme.onPrimary,
-              fontWeight: FontWeight.bold,
+            style: theme.textTheme.headlineSmall?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.5,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: AppSpacing.sm),
           Text(
             widget.subtitle,
             textAlign: TextAlign.center,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onPrimary.withOpacity(0.8),
+              color: Colors.white.withOpacity(0.9),
+              letterSpacing: 0.3,
             ),
           ),
         ],
@@ -255,23 +289,60 @@ class _LoginFormState extends State<LoginForm> {
         children: [
           // Role Selection Buttons
           _buildRoleSelector(theme),
-          const SizedBox(height: 24),
+          SizedBox(height: AppSpacing.xl),
+          
+          // Alerts
           if (_error != null)
-            _Alert(type: _AlertType.destructive, message: _error!),
+            Padding(
+              padding: EdgeInsets.only(bottom: AppSpacing.md),
+              child: _Alert(type: _AlertType.destructive, message: _error!),
+            ),
           if (isLocked)
-            _Alert(type: _AlertType.info, message: "Account locked. Try again in $_lockDuration seconds."),
+            Padding(
+              padding: EdgeInsets.only(bottom: AppSpacing.md),
+              child: _Alert(type: _AlertType.info, message: "Account locked. Try again in $_lockDuration seconds."),
+            ),
           if (_remainingAttempts != null && _remainingAttempts! > 0 && _remainingAttempts! <= 2)
-            _Alert(type: _AlertType.warning, message: "Warning: $_remainingAttempts attempt${_remainingAttempts! != 1 ? 's' : ''} remaining before lockout."),
+            Padding(
+              padding: EdgeInsets.only(bottom: AppSpacing.md),
+              child: _Alert(type: _AlertType.warning, message: "Warning: $_remainingAttempts attempt${_remainingAttempts! != 1 ? 's' : ''} remaining before lockout."),
+            ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: AppSpacing.lg),
+          
+          // User ID Input
+          _buildFormLabel(theme, "User ID"),
+          SizedBox(height: AppSpacing.sm),
           TextFormField(
             controller: _userIdController,
             enabled: !isDisabled,
+            style: theme.textTheme.bodyMedium,
             decoration: InputDecoration(
-              labelText: "User ID",
               hintText: widget.placeholderId,
-              prefixIcon: const Icon(Icons.person_outline),
-              border: const OutlineInputBorder(),
+              prefixIcon: Icon(Icons.badge_rounded, color: AppColors.student),
+              prefixIconConstraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+              border: OutlineInputBorder(
+                borderRadius: AppRadius.radiusMd,
+                borderSide: BorderSide(color: AppColors.outlineLight),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: AppRadius.radiusMd,
+                borderSide: BorderSide(color: AppColors.outlineLight, width: 1.5),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: AppRadius.radiusMd,
+                borderSide: BorderSide(color: AppColors.student, width: 2),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: AppRadius.radiusMd,
+                borderSide: BorderSide(color: AppColors.error, width: 1.5),
+              ),
+              filled: true,
+              fillColor: AppColors.backgroundLight,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg,
+                vertical: AppSpacing.md,
+              ),
             ),
             validator: (value) {
               if (value == null || value.isEmpty) return 'Please enter your User ID';
@@ -282,18 +353,48 @@ class _LoginFormState extends State<LoginForm> {
               return null;
             },
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: AppSpacing.lg),
+          
+          // Password Input
+          _buildFormLabel(theme, "Password"),
+          SizedBox(height: AppSpacing.sm),
           TextFormField(
             controller: _passwordController,
             obscureText: !_showPassword,
             enabled: !isDisabled,
+            style: theme.textTheme.bodyMedium,
             decoration: InputDecoration(
-              labelText: "Password",
-              prefixIcon: const Icon(Icons.lock_outline),
-              border: const OutlineInputBorder(),
+              prefixIcon: Icon(Icons.lock_rounded, color: AppColors.student),
+              prefixIconConstraints: const BoxConstraints(minWidth: 48, minHeight: 48),
               suffixIcon: IconButton(
-                icon: Icon(_showPassword ? Icons.visibility_off : Icons.visibility),
-                onPressed: () => setState(() => _showPassword = !_showPassword),
+                icon: Icon(
+                  _showPassword ? Icons.visibility_off_rounded : Icons.visibility_rounded,
+                  color: AppColors.textSecondaryLight,
+                ),
+                onPressed: isDisabled ? null : () => setState(() => _showPassword = !_showPassword),
+              ),
+              suffixIconConstraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+              border: OutlineInputBorder(
+                borderRadius: AppRadius.radiusMd,
+                borderSide: BorderSide(color: AppColors.outlineLight),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: AppRadius.radiusMd,
+                borderSide: BorderSide(color: AppColors.outlineLight, width: 1.5),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: AppRadius.radiusMd,
+                borderSide: BorderSide(color: AppColors.student, width: 2),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: AppRadius.radiusMd,
+                borderSide: BorderSide(color: AppColors.error, width: 1.5),
+              ),
+              filled: true,
+              fillColor: AppColors.backgroundLight,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg,
+                vertical: AppSpacing.md,
               ),
             ),
             validator: (value) {
@@ -301,8 +402,9 @@ class _LoginFormState extends State<LoginForm> {
               return null;
             },
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: AppSpacing.lg),
 
+          // Remember Me & Forgot Password
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -311,27 +413,88 @@ class _LoginFormState extends State<LoginForm> {
                   Checkbox(
                     value: _rememberMe,
                     onChanged: isDisabled ? null : (value) => setState(() => _rememberMe = value ?? false),
+                    activeColor: AppColors.student,
                   ),
-                  const Text("Remember me"),
+                  Text(
+                    "Remember me",
+                    style: theme.textTheme.bodyMedium,
+                  ),
                 ],
               ),
-              const Text("🔒 CAPTCHA", style: TextStyle(fontSize: 12)), // Placeholder
+              TextButton(
+                onPressed: isDisabled ? null : () {},
+                child: Text(
+                  "Forgot password?",
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: AppColors.student,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          SizedBox(height: AppSpacing.xl),
+
+          // Login Button
+          SizedBox(
+            height: 48,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.student,
+                disabledBackgroundColor: AppColors.inactive,
+                elevation: 4,
+                shape: RoundedRectangleBorder(borderRadius: AppRadius.radiusMd),
+              ),
+              onPressed: isDisabled ? null : _handleSubmit,
+              child: _isSubmitting
+                  ? SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          theme.colorScheme.onPrimary,
+                        ),
+                      ),
+                    )
+                  : Text(
+                      "Sign In",
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
             ),
-            onPressed: isDisabled ? null : _handleSubmit,
-            child: _isSubmitting
-                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white,))
-                : const Text("Sign In"),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: AppSpacing.xl),
           _buildDemoCredentials(theme),
+          SizedBox(height: AppSpacing.md),
+          
+          // Back to Home
+          Center(
+            child: TextButton.icon(
+              onPressed: isDisabled ? null : () => context.go('/'),
+              icon: Icon(Icons.arrow_back_rounded, color: AppColors.textSecondaryLight),
+              label: Text(
+                "Back to Home",
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: AppColors.textSecondaryLight,
+                ),
+              ),
+            ),
+          ),
         ],
+      ),
+    );
+  }
+  
+  Widget _buildFormLabel(ThemeData theme, String label) {
+    return Text(
+      label,
+      style: theme.textTheme.labelLarge?.copyWith(
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.3,
       ),
     );
   }
@@ -347,10 +510,11 @@ class _LoginFormState extends State<LoginForm> {
     }
 
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceVariant.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(8),
+        color: AppColors.backgroundLight,
+        borderRadius: AppRadius.radiusMd,
+        border: Border.all(color: AppColors.outlineLight),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -359,100 +523,140 @@ class _LoginFormState extends State<LoginForm> {
             _selectedRole != null 
                 ? "$_selectedRole Demo Credentials:"
                 : "Demo Credentials:",
-            style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.labelSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: AppColors.textSecondaryLight,
+              fontSize: 11,
+            ),
           ),
-          const SizedBox(height: 8),
-          Table(
-            columnWidths: const {
-              0: IntrinsicColumnWidth(),
-              1: FlexColumnWidth(),
-            },
-            children: filteredCredentials.map((c) => TableRow(
+          SizedBox(height: AppSpacing.sm),
+          ...filteredCredentials.map((c) => Padding(
+            padding: EdgeInsets.symmetric(vertical: AppSpacing.xs / 2),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 16.0, top: 2, bottom: 2),
-                  child: Text("${c.label}:", style: theme.textTheme.bodySmall),
+                Text(
+                  "${c.label}:",
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textSecondaryLight,
+                    fontSize: 10,
+                  ),
                 ),
                 GestureDetector(
                   onTap: () {
                     _userIdController.text = c.id;
                     _passwordController.text = c.password;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Credentials loaded for ${c.label}'),
+                        duration: const Duration(seconds: 2),
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: AppColors.success,
+                      ),
+                    );
                   },
                   child: Text(
                     "${c.id} / ${c.password}",
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.primary,
+                      color: AppColors.student,
+                      fontSize: 10,
+                      fontFamily: 'monospace',
                       decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
               ],
-            )).toList(),
-          ),
+            ),
+          )).toList(),
         ],
       ),
     );
   }
 
   Widget _buildRoleSelector(ThemeData theme) {
-    final roles = ['Student', 'Faculty', 'Admin'];
+    final roles = [
+      {'label': 'Student', 'icon': Icons.person_rounded, 'color': AppColors.student},
+      {'label': 'Faculty', 'icon': Icons.school_rounded, 'color': AppColors.faculty},
+      {'label': 'Admin', 'icon': Icons.admin_panel_settings_rounded, 'color': AppColors.admin},
+    ];
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Select Your Role:',
-          style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold),
+          'Select Your Role',
+          style: theme.textTheme.labelLarge?.copyWith(
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.5,
+          ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: AppSpacing.md),
         Row(
           children: roles.map((role) {
-            final isSelected = _selectedRole == role.toUpperCase();
+            final label = role['label'] as String;
+            final roleUpper = label.toUpperCase();
+            final isSelected = _selectedRole == roleUpper;
+            final color = role['color'] as Color;
+            final icon = role['icon'] as IconData;
+
             return Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _selectedRole = role.toUpperCase();
-                      _userIdController.clear();
-                      _passwordController.clear();
-                      _error = null;
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isSelected 
-                        ? theme.colorScheme.primary 
-                        : theme.colorScheme.surface,
-                    foregroundColor: isSelected 
-                        ? theme.colorScheme.onPrimary 
-                        : theme.colorScheme.onSurface,
-                    side: BorderSide(
-                      color: isSelected 
-                          ? theme.colorScheme.primary 
-                          : theme.colorScheme.outline,
-                      width: 2,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedRole = roleUpper;
+                    _userIdController.clear();
+                    _passwordController.clear();
+                    _error = null;
+                  });
+                },
+                child: AnimatedContainer(
+                  duration: AppDuration.fast,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.md,
+                  ),
+                  margin: EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+                  decoration: BoxDecoration(
+                    gradient: isSelected
+                        ? LinearGradient(
+                            colors: [color, color.withOpacity(0.7)],
+                          )
+                        : null,
+                    color: isSelected ? null : AppColors.backgroundLight,
+                    border: Border.all(
+                      color: isSelected ? color : AppColors.outlineLight,
+                      width: isSelected ? 2 : 1.5,
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                    borderRadius: AppRadius.radiusMd,
+                    boxShadow: isSelected
+                        ? [
+                            BoxShadow(
+                              color: color.withOpacity(0.3),
+                              blurRadius: 12,
+                              spreadRadius: 2,
+                            ),
+                          ]
+                        : [],
                   ),
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        role == 'Student' 
-                            ? Icons.person_outline
-                            : role == 'Faculty'
-                                ? Icons.school_outlined
-                                : Icons.admin_panel_settings_outlined,
-                        size: 24,
+                        icon,
+                        color: isSelected ? Colors.white : color,
+                        size: AppIconSize.md,
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: AppSpacing.xs),
                       Text(
-                        role,
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                        label,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: isSelected ? Colors.white : color,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                        ),
                       ),
                     ],
                   ),
@@ -466,7 +670,7 @@ class _LoginFormState extends State<LoginForm> {
   }
 }
 
-// Placeholder Alert Widget
+// Professional Alert Widget with Material Design 3 styling
 enum _AlertType { destructive, warning, info }
 
 class _Alert extends StatelessWidget {
@@ -476,36 +680,45 @@ class _Alert extends StatelessWidget {
 
   IconData get icon {
     switch (type) {
-      case _AlertType.destructive: return Icons.error_outline;
-      case _AlertType.warning: return Icons.warning_amber_outlined;
-      case _AlertType.info: return Icons.info_outline;
+      case _AlertType.destructive: return Icons.error_rounded;
+      case _AlertType.warning: return Icons.warning_amber_rounded;
+      case _AlertType.info: return Icons.info_rounded;
     }
   }
 
   Color getColor(BuildContext context) {
-    final theme = Theme.of(context);
     switch (type) {
-      case _AlertType.destructive: return theme.colorScheme.error;
-      case _AlertType.warning: return Colors.orange; // Or a color from your theme
-      case _AlertType.info: return theme.colorScheme.primary;
+      case _AlertType.destructive: return AppColors.error;
+      case _AlertType.warning: return AppColors.warning;
+      case _AlertType.info: return AppColors.info;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final color = getColor(context);
+    final theme = Theme.of(context);
+    
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withOpacity(0.3), width: 1.5),
+        borderRadius: AppRadius.radiusMd,
       ),
       child: Row(
         children: [
-          Icon(icon, color: color, size: 20),
-          const SizedBox(width: 12),
-          Expanded(child: Text(message, style: TextStyle(color: color, fontSize: 13))),
+          Icon(icon, color: color, size: AppIconSize.md),
+          SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Text(
+              message,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: color,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
         ],
       ),
     );
