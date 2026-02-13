@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../config/routes.dart';
-import '../../../services/auth_service.dart';
+import '../../../../config/routes.dart';
+import '../../../../services/auth_service.dart';
 
 class AdminDashboard extends StatefulWidget {
   final String userId;
@@ -144,12 +144,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
               Navigator.pop(context);
               _showLogoutDialog();
             },
-          ),
-        ],
-      ),
-    );
-  }
-            onTap: () => Navigator.pop(context),
           ),
         ],
       ),
