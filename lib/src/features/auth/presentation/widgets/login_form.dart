@@ -172,7 +172,7 @@ class _LoginFormState extends State<LoginForm> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: const AssetImage('assets/images/a-block.png'),
+            image: const AssetImage('assets/images/a-block.jpeg'),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
               Colors.black.withValues(alpha: 0.3),
@@ -222,7 +222,7 @@ class _LoginFormState extends State<LoginForm> {
             backgroundColor: Colors.white,
             child: Padding(
               padding: const EdgeInsets.all(4.0),
-              child: Image.asset('assets/images/ksrce-icon.png'),
+              child: Image.asset('assets/images/ksrce-icon.jpeg'),
             ),
           ),
           const SizedBox(height: 16),

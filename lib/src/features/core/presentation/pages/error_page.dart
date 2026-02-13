@@ -22,7 +22,7 @@ class ErrorPage extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: const AssetImage('assets/images/b-block.png'),
+            image: const AssetImage('assets/images/b-block.jpeg'),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
               Colors.black.withValues(alpha: 0.4),
