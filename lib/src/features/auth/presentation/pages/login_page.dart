@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/config/security_flags.dart';
 import '../../domain/models.dart';
 import '../widgets/login_form.dart';
 
@@ -13,17 +15,22 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Configuration that was previously passed as props to the React component.
+    final bool showDemoCredentials = kEnableDemoAuth || kDebugMode;
+
+    // Configuration for the LoginForm widget
     const String title = "K.S.R. College of Engineering";
     const String subtitle = "Autonomous Institution | Tiruchengode, Tamil Nadu";
-    const List<String> allowedPrefixes = ["S", "ADM"]; // For Student and Admin
+    const List<String> allowedPrefixes = ["S", "FAC", "ADM"]; // For Student, Faculty, and Admin
     const String placeholderId = "Eg. S20210001";
-    const List<DemoCredential> demoCredentials = [
-      DemoCredential(label: "Student", id: "S20210001", password: "demo123"),
-      DemoCredential(label: "Admin", id: "ADM001", password: "admin123"),
-    ];
+    final List<DemoCredential> demoCredentials = showDemoCredentials
+        ? const [
+            DemoCredential(label: "Student", id: "S20210001", password: "demo123"),
+            DemoCredential(label: "Faculty", id: "FAC001", password: "demo123"),
+            DemoCredential(label: "Admin", id: "ADM001", password: "admin123"),
+          ]
+        : const [];
 
-    return const LoginForm(
+    return LoginForm(
       title: title,
       subtitle: subtitle,
       allowedPrefixes: allowedPrefixes,
