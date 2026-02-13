@@ -169,15 +169,25 @@ class _LoginFormState extends State<LoginForm> {
     final isDisabled = _isSubmitting || isLocked;
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.secondary.withOpacity(0.3),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 400),
-            child: Card(
-              elevation: 8.0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: const AssetImage('assets/images/a-block.png'),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+              Colors.black.withValues(alpha: 0.3),
+              BlendMode.darken,
+            ),
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: Card(
+                elevation: 8.0,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
               clipBehavior: Clip.antiAlias,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -192,7 +202,8 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
         ),
-      ),
+        ),
+      );
     );
   }
 

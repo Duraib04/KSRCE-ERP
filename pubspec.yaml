@@ -20,3 +20,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/a-block.png
+    - assets/images/b-block.png
+    - assets/images/d-block.png
+    - assets/ksrce-logo.png

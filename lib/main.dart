@@ -5,6 +5,7 @@ import 'src/config/routes.dart';
 import 'src/core/theme/app_theme.dart';
 import 'src/features/home/presentation/pages/home_page.dart';
 import 'src/features/auth/presentation/pages/login_page.dart';
+import 'src/features/core/presentation/pages/error_page.dart';
 import 'src/features/student/presentation/pages/student_dashboard.dart';
 import 'src/features/student/presentation/pages/profile_page.dart';
 import 'src/features/student/presentation/pages/courses_page.dart';
@@ -77,6 +78,12 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: AuthRoutes.login,
       builder: (context, state) => const LoginPage(),
+    ),
+
+    // Error Route
+    GoRoute(
+      path: '/error',
+      builder: (context, state) => const ErrorPage(),
     ),
 
     // Student Routes
@@ -199,7 +206,10 @@ final GoRouter _router = GoRouter(
       ],
     ),
   ],
-  errorBuilder: (context, state) => _ErrorPage(error: state.error),
+  errorBuilder: (context, state) => ErrorPage(
+    error: state.error?.message,
+    statusCode: 404,
+  ),
 );
 
 String _getInitialRoute() {
@@ -212,47 +222,6 @@ String _getInitialRoute() {
       return AdminRoutes.dashboard;
     case UserRole.guest:
       return AuthRoutes.login;
-  }
-}
-
-class _ErrorPage extends StatelessWidget {
-  final Exception? error;
-
-  const _ErrorPage({this.error});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Error')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.error_outline,
-              color: Colors.red,
-              size: 64,
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Page Not Found',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error?.toString() ?? 'Unknown error',
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.grey),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => context.go(AuthRoutes.login),
-              child: const Text('Back to Login'),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
 
