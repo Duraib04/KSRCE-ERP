@@ -191,6 +191,7 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
                 constraints: const BoxConstraints(maxWidth: 400),
                 child: Card(
                   elevation: 8.0,
+                  color: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0),
                   ),
