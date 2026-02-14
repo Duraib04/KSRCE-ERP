@@ -106,10 +106,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 ),
               ],
             ),
-            child: Icon(
-              Icons.school_rounded,
-              size: AppIconSize.xxl,
-              color: Colors.white,
+            child: Image.asset(
+              'assets/images/ksrce-icon.jpeg',
+              width: AppIconSize.xxl,
+              height: AppIconSize.xxl,
             ),
           ),
           SizedBox(height: AppSpacing.xl),
