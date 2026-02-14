@@ -38,17 +38,8 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
   final _passwordController = TextEditingController();
   final _localAuthService = local_auth.AuthService();
 
-  // Background image rotation
-  late AnimationController _backgroundAnimationController;
-  int _currentBackgroundIndex = 0;
-  late Timer _backgroundTimer;
-  final List<String> _backgroundImages = [
-    'assets/images/a-block.jpeg',
-    'assets/images/b-block.jpeg',
-    'assets/images/c-block.jpeg',
-    'assets/images/d-block.jpeg',
-    'assets/images/f-block.jpeg',
-  ];
+  // Background image - single static image
+  final String _backgroundImage = 'assets/images/a-block.jpeg';
 
   bool _showPassword = false;
   bool _rememberMe = false;
@@ -63,31 +54,11 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
   void initState() {
     super.initState();
     _loadRememberedUser();
-    
-    // Preload all background images
-    _preloadBackgroundImages();
-    
-    // Initialize background animation
-    _backgroundAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-    
-    // Start background rotation timer (change every 5 seconds)
-    _backgroundTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      if (mounted) {
-        setState(() {
-          _currentBackgroundIndex = (_currentBackgroundIndex + 1) % _backgroundImages.length;
-        });
-        _backgroundAnimationController.forward(from: 0.0);
-      }
-    });
+    _preloadBackgroundImage();
   }
 
-  Future<void> _preloadBackgroundImages() async {
-    for (String imagePath in _backgroundImages) {
-      await precacheImage(AssetImage(imagePath), context);
-    }
+  Future<void> _preloadBackgroundImage() async {
+    await precacheImage(AssetImage(_backgroundImage), context);
   }
 
   @override
@@ -95,8 +66,6 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
     _userIdController.dispose();
     _passwordController.dispose();
     _lockTimer?.cancel();
-    _backgroundTimer.cancel();
-    _backgroundAnimationController.dispose();
     super.dispose();
   }
 
@@ -246,26 +215,17 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
   }
 
   Widget _buildAnimatedBackground() {
-    return AnimatedBuilder(
-      animation: _backgroundAnimationController,
-      builder: (context, child) {
-        return Opacity(
-          opacity: 1.0 - (_backgroundAnimationController.value * 0.2),
-          child: child,
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(_backgroundImages[_currentBackgroundIndex]),
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-              Colors.black.withValues(alpha: 0.5),
-              BlendMode.darken,
-            ),
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(_backgroundImage),
+          fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(
+            Colors.black.withValues(alpha: 0.5),
+            BlendMode.darken,
           ),
-          color: Colors.black, // Fallback color while image loads
         ),
+        color: Colors.black, // Fallback color while image loads
       ),
     );
   }
