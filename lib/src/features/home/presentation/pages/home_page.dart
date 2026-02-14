@@ -86,17 +86,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       ),
       child: Column(
         children: [
-          // Logo Container with gradient
+          // Logo Container
           Container(
-            padding: EdgeInsets.all(AppSpacing.lg),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.student,
-                  AppColors.info.withOpacity(0.8),
-                ],
-              ),
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.circular(AppRadius.lg),
               boxShadow: [
                 BoxShadow(
                   color: AppColors.student.withOpacity(0.4),
@@ -106,10 +99,14 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 ),
               ],
             ),
-            child: Image.asset(
-              'assets/images/ksrce-icon.jpeg',
-              width: AppIconSize.xxl,
-              height: AppIconSize.xxl,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(AppRadius.lg),
+              child: Image.asset(
+                'assets/images/ksrce-icon.jpeg',
+                width: 150,
+                height: 150,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
           SizedBox(height: AppSpacing.xl),
