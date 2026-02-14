@@ -375,9 +375,10 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
           TextFormField(
             controller: _userIdController,
             enabled: !isDisabled,
-            style: theme.textTheme.bodyMedium,
+            style: theme.textTheme.bodyMedium?.copyWith(color: Colors.black) ?? const TextStyle(color: Colors.black),
             decoration: InputDecoration(
               hintText: widget.placeholderId,
+              hintStyle: const TextStyle(color: Colors.grey),
               prefixIcon: Icon(Icons.badge_rounded, color: AppColors.student),
               prefixIconConstraints: const BoxConstraints(minWidth: 48, minHeight: 48),
               border: OutlineInputBorder(
@@ -421,8 +422,9 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
             controller: _passwordController,
             obscureText: !_showPassword,
             enabled: !isDisabled,
-            style: theme.textTheme.bodyMedium,
+            style: theme.textTheme.bodyMedium?.copyWith(color: Colors.black) ?? const TextStyle(color: Colors.black),
             decoration: InputDecoration(
+              hintStyle: const TextStyle(color: Colors.grey),
               prefixIcon: Icon(Icons.lock_rounded, color: AppColors.student),
               prefixIconConstraints: const BoxConstraints(minWidth: 48, minHeight: 48),
               suffixIcon: IconButton(
