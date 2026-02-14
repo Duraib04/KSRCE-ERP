@@ -196,8 +196,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               ),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: AppColors.student,
+              backgroundColor: AppColors.accentGold,
+              foregroundColor: AppColors.textPrimaryLight,
               elevation: AppElevation.lg,
               shape: RoundedRectangleBorder(
                 borderRadius: AppRadius.radiusLg,

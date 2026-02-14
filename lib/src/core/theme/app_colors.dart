@@ -18,6 +18,31 @@ class AppColors {
   AppColors._(); // Private constructor to prevent instantiation
 
   // ============================================================
+  // KSRCE OFFICIAL BRAND COLORS
+  // ============================================================
+
+  /// Primary Academic Blue - Core brand color
+  /// Used for: AppBar, Sidebar, Primary buttons, Active navigation
+  static const Color primaryBlue = Color(0xFF0B3D91);
+
+  /// Secondary Blue - Light variant for interactions
+  /// Used for: Hover states, Selected tabs, Icons
+  static const Color secondaryBlue = Color(0xFF1F5FBF);
+
+  /// Accent Gold - Premium highlight color
+  /// Used for: Highlights, Notification badges, Important buttons
+  static const Color accentGold = Color(0xFFF4B400);
+
+  /// Background color - Clean professional ERP background
+  static const Color backgroundLight = Color(0xFFF5F7FA);
+
+  /// Primary text color
+  static const Color textPrimaryLight = Color(0xFF1A1A1A);
+
+  /// Text on blue backgrounds
+  static const Color textOnBlue = Color(0xFFFFFFFF);
+
+  // ============================================================
   // SEMANTIC COLORS - For feedback and status indication
   // ============================================================
 
@@ -39,7 +64,7 @@ class AppColors {
   static const Color warningLight = Color(0xFFFFB74D);
   static const Color warningDark = Color(0xFFEF6C00);
 
-  /// Info color - Used for informational messages
+  /// Info color - Used for informational messages (kept for compatibility)
   /// Light mode: Blue 600
   static const Color info = Color(0xFF1E88E5);
   static const Color infoLight = Color(0xFF64B5F6);
@@ -49,10 +74,10 @@ class AppColors {
   // MODULE COLORS - For visual distinction between modules
   // ============================================================
 
-  /// Student module primary color
-  static const Color student = Color(0xFF2196F3); // Blue 500
-  static const Color studentLight = Color(0xFF64B5F6);
-  static const Color studentDark = Color(0xFF1976D2);
+  /// Student module primary color - Uses KSRCE Primary Blue
+  static const Color student = Color(0xFF0B3D91); // KSRCE Primary Blue
+  static const Color studentLight = Color(0xFF1F5FBF); // KSRCE Secondary Blue
+  static const Color studentDark = Color(0xFF062651);
 
   /// Faculty module primary color
   static const Color faculty = Color(0xFF9C27B0); // Purple 500
