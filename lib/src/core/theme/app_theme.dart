@@ -45,7 +45,7 @@ class AppTheme {
         letterSpacing: -0.5,
       ),
       iconTheme: IconThemeData(
-        color: AppColors.textPrimaryLight,
+        color: Colors.white,
         size: AppIconSize.md,
       ),
     ),
@@ -142,9 +142,9 @@ class AppTheme {
     chipTheme: ChipThemeData(
       backgroundColor: AppColors.backgroundLight,
       deleteIconColor: AppColors.textSecondaryLight,
-      disabledColor: AppColors.inactive.withOpacity(0.3),
-      selectedColor: AppColors.info.withOpacity(0.2),
-      secondarySelectedColor: AppColors.info.withOpacity(0.3),
+      disabledColor: AppColors.inactive.withValues(alpha: 0.3),
+      selectedColor: AppColors.info.withValues(alpha: 0.2),
+      secondarySelectedColor: AppColors.info.withValues(alpha: 0.3),
       padding: EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
         vertical: AppSpacing.xs,
@@ -265,7 +265,7 @@ class AppTheme {
     navigationBarTheme: NavigationBarThemeData(
       elevation: AppElevation.sm,
       height: 64,
-      labelTextStyle: MaterialStateProperty.all(
+      labelTextStyle: WidgetStateProperty.all(
         const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
       ),
     ),
@@ -319,7 +319,7 @@ class AppTheme {
         letterSpacing: -0.5,
       ),
       iconTheme: IconThemeData(
-        color: AppColors.textPrimaryDark,
+        color: Colors.white,
         size: AppIconSize.md,
       ),
     ),
@@ -416,9 +416,9 @@ class AppTheme {
     chipTheme: ChipThemeData(
       backgroundColor: AppColors.backgroundDark,
       deleteIconColor: AppColors.textSecondaryDark,
-      disabledColor: AppColors.inactive.withOpacity(0.3),
-      selectedColor: AppColors.info.withOpacity(0.2),
-      secondarySelectedColor: AppColors.info.withOpacity(0.3),
+      disabledColor: AppColors.inactive.withValues(alpha: 0.3),
+      selectedColor: AppColors.info.withValues(alpha: 0.2),
+      secondarySelectedColor: AppColors.info.withValues(alpha: 0.3),
       padding: EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
         vertical: AppSpacing.xs,
@@ -541,7 +541,7 @@ class AppTheme {
     navigationBarTheme: NavigationBarThemeData(
       elevation: AppElevation.sm,
       height: 64,
-      labelTextStyle: MaterialStateProperty.all(
+      labelTextStyle: WidgetStateProperty.all(
         const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
       ),
     ),
