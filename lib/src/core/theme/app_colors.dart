@@ -162,8 +162,7 @@ class AppColors {
   // BACKGROUND & SURFACE COLORS
   // ============================================================
 
-  /// Light mode background colors
-  static const Color backgroundLight = Color(0xFFFAFAFA); // Grey 50
+  /// Surface colors for cards and elevated components
   static const Color surfaceLight = Color(0xFFFFFFFF); // White
   static const Color cardLight = Color(0xFFFFFFFF); // White
 
@@ -192,8 +191,7 @@ class AppColors {
   // TEXT COLORS
   // ============================================================
 
-  /// Primary text color (high emphasis)
-  static const Color textPrimaryLight = Color(0xDE000000); // 87% black
+  /// Primary text color for dark mode
   static const Color textPrimaryDark = Color(0xFFFFFFFF); // 100% white
 
   /// Secondary text color (medium emphasis)
