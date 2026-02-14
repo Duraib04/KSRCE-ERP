@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           // Logo Container
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppRadius.lg),
+              shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
                   color: AppColors.student.withOpacity(0.4),
@@ -99,13 +99,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 ),
               ],
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(AppRadius.lg),
+            child: ClipOval(
               child: Image.asset(
                 'assets/images/ksrce-icon.jpeg',
                 width: 150,
                 height: 150,
-                fit: BoxFit.contain,
+                fit: BoxFit.cover,
               ),
             ),
           ),
