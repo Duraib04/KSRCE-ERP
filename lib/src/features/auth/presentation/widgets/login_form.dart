@@ -64,6 +64,9 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
     super.initState();
     _loadRememberedUser();
     
+    // Preload all background images
+    _preloadBackgroundImages();
+    
     // Initialize background animation
     _backgroundAnimationController = AnimationController(
       duration: const Duration(milliseconds: 800),
@@ -79,6 +82,12 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
         _backgroundAnimationController.forward(from: 0.0);
       }
     });
+  }
+
+  Future<void> _preloadBackgroundImages() async {
+    for (String imagePath in _backgroundImages) {
+      await precacheImage(AssetImage(imagePath), context);
+    }
   }
 
   @override
@@ -255,6 +264,7 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
               BlendMode.darken,
             ),
           ),
+          color: Colors.black, // Fallback color while image loads
         ),
       ),
     );
