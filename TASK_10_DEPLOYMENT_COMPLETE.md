@@ -223,7 +223,7 @@ GitHub Actions: Build & Test
     ↓
 Deploy to Staging (Vercel)
     ↓
-https://staging-deploy.ksrce-erp.vercel.app
+https://staging.ksrce-team.vercel.app
 ```
 
 ### Production Deployment

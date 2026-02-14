@@ -13,8 +13,10 @@ class LocalCacheService {
   static const String _announcementsCacheKey = 'cached_announcements';
   static const String _userProfileCacheKey = 'cached_user_profile';
   static const String _lastSyncKey = 'last_sync_time';
+  // ignore: unused_field
   static const String _cacheVersionKey = 'cache_version';
 
+  // ignore: unused_field
   static const int _cacheVersion = 1;
   static const Duration _cacheDuration = Duration(hours: 24);
 

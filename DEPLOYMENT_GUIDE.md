@@ -206,7 +206,7 @@ vercel --prod --scope=your-org-id
 
 ```
 Vercel CLI 28.0.0
-> Ready! Assigned to https://ksrce-erp.vercel.app [in 2.3s]
+> Ready! Assigned to https://ksrce-team.vercel.app [in 2.3s]
 > Building...
 > Generated successfully in 45s
 > Deployed to production [in 3.2s]

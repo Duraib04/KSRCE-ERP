@@ -3,9 +3,6 @@
 /// This file demonstrates how to implement repositories with offline-first approach
 /// using LocalCacheService and DatabaseSyncService
 
-import '../services/local_cache_service.dart';
-import '../services/database_sync_service.dart';
-
 /// Example: Offline-First Repository Pattern
 /// 
 /// This pattern provides data to the UI with automatic fallback to cached data

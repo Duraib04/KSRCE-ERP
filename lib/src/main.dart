@@ -24,13 +24,29 @@ import 'features/admin/presentation/pages/faculty_management_page.dart';
 import 'features/admin/presentation/pages/administration_dashboard_page.dart';
 import 'services/auth_service.dart';
 
-void main() {
+void main() async {
+  // Restore authentication state from browser storage before app starts
+  await AuthService.restoreAuthState();
   runApp(const KsrceErpApp());
 }
 
 /// The main application widget.
-class KsrceErpApp extends StatelessWidget {
+class KsrceErpApp extends StatefulWidget {
   const KsrceErpApp({super.key});
+
+  @override
+  State<KsrceErpApp> createState() => _KsrceErpAppState();
+}
+
+class _KsrceErpAppState extends State<KsrceErpApp> {
+  late final GoRouter _router;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize router after auth state is restored
+    _router = _createRouter();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,91 +59,91 @@ class KsrceErpApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
     );
   }
-}
 
-/// App router configuration using go_router.
-final GoRouter _router = GoRouter(
-  initialLocation: AuthService.isAuthenticated ? _getInitialRoute() : AuthRoutes.login,
-  redirect: (context, state) {
-    final isLoggingIn = state.matchedLocation == AuthRoutes.login;
-    final isAuthenticated = AuthService.isAuthenticated;
+  /// Create and configure the GoRouter
+  GoRouter _createRouter() {
+    return GoRouter(
+      initialLocation: AuthService.isAuthenticated ? _getInitialRoute() : AuthRoutes.login,
+      redirect: (context, state) {
+        final isLoggingIn = state.matchedLocation == AuthRoutes.login;
+        final isAuthenticated = AuthService.isAuthenticated;
 
-    // If not authenticated and not on login page, send to login
-    if (!isAuthenticated && !isLoggingIn) {
-      return AuthRoutes.login;
-    }
+        // If not authenticated and not on login page, send to login
+        if (!isAuthenticated && !isLoggingIn) {
+          return AuthRoutes.login;
+        }
 
-    // If authenticated and on login page, send to appropriate dashboard
-    if (isAuthenticated && isLoggingIn) {
-      return _getInitialRoute();
-    }
+        // If authenticated and on login page, send to appropriate dashboard
+        if (isAuthenticated && isLoggingIn) {
+          return _getInitialRoute();
+        }
 
-    return null;
-  },
-  routes: [
-    // Auth Routes
-    GoRoute(
-      path: AuthRoutes.login,
-      builder: (context, state) => const LoginPage(),
-    ),
-
-    // Student Routes
-    GoRoute(
-      path: StudentRoutes.dashboard,
-      builder: (context, state) => StudentDashboard(
-        userId: AuthService.currentUserId,
-      ),
+        return null;
+      },
       routes: [
+        // Auth Routes
         GoRoute(
-          path: 'profile',
-          builder: (context, state) => StudentProfilePage(
+          path: AuthRoutes.login,
+          builder: (context, state) => const LoginPage(),
+        ),
+
+        // Student Routes
+        GoRoute(
+          path: StudentRoutes.dashboard,
+          builder: (context, state) => StudentDashboard(
             userId: AuthService.currentUserId,
           ),
+          routes: [
+            GoRoute(
+              path: 'profile',
+              builder: (context, state) => StudentProfilePage(
+                userId: AuthService.currentUserId,
+              ),
+            ),
+            GoRoute(
+              path: 'courses',
+              builder: (context, state) => StudentCoursesPage(
+                userId: AuthService.currentUserId,
+              ),
+            ),
+            GoRoute(
+              path: 'assignments',
+              builder: (context, state) => StudentAssignmentsPage(
+                userId: AuthService.currentUserId,
+              ),
+            ),
+            GoRoute(
+              path: 'results',
+              builder: (context, state) => StudentResultsPage(
+                userId: AuthService.currentUserId,
+              ),
+            ),
+            GoRoute(
+              path: 'attendance',
+              builder: (context, state) => StudentAttendancePage(
+                userId: AuthService.currentUserId,
+              ),
+            ),
+            GoRoute(
+              path: 'complaints',
+              builder: (context, state) => StudentComplaintsPage(
+                userId: AuthService.currentUserId,
+              ),
+            ),
+            GoRoute(
+              path: 'notifications',
+              builder: (context, state) => StudentNotificationsPage(
+                userId: AuthService.currentUserId,
+              ),
+            ),
+            GoRoute(
+              path: 'time-table',
+              builder: (context, state) => StudentTimeTablePage(
+                userId: AuthService.currentUserId,
+              ),
+            ),
+          ],
         ),
-        GoRoute(
-          path: 'courses',
-          builder: (context, state) => StudentCoursesPage(
-            userId: AuthService.currentUserId,
-          ),
-        ),
-        GoRoute(
-          path: 'assignments',
-          builder: (context, state) => StudentAssignmentsPage(
-            userId: AuthService.currentUserId,
-          ),
-        ),
-        GoRoute(
-          path: 'results',
-          builder: (context, state) => StudentResultsPage(
-            userId: AuthService.currentUserId,
-          ),
-        ),
-        GoRoute(
-          path: 'attendance',
-          builder: (context, state) => StudentAttendancePage(
-            userId: AuthService.currentUserId,
-          ),
-        ),
-        GoRoute(
-          path: 'complaints',
-          builder: (context, state) => StudentComplaintsPage(
-            userId: AuthService.currentUserId,
-          ),
-        ),
-        GoRoute(
-          path: 'notifications',
-          builder: (context, state) => StudentNotificationsPage(
-            userId: AuthService.currentUserId,
-          ),
-        ),
-        GoRoute(
-          path: 'time-table',
-          builder: (context, state) => StudentTimeTablePage(
-            userId: AuthService.currentUserId,
-          ),
-        ),
-      ],
-    ),
 
     // Faculty Routes
     GoRoute(
@@ -193,7 +209,10 @@ final GoRouter _router = GoRouter(
   ],
   errorBuilder: (context, state) => _ErrorPage(error: state.error),
 );
+  }
+}
 
+/// Get initial route based on user role
 String _getInitialRoute() {
   switch (AuthService.currentRole) {
     case UserRole.student:
@@ -207,6 +226,7 @@ String _getInitialRoute() {
   }
 }
 
+/// Error page widget
 class _ErrorPage extends StatelessWidget {
   final Exception? error;
 
