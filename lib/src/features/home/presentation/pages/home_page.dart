@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.student.withOpacity(0.4),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.4),
                   blurRadius: 30,
                   spreadRadius: 8,
                   offset: const Offset(0, 10),
@@ -113,7 +113,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           // Title with Modern Styling
           ShaderMask(
             shaderCallback: (bounds) => LinearGradient(
-              colors: [AppColors.student, AppColors.info],
+              colors: [
+                theme.colorScheme.primary,
+                theme.colorScheme.secondary,
+              ],
             ).createShader(bounds),
             child: Text(
               'KSRCE ERP',
@@ -130,7 +133,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           Text(
             'KSR College of Engineering',
             style: theme.textTheme.headlineSmall?.copyWith(
-              color: Colors.white.withOpacity(0.95),
+              color: Colors.white.withValues(alpha: 0.95),
               fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
             ),
@@ -143,7 +146,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             child: Text(
               'Enterprise Resource Planning System',
               style: theme.textTheme.bodyLarge?.copyWith(
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
                 letterSpacing: 0.3,
               ),
               textAlign: TextAlign.center,
@@ -173,7 +176,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         Text(
           'Login to access your personalized dashboard',
           style: theme.textTheme.bodyLarge?.copyWith(
-            color: Colors.white.withOpacity(0.85),
+            color: Colors.white.withValues(alpha: 0.85),
             letterSpacing: 0.3,
           ),
           textAlign: TextAlign.center,
@@ -196,8 +199,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               ),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.accentGold,
-              foregroundColor: AppColors.textPrimaryLight,
+              backgroundColor: theme.colorScheme.primary,
+              foregroundColor: theme.colorScheme.onPrimary,
               elevation: AppElevation.lg,
               shape: RoundedRectangleBorder(
                 borderRadius: AppRadius.radiusLg,
@@ -213,7 +216,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return Column(
       children: [
         Divider(
-          color: Colors.white.withOpacity(0.2),
+          color: Colors.white.withValues(alpha: 0.2),
           height: 1,
         ),
         SizedBox(height: AppSpacing.md),
@@ -223,19 +226,19 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             Text(
               '© 2025 KSRCE',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: Colors.white.withOpacity(0.6),
+                color: Colors.white.withValues(alpha: 0.6),
               ),
             ),
             Text(
               '•',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: Colors.white.withOpacity(0.6),
+                color: Colors.white.withValues(alpha: 0.6),
               ),
             ),
             Text(
               'v1.0.0',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: Colors.white.withOpacity(0.6),
+                color: Colors.white.withValues(alpha: 0.6),
               ),
             ),
           ],

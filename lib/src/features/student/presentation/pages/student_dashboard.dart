@@ -92,8 +92,8 @@ class _StudentDashboardState extends State<StudentDashboard>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  AppColors.student,
-                  AppColors.info,
+                  Theme.of(context).colorScheme.primary,
+                  Theme.of(context).colorScheme.secondary,
                 ],
               ),
             ),
@@ -109,11 +109,14 @@ class _StudentDashboardState extends State<StudentDashboard>
                 Container(
                   padding: EdgeInsets.all(AppSpacing.sm),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onPrimary,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.student.withOpacity(0.3),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withValues(alpha: 0.3),
                         blurRadius: 10,
                         spreadRadius: 2,
                       ),
@@ -122,21 +125,21 @@ class _StudentDashboardState extends State<StudentDashboard>
                   child: Icon(
                     Icons.person_rounded,
                     size: AppIconSize.lg,
-                    color: AppColors.student,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 SizedBox(height: AppSpacing.md),
                 Text(
                   widget.userId,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onPrimary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   'B.Tech Computer Science',
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Colors.white.withOpacity(0.85),
+                    color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.85),
                   ),
                 ),
               ],
@@ -175,7 +178,7 @@ class _StudentDashboardState extends State<StudentDashboard>
                 label: const Text('Logout'),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.error,
-                  side: BorderSide(color: AppColors.error.withOpacity(0.5)),
+                  side: BorderSide(color: AppColors.error.withValues(alpha: 0.5)),
                 ),
               ),
             ),
@@ -251,15 +254,23 @@ class _StudentDashboardState extends State<StudentDashboard>
 
     return CustomScrollView(
       slivers: [
-        // Beautiful gradient header
+        // Branded hero header
         SliverAppBar(
-          expandedHeight: 240,
+          expandedHeight: 220,
           floating: false,
           pinned: true,
           elevation: 0,
           backgroundColor: Colors.transparent,
+          foregroundColor: Colors.white,
+          leading: Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(Icons.menu_rounded),
+              tooltip: 'Menu',
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            ),
+          ),
           flexibleSpace: FlexibleSpaceBar(
-            background: _buildGradientHeader(),
+            background: _buildHeroHeader(),
           ),
         ),
         // Main content
@@ -269,15 +280,12 @@ class _StudentDashboardState extends State<StudentDashboard>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Quick stats with 3D animations
-                _buildQuickStats(),
+                _buildQuickActions(),
                 SizedBox(height: AppSpacing.xxl),
-
-                // Upcoming classes
-                _buildUpcomingClasses(),
+                _buildTodaySchedule(),
                 SizedBox(height: AppSpacing.xxl),
-
-                // Announcements
+                _buildAcademicSnapshot(),
+                SizedBox(height: AppSpacing.xxl),
                 _buildAnnouncements(),
                 SizedBox(height: AppSpacing.xl),
               ],
@@ -288,77 +296,225 @@ class _StudentDashboardState extends State<StudentDashboard>
     );
   }
 
-  Widget _buildGradientHeader() {
+  Widget _buildHeroHeader() {
+    final theme = Theme.of(context);
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Image.asset(
+          'assets/images/b-block.jpeg',
+          fit: BoxFit.cover,
+        ),
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                theme.colorScheme.primary.withValues(alpha: 0.85),
+                theme.colorScheme.secondary.withValues(alpha: 0.65),
+                Colors.black.withValues(alpha: 0.45),
+              ],
+            ),
+          ),
+        ),
+        SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  'Student ERP',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.8),
+                    letterSpacing: 0.6,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                SizedBox(height: AppSpacing.xs),
+                Text(
+                  'Welcome back',
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                SizedBox(height: AppSpacing.xs),
+                Text(
+                  widget.userId,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.9),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: AppSpacing.lg),
+                Wrap(
+                  spacing: AppSpacing.md,
+                  runSpacing: AppSpacing.sm,
+                  children: [
+                    _buildHeroInfoPill('Semester', 'VI'),
+                    _buildHeroInfoPill('Attendance', '92%'),
+                    _buildHeroInfoPill('CGPA', '3.85'),
+                  ],
+                ),
+                SizedBox(height: AppSpacing.lg),
+                Wrap(
+                  spacing: AppSpacing.md,
+                  runSpacing: AppSpacing.sm,
+                  children: [
+                    OutlinedButton.icon(
+                      onPressed: () => _navigateTo(StudentRoutes.timeTable),
+                      icon: const Icon(Icons.event_rounded, size: 18),
+                      label: const Text('Timetable'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        side: BorderSide(color: Colors.white.withValues(alpha: 0.6)),
+                      ),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () => _navigateTo(StudentRoutes.attendance),
+                      icon: const Icon(Icons.fact_check_rounded, size: 18),
+                      label: const Text('Attendance'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.accentGold,
+                        foregroundColor: Colors.black,
+                        elevation: 0,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHeroInfoPill(String label, String value) {
+    final theme = Theme.of(context);
     return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.xs,
+      ),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.student,
-            AppColors.info,
-            AppColors.student.withOpacity(0.7),
+        color: Colors.white.withValues(alpha: 0.18),
+        borderRadius: AppRadius.radiusFull,
+        border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+      ),
+      child: RichText(
+        text: TextSpan(
+          text: '$label: ',
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: Colors.white.withValues(alpha: 0.8),
+            fontWeight: FontWeight.w600,
+          ),
+          children: [
+            TextSpan(
+              text: value,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ],
         ),
       ),
-      child: SafeArea(
+    );
+  }
+
+  Widget _buildQuickActions() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader(
+          title: 'Quick Actions',
+          subtitle: 'Common ERP tasks at a glance.',
+        ),
+        SizedBox(height: AppSpacing.md),
+        ResponsiveGrid(
+          minItemWidth: 220,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          childAspectRatio: 1.7,
+          children: [
+            _buildQuickActionCard(
+              title: 'Courses',
+              description: 'View enrolled subjects and faculty.',
+              icon: Icons.class_rounded,
+              color: AppColors.student,
+              onTap: () => _navigateTo(StudentRoutes.courses),
+            ),
+            _buildQuickActionCard(
+              title: 'Assignments',
+              description: 'Track pending and submitted work.',
+              icon: Icons.assignment_rounded,
+              color: AppColors.warning,
+              onTap: () => _navigateTo(StudentRoutes.assignments),
+            ),
+            _buildQuickActionCard(
+              title: 'Results',
+              description: 'Semester performance and grades.',
+              icon: Icons.grade_rounded,
+              color: AppColors.success,
+              onTap: () => _navigateTo(StudentRoutes.results),
+            ),
+            _buildQuickActionCard(
+              title: 'Notifications',
+              description: 'Announcements and circulars.',
+              icon: Icons.notifications_rounded,
+              color: AppColors.info,
+              onTap: () => _navigateTo(StudentRoutes.notifications),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuickActionCard({
+    required String title,
+    required String description,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    final theme = Theme.of(context);
+    return Card(
+      elevation: AppElevation.sm,
+      shape: RoundedRectangleBorder(borderRadius: AppRadius.radiusMd),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: AppRadius.radiusMd,
         child: Padding(
-          padding: EdgeInsets.all(AppSpacing.lg),
+          padding: AppSpacing.paddingLg,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Welcome Back! 👋',
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      SizedBox(height: AppSpacing.xs),
-                      Text(
-                        widget.userId,
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: Colors.white.withOpacity(0.9),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(AppSpacing.md),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.3),
-                        width: 1.5,
-                      ),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.logout_rounded),
-                      color: Colors.white,
-                      onPressed: _showLogoutDialog,
-                    ),
-                  ),
-                ],
+              Container(
+                padding: EdgeInsets.all(AppSpacing.sm),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: AppRadius.radiusSm,
+                ),
+                child: Icon(icon, color: color, size: AppIconSize.md),
               ),
-              SizedBox(height: AppSpacing.lg),
-              // Quick info
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildHeaderInfo('Credits', '120 / 150'),
-                  _buildHeaderInfo('GPA', '3.85'),
-                  _buildHeaderInfo('Attendance', '92%'),
-                ],
+              SizedBox(height: AppSpacing.md),
+              Text(
+                title,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(height: AppSpacing.xs),
+              Text(
+                description,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
               ),
             ],
           ),
@@ -367,176 +523,119 @@ class _StudentDashboardState extends State<StudentDashboard>
     );
   }
 
-  Widget _buildHeaderInfo(String label, String value) {
+  Widget _buildTodaySchedule() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: Colors.white.withOpacity(0.8),
-            fontWeight: FontWeight.w600,
+        _buildSectionHeader(
+          title: 'Today',
+          subtitle: 'Your schedule for the next sessions.',
+          trailing: TextButton(
+            onPressed: () => _navigateTo(StudentRoutes.timeTable),
+            child: const Text('View timetable'),
           ),
         ),
-        SizedBox(height: AppSpacing.xs),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.w700,
+        AppCard.outlined(
+          margin: EdgeInsets.zero,
+          contentPadding: AppSpacing.paddingLg,
+          showHeaderDivider: false,
+          child: Column(
+            children: [
+              _buildScheduleItem(
+                title: 'Mathematics 101',
+                time: '10:00 AM - 11:00 AM',
+                location: 'Lecture Hall A-5',
+                instructor: 'Dr. John Smith',
+                color: AppColors.student,
+              ),
+              SizedBox(height: AppSpacing.md),
+              _buildScheduleItem(
+                title: 'Data Structures Lab',
+                time: '12:15 PM - 2:00 PM',
+                location: 'Lab 3',
+                instructor: 'Dr. Sarah Wilson',
+                color: AppColors.info,
+              ),
+              SizedBox(height: AppSpacing.md),
+              _buildScheduleItem(
+                title: 'English Literature',
+                time: '3:30 PM - 4:30 PM',
+                location: 'Seminar Room 2',
+                instructor: 'Prof. Emily Brown',
+                color: AppColors.warning,
+              ),
+            ],
           ),
         ),
       ],
     );
   }
 
-  Widget _buildQuickStats() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Your Performance',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w700,
-            letterSpacing: 0.3,
-          ),
-        ),
-        SizedBox(height: AppSpacing.md),
-        _AnimatedStatCard(
-          animation: _cardAnimations[0],
-          child: _buildStatCardItem(
-            icon: Icons.trending_up,
-            value: '3.85',
-            title: 'GPA',
-            subtitle: 'Excellent Progress',
-            color: AppColors.student,
-            gradient: [AppColors.student, AppColors.info],
-          ),
-        ),
-        SizedBox(height: AppSpacing.md),
-        Row(
-          children: [
-            Expanded(
-              child: _AnimatedStatCard(
-                animation: _cardAnimations[1],
-                child: _buildCompactStatCard(
-                  icon: Icons.check_circle,
-                  value: '92%',
-                  title: 'Attendance',
-                  color: AppColors.success,
-                ),
-              ),
-            ),
-            SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: _AnimatedStatCard(
-                animation: _cardAnimations[2],
-                child: _buildCompactStatCard(
-                  icon: Icons.class_,
-                  value: '5',
-                  title: 'Courses',
-                  color: AppColors.info,
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: AppSpacing.md),
-        Row(
-          children: [
-            Expanded(
-              child: _AnimatedStatCard(
-                animation: _cardAnimations[3],
-                child: _buildCompactStatCard(
-                  icon: Icons.pending_actions,
-                  value: '3',
-                  title: 'Tasks Due',
-                  color: AppColors.warning,
-                ),
-              ),
-            ),
-            SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: _AnimatedStatCard(
-                animation: _cardAnimations[3],
-                child: _buildCompactStatCard(
-                  icon: Icons.assignment,
-                  value: '12',
-                  title: 'Assignments',
-                  color: AppColors.student,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStatCardItem({
-    required IconData icon,
-    required String value,
+  Widget _buildScheduleItem({
     required String title,
-    required String subtitle,
+    required String time,
+    required String location,
+    required String instructor,
     required Color color,
-    required List<Color> gradient,
   }) {
+    final theme = Theme.of(context);
     return Container(
-      padding: EdgeInsets.all(AppSpacing.lg),
+      padding: EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: gradient,
-        ),
-        borderRadius: AppRadius.radiusLg,
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.3),
-            blurRadius: 20,
-            spreadRadius: 5,
-          ),
-        ],
+        color: theme.colorScheme.surface,
+        borderRadius: AppRadius.radiusMd,
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.all(AppSpacing.md),
+            width: 4,
+            height: 64,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: AppRadius.radiusMd,
-            ),
-            child: Icon(
-              icon,
-              color: Colors.white,
-              size: AppIconSize.lg,
+              color: color,
+              borderRadius: AppRadius.radiusFull,
             ),
           ),
-          SizedBox(width: AppSpacing.lg),
+          SizedBox(width: AppSpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  value,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w800,
+                  title,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 SizedBox(height: AppSpacing.xs),
                 Text(
-                  title,
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: Colors.white.withOpacity(0.9),
-                    fontWeight: FontWeight.w600,
+                  instructor,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
-                Text(
-                  subtitle,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Colors.white.withOpacity(0.7),
-                  ),
+                SizedBox(height: AppSpacing.sm),
+                Row(
+                  children: [
+                    Icon(Icons.access_time, size: 14, color: color),
+                    SizedBox(width: AppSpacing.xs),
+                    Text(
+                      time,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                      ),
+                    ),
+                    SizedBox(width: AppSpacing.lg),
+                    Icon(Icons.location_on_rounded, size: 14, color: color),
+                    SizedBox(width: AppSpacing.xs),
+                    Text(
+                      location,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -546,234 +645,64 @@ class _StudentDashboardState extends State<StudentDashboard>
     );
   }
 
-  Widget _buildCompactStatCard({
-    required IconData icon,
-    required String value,
-    required String title,
-    required Color color,
-  }) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.lg,
-      ),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        border: Border.all(color: color.withOpacity(0.3), width: 1.5),
-        borderRadius: AppRadius.radiusMd,
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.1),
-            blurRadius: 12,
-            spreadRadius: 2,
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.all(AppSpacing.sm),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
-              borderRadius: AppRadius.radiusSm,
-            ),
-            child: Icon(
-              icon,
-              color: color,
-              size: AppIconSize.md,
-            ),
-          ),
-          SizedBox(height: AppSpacing.md),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: color,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          SizedBox(height: AppSpacing.xs),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: AppColors.textSecondaryLight,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildUpcomingClasses() {
+  Widget _buildAcademicSnapshot() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        _buildSectionHeader(
+          title: 'Academic Snapshot',
+          subtitle: 'Progress and performance overview.',
+        ),
+        SizedBox(height: AppSpacing.md),
+        ResponsiveGrid(
+          minItemWidth: 220,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
           children: [
-            Text(
-              'Upcoming Classes',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.3,
+            _AnimatedStatCard(
+              animation: _cardAnimations[0],
+              child: const StatCard(
+                icon: Icons.trending_up,
+                value: '3.85',
+                title: 'CGPA',
+                subtitle: 'Consistent improvement',
+                color: AppColors.student,
+                trendIcon: Icons.trending_up,
               ),
             ),
-            TextButton(
-              onPressed: () => _navigateTo(StudentRoutes.courses),
-              child: Text(
-                'See All',
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppColors.student,
-                  fontWeight: FontWeight.w600,
-                ),
+            _AnimatedStatCard(
+              animation: _cardAnimations[1],
+              child: const StatCard(
+                icon: Icons.fact_check_rounded,
+                value: '92%',
+                title: 'Attendance',
+                subtitle: 'On track',
+                color: AppColors.success,
+              ),
+            ),
+            _AnimatedStatCard(
+              animation: _cardAnimations[2],
+              child: const StatCard(
+                icon: Icons.class_rounded,
+                value: '5',
+                title: 'Courses',
+                subtitle: 'Active this term',
+                color: AppColors.secondaryBlue,
+              ),
+            ),
+            _AnimatedStatCard(
+              animation: _cardAnimations[3],
+              child: const StatCard(
+                icon: Icons.assignment_rounded,
+                value: '12',
+                title: 'Assignments',
+                subtitle: '3 due soon',
+                color: AppColors.warning,
               ),
             ),
           ],
         ),
-        SizedBox(height: AppSpacing.md),
-        _buildClassCard(
-          subject: 'Mathematics 101',
-          instructor: 'Dr. John Smith',
-          time: 'Today • 10:00 AM',
-          room: 'Lecture Hall A-5',
-          icon: Icons.calculate,
-          color: AppColors.student,
-          gradient: [AppColors.student, AppColors.info],
-        ),
-        SizedBox(height: AppSpacing.md),
-        _buildClassCard(
-          subject: 'Physics Lab',
-          instructor: 'Dr. Sarah Wilson',
-          time: 'Tomorrow • 2:00 PM',
-          room: 'Lab 3',
-          icon: Icons.science,
-          color: AppColors.info,
-          gradient: [AppColors.info, AppColors.success],
-        ),
-        SizedBox(height: AppSpacing.md),
-        _buildClassCard(
-          subject: 'English Literature',
-          instructor: 'Prof. Emily Brown',
-          time: 'Tomorrow • 4:30 PM',
-          room: 'Seminar Room 2',
-          icon: Icons.menu_book,
-          color: AppColors.warning,
-          gradient: [AppColors.warning, AppColors.student],
-        ),
       ],
-    );
-  }
-
-  Widget _buildClassCard({
-    required String subject,
-    required String instructor,
-    required String time,
-    required String room,
-    required IconData icon,
-    required Color color,
-    required List<Color> gradient,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(colors: gradient),
-        borderRadius: AppRadius.radiusMd,
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.2),
-            blurRadius: 15,
-            spreadRadius: 3,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {},
-          borderRadius: AppRadius.radiusMd,
-          child: Padding(
-            padding: EdgeInsets.all(AppSpacing.lg),
-            child: Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(AppSpacing.md),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.15),
-                    borderRadius: AppRadius.radiusMd,
-                  ),
-                  child: Icon(
-                    icon,
-                    color: Colors.white,
-                    size: AppIconSize.lg,
-                  ),
-                ),
-                SizedBox(width: AppSpacing.lg),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        subject,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      SizedBox(height: AppSpacing.xs),
-                      Text(
-                        instructor,
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: Colors.white.withOpacity(0.85),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(height: AppSpacing.sm),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.access_time,
-                            color: Colors.white.withOpacity(0.7),
-                            size: 14,
-                          ),
-                          SizedBox(width: AppSpacing.xs),
-                          Text(
-                            time,
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: Colors.white.withOpacity(0.7),
-                              fontSize: 11,
-                            ),
-                          ),
-                          SizedBox(width: AppSpacing.lg),
-                          Icon(
-                            Icons.location_on,
-                            color: Colors.white.withOpacity(0.7),
-                            size: 14,
-                          ),
-                          SizedBox(width: AppSpacing.xs),
-                          Text(
-                            room,
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: Colors.white.withOpacity(0.7),
-                              fontSize: 11,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: AppSpacing.md),
-                Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: Colors.white.withOpacity(0.6),
-                  size: 16,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -781,40 +710,33 @@ class _StudentDashboardState extends State<StudentDashboard>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Latest Announcements',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+        _buildSectionHeader(
+          title: 'Announcements',
+          subtitle: 'Important circulars and updates.',
+          trailing: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSpacing.sm,
+              vertical: AppSpacing.xs,
+            ),
+            decoration: BoxDecoration(
+              color: AppColors.error.withValues(alpha: 0.15),
+              borderRadius: AppRadius.radiusSm,
+            ),
+            child: Text(
+              '2 New',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: AppColors.error,
+                fontSize: 10,
                 fontWeight: FontWeight.w700,
-                letterSpacing: 0.3,
               ),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSpacing.sm,
-                vertical: AppSpacing.xs,
-              ),
-              decoration: BoxDecoration(
-                color: AppColors.error.withOpacity(0.15),
-                borderRadius: AppRadius.radiusSm,
-              ),
-              child: Text(
-                '2 New',
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppColors.error,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
         SizedBox(height: AppSpacing.md),
         _buildAnnouncementCard(
-          title: 'Semester Results Published 🎓',
-          description: 'Your 2nd semester results are now available in the grades section. Check your performance and progress.',
+          title: 'Semester Results Published',
+          description:
+              'Your semester results are now available in the grades section. Review your performance and progress.',
           icon: Icons.celebration_rounded,
           color: AppColors.success,
           timestamp: 'Today at 9:30 AM',
@@ -822,8 +744,9 @@ class _StudentDashboardState extends State<StudentDashboard>
         ),
         SizedBox(height: AppSpacing.md),
         _buildAnnouncementCard(
-          title: 'Assignment Deadline Extended ⏰',
-          description: 'The deadline for DSA assignment has been extended to Friday. Don\'t miss this opportunity!',
+          title: 'Assignment Deadline Extended',
+          description:
+              'The deadline for the DSA assignment has been extended to Friday. Please submit on time.',
           icon: Icons.schedule_rounded,
           color: AppColors.warning,
           timestamp: 'Yesterday at 3:15 PM',
@@ -831,8 +754,9 @@ class _StudentDashboardState extends State<StudentDashboard>
         ),
         SizedBox(height: AppSpacing.md),
         _buildAnnouncementCard(
-          title: 'Campus Event: Tech Fest 2026 🚀',
-          description: 'Join us for the Annual Tech Fest! Register now for exciting competitions and workshops.',
+          title: 'Campus Event: Tech Fest 2026',
+          description:
+              'Registrations are open for the annual tech fest. Check circulars for competitions and workshops.',
           icon: Icons.event_rounded,
           color: AppColors.student,
           timestamp: '2 days ago',
@@ -850,21 +774,10 @@ class _StudentDashboardState extends State<StudentDashboard>
     required String timestamp,
     required String priority,
   }) {
-    return Container(
-      padding: EdgeInsets.all(AppSpacing.lg),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: AppRadius.radiusMd,
-        border: Border.all(color: color.withOpacity(0.2), width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.08),
-            blurRadius: 12,
-            spreadRadius: 2,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
+    return AppCard.outlined(
+      margin: EdgeInsets.zero,
+      contentPadding: AppSpacing.paddingLg,
+      borderColor: color.withValues(alpha: 0.2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -874,7 +787,7 @@ class _StudentDashboardState extends State<StudentDashboard>
               Container(
                 padding: EdgeInsets.all(AppSpacing.md),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.12),
+                  color: color.withValues(alpha: 0.12),
                   borderRadius: AppRadius.radiusMd,
                 ),
                 child: Icon(
@@ -917,7 +830,7 @@ class _StudentDashboardState extends State<StudentDashboard>
                       : priority == 'medium'
                           ? AppColors.warning
                           : AppColors.success)
-                      .withOpacity(0.15),
+                      .withValues(alpha: 0.15),
                   borderRadius: AppRadius.radiusSm,
                 ),
                 child: Text(
@@ -963,6 +876,44 @@ class _StudentDashboardState extends State<StudentDashboard>
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildSectionHeader({
+    required String title,
+    required String subtitle,
+    Widget? trailing,
+  }) {
+    final theme = Theme.of(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.3,
+                ),
+              ),
+              SizedBox(height: AppSpacing.xs),
+              Text(
+                subtitle,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (trailing != null) ...[
+          SizedBox(width: AppSpacing.md),
+          trailing,
+        ],
+      ],
     );
   }
 

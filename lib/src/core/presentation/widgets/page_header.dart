@@ -71,7 +71,7 @@ class PageHeader extends StatelessWidget {
               color: backgroundColor,
               border: Border(
                 bottom: BorderSide(
-                  color: AppColors.dividerLight,
+                  color: theme.dividerColor,
                   width: 1,
                 ),
               ),
@@ -115,7 +115,7 @@ class PageHeader extends StatelessWidget {
                       Text(
                         subtitle!,
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: AppColors.textSecondaryLight,
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                       ),
                     ],
@@ -148,17 +148,17 @@ class PageHeader extends StatelessWidget {
             Icon(
               Icons.chevron_right,
               size: 16,
-              color: AppColors.textSecondaryLight,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           Text(
             breadcrumbs![i],
             style: theme.textTheme.bodySmall?.copyWith(
               color: i == breadcrumbs!.length - 1
-                  ? AppColors.textPrimaryLight
-                  : AppColors.textSecondaryLight,
+                ? theme.colorScheme.onSurface
+                : theme.colorScheme.onSurface.withValues(alpha: 0.6),
               fontWeight: i == breadcrumbs!.length - 1
-                  ? FontWeight.w600
-                  : FontWeight.w400,
+                ? FontWeight.w600
+                : FontWeight.w400,
             ),
           ),
         ],

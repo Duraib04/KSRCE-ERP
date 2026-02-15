@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 import 'design_tokens.dart';
 
@@ -19,13 +20,18 @@ class AppTheme {
     brightness: Brightness.light,
     
     // Color scheme based on blue primary color
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: AppColors.info, // Blue as primary color
-      brightness: Brightness.light,
-      error: AppColors.error,
-      surface: AppColors.surfaceLight,
-      background: AppColors.backgroundLight,
-    ),
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.primaryBlue,
+        brightness: Brightness.light,
+        error: AppColors.error,
+        surface: AppColors.surfaceLight,
+        background: AppColors.backgroundLight,
+      ).copyWith(
+        primary: AppColors.primaryBlue,
+        secondary: AppColors.secondaryBlue,
+        onPrimary: AppColors.textOnBlue,
+        onSurface: AppColors.textPrimaryLight,
+      ),
 
     // Scaffold background
     scaffoldBackgroundColor: AppColors.backgroundLight,
@@ -35,17 +41,17 @@ class AppTheme {
       elevation: 0,
       centerTitle: false,
       scrolledUnderElevation: AppElevation.xs,
-      backgroundColor: AppColors.surfaceLight,
-      foregroundColor: AppColors.textPrimaryLight,
-      systemOverlayStyle: SystemUiOverlayStyle.dark,
+      backgroundColor: AppColors.primaryBlue,
+      foregroundColor: AppColors.textOnBlue,
+      systemOverlayStyle: SystemUiOverlayStyle.light,
       titleTextStyle: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w600,
-        color: AppColors.textPrimaryLight,
+        color: AppColors.textOnBlue,
         letterSpacing: -0.5,
       ),
       iconTheme: IconThemeData(
-        color: Colors.white,
+        color: AppColors.textOnBlue,
         size: AppIconSize.md,
       ),
     ),
@@ -143,8 +149,8 @@ class AppTheme {
       backgroundColor: AppColors.backgroundLight,
       deleteIconColor: AppColors.textSecondaryLight,
       disabledColor: AppColors.inactive.withValues(alpha: 0.3),
-      selectedColor: AppColors.info.withValues(alpha: 0.2),
-      secondarySelectedColor: AppColors.info.withValues(alpha: 0.3),
+      selectedColor: AppColors.primaryBlue.withValues(alpha: 0.2),
+      secondarySelectedColor: AppColors.primaryBlue.withValues(alpha: 0.3),
       padding: EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
         vertical: AppSpacing.xs,
@@ -182,7 +188,7 @@ class AppTheme {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: AppRadius.radiusSm,
-        borderSide: BorderSide(color: AppColors.info, width: 2),
+        borderSide: BorderSide(color: AppColors.primaryBlue, width: 2),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: AppRadius.radiusSm,
@@ -293,13 +299,18 @@ class AppTheme {
     brightness: Brightness.dark,
     
     // Color scheme based on blue primary color
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: AppColors.info,
-      brightness: Brightness.dark,
-      error: AppColors.errorLight,
-      surface: AppColors.surfaceDark,
-      background: AppColors.backgroundDark,
-    ),
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.primaryBlue,
+        brightness: Brightness.dark,
+        error: AppColors.error,
+        surface: AppColors.surfaceDark,
+        background: AppColors.backgroundDark,
+      ).copyWith(
+        primary: AppColors.primaryBlue,
+        secondary: AppColors.secondaryBlue,
+        onPrimary: AppColors.textOnBlue,
+        onSurface: AppColors.textPrimaryDark,
+      ),
 
     // Scaffold background
     scaffoldBackgroundColor: AppColors.backgroundDark,
@@ -309,17 +320,17 @@ class AppTheme {
       elevation: 0,
       centerTitle: false,
       scrolledUnderElevation: AppElevation.xs,
-      backgroundColor: AppColors.surfaceDark,
-      foregroundColor: AppColors.textPrimaryDark,
+      backgroundColor: AppColors.primaryBlue,
+      foregroundColor: AppColors.textOnBlue,
       systemOverlayStyle: SystemUiOverlayStyle.light,
       titleTextStyle: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w600,
-        color: AppColors.textPrimaryDark,
+        color: AppColors.textOnBlue,
         letterSpacing: -0.5,
       ),
       iconTheme: IconThemeData(
-        color: Colors.white,
+        color: AppColors.textOnBlue,
         size: AppIconSize.md,
       ),
     ),
@@ -417,8 +428,8 @@ class AppTheme {
       backgroundColor: AppColors.backgroundDark,
       deleteIconColor: AppColors.textSecondaryDark,
       disabledColor: AppColors.inactive.withValues(alpha: 0.3),
-      selectedColor: AppColors.info.withValues(alpha: 0.2),
-      secondarySelectedColor: AppColors.info.withValues(alpha: 0.3),
+      selectedColor: AppColors.primaryBlue.withValues(alpha: 0.2),
+      secondarySelectedColor: AppColors.primaryBlue.withValues(alpha: 0.3),
       padding: EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
         vertical: AppSpacing.xs,
@@ -456,7 +467,7 @@ class AppTheme {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: AppRadius.radiusSm,
-        borderSide: BorderSide(color: AppColors.info, width: 2),
+        borderSide: BorderSide(color: AppColors.primaryBlue, width: 2),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: AppRadius.radiusSm,
@@ -573,23 +584,26 @@ class AppTheme {
         ? AppColors.textSecondaryLight 
         : AppColors.textSecondaryDark;
 
+    final base = GoogleFonts.sourceSans3TextTheme();
+    final display = GoogleFonts.merriweatherTextTheme();
+
     return TextTheme(
       // Display styles - Largest text
-      displayLarge: TextStyle(
+      displayLarge: display.displayLarge?.copyWith(
         fontSize: 57,
         fontWeight: FontWeight.w400,
         color: primaryColor,
         letterSpacing: -0.25,
         height: 1.12,
       ),
-      displayMedium: TextStyle(
+      displayMedium: display.displayMedium?.copyWith(
         fontSize: 45,
         fontWeight: FontWeight.w400,
         color: primaryColor,
         letterSpacing: 0,
         height: 1.16,
       ),
-      displaySmall: TextStyle(
+      displaySmall: display.displaySmall?.copyWith(
         fontSize: 36,
         fontWeight: FontWeight.w400,
         color: primaryColor,
@@ -598,21 +612,21 @@ class AppTheme {
       ),
 
       // Headline styles - Page headers
-      headlineLarge: TextStyle(
+      headlineLarge: display.headlineLarge?.copyWith(
         fontSize: 32,
         fontWeight: FontWeight.w600,
         color: primaryColor,
         letterSpacing: 0,
         height: 1.25,
       ),
-      headlineMedium: TextStyle(
+      headlineMedium: display.headlineMedium?.copyWith(
         fontSize: 28,
         fontWeight: FontWeight.w600,
         color: primaryColor,
         letterSpacing: 0,
         height: 1.29,
       ),
-      headlineSmall: TextStyle(
+      headlineSmall: display.headlineSmall?.copyWith(
         fontSize: 24,
         fontWeight: FontWeight.w600,
         color: primaryColor,
@@ -621,21 +635,21 @@ class AppTheme {
       ),
 
       // Title styles - Section headers
-      titleLarge: TextStyle(
+      titleLarge: display.titleLarge?.copyWith(
         fontSize: 22,
         fontWeight: FontWeight.w500,
         color: primaryColor,
         letterSpacing: 0,
         height: 1.27,
       ),
-      titleMedium: TextStyle(
+      titleMedium: display.titleMedium?.copyWith(
         fontSize: 16,
         fontWeight: FontWeight.w600,
         color: primaryColor,
         letterSpacing: 0.15,
         height: 1.5,
       ),
-      titleSmall: TextStyle(
+      titleSmall: display.titleSmall?.copyWith(
         fontSize: 14,
         fontWeight: FontWeight.w600,
         color: primaryColor,
@@ -644,21 +658,21 @@ class AppTheme {
       ),
 
       // Body styles - Main content
-      bodyLarge: TextStyle(
+      bodyLarge: base.bodyLarge?.copyWith(
         fontSize: 16,
         fontWeight: FontWeight.w400,
         color: primaryColor,
         letterSpacing: 0.5,
         height: 1.5,
       ),
-      bodyMedium: TextStyle(
+      bodyMedium: base.bodyMedium?.copyWith(
         fontSize: 14,
         fontWeight: FontWeight.w400,
         color: primaryColor,
         letterSpacing: 0.25,
         height: 1.43,
       ),
-      bodySmall: TextStyle(
+      bodySmall: base.bodySmall?.copyWith(
         fontSize: 12,
         fontWeight: FontWeight.w400,
         color: secondaryColor,
@@ -667,21 +681,21 @@ class AppTheme {
       ),
 
       // Label styles - Buttons, labels
-      labelLarge: TextStyle(
+      labelLarge: base.labelLarge?.copyWith(
         fontSize: 14,
         fontWeight: FontWeight.w600,
         color: primaryColor,
         letterSpacing: 0.1,
         height: 1.43,
       ),
-      labelMedium: TextStyle(
+      labelMedium: base.labelMedium?.copyWith(
         fontSize: 12,
         fontWeight: FontWeight.w600,
         color: primaryColor,
         letterSpacing: 0.5,
         height: 1.33,
       ),
-      labelSmall: TextStyle(
+      labelSmall: base.labelSmall?.copyWith(
         fontSize: 11,
         fontWeight: FontWeight.w500,
         color: secondaryColor,

@@ -194,7 +194,7 @@ class AppCard extends StatelessWidget {
                   Text(
                     subtitle!,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: AppColors.textSecondaryLight,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                   ),
                 ],
@@ -245,7 +245,7 @@ class AppCard extends StatelessWidget {
           Text(
             error!,
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: AppColors.textSecondaryLight,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
             textAlign: TextAlign.center,
           ),

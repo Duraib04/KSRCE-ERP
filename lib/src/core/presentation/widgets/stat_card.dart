@@ -125,6 +125,7 @@ class StatCard extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context, ThemeData theme, Color effectiveColor) {
+    final secondaryTextColor = theme.colorScheme.onSurface.withValues(alpha: 0.7);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -137,7 +138,7 @@ class StatCard extends StatelessWidget {
               child: Text(
                 title,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: AppColors.textSecondaryLight,
+                  color: secondaryTextColor,
                   fontWeight: FontWeight.w500,
                 ),
                 maxLines: 1,
@@ -149,7 +150,7 @@ class StatCard extends StatelessWidget {
               trailing ?? Container(
                 padding: EdgeInsets.all(AppSpacing.sm),
                 decoration: BoxDecoration(
-                  color: effectiveColor.withOpacity(0.1),
+                  color: effectiveColor.withValues(alpha: 0.1),
                   borderRadius: AppRadius.radiusSm,
                 ),
                 child: Icon(
@@ -184,7 +185,7 @@ class StatCard extends StatelessWidget {
                 Icon(
                   trendIcon,
                   size: 14,
-                  color: _getTrendColor(),
+                  color: _getTrendColor(secondaryTextColor),
                 ),
                 SizedBox(width: AppSpacing.xs),
               ],
@@ -193,8 +194,8 @@ class StatCard extends StatelessWidget {
                   subtitle!,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: trendIcon != null 
-                        ? _getTrendColor() 
-                        : AppColors.textSecondaryLight,
+                        ? _getTrendColor(secondaryTextColor) 
+                        : secondaryTextColor,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -207,13 +208,13 @@ class StatCard extends StatelessWidget {
     );
   }
 
-  Color _getTrendColor() {
+  Color _getTrendColor(Color neutralColor) {
     if (trendIcon == Icons.trending_up) {
       return AppColors.success;
     } else if (trendIcon == Icons.trending_down) {
       return AppColors.error;
     }
-    return AppColors.textSecondaryLight;
+    return neutralColor;
   }
 }
 

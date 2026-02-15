@@ -80,14 +80,14 @@ class AppColors {
   static const Color studentDark = Color(0xFF062651);
 
   /// Faculty module primary color
-  static const Color faculty = Color(0xFF9C27B0); // Purple 500
-  static const Color facultyLight = Color(0xFFBA68C8);
-  static const Color facultyDark = Color(0xFF7B1FA2);
+  static const Color faculty = Color(0xFF0F766E); // Teal 700
+  static const Color facultyLight = Color(0xFF14B8A6); // Teal 500
+  static const Color facultyDark = Color(0xFF0B4F4A); // Teal 900
 
   /// Admin module primary color
-  static const Color admin = Color(0xFFFF5722); // Deep Orange 500
-  static const Color adminLight = Color(0xFFFF8A65);
-  static const Color adminDark = Color(0xFFE64A19);
+  static const Color admin = Color(0xFFB45309); // Amber 700
+  static const Color adminLight = Color(0xFFF59E0B); // Amber 500
+  static const Color adminDark = Color(0xFF7C2D12); // Amber 900
 
   // ============================================================
   // STATUS COLORS - For various entity states
@@ -312,7 +312,7 @@ class AppColors {
 
   /// Get lighter shade of any color (for backgrounds)
   static Color withLightOpacity(Color color, [double opacity = 0.1]) {
-    return color.withOpacity(opacity);
+    return color.withValues(alpha: opacity);
   }
 
   /// Get contrasting text color for a background color

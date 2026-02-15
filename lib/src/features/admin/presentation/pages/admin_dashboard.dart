@@ -3,6 +3,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes.dart';
 import '../../../../services/auth_service.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/design_tokens.dart';
+import '../../../../core/presentation/core_widgets.dart';
 
 class AdminDashboard extends StatefulWidget {
   final String userId;
@@ -24,23 +27,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Admin Dashboard'),
-        centerTitle: true,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {},
-            tooltip: 'Notifications',
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: _showLogoutDialog,
-            tooltip: 'Logout',
-          ),
-        ],
-      ),
       drawer: _buildDrawer(),
       body: _buildBody(),
       bottomNavigationBar: _buildBottomNavBar(),
@@ -54,31 +40,40 @@ class _AdminDashboardState extends State<AdminDashboard> {
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  AppColors.admin,
+                  Theme.of(context).colorScheme.primary,
+                ],
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 30,
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.admin_panel_settings, size: 40),
+                  backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                  child: Icon(
+                    Icons.admin_panel_settings,
+                    size: 40,
+                    color: AppColors.admin,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 Text(
                   'Admin: ${widget.userId}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onPrimary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   'System Administrator',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
-                    fontSize: 12,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.8),
                   ),
                 ),
               ],
@@ -138,8 +133,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text('Logout', style: TextStyle(color: Colors.red)),
+            leading: const Icon(Icons.logout, color: AppColors.error),
+            title: const Text('Logout', style: TextStyle(color: AppColors.error)),
             onTap: () {
               Navigator.pop(context);
               _showLogoutDialog();
@@ -151,142 +146,152 @@ class _AdminDashboardState extends State<AdminDashboard> {
   }
 
   Widget _buildBody() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'System Overview',
-              style: Theme.of(context).textTheme.headlineSmall,
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          expandedHeight: 220,
+          pinned: true,
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.white,
+          leading: Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(Icons.menu_rounded),
+              tooltip: 'Menu',
+              onPressed: () => Scaffold.of(context).openDrawer(),
             ),
-            const SizedBox(height: 20),
-            _buildSystemMetrics(),
-            const SizedBox(height: 32),
-            _buildQuickActions(),
-            const SizedBox(height: 32),
-            _buildRecentActivity(),
-            const SizedBox(height: 32),
-            _buildSystemHealth(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSystemMetrics() {
-    return GridView.count(
-      crossAxisCount: 2,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisSpacing: 16,
-      mainAxisSpacing: 16,
-      children: [
-        _MetricCard(
-          icon: Icons.people,
-          value: '1,245',
-          label: 'Total Users',
-          color: Colors.blue,
-        ),
-        _MetricCard(
-          icon: Icons.person_add,
-          value: '45',
-          label: 'Active Sessions',
-          color: Colors.green,
-        ),
-        _MetricCard(
-          icon: Icons.warning,
-          value: '3',
-          label: 'System Alerts',
-          color: Colors.orange,
-        ),
-        _MetricCard(
-          icon: Icons.storage,
-          value: '785 GB',
-          label: 'Storage Used',
-          color: Colors.purple,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildQuickActions() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Quick Actions',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        const SizedBox(height: 12),
-        GridView.count(
-          crossAxisCount: 2,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 12,
-          childAspectRatio: 2.5,
-          children: [
-            _ActionButton(
-              icon: Icons.person_add,
-              label: 'Add User',
-              onTap: () {},
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.notifications_rounded),
+              tooltip: 'Notifications',
+              onPressed: () {},
             ),
-            _ActionButton(
-              icon: Icons.lock,
-              label: 'Manage Roles',
-              onTap: () {},
-            ),
-            _ActionButton(
-              icon: Icons.update,
-              label: 'System Update',
-              onTap: () {},
-            ),
-            _ActionButton(
-              icon: Icons.backup,
-              label: 'Backup',
-              onTap: () {},
+            IconButton(
+              icon: const Icon(Icons.logout_rounded),
+              tooltip: 'Logout',
+              onPressed: _showLogoutDialog,
             ),
           ],
+          flexibleSpace: FlexibleSpaceBar(
+            background: _buildHeroHeader(),
+          ),
         ),
-      ],
-    );
-  }
-
-  Widget _buildRecentActivity() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Recent Activity',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        const SizedBox(height: 12),
-        Card(
+        SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: AppSpacing.paddingLg,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _ActivityItem(
-                  icon: Icons.person,
-                  title: 'New user registration',
-                  subtitle: 'User ID: S20260215',
-                  time: '2 hours ago',
+                _buildSystemMetrics(),
+                SizedBox(height: AppSpacing.xxl),
+                _buildQuickActions(),
+                SizedBox(height: AppSpacing.xxl),
+                _buildRecentActivity(),
+                SizedBox(height: AppSpacing.xxl),
+                _buildSystemHealth(),
+                SizedBox(height: AppSpacing.xl),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHeroHeader() {
+    final theme = Theme.of(context);
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Image.asset(
+          'assets/images/b-block.jpeg',
+          fit: BoxFit.cover,
+        ),
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                AppColors.admin.withValues(alpha: 0.85),
+                theme.colorScheme.primary.withValues(alpha: 0.65),
+                Colors.black.withValues(alpha: 0.4),
+              ],
+            ),
+          ),
+        ),
+        SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  'Admin Dashboard',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.8),
+                    letterSpacing: 0.6,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-                const Divider(height: 16),
-                _ActivityItem(
-                  icon: Icons.edit,
-                  title: 'Course structure updated',
-                  subtitle: 'Mathematics dept - 5 new courses',
-                  time: '4 hours ago',
+                SizedBox(height: AppSpacing.xs),
+                Text(
+                  'System Overview',
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
-                const Divider(height: 16),
-                _ActivityItem(
-                  icon: Icons.warning,
-                  title: 'System alert: High CPU usage',
-                  subtitle: 'Server-02: 87% CPU utilization',
-                  time: '6 hours ago',
+                SizedBox(height: AppSpacing.sm),
+                Row(
+                  children: [
+                    StatusBadge.active(label: 'System Operational'),
+                    SizedBox(width: AppSpacing.md),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSpacing.sm,
+                        vertical: AppSpacing.xs,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.18),
+                        borderRadius: AppRadius.radiusFull,
+                        border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                      ),
+                      child: Text(
+                        'Users: 1245',
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: AppSpacing.lg),
+                Row(
+                  children: [
+                    OutlinedButton.icon(
+                      onPressed: () {},
+                      icon: const Icon(Icons.update_rounded),
+                      label: const Text('System Update'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        side: BorderSide(color: Colors.white.withValues(alpha: 0.6)),
+                      ),
+                    ),
+                    SizedBox(width: AppSpacing.md),
+                    OutlinedButton.icon(
+                      onPressed: () {},
+                      icon: const Icon(Icons.backup_rounded),
+                      label: const Text('Backup Now'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        side: BorderSide(color: Colors.white.withValues(alpha: 0.6)),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -296,45 +301,189 @@ class _AdminDashboardState extends State<AdminDashboard> {
     );
   }
 
+  Widget _buildSystemMetrics() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'System Metrics',
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.3,
+          ),
+        ),
+        SizedBox(height: AppSpacing.md),
+        ResponsiveGrid(
+          minItemWidth: 220,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            const StatCard(
+              icon: Icons.people_rounded,
+              value: '1,245',
+              title: 'Total Users',
+              color: AppColors.admin,
+            ),
+            const StatCard(
+              icon: Icons.person_add_rounded,
+              value: '45',
+              title: 'Active Sessions',
+              color: AppColors.success,
+            ),
+            const StatCard(
+              icon: Icons.warning_rounded,
+              value: '3',
+              title: 'System Alerts',
+              color: AppColors.warning,
+            ),
+            const StatCard(
+              icon: Icons.storage_rounded,
+              value: '785 GB',
+              title: 'Storage Used',
+              color: AppColors.secondaryBlue,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuickActions() {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Quick Actions',
+          style: theme.textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.3,
+          ),
+        ),
+        SizedBox(height: AppSpacing.md),
+        ResponsiveGrid(
+          minItemWidth: 220,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          childAspectRatio: 1.8,
+          children: [
+            _ActionButton(
+              icon: Icons.person_add_rounded,
+              label: 'Add User',
+              color: AppColors.success,
+              onTap: () {},
+            ),
+            _ActionButton(
+              icon: Icons.lock_rounded,
+              label: 'Manage Roles',
+              color: AppColors.info,
+              onTap: () {},
+            ),
+            _ActionButton(
+              icon: Icons.update_rounded,
+              label: 'System Update',
+              color: AppColors.warning,
+              onTap: () {},
+            ),
+            _ActionButton(
+              icon: Icons.backup_rounded,
+              label: 'Backup System',
+              color: AppColors.admin,
+              onTap: () {},
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRecentActivity() {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Recent Activity',
+          style: theme.textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.3,
+          ),
+        ),
+        SizedBox(height: AppSpacing.md),
+        AppCard.outlined(
+          margin: EdgeInsets.zero,
+          contentPadding: AppSpacing.paddingLg,
+          child: Column(
+            children: [
+              _ActivityItem(
+                icon: Icons.person,
+                title: 'New user registration',
+                subtitle: 'User ID: S20260215',
+                time: '2 hours ago',
+              ),
+              SizedBox(height: AppSpacing.md),
+              _ActivityItem(
+                icon: Icons.edit_rounded,
+                title: 'Course structure updated',
+                subtitle: 'Mathematics dept - 5 new courses',
+                time: '4 hours ago',
+              ),
+              SizedBox(height: AppSpacing.md),
+              _ActivityItem(
+                icon: Icons.warning_rounded,
+                title: 'System alert: High CPU usage',
+                subtitle: 'Server-02: 87% CPU utilization',
+                time: '6 hours ago',
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildSystemHealth() {
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'System Health',
-          style: Theme.of(context).textTheme.titleLarge,
+          style: theme.textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.3,
+          ),
         ),
-        const SizedBox(height: 12),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                _HealthIndicator(
-                  label: 'API Server',
-                  status: 'Operational',
-                  statusColor: Colors.green,
-                ),
-                const SizedBox(height: 16),
-                _HealthIndicator(
-                  label: 'Database',
-                  status: 'Operational',
-                  statusColor: Colors.green,
-                ),
-                const SizedBox(height: 16),
-                _HealthIndicator(
-                  label: 'Email Service',
-                  status: 'Operational',
-                  statusColor: Colors.green,
-                ),
-                const SizedBox(height: 16),
-                _HealthIndicator(
-                  label: 'Backup Service',
-                  status: 'Running',
-                  statusColor: Colors.blue,
-                ),
-              ],
-            ),
+        SizedBox(height: AppSpacing.md),
+        AppCard.outlined(
+          margin: EdgeInsets.zero,
+          contentPadding: AppSpacing.paddingLg,
+          child: Column(
+            children: [
+              _HealthIndicator(
+                label: 'API Server',
+                status: 'Operational',
+                statusColor: AppColors.success,
+              ),
+              SizedBox(height: AppSpacing.md),
+              _HealthIndicator(
+                label: 'Database',
+                status: 'Operational',
+                statusColor: AppColors.success,
+              ),
+              SizedBox(height: AppSpacing.md),
+              _HealthIndicator(
+                label: 'Email Service',
+                status: 'Operational',
+                statusColor: AppColors.success,
+              ),
+              SizedBox(height: AppSpacing.md),
+              _HealthIndicator(
+                label: 'Backup Service',
+                status: 'Running',
+                statusColor: AppColors.secondaryBlue,
+              ),
+            ],
           ),
         ),
       ],
@@ -394,86 +543,51 @@ class _AdminDashboardState extends State<AdminDashboard> {
   }
 }
 
-class _MetricCard extends StatelessWidget {
-  final IconData icon;
-  final String value;
-  final String label;
-  final Color color;
-
-  const _MetricCard({
-    required this.icon,
-    required this.value,
-    required this.label,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(icon, color: color, size: 28),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey[600],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class _ActionButton extends StatelessWidget {
   final IconData icon;
   final String label;
+  final Color color;
   final VoidCallback onTap;
 
   const _ActionButton({
     required this.icon,
     required this.label,
+    required this.color,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Card(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 24),
-              const SizedBox(height: 6),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12),
-              ),
-            ],
+    final theme = Theme.of(context);
+    return Card(
+      child: Center(
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: AppRadius.radiusMd,
+          child: Padding(
+            padding: AppSpacing.paddingLg,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(AppSpacing.sm),
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.12),
+                    borderRadius: AppRadius.radiusSm,
+                  ),
+                  child: Icon(icon, size: 24, color: color),
+                ),
+                SizedBox(height: AppSpacing.md),
+                Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -496,37 +610,49 @@ class _ActivityItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    final theme = Theme.of(context);
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.blue.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(icon, size: 20, color: Colors.blue),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.all(AppSpacing.sm),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                borderRadius: AppRadius.radiusSm,
               ),
-              const SizedBox(height: 4),
-              Text(
-                subtitle,
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+              child: Icon(icon, size: 18, color: theme.colorScheme.primary),
+            ),
+            SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: AppSpacing.xs),
+                  Text(
+                    subtitle,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-        Text(
-          time,
-          style: TextStyle(fontSize: 11, color: Colors.grey[400]),
+            ),
+            Text(
+              time,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -546,19 +672,38 @@ class _HealthIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: const TextStyle(fontWeight: FontWeight.w500),
+        Row(
+          children: [
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: statusColor,
+                shape: BoxShape.circle,
+              ),
+            ),
+            SizedBox(width: AppSpacing.sm),
+            Text(
+              label,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
         ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          padding: EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.xs,
+          ),
           decoration: BoxDecoration(
-            color: statusColor.withOpacity(0.1),
+            color: statusColor.withValues(alpha: 0.1),
             border: Border.all(color: statusColor),
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: AppRadius.radiusSm,
           ),
           child: Text(
             status,

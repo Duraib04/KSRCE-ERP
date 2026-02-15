@@ -48,7 +48,7 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
   int? _lockDuration;
   int? _remainingAttempts;
   Timer? _lockTimer;
-  String? _selectedRole; // Track selected role
+  String _selectedRole = 'STUDENT';
 
   @override
   void initState() {
@@ -77,9 +77,17 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
         setState(() {
           _userIdController.text = rememberedId;
           _rememberMe = true;
+          _selectedRole = _roleFromPrefix(prefix);
         });
       }
     }
+  }
+
+  String _roleFromPrefix(String prefix) {
+    if (prefix == 'S') return 'STUDENT';
+    if (prefix == 'FAC' || prefix == 'FA') return 'FACULTY';
+    if (prefix == 'ADM') return 'ADMIN';
+    return 'STUDENT';
   }
 
   void _startLockTimer(int seconds) {
@@ -179,43 +187,61 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
     final isDisabled = _isSubmitting || isLocked;
 
     return Scaffold(
-      body: Stack(
-        children: [
-          // Animated rotating background
-          _buildAnimatedBackground(),
-          // Content on top
-          Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 400),
-                child: Card(
-                  elevation: 8.0,
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _buildHeader(theme),
-                      Padding(
-                        padding: const EdgeInsets.all(24.0),
-                        child: _buildForm(theme, isDisabled, isLocked),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isWide = constraints.maxWidth >= 960;
+          return Stack(
+            children: [
+              _buildBackground(theme),
+              SafeArea(
+                child: Center(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSpacing.lg,
+                      vertical: AppSpacing.xl,
+                    ),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: isWide ? 1120 : 520,
                       ),
-                    ],
+                      child: isWide
+                          ? Row(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Expanded(
+                                  flex: 7,
+                                  child: _buildBrandPanel(theme),
+                                ),
+                                SizedBox(width: AppSpacing.xl),
+                                Expanded(
+                                  flex: 5,
+                                  child: _buildFormCard(
+                                    theme,
+                                    isDisabled,
+                                    isLocked,
+                                    compact: false,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : _buildFormCard(
+                              theme,
+                              isDisabled,
+                              isLocked,
+                              compact: true,
+                            ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildAnimatedBackground() {
+  Widget _buildBackground(ThemeData theme) {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -226,74 +252,250 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
             BlendMode.darken,
           ),
         ),
-        color: Colors.black, // Fallback color while image loads
+        color: Colors.black,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.black.withValues(alpha: 0.35),
+              Colors.black.withValues(alpha: 0.65),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildHeader(ThemeData theme) {
+  Widget _buildBrandPanel(ThemeData theme) {
     return Container(
-      padding: EdgeInsets.fromLTRB(AppSpacing.xl, AppSpacing.xl, AppSpacing.xl, AppSpacing.lg),
+      padding: EdgeInsets.all(AppSpacing.xxl),
+      decoration: BoxDecoration(
+        borderRadius: AppRadius.radiusLg,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            theme.colorScheme.primary.withValues(alpha: 0.35),
+            theme.colorScheme.secondary.withValues(alpha: 0.25),
+          ],
+        ),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.2),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(AppSpacing.md),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.15),
+                      blurRadius: 12,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
+                child: ClipOval(
+                  child: Image.asset(
+                    'assets/images/ksrce-icon.jpeg',
+                    width: 44,
+                    height: 44,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Text(
+                  widget.title,
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                    height: 1.2,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: AppSpacing.md),
+          Text(
+            widget.subtitle,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: Colors.white.withValues(alpha: 0.85),
+              height: 1.5,
+            ),
+          ),
+          SizedBox(height: AppSpacing.xl),
+          Text(
+            'Unified ERP access for academics, attendance, and campus services.',
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: AppSpacing.lg),
+          Wrap(
+            spacing: AppSpacing.sm,
+            runSpacing: AppSpacing.sm,
+            children: [
+              _buildInfoPill('Academics', theme),
+              _buildInfoPill('Attendance', theme),
+              _buildInfoPill('Results', theme),
+              _buildInfoPill('Communications', theme),
+            ],
+          ),
+          SizedBox(height: AppSpacing.xxl),
+          Container(
+            padding: EdgeInsets.all(AppSpacing.lg),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.12),
+              borderRadius: AppRadius.radiusMd,
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.2),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.lock_rounded,
+                  color: Colors.white,
+                ),
+                SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Text(
+                    'Secure, role-based access for students, faculty, and administration.',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: Colors.white.withValues(alpha: 0.85),
+                      height: 1.4,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoPill(String label, ThemeData theme) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.xs,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.18),
+        borderRadius: AppRadius.radiusFull,
+        border: Border.all(color: Colors.white.withValues(alpha: 0.25)),
+      ),
+      child: Text(
+        label,
+        style: theme.textTheme.labelSmall?.copyWith(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.3,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFormCard(
+    ThemeData theme,
+    bool isDisabled,
+    bool isLocked, {
+    required bool compact,
+  }) {
+    return Container(
       width: double.infinity,
+      constraints: const BoxConstraints(maxWidth: 480),
+      child: Card(
+        elevation: 10,
+        color: theme.colorScheme.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: AppRadius.radiusLg,
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildCardHeader(theme, compact: compact),
+            Padding(
+              padding: EdgeInsets.all(compact ? AppSpacing.lg : AppSpacing.xl),
+              child: _buildForm(theme, isDisabled, isLocked),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCardHeader(ThemeData theme, {required bool compact}) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.fromLTRB(
+        AppSpacing.xl,
+        compact ? AppSpacing.lg : AppSpacing.xl,
+        AppSpacing.xl,
+        compact ? AppSpacing.md : AppSpacing.lg,
+      ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppColors.student,
-            AppColors.info,
+            theme.colorScheme.primary,
+            theme.colorScheme.secondary,
           ],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.student.withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // KSRCE Logo with glow
-          Container(
-            padding: EdgeInsets.all(AppSpacing.md),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.white.withOpacity(0.3),
-                  blurRadius: 20,
-                  spreadRadius: 5,
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(AppSpacing.sm),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
                 ),
-              ],
-            ),
-            child: ClipOval(
-              child: Image.asset(
-                'assets/images/ksrce-icon.jpeg',
-                width: AppIconSize.lg,
-                height: AppIconSize.lg,
-                fit: BoxFit.cover,
+                child: ClipOval(
+                  child: Image.asset(
+                    'assets/images/ksrce-icon.jpeg',
+                    width: AppIconSize.md,
+                    height: AppIconSize.md,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-            ),
-          ),
-          SizedBox(height: AppSpacing.lg),
-          Text(
-            widget.title,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 0.5,
-            ),
+              SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Text(
+                  'ERP Login',
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: AppSpacing.sm),
           Text(
-            widget.subtitle,
-            textAlign: TextAlign.center,
+            'Sign in with your institutional credentials.',
             style: theme.textTheme.bodySmall?.copyWith(
-              color: Colors.white.withOpacity(0.9),
-              letterSpacing: 0.3,
+              color: Colors.white.withValues(alpha: 0.9),
             ),
           ),
         ],
@@ -302,13 +504,14 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
   }
 
   Widget _buildForm(ThemeData theme, bool isDisabled, bool isLocked) {
+    final placeholderId = _rolePlaceholder();
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Role Selection Buttons
-          _buildRoleSelector(theme),
+          _buildRoleSelector(theme, isDisabled: isDisabled),
           SizedBox(height: AppSpacing.xl),
           
           // Alerts
@@ -336,30 +539,34 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
           TextFormField(
             controller: _userIdController,
             enabled: !isDisabled,
-            style: theme.textTheme.bodyMedium?.copyWith(color: Colors.black) ?? const TextStyle(color: Colors.black),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface,
+            ),
             decoration: InputDecoration(
-              hintText: widget.placeholderId,
-              hintStyle: const TextStyle(color: Colors.grey),
-              prefixIcon: Icon(Icons.badge_rounded, color: AppColors.student),
+              hintText: placeholderId,
+              hintStyle: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+              prefixIcon: Icon(Icons.badge_rounded, color: theme.colorScheme.primary),
               prefixIconConstraints: const BoxConstraints(minWidth: 48, minHeight: 48),
               border: OutlineInputBorder(
                 borderRadius: AppRadius.radiusMd,
-                borderSide: BorderSide(color: AppColors.outlineLight),
+                borderSide: BorderSide(color: theme.colorScheme.outline),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: AppRadius.radiusMd,
-                borderSide: BorderSide(color: AppColors.outlineLight, width: 1.5),
+                borderSide: BorderSide(color: theme.colorScheme.outline, width: 1.5),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: AppRadius.radiusMd,
-                borderSide: BorderSide(color: AppColors.student, width: 2),
+                borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: AppRadius.radiusMd,
-                borderSide: BorderSide(color: AppColors.error, width: 1.5),
+                borderSide: BorderSide(color: theme.colorScheme.error, width: 1.5),
               ),
               filled: true,
-              fillColor: AppColors.backgroundLight,
+              fillColor: theme.colorScheme.surface,
               contentPadding: EdgeInsets.symmetric(
                 horizontal: AppSpacing.lg,
                 vertical: AppSpacing.md,
@@ -383,37 +590,41 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
             controller: _passwordController,
             obscureText: !_showPassword,
             enabled: !isDisabled,
-            style: theme.textTheme.bodyMedium?.copyWith(color: Colors.black) ?? const TextStyle(color: Colors.black),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface,
+            ),
             decoration: InputDecoration(
-              hintStyle: const TextStyle(color: Colors.grey),
-              prefixIcon: Icon(Icons.lock_rounded, color: AppColors.student),
+              hintStyle: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+              prefixIcon: Icon(Icons.lock_rounded, color: theme.colorScheme.primary),
               prefixIconConstraints: const BoxConstraints(minWidth: 48, minHeight: 48),
               suffixIcon: IconButton(
                 icon: Icon(
                   _showPassword ? Icons.visibility_off_rounded : Icons.visibility_rounded,
-                  color: AppColors.textSecondaryLight,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
                 onPressed: isDisabled ? null : () => setState(() => _showPassword = !_showPassword),
               ),
               suffixIconConstraints: const BoxConstraints(minWidth: 48, minHeight: 48),
               border: OutlineInputBorder(
                 borderRadius: AppRadius.radiusMd,
-                borderSide: BorderSide(color: AppColors.outlineLight),
+                borderSide: BorderSide(color: theme.colorScheme.outline),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: AppRadius.radiusMd,
-                borderSide: BorderSide(color: AppColors.outlineLight, width: 1.5),
+                borderSide: BorderSide(color: theme.colorScheme.outline, width: 1.5),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: AppRadius.radiusMd,
-                borderSide: BorderSide(color: AppColors.student, width: 2),
+                borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: AppRadius.radiusMd,
-                borderSide: BorderSide(color: AppColors.error, width: 1.5),
+                borderSide: BorderSide(color: theme.colorScheme.error, width: 1.5),
               ),
               filled: true,
-              fillColor: AppColors.backgroundLight,
+              fillColor: theme.colorScheme.surface,
               contentPadding: EdgeInsets.symmetric(
                 horizontal: AppSpacing.lg,
                 vertical: AppSpacing.md,
@@ -435,7 +646,7 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
                   Checkbox(
                     value: _rememberMe,
                     onChanged: isDisabled ? null : (value) => setState(() => _rememberMe = value ?? false),
-                    activeColor: AppColors.student,
+                    activeColor: theme.colorScheme.primary,
                   ),
                   Text(
                     "Remember me",
@@ -448,7 +659,7 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
                 child: Text(
                   "Forgot password?",
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: AppColors.student,
+                    color: theme.colorScheme.primary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -462,8 +673,8 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
             height: 48,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.student,
-                disabledBackgroundColor: AppColors.inactive,
+                backgroundColor: theme.colorScheme.primary,
+                disabledBackgroundColor: theme.colorScheme.primary.withValues(alpha: 0.4),
                 elevation: 4,
                 shape: RoundedRectangleBorder(borderRadius: AppRadius.radiusMd),
               ),
@@ -482,7 +693,7 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
                   : Text(
                       "Sign In",
                       style: theme.textTheme.labelLarge?.copyWith(
-                        color: Colors.white,
+                        color: theme.colorScheme.onPrimary,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.5,
                       ),
@@ -497,11 +708,14 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
           Center(
             child: TextButton.icon(
               onPressed: isDisabled ? null : () => context.go('/'),
-              icon: Icon(Icons.arrow_back_rounded, color: AppColors.textSecondaryLight),
+              icon: Icon(
+                Icons.arrow_back_rounded,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
               label: Text(
                 "Back to Home",
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: AppColors.textSecondaryLight,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
               ),
             ),
@@ -523,9 +737,8 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
 
   Widget _buildDemoCredentials(ThemeData theme) {
     // Get credentials for the selected role only
-    List<DemoCredential> filteredCredentials = _selectedRole != null
-        ? widget.demoCredentials.where((c) => c.label.toUpperCase() == _selectedRole).toList()
-        : widget.demoCredentials;
+    List<DemoCredential> filteredCredentials =
+      widget.demoCredentials.where((c) => c.label.toUpperCase() == _selectedRole).toList();
 
     if (filteredCredentials.isEmpty) {
       return const SizedBox.shrink();
@@ -534,20 +747,18 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
     return Container(
       padding: EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: AppColors.backgroundLight,
+        color: theme.colorScheme.surfaceVariant,
         borderRadius: AppRadius.radiusMd,
-        border: Border.all(color: AppColors.outlineLight),
+        border: Border.all(color: theme.colorScheme.outline),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            _selectedRole != null 
-                ? "$_selectedRole Demo Credentials:"
-                : "Demo Credentials:",
+            "$_selectedRole Demo Credentials:",
             style: theme.textTheme.labelSmall?.copyWith(
               fontWeight: FontWeight.w700,
-              color: AppColors.textSecondaryLight,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               fontSize: 11,
             ),
           ),
@@ -561,7 +772,7 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
                   "${c.label}:",
                   style: theme.textTheme.bodySmall?.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textSecondaryLight,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                     fontSize: 10,
                   ),
                 ),
@@ -581,7 +792,7 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
                   child: Text(
                     "${c.id} / ${c.password}",
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: AppColors.student,
+                      color: theme.colorScheme.primary,
                       fontSize: 10,
                       fontFamily: 'monospace',
                       decoration: TextDecoration.underline,
@@ -597,13 +808,31 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
     );
   }
 
-  Widget _buildRoleSelector(ThemeData theme) {
+  Widget _buildRoleSelector(ThemeData theme, {required bool isDisabled}) {
     final roles = [
-      {'label': 'Student', 'icon': Icons.person_rounded, 'color': AppColors.student},
-      {'label': 'Faculty', 'icon': Icons.school_rounded, 'color': AppColors.faculty},
-      {'label': 'Admin', 'icon': Icons.admin_panel_settings_rounded, 'color': AppColors.admin},
+      const (
+        value: 'STUDENT',
+        label: 'Student',
+        icon: Icons.person_rounded,
+      ),
+      const (
+        value: 'FACULTY',
+        label: 'Faculty',
+        icon: Icons.school_rounded,
+      ),
+      const (
+        value: 'ADMIN',
+        label: 'Admin',
+        icon: Icons.admin_panel_settings_rounded,
+      ),
     ];
-    
+
+    final selectedColor = _selectedRole == 'STUDENT'
+        ? AppColors.student
+        : _selectedRole == 'FACULTY'
+            ? AppColors.faculty
+            : AppColors.admin;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -615,80 +844,77 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
           ),
         ),
         SizedBox(height: AppSpacing.md),
-        Row(
-          children: roles.map((role) {
-            final label = role['label'] as String;
-            final roleUpper = label.toUpperCase();
-            final isSelected = _selectedRole == roleUpper;
-            final color = role['color'] as Color;
-            final icon = role['icon'] as IconData;
-
-            return Expanded(
-              child: GestureDetector(
-                onTap: () {
+        SegmentedButton<String>(
+          segments: roles
+              .map(
+                (role) => ButtonSegment<String>(
+                  value: role.value,
+                  label: Text(role.label),
+                  icon: Icon(role.icon),
+                ),
+              )
+              .toList(),
+          selected: {_selectedRole},
+          onSelectionChanged: isDisabled
+              ? null
+              : (selection) {
+                  final nextRole = selection.first;
                   setState(() {
-                    _selectedRole = roleUpper;
+                    _selectedRole = nextRole;
                     _userIdController.clear();
                     _passwordController.clear();
                     _error = null;
                   });
                 },
-                child: AnimatedContainer(
-                  duration: AppDuration.fast,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.md,
-                  ),
-                  margin: EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-                  decoration: BoxDecoration(
-                    gradient: isSelected
-                        ? LinearGradient(
-                            colors: [color, color.withOpacity(0.7)],
-                          )
-                        : null,
-                    color: isSelected ? null : AppColors.backgroundLight,
-                    border: Border.all(
-                      color: isSelected ? color : AppColors.outlineLight,
-                      width: isSelected ? 2 : 1.5,
-                    ),
-                    borderRadius: AppRadius.radiusMd,
-                    boxShadow: isSelected
-                        ? [
-                            BoxShadow(
-                              color: color.withOpacity(0.3),
-                              blurRadius: 12,
-                              spreadRadius: 2,
-                            ),
-                          ]
-                        : [],
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        icon,
-                        color: isSelected ? Colors.white : color,
-                        size: AppIconSize.md,
-                      ),
-                      SizedBox(height: AppSpacing.xs),
-                      Text(
-                        label,
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: isSelected ? Colors.white : color,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+          showSelectedIcon: false,
+          style: ButtonStyle(
+            padding: WidgetStateProperty.all(
+              EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.sm,
               ),
-            );
-          }).toList(),
+            ),
+            backgroundColor: WidgetStateProperty.resolveWith(
+              (states) => states.contains(WidgetState.selected)
+                  ? selectedColor.withValues(alpha: 0.12)
+                  : theme.colorScheme.surface,
+            ),
+            foregroundColor: WidgetStateProperty.resolveWith(
+              (states) => states.contains(WidgetState.selected)
+                  ? selectedColor
+                  : theme.colorScheme.onSurface,
+            ),
+            side: WidgetStateProperty.resolveWith(
+              (states) => BorderSide(
+                color: states.contains(WidgetState.selected)
+                    ? selectedColor
+                    : theme.colorScheme.outline,
+                width: 1.2,
+              ),
+            ),
+            shape: WidgetStateProperty.all(
+              RoundedRectangleBorder(borderRadius: AppRadius.radiusSm),
+            ),
+            textStyle: WidgetStateProperty.all(
+              theme.textTheme.labelSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
         ),
       ],
     );
+  }
+
+  String _rolePlaceholder() {
+    switch (_selectedRole) {
+      case 'FACULTY':
+        return 'Eg. FAC001';
+      case 'ADMIN':
+        return 'Eg. ADM001';
+      default:
+        return widget.placeholderId;
+    }
   }
 }
 
@@ -724,8 +950,8 @@ class _Alert extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        border: Border.all(color: color.withOpacity(0.3), width: 1.5),
+        color: color.withValues(alpha: 0.1),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1.5),
         borderRadius: AppRadius.radiusMd,
       ),
       child: Row(
