@@ -54,11 +54,6 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
   void initState() {
     super.initState();
     _loadRememberedUser();
-    _preloadBackgroundImage();
-  }
-
-  Future<void> _preloadBackgroundImage() async {
-    await precacheImage(AssetImage(_backgroundImage), context);
   }
 
   @override
@@ -187,56 +182,55 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
     final isDisabled = _isSubmitting || isLocked;
 
     return Scaffold(
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final isWide = constraints.maxWidth >= 960;
-          return Stack(
-            children: [
-              _buildBackground(theme),
-              SafeArea(
-                child: Center(
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppSpacing.lg,
-                      vertical: AppSpacing.xl,
-                    ),
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        maxWidth: isWide ? 1120 : 520,
-                      ),
-                      child: isWide
-                          ? Row(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Expanded(
-                                  flex: 7,
-                                  child: _buildBrandPanel(theme),
+      body: Stack(
+        children: [
+          _buildBackground(theme),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isWide = constraints.maxWidth > 960;
+              
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(AppSpacing.lg),
+                    child: isWide
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                flex: 2,
+                                child: _buildBrandPanel(theme),
+                              ),
+                              SizedBox(width: AppSpacing.xl),
+                              Flexible(
+                                flex: 2,
+                                child: _buildFormCard(
+                                  theme,
+                                  isDisabled,
+                                  isLocked,
+                                  compact: false,
                                 ),
-                                SizedBox(width: AppSpacing.xl),
-                                Expanded(
-                                  flex: 5,
-                                  child: _buildFormCard(
-                                    theme,
-                                    isDisabled,
-                                    isLocked,
-                                    compact: false,
-                                  ),
-                                ),
-                              ],
-                            )
-                          : _buildFormCard(
+                              ),
+                            ],
+                          )
+                        : Center(
+                            child: _buildFormCard(
                               theme,
                               isDisabled,
                               isLocked,
                               compact: true,
                             ),
-                    ),
+                          ),
                   ),
                 ),
-              ),
-            ],
-          );
-        },
+              );
+            },
+          ),
+        ],
       ),
     );
   }
@@ -418,7 +412,6 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
   }) {
     return Container(
       width: double.infinity,
-      constraints: const BoxConstraints(maxWidth: 480),
       child: Card(
         elevation: 10,
         color: theme.colorScheme.surface,
