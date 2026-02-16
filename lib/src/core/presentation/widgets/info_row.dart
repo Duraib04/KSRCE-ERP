@@ -76,7 +76,7 @@ class InfoRow extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(AppSpacing.sm),
                   decoration: BoxDecoration(
-                    color: effectiveIconColor.withOpacity(0.1),
+                    color: effectiveIconColor.withValues(alpha: 0.1),
                     borderRadius: AppRadius.radiusSm,
                   ),
                   child: Icon(

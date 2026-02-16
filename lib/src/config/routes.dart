@@ -22,10 +22,14 @@ class StudentRoutes {
 class FacultyRoutes {
   static const String dashboard = '/faculty-dashboard';
   static const String myClasses = '$dashboard/my-classes';
+  static const String classDetail = '$dashboard/class';
   static const String attendance = '$dashboard/attendance-management';
   static const String grades = '$dashboard/grades-management';
   static const String schedule = '$dashboard/schedule';
+  static const String notices = '$dashboard/notices';
   static const String profile = '$dashboard/profile';
+  static const String features = '$dashboard/features';
+  static const String featureDetail = '$features';
 }
 
 // Admin Routes
@@ -40,6 +44,7 @@ class AdminRoutes {
 // Auth Routes
 class AuthRoutes {
   static const String login = '/login';
+  static const String facultyLogin = '/faculty-login';
   static const String register = '/register';
   static const String forgotPassword = '/forgot-password';
 }

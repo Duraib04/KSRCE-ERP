@@ -5,6 +5,7 @@ import 'src/config/routes.dart';
 import 'src/core/theme/app_theme.dart';
 import 'src/features/home/presentation/pages/home_page.dart';
 import 'src/features/auth/presentation/pages/login_page.dart';
+import 'src/features/auth/presentation/pages/faculty_login_page.dart';
 import 'src/features/core/presentation/pages/error_page.dart';
 import 'src/features/student/presentation/pages/student_dashboard.dart';
 import 'src/features/student/presentation/pages/profile_page.dart';
@@ -20,6 +21,11 @@ import 'src/features/faculty/presentation/pages/my_classes_page.dart';
 import 'src/features/faculty/presentation/pages/attendance_management_page.dart';
 import 'src/features/faculty/presentation/pages/grades_management_page.dart';
 import 'src/features/faculty/presentation/pages/schedule_page.dart';
+import 'src/features/faculty/presentation/pages/faculty_notices_page.dart';
+import 'src/features/faculty/presentation/pages/faculty_profile_page.dart';
+import 'src/features/faculty/presentation/pages/faculty_class_detail_page.dart';
+import 'src/features/faculty/presentation/pages/faculty_features_hub_page.dart';
+import 'src/features/faculty/presentation/pages/faculty_feature_page.dart';
 import 'src/features/admin/presentation/pages/admin_dashboard.dart';
 import 'src/features/admin/presentation/pages/students_list_page.dart';
 import 'src/features/admin/presentation/pages/faculty_management_page.dart';
@@ -52,8 +58,12 @@ final GoRouter _router = GoRouter(
   initialLocation: AuthService.isAuthenticated ? _getInitialRoute() : HomeRoutes.home,
   redirect: (context, state) {
     final isHome = state.matchedLocation == HomeRoutes.home;
-    final isLoggingIn = state.matchedLocation == AuthRoutes.login;
+    final isLoggingIn = state.matchedLocation == AuthRoutes.login ||
+        state.matchedLocation == AuthRoutes.facultyLogin;
     final isAuthenticated = AuthService.isAuthenticated;
+    final isFacultyRoute = _isFacultyRoute(state.matchedLocation);
+    final isStudentRoute = _isStudentRoute(state.matchedLocation);
+    final isAdminRoute = _isAdminRoute(state.matchedLocation);
 
     // If authenticated and on home or login page, send to appropriate dashboard
     if (isAuthenticated && (isHome || isLoggingIn)) {
@@ -63,6 +73,19 @@ final GoRouter _router = GoRouter(
     // If not authenticated and trying to access protected routes, send to home
     if (!isAuthenticated && !isHome && !isLoggingIn) {
       return HomeRoutes.home;
+    }
+
+    // Role-based access guard for protected routes
+    if (isAuthenticated) {
+      if (isStudentRoute && AuthService.currentRole != UserRole.student) {
+        return _getInitialRoute();
+      }
+      if (isFacultyRoute && AuthService.currentRole != UserRole.faculty) {
+        return _getInitialRoute();
+      }
+      if (isAdminRoute && AuthService.currentRole != UserRole.admin) {
+        return _getInitialRoute();
+      }
     }
 
     return null;
@@ -78,6 +101,10 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: AuthRoutes.login,
       builder: (context, state) => const LoginPage(),
+    ),
+    GoRoute(
+      path: AuthRoutes.facultyLogin,
+      builder: (context, state) => const FacultyLoginPage(),
     ),
 
     // Error Route
@@ -158,6 +185,13 @@ final GoRouter _router = GoRouter(
           ),
         ),
         GoRoute(
+          path: 'class/:courseId',
+          builder: (context, state) => FacultyClassDetailPage(
+            facultyId: AuthService.currentUserId,
+            courseId: state.pathParameters['courseId'] ?? '',
+          ),
+        ),
+        GoRoute(
           path: 'attendance-management',
           builder: (context, state) => FacultyAttendanceManagementPage(
             userId: AuthService.currentUserId,
@@ -174,6 +208,30 @@ final GoRouter _router = GoRouter(
           builder: (context, state) => FacultySchedulePage(
             userId: AuthService.currentUserId,
           ),
+        ),
+        GoRoute(
+          path: 'notices',
+          builder: (context, state) => FacultyNoticesPage(
+            facultyId: AuthService.currentUserId,
+          ),
+        ),
+        GoRoute(
+          path: 'profile',
+          builder: (context, state) => FacultyProfilePage(
+            facultyId: AuthService.currentUserId,
+          ),
+        ),
+        GoRoute(
+          path: 'features',
+          builder: (context, state) => const FacultyFeaturesHubPage(),
+          routes: [
+            GoRoute(
+              path: ':key',
+              builder: (context, state) => FacultyFeaturePage(
+                featureKey: state.pathParameters['key'] ?? '',
+              ),
+            ),
+          ],
         ),
       ],
     ),
@@ -224,4 +282,13 @@ String _getInitialRoute() {
       return AuthRoutes.login;
   }
 }
+
+bool _isFacultyRoute(String location) =>
+    location.startsWith(FacultyRoutes.dashboard);
+
+bool _isStudentRoute(String location) =>
+    location.startsWith(StudentRoutes.dashboard);
+
+bool _isAdminRoute(String location) =>
+    location.startsWith(AdminRoutes.dashboard);
 

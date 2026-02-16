@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ksrce_erp/src/features/faculty/data/faculty_data_service.dart';
 
 class FacultyAttendanceManagementPage extends StatefulWidget {
   final String userId;
@@ -68,6 +69,21 @@ class _FacultyAttendanceManagementPageState
       appBar: AppBar(
         title: const Text('Attendance Management'),
         elevation: 0,
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: (value) => _exportAttendance(value),
+            itemBuilder: (context) => const [
+              PopupMenuItem(
+                value: 'csv',
+                child: Text('Export CSV'),
+              ),
+              PopupMenuItem(
+                value: 'pdf',
+                child: Text('Export PDF'),
+              ),
+            ],
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -259,6 +275,18 @@ class _FacultyAttendanceManagementPageState
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _exportAttendance(String format) async {
+    final courseId = selectedCourse;
+    final path = format == 'pdf'
+        ? await FacultyDataService.exportAttendancePdf(courseId)
+        : await FacultyDataService.exportAttendanceCsv(courseId);
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Exported: $path')),
     );
   }
 }

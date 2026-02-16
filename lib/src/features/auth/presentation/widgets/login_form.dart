@@ -740,7 +740,7 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
     return Container(
       padding: EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceVariant,
+        color: theme.colorScheme.surfaceContainerHighest,
         borderRadius: AppRadius.radiusMd,
         border: Border.all(color: theme.colorScheme.outline),
       ),

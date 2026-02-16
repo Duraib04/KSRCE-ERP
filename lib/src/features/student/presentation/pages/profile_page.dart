@@ -198,7 +198,7 @@ class _StudentProfilePageState extends State<StudentProfilePage>
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.student.withOpacity(0.4),
+                      color: AppColors.student.withValues(alpha: 0.4),
                       blurRadius: 20,
                       spreadRadius: 5,
                     ),
@@ -223,7 +223,7 @@ class _StudentProfilePageState extends State<StudentProfilePage>
               Text(
                 profileData.registrationNumber,
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withValues(alpha: 0.9),
                 ),
               ),
             ],
@@ -259,10 +259,10 @@ class _StudentProfilePageState extends State<StudentProfilePage>
     return Container(
       padding: EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [color, color.withOpacity(0.7)]),
+        gradient: LinearGradient(colors: [color, color.withValues(alpha: 0.7)]),
         borderRadius: AppRadius.radiusMd,
         boxShadow: [
-          BoxShadow(color: color.withOpacity(0.2), blurRadius: 12, spreadRadius: 2),
+          BoxShadow(color: color.withValues(alpha: 0.2), blurRadius: 12, spreadRadius: 2),
         ],
       ),
       child: Column(
@@ -278,7 +278,7 @@ class _StudentProfilePageState extends State<StudentProfilePage>
           Text(
             label,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -313,7 +313,7 @@ class _StudentProfilePageState extends State<StudentProfilePage>
                     border: Border.all(color: AppColors.outlineLight),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.student.withOpacity(0.08),
+                        color: AppColors.student.withValues(alpha: 0.08),
                         blurRadius: 12,
                         spreadRadius: 2,
                       ),
@@ -337,7 +337,7 @@ class _StudentProfilePageState extends State<StudentProfilePage>
           Container(
             padding: EdgeInsets.all(AppSpacing.sm),
             decoration: BoxDecoration(
-              color: AppColors.student.withOpacity(0.1),
+              color: AppColors.student.withValues(alpha: 0.1),
               borderRadius: AppRadius.radiusMd,
             ),
             child: Icon(icon, color: AppColors.student, size: AppIconSize.md),

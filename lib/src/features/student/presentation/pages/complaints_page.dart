@@ -246,7 +246,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
-                value: selectedCategory,
+                initialValue: selectedCategory,
                 items: ['Academic', 'Infrastructure', 'Staff', 'Other']
                     .map((cat) =>
                         DropdownMenuItem(value: cat, child: Text(cat)))

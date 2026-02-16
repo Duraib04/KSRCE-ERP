@@ -6,6 +6,7 @@ import '../../../../services/auth_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/design_tokens.dart';
 import '../../../../core/presentation/core_widgets.dart';
+import '../../data/faculty_data_service.dart';
 
 class FacultyDashboard extends StatefulWidget {
   final String userId;
@@ -116,6 +117,30 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
               _navigateTo(FacultyRoutes.grades);
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.apps),
+            title: const Text('All Features'),
+            selected: _selectedIndex == 7,
+            onTap: () {
+              _navigateTo(FacultyRoutes.features);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.notifications),
+            title: const Text('Notices'),
+            selected: _selectedIndex == 5,
+            onTap: () {
+              _navigateTo(FacultyRoutes.notices);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.person),
+            title: const Text('Profile'),
+            selected: _selectedIndex == 6,
+            onTap: () {
+              _navigateTo(FacultyRoutes.profile);
+            },
+          ),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.settings),
@@ -174,6 +199,8 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
                 _buildTodayTeaching(),
                 SizedBox(height: AppSpacing.xxl),
                 _buildGradingQueue(),
+                SizedBox(height: AppSpacing.xxl),
+                _buildAnalytics(),
                 SizedBox(height: AppSpacing.xxl),
                 _buildRecentAnnouncements(),
                 SizedBox(height: AppSpacing.xl),
@@ -334,7 +361,59 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
               color: AppColors.secondaryBlue,
               onTap: () => _navigateTo(FacultyRoutes.schedule),
             ),
+            _buildQuickActionCard(
+              title: 'Notices',
+              description: 'Post updates and circulars.',
+              icon: Icons.notifications_active_rounded,
+              color: AppColors.warning,
+              onTap: () => _navigateTo(FacultyRoutes.notices),
+            ),
           ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAnalytics() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader(
+          title: 'Analytics',
+          subtitle: 'Quick insights on your classes.',
+        ),
+        AppCard.outlined(
+          margin: EdgeInsets.zero,
+          contentPadding: AppSpacing.paddingLg,
+          child: FutureBuilder<Map<String, double>>(
+            future: FacultyDataService.getFacultyAnalytics(widget.userId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const LoadingShimmer.compact(count: 3);
+              }
+              final data = snapshot.data ?? {};
+              return Column(
+                children: [
+                  InfoRow(
+                    icon: Icons.event_available,
+                    label: 'Avg Attendance',
+                    value: '${data['averageAttendance']?.toStringAsFixed(1) ?? '0'}%',
+                  ),
+                  InfoRow(
+                    icon: Icons.assignment_turned_in,
+                    label: 'Grading Completion',
+                    value: '${data['gradingCompletion']?.toStringAsFixed(0) ?? '0'}%',
+                  ),
+                  InfoRow(
+                    icon: Icons.thumb_up,
+                    label: 'Student Satisfaction',
+                    value: '${data['studentSatisfaction']?.toStringAsFixed(1) ?? '0'} / 5',
+                    showDivider: false,
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ],
     );

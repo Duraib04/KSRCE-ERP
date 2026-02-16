@@ -59,7 +59,7 @@ class StatusBadge extends StatelessWidget {
   /// Active status (green)
   factory StatusBadge.active({String? label}) => StatusBadge(
         label: label ?? 'Active',
-        backgroundColor: AppColors.active.withOpacity(0.1),
+        backgroundColor: AppColors.active.withValues(alpha: 0.1),
         textColor: AppColors.active,
         showDot: true,
       );
@@ -67,7 +67,7 @@ class StatusBadge extends StatelessWidget {
   /// Inactive status (grey)
   factory StatusBadge.inactive({String? label}) => StatusBadge(
         label: label ?? 'Inactive',
-        backgroundColor: AppColors.inactive.withOpacity(0.1),
+        backgroundColor: AppColors.inactive.withValues(alpha: 0.1),
         textColor: AppColors.inactive,
         showDot: true,
       );
@@ -75,7 +75,7 @@ class StatusBadge extends StatelessWidget {
   /// Pending status (orange)
   factory StatusBadge.pending({String? label}) => StatusBadge(
         label: label ?? 'Pending',
-        backgroundColor: AppColors.pending.withOpacity(0.1),
+        backgroundColor: AppColors.pending.withValues(alpha: 0.1),
         textColor: AppColors.pending,
         showDot: true,
       );
@@ -83,7 +83,7 @@ class StatusBadge extends StatelessWidget {
   /// Approved status (green)
   factory StatusBadge.approved({String? label}) => StatusBadge(
         label: label ?? 'Approved',
-        backgroundColor: AppColors.approved.withOpacity(0.1),
+        backgroundColor: AppColors.approved.withValues(alpha: 0.1),
         textColor: AppColors.approved,
         icon: Icons.check_circle,
       );
@@ -91,7 +91,7 @@ class StatusBadge extends StatelessWidget {
   /// Rejected status (red)
   factory StatusBadge.rejected({String? label}) => StatusBadge(
         label: label ?? 'Rejected',
-        backgroundColor: AppColors.rejected.withOpacity(0.1),
+        backgroundColor: AppColors.rejected.withValues(alpha: 0.1),
         textColor: AppColors.rejected,
         icon: Icons.cancel,
       );
@@ -99,7 +99,7 @@ class StatusBadge extends StatelessWidget {
   /// Overdue status (red)
   factory StatusBadge.overdue({String? label}) => StatusBadge(
         label: label ?? 'Overdue',
-        backgroundColor: AppColors.overdue.withOpacity(0.1),
+        backgroundColor: AppColors.overdue.withValues(alpha: 0.1),
         textColor: AppColors.overdue,
         icon: Icons.warning,
       );
@@ -107,7 +107,7 @@ class StatusBadge extends StatelessWidget {
   /// Completed status (green)
   factory StatusBadge.completed({String? label}) => StatusBadge(
         label: label ?? 'Completed',
-        backgroundColor: AppColors.completed.withOpacity(0.1),
+        backgroundColor: AppColors.completed.withValues(alpha: 0.1),
         textColor: AppColors.completed,
         icon: Icons.check_circle_outline,
       );
@@ -115,7 +115,7 @@ class StatusBadge extends StatelessWidget {
   /// In Progress status (blue)
   factory StatusBadge.inProgress({String? label}) => StatusBadge(
         label: label ?? 'In Progress',
-        backgroundColor: AppColors.inProgress.withOpacity(0.1),
+        backgroundColor: AppColors.inProgress.withValues(alpha: 0.1),
         textColor: AppColors.inProgress,
         showDot: true,
       );
@@ -123,7 +123,7 @@ class StatusBadge extends StatelessWidget {
   /// Draft status (grey)
   factory StatusBadge.draft({String? label}) => StatusBadge(
         label: label ?? 'Draft',
-        backgroundColor: AppColors.draft.withOpacity(0.1),
+        backgroundColor: AppColors.draft.withValues(alpha: 0.1),
         textColor: AppColors.draft,
       );
 
@@ -134,7 +134,7 @@ class StatusBadge extends StatelessWidget {
   /// Present status (green)
   factory StatusBadge.present({String? label}) => StatusBadge(
         label: label ?? 'Present',
-        backgroundColor: AppColors.present.withOpacity(0.1),
+        backgroundColor: AppColors.present.withValues(alpha: 0.1),
         textColor: AppColors.present,
         icon: Icons.check,
       );
@@ -142,7 +142,7 @@ class StatusBadge extends StatelessWidget {
   /// Absent status (red)
   factory StatusBadge.absent({String? label}) => StatusBadge(
         label: label ?? 'Absent',
-        backgroundColor: AppColors.absent.withOpacity(0.1),
+        backgroundColor: AppColors.absent.withValues(alpha: 0.1),
         textColor: AppColors.absent,
         icon: Icons.close,
       );
@@ -150,7 +150,7 @@ class StatusBadge extends StatelessWidget {
   /// Late status (orange)
   factory StatusBadge.late({String? label}) => StatusBadge(
         label: label ?? 'Late',
-        backgroundColor: AppColors.late.withOpacity(0.1),
+        backgroundColor: AppColors.late.withValues(alpha: 0.1),
         textColor: AppColors.late,
         icon: Icons.schedule,
       );
@@ -158,7 +158,7 @@ class StatusBadge extends StatelessWidget {
   /// On Leave status (blue)
   factory StatusBadge.onLeave({String? label}) => StatusBadge(
         label: label ?? 'On Leave',
-        backgroundColor: AppColors.onLeave.withOpacity(0.1),
+        backgroundColor: AppColors.onLeave.withValues(alpha: 0.1),
         textColor: AppColors.onLeave,
       );
 
@@ -169,7 +169,7 @@ class StatusBadge extends StatelessWidget {
   /// Critical priority (red)
   factory StatusBadge.critical({String? label}) => StatusBadge(
         label: label ?? 'Critical',
-        backgroundColor: AppColors.priorityCritical.withOpacity(0.1),
+        backgroundColor: AppColors.priorityCritical.withValues(alpha: 0.1),
         textColor: AppColors.priorityCritical,
         icon: Icons.error,
       );
@@ -177,7 +177,7 @@ class StatusBadge extends StatelessWidget {
   /// High priority (orange)
   factory StatusBadge.high({String? label}) => StatusBadge(
         label: label ?? 'High',
-        backgroundColor: AppColors.priorityHigh.withOpacity(0.1),
+        backgroundColor: AppColors.priorityHigh.withValues(alpha: 0.1),
         textColor: AppColors.priorityHigh,
         icon: Icons.arrow_upward,
       );
@@ -185,14 +185,14 @@ class StatusBadge extends StatelessWidget {
   /// Medium priority (orange)
   factory StatusBadge.medium({String? label}) => StatusBadge(
         label: label ?? 'Medium',
-        backgroundColor: AppColors.priorityMedium.withOpacity(0.1),
+        backgroundColor: AppColors.priorityMedium.withValues(alpha: 0.1),
         textColor: AppColors.priorityMedium,
       );
 
   /// Low priority (green)
   factory StatusBadge.low({String? label}) => StatusBadge(
         label: label ?? 'Low',
-        backgroundColor: AppColors.priorityLow.withOpacity(0.1),
+        backgroundColor: AppColors.priorityLow.withValues(alpha: 0.1),
         textColor: AppColors.priorityLow,
         icon: Icons.arrow_downward,
       );
@@ -204,7 +204,7 @@ class StatusBadge extends StatelessWidget {
   /// Success message (green)
   factory StatusBadge.success({String? label}) => StatusBadge(
         label: label ?? 'Success',
-        backgroundColor: AppColors.success.withOpacity(0.1),
+        backgroundColor: AppColors.success.withValues(alpha: 0.1),
         textColor: AppColors.success,
         icon: Icons.check_circle,
       );
@@ -212,7 +212,7 @@ class StatusBadge extends StatelessWidget {
   /// Error message (red)
   factory StatusBadge.error({String? label}) => StatusBadge(
         label: label ?? 'Error',
-        backgroundColor: AppColors.error.withOpacity(0.1),
+        backgroundColor: AppColors.error.withValues(alpha: 0.1),
         textColor: AppColors.error,
         icon: Icons.error,
       );
@@ -220,7 +220,7 @@ class StatusBadge extends StatelessWidget {
   /// Warning message (orange)
   factory StatusBadge.warning({String? label}) => StatusBadge(
         label: label ?? 'Warning',
-        backgroundColor: AppColors.warning.withOpacity(0.1),
+        backgroundColor: AppColors.warning.withValues(alpha: 0.1),
         textColor: AppColors.warning,
         icon: Icons.warning,
       );
@@ -228,7 +228,7 @@ class StatusBadge extends StatelessWidget {
   /// Info message (blue)
   factory StatusBadge.info({String? label}) => StatusBadge(
         label: label ?? 'Info',
-        backgroundColor: AppColors.info.withOpacity(0.1),
+        backgroundColor: AppColors.info.withValues(alpha: 0.1),
         textColor: AppColors.info,
         icon: Icons.info,
       );

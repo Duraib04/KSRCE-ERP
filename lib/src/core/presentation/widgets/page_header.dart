@@ -3,7 +3,6 @@
 /// Displays page title, subtitle, and action buttons.
 
 import 'package:flutter/material.dart';
-import '../../theme/app_colors.dart';
 import '../../theme/design_tokens.dart';
 
 /// A consistent header for pages with title and actions.

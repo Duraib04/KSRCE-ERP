@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/theme/app_colors.dart';
+import '../../../../config/routes.dart';
+import '../../../../services/auth_service.dart';
 import '../../../../core/theme/design_tokens.dart';
 
 /// Modern home page displayed before login with professional design.
@@ -202,6 +203,36 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               backgroundColor: theme.colorScheme.primary,
               foregroundColor: theme.colorScheme.onPrimary,
               elevation: AppElevation.lg,
+              shape: RoundedRectangleBorder(
+                borderRadius: AppRadius.radiusLg,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: AppSpacing.md),
+        SizedBox(
+          width: isMobile ? double.infinity : 300,
+          height: 48,
+          child: OutlinedButton.icon(
+            onPressed: () {
+              if (AuthService.isAuthenticated &&
+                  AuthService.currentRole == UserRole.faculty) {
+                context.go(FacultyRoutes.features);
+              } else {
+                context.go(AuthRoutes.facultyLogin);
+              }
+            },
+            icon: Icon(Icons.apps_rounded, size: AppIconSize.md),
+            label: Text(
+              'Faculty Features',
+              style: theme.textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.3,
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.white,
+              side: BorderSide(color: Colors.white.withValues(alpha: 0.6)),
               shape: RoundedRectangleBorder(
                 borderRadius: AppRadius.radiusLg,
               ),
