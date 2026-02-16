@@ -389,7 +389,7 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
             future: FacultyDataService.getFacultyAnalytics(widget.userId),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const LoadingShimmer.compact(count: 3);
+                return LoadingShimmer.compact(count: 3);
               }
               final data = snapshot.data ?? {};
               return Column(

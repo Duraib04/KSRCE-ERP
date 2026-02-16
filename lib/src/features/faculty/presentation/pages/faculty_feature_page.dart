@@ -18,8 +18,9 @@ class FacultyFeaturePage extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Feature Not Found'),
         ),
-        body: const ErrorState(
+        body: ErrorState(
           message: 'This feature is not available.',
+          onRetry: () {},
         ),
       );
     }

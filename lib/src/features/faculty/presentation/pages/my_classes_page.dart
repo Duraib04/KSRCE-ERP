@@ -36,7 +36,7 @@ class _FacultyMyClassesPageState extends State<FacultyMyClassesPage> {
         future: _classesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LoadingShimmer.list(count: 4);
+            return LoadingShimmer.list(count: 4);
           }
 
           if (snapshot.hasError) {

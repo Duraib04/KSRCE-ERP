@@ -51,8 +51,8 @@ class _FacultyNoticesPageState extends State<FacultyNoticesPage> {
             // Filter tabs
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: AppSpacing.paddingMd,
-                vertical: AppSpacing.paddingMd,
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.md,
               ),
               child: Row(
                 children: [
@@ -80,7 +80,7 @@ class _FacultyNoticesPageState extends State<FacultyNoticesPage> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Padding(
-                    padding: EdgeInsets.all(AppSpacing.paddingMd),
+                    padding: EdgeInsets.all(AppSpacing.md),
                     child: LoadingShimmer.list(count: 3),
                   );
                 }
@@ -111,7 +111,7 @@ class _FacultyNoticesPageState extends State<FacultyNoticesPage> {
 
                 return Padding(
                   padding: EdgeInsets.symmetric(
-                    vertical: AppSpacing.paddingMd,
+                    vertical: AppSpacing.md,
                   ),
                   child: Column(
                     children: notices
@@ -346,7 +346,7 @@ class _NoticeDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(AppSpacing.paddingLg),
+      padding: EdgeInsets.all(AppSpacing.lg),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
