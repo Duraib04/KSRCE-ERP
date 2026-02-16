@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../data/student_data_service.dart';
-import '../../domain/student_models.dart';
+import '../../../data/student_data_service.dart';
+import '../../../domain/student_models.dart';
 
 class StudentAssignmentsPage extends StatefulWidget {
   final String userId;
@@ -60,7 +60,7 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> {
         return _assignments!;
     }
     
-    return _assignments!.where((a) => a.status == status).toList();
+    return _assignments!.where((a) => a?.status == status).toList();
   }
 
   @override
@@ -394,6 +394,7 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> {
       case AssignmentStatus.late:
         return Colors.red;
     }
+    return Colors.grey; // Default fallback
   }
 
   String _getStatusText(AssignmentStatus status, bool isOverdue) {
@@ -408,6 +409,7 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> {
       case AssignmentStatus.late:
         return 'LATE';
     }
+    return 'UNKNOWN'; // Default fallback
   }
 
   String _formatDate(DateTime date) {

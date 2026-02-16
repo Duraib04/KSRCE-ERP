@@ -139,10 +139,10 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: _getCategoryColor(complaint.category).withOpacity(0.1),
+                      color: _getCategoryColor(complaint.category).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(6),
                       border: Border.all(
-                        color: _getCategoryColor(complaint.category).withOpacity(0.3),
+                        color: _getCategoryColor(complaint.category).withValues(alpha: 0.3),
                       ),
                     ),
                     child: Text(
@@ -174,7 +174,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
               ),
               const SizedBox(height: 12),
               Text(
-                complaint.subject,
+                complaint.title,
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               const SizedBox(height: 8),
@@ -238,10 +238,10 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
-                      color: _getCategoryColor(complaint.category).withOpacity(0.1),
+                      color: _getCategoryColor(complaint.category).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: _getCategoryColor(complaint.category).withOpacity(0.3),
+                        color: _getCategoryColor(complaint.category).withValues(alpha: 0.3),
                       ),
                     ),
                     child: Text(
@@ -273,7 +273,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
               ),
               const SizedBox(height: 20),
               Text(
-                complaint.subject,
+                complaint.title,
                 style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
@@ -370,8 +370,6 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
         return Colors.green;
       case ComplaintCategory.library:
         return Colors.teal;
-      case ComplaintCategory.canteen:
-        return Colors.brown;
       case ComplaintCategory.other:
         return Colors.grey;
     }

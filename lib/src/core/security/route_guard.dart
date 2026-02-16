@@ -59,9 +59,11 @@ extension UserRoleExtension on UserRole {
 
 /// Route Guard for preventing unauthorized navigation
 class RouteGuard {
-  static const String _tokenKey = 'auth_token';
-  static const String _roleKey = 'user_role';
-  static const String _userIdKey = 'user_id';
+  // Note: These constants are for future use when storing in SharedPreferences
+  // not currently used in the current implementation
+  // static const String _tokenKey = 'auth_token';
+  // static const String _roleKey = 'user_role';
+  // static const String _userIdKey = 'user_id';
 
   /// Validate route access based on authentication token and role
   static bool canAccessRoute(String requestedRoute, {required String? authToken}) {

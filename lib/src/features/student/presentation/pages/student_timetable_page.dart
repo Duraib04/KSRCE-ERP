@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../data/student_data_service.dart';
-import '../../domain/student_models.dart';
+import '../../../data/student_data_service.dart';
+import '../../../domain/student_models.dart';
 
 class StudentTimetablePage extends StatefulWidget {
   final String userId;
@@ -96,9 +96,9 @@ class _StudentTimetablePageState extends State<StudentTimetablePage> with Single
 
   Widget _buildDaySchedule(String day) {
     final dayEntries = _timetable!
-        .where((entry) => entry.day == day)
+        .where((entry) => entry?.day == day)
         .toList()
-      ..sort((a, b) => a.startTime.compareTo(b.startTime));
+      ..sort((a, b) => (a?.startTime ?? '').compareTo(b?.startTime ?? ''));
 
     if (dayEntries.isEmpty) {
       return Center(

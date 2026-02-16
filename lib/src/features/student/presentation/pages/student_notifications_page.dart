@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../data/student_data_service.dart';
-import '../../domain/student_models.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../data/student_data_service.dart';
+import '../../../domain/student_models.dart' as models;
+
+// Use StudentNotification instead of Notification to avoid conflict with Flutter's Notification
+typedef StudentNotification = models.Notification;
 
 class StudentNotificationsPage extends StatefulWidget {
   final String userId;
@@ -12,7 +17,7 @@ class StudentNotificationsPage extends StatefulWidget {
 }
 
 class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
-  List<Notification>? _notifications;
+  List<StudentNotification>? _notifications;
   bool _isLoading = true;
   String _filter = 'all'; // all, announcement, exam, assignment, attendance, result, event, alert
 
@@ -41,14 +46,14 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
     }
   }
 
-  List<Notification> get _filteredNotifications {
+  List<StudentNotification> get _filteredNotifications {
     if (_notifications == null) return [];
     if (_filter == 'all') return _notifications!;
     
     NotificationType type;
     switch (_filter) {
       case 'announcement':
-        type = NotificationType.announcement;
+        type = NotificationType.general;
         break;
       case 'exam':
         type = NotificationType.exam;
@@ -60,13 +65,13 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
         type = NotificationType.attendance;
         break;
       case 'result':
-        type = NotificationType.result;
+        type = NotificationType.event;
         break;
       case 'event':
         type = NotificationType.event;
         break;
       case 'alert':
-        type = NotificationType.alert;
+        type = NotificationType.urgent;
         break;
       default:
         return _notifications!;
@@ -132,7 +137,7 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
     );
   }
 
-  Widget _buildNotificationCard(Notification notification) {
+  Widget _buildNotificationCard(StudentNotification notification) {
     final isNew = !notification.isRead;
     
     return Card(
@@ -149,7 +154,7 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: _getTypeColor(notification.type).withOpacity(0.1),
+                  color: _getTypeColor(notification.type).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
@@ -216,7 +221,7 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
     );
   }
 
-  void _showNotificationDetails(Notification notification) {
+  void _showNotificationDetails(StudentNotification notification) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -239,7 +244,7 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: _getTypeColor(notification.type).withOpacity(0.1),
+                      color: _getTypeColor(notification.type).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -299,26 +304,26 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
 
   IconData _getTypeIcon(NotificationType type) {
     switch (type) {
-      case NotificationType.announcement:
-        return Icons.campaign;
+      case NotificationType.general:
+        return Icons.info;
       case NotificationType.exam:
         return Icons.assignment;
       case NotificationType.assignment:
         return Icons.task;
       case NotificationType.attendance:
         return Icons.how_to_reg;
-      case NotificationType.result:
-        return Icons.grade;
+      case NotificationType.fee:
+        return Icons.payment;
       case NotificationType.event:
         return Icons.event;
-      case NotificationType.alert:
+      case NotificationType.urgent:
         return Icons.warning;
     }
   }
 
   Color _getTypeColor(NotificationType type) {
     switch (type) {
-      case NotificationType.announcement:
+      case NotificationType.general:
         return Colors.blue;
       case NotificationType.exam:
         return Colors.purple;
@@ -326,31 +331,31 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
         return Colors.orange;
       case NotificationType.attendance:
         return Colors.green;
-      case NotificationType.result:
-        return Colors.teal;
+      case NotificationType.fee:
+        return Colors.blueGrey;
       case NotificationType.event:
         return Colors.pink;
-      case NotificationType.alert:
+      case NotificationType.urgent:
         return Colors.red;
     }
   }
 
   String _getTypeName(NotificationType type) {
     switch (type) {
-      case NotificationType.announcement:
-        return 'ANNOUNCEMENT';
+      case NotificationType.general:
+        return 'GENERAL';
       case NotificationType.exam:
         return 'EXAM';
       case NotificationType.assignment:
         return 'ASSIGNMENT';
       case NotificationType.attendance:
         return 'ATTENDANCE';
-      case NotificationType.result:
-        return 'RESULT';
+      case NotificationType.fee:
+        return 'FEE';
       case NotificationType.event:
         return 'EVENT';
-      case NotificationType.alert:
-        return 'ALERT';
+      case NotificationType.urgent:
+        return 'URGENT';
     }
   }
 

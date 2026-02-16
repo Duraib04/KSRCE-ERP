@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import '../core/security/jwt_token_manager.dart';
-import '../core/security/route_guard.dart';
-import '../core/services/browser_storage_service.dart';
+import 'jwt_token_manager.dart';
+import 'route_guard.dart';
+import '../services/browser_storage_service.dart';
 
 enum UserRoleAuth {
   student,

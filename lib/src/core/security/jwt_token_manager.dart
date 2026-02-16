@@ -40,7 +40,28 @@ class JWTToken {
 
 /// JWT Token Manager with SHA-256 hashing for secure token generation and validation
 class JWTTokenManager {
-  static const String _secret = 'ksrce_erp_super_secret_key_2026';
+  // NOTE: In production, this secret should NEVER be hardcoded.
+  // Instead, use environment variables:
+  // 
+  // For development:
+  //   const String _secret = String.fromEnvironment('JWT_SECRET', 
+  //     defaultValue: 'dev_secret_key_only_for_development');
+  //
+  // For production:
+  //   Get from: Platform-specific secure storage (Keychain/Keystore)
+  //   Or: Backend authentication service that provides tokens
+  //   Or: Environment variable from deployment system
+  
+  static String get _secret {
+    const String? prodSecret = String.fromEnvironment('JWT_SECRET_KEY');
+    if (prodSecret != null && prodSecret.isNotEmpty) {
+      return prodSecret;
+    }
+    // Fallback: Generate a dynamic secret based on app version
+    // In production, this MUST be replaced with proper secret management
+    return 'INSECURE_SECRET_REPLACE_IN_PRODUCTION_${DateTime.now().year}';
+  }
+  
   static const int _tokenExpirationHours = 24;
 
   /// Generate a secure JWT token with encoded header and payload

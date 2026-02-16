@@ -3,6 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/config/security_flags.dart';
 
+// Static auth state
+String? _currentUserId;
+
 // A data class for the result of a login attempt.
 @immutable
 class LoginResult {
@@ -25,6 +28,7 @@ class LoginResult {
 /// uses shared_preferences to manage simple data persistence like a
 /// "remembered" user.
 class AuthService {
+  static String? get currentUserId => _currentUserId;
   static const String _rememberedUserKey = 'remembered_user_id';
   static const String _failedAttemptsKey = 'auth_failed_attempts';
   static const String _lockoutUntilKey = 'auth_lockout_until_ms';
@@ -59,12 +63,15 @@ class AuthService {
     // In a real app, you would make an HTTP request here.
     // This is placeholder logic to mimic the React component's behavior.
     if (allowDemo && normalizedUserId.startsWith('S') && password == "demo123") {
+      _currentUserId = normalizedUserId;
       await _handleSuccessfulLogin(normalizedUserId, rememberMe, prefs);
       return const LoginResult(success: true);
     } else if (allowDemo && normalizedUserId.startsWith('FAC') && password == "demo123") {
+      _currentUserId = normalizedUserId;
       await _handleSuccessfulLogin(normalizedUserId, rememberMe, prefs);
       return const LoginResult(success: true);
     } else if (allowDemo && normalizedUserId.startsWith('ADM') && password == "admin123") {
+      _currentUserId = normalizedUserId;
       await _handleSuccessfulLogin(normalizedUserId, rememberMe, prefs);
       return const LoginResult(success: true);
     } else {
