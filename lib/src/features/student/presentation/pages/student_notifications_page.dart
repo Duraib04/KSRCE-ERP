@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../data/student_data_service.dart';
-import '../../../domain/student_models.dart' as models;
+import '../../data/student_data_service.dart';
+import '../../domain/student_models.dart' as models;
 
 // Use StudentNotification instead of Notification to avoid conflict with Flutter's Notification
 typedef StudentNotification = models.Notification;
@@ -50,34 +50,34 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
     if (_notifications == null) return [];
     if (_filter == 'all') return _notifications!;
     
-    NotificationType type;
+    models.NotificationType type;
     switch (_filter) {
       case 'announcement':
-        type = NotificationType.general;
+        type = models.NotificationType.general;
         break;
       case 'exam':
-        type = NotificationType.exam;
+        type = models.NotificationType.exam;
         break;
       case 'assignment':
-        type = NotificationType.assignment;
+        type = models.NotificationType.assignment;
         break;
       case 'attendance':
-        type = NotificationType.attendance;
+        type = models.NotificationType.attendance;
         break;
       case 'result':
-        type = NotificationType.event;
+        type = models.NotificationType.event;
         break;
       case 'event':
-        type = NotificationType.event;
+        type = models.NotificationType.event;
         break;
       case 'alert':
-        type = NotificationType.urgent;
+        type = models.NotificationType.urgent;
         break;
       default:
         return _notifications!;
     }
     
-    return _notifications!.where((n) => n.type == type).toList();
+    return _notifications!.where((n) => n?.type == type).toList();
   }
 
   @override
@@ -302,61 +302,64 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
     );
   }
 
-  IconData _getTypeIcon(NotificationType type) {
+  IconData _getTypeIcon(models.NotificationType type) {
     switch (type) {
-      case NotificationType.general:
+      case models.NotificationType.general:
         return Icons.info;
-      case NotificationType.exam:
+      case models.NotificationType.exam:
         return Icons.assignment;
-      case NotificationType.assignment:
+      case models.NotificationType.assignment:
         return Icons.task;
-      case NotificationType.attendance:
+      case models.NotificationType.attendance:
         return Icons.how_to_reg;
-      case NotificationType.fee:
+      case models.NotificationType.fee:
         return Icons.payment;
-      case NotificationType.event:
+      case models.NotificationType.event:
         return Icons.event;
-      case NotificationType.urgent:
+      case models.NotificationType.urgent:
         return Icons.warning;
     }
+    return Icons.info;
   }
 
-  Color _getTypeColor(NotificationType type) {
+  Color _getTypeColor(models.NotificationType type) {
     switch (type) {
-      case NotificationType.general:
+      case models.NotificationType.general:
         return Colors.blue;
-      case NotificationType.exam:
+      case models.NotificationType.exam:
         return Colors.purple;
-      case NotificationType.assignment:
+      case models.NotificationType.assignment:
         return Colors.orange;
-      case NotificationType.attendance:
+      case models.NotificationType.attendance:
         return Colors.green;
-      case NotificationType.fee:
+      case models.NotificationType.fee:
         return Colors.blueGrey;
-      case NotificationType.event:
+      case models.NotificationType.event:
         return Colors.pink;
-      case NotificationType.urgent:
+      case models.NotificationType.urgent:
         return Colors.red;
     }
+    return Colors.grey;
   }
 
-  String _getTypeName(NotificationType type) {
+  String _getTypeName(models.NotificationType type) {
     switch (type) {
-      case NotificationType.general:
+      case models.NotificationType.general:
         return 'GENERAL';
-      case NotificationType.exam:
+      case models.NotificationType.exam:
         return 'EXAM';
-      case NotificationType.assignment:
+      case models.NotificationType.assignment:
         return 'ASSIGNMENT';
-      case NotificationType.attendance:
+      case models.NotificationType.attendance:
         return 'ATTENDANCE';
-      case NotificationType.fee:
+      case models.NotificationType.fee:
         return 'FEE';
-      case NotificationType.event:
+      case models.NotificationType.event:
         return 'EVENT';
-      case NotificationType.urgent:
+      case models.NotificationType.urgent:
         return 'URGENT';
     }
+    return 'UNKNOWN';
   }
 
   String _formatDateTime(DateTime dateTime) {

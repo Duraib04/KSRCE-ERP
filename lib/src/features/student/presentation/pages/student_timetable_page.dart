@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../data/student_data_service.dart';
-import '../../../domain/student_models.dart';
+import '../../data/student_data_service.dart';
+import '../../domain/student_models.dart';
 
 class StudentTimetablePage extends StatefulWidget {
   final String userId;
@@ -220,7 +220,7 @@ class _StudentTimetablePageState extends State<StudentTimetablePage> with Single
               Row(
                 children: [
                   Expanded(
-                    child: _buildInfoChip(Icons.person, entry.faculty),
+                    child: _buildInfoChip(Icons.person, entry.facultyName),
                   ),
                 ],
               ),
@@ -307,7 +307,7 @@ class _StudentTimetablePageState extends State<StudentTimetablePage> with Single
               const SizedBox(height: 20),
               const Divider(),
               const SizedBox(height: 20),
-              _buildDetailRow(Icons.person, 'Faculty', entry.faculty),
+              _buildDetailRow(Icons.person, 'Faculty', entry.facultyName),
               _buildDetailRow(Icons.calendar_today, 'Day', entry.day),
               _buildDetailRow(Icons.access_time, 'Time', '${entry.startTime} - ${entry.endTime}'),
               _buildDetailRow(Icons.meeting_room, 'Room', entry.room),

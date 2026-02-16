@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../data/student_data_service.dart';
-import '../../../domain/student_models.dart';
+import '../../data/student_data_service.dart';
+import '../../domain/student_models.dart';
 
 class StudentAssignmentsPage extends StatefulWidget {
   final String userId;
