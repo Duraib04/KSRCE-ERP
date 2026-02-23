@@ -1,0 +1,17 @@
+{
+  "name": "ksrce-erp",
+  "version": "1.0.0",
+  "description": "KSRCE ERP System - Flutter Web Application",
+  "scripts": {
+    "build": "flutter build web --release",
+    "dev": "flutter run -d web-server",
+    "serve": "http-server ./build/web -p 3000"
+  },
+  "dependencies": {
+    "http-server": "^14.1.1"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": "18"
+  }
+}
