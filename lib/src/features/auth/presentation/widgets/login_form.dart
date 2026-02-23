@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/api_error_handler.dart';
 import '../../data/auth_service.dart';
 import '../../domain/models.dart';
 
@@ -206,8 +207,18 @@ class _LoginFormState extends State<LoginForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (_error != null)
+          // Enhanced error messaging for API failures
+          if (_error != null) ...[
             _Alert(type: _AlertType.destructive, message: _error!),
+            if (_error!.contains('404') || _error!.contains('not found') || _error!.contains('backend'))
+              Padding(
+                padding: const EdgeInsets.only(top: 12.0),
+                child: _Alert(
+                  type: _AlertType.info,
+                  message: 'Tip: ${ApiErrorHandler.error404Suggestion}',
+                ),
+              ),
+          ],
           if (isLocked)
             _Alert(type: _AlertType.info, message: "Account locked. Try again in $_lockDuration seconds."),
           if (_remainingAttempts != null && _remainingAttempts! > 0 && _remainingAttempts! <= 2)

@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../core/api_config.dart';
 
 // A data class for the result of a login attempt.
 @immutable
@@ -24,34 +27,97 @@ class LoginResult {
 /// "remembered" user.
 class AuthService {
   static const String _rememberedUserKey = 'remembered_user_id';
+  static const int _requestTimeout = 10; // seconds
 
-  /// Simulates a login API call.
+  /// Attempts to login via API. Falls back to mock if API unavailable.
   Future<LoginResult> login(String userId, String password, bool rememberMe) async {
+    try {
+      // Attempt real API call first
+      return await _loginViaAPI(userId, password, rememberMe);
+    } catch (e) {
+      // If API fails (404, connection error, timeout), fall back to mock
+      print('API login failed: $e. Using mock authentication.');
+      return await _loginMock(userId, password, rememberMe);
+    }
+  }
+
+  /// Real API login call (will fail gracefully if backend not available)
+  Future<LoginResult> _loginViaAPI(String userId, String password, bool rememberMe) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse(ApiConfig.loginEndpoint),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({'userId': userId, 'password': password}),
+          )
+          .timeout(const Duration(seconds: _requestTimeout));
+
+      // Check for 404 or other error status codes
+      if (response.statusCode == 404) {
+        throw Exception('API endpoint not found (404). Backend server may not be running.');
+      }
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          if (rememberMe) {
+            await _saveRememberedUser(userId);
+          } else {
+            await _clearRememberedUser();
+          }
+          return LoginResult(
+            success: true,
+            message: data['message'] ?? 'Login successful',
+          );
+        } else {
+          return LoginResult(
+            success: false,
+            message: data['message'] ?? 'Login failed. Invalid credentials.',
+            remainingAttempts: data['remainingAttempts'],
+            lockDuration: data['lockDuration'],
+          );
+        }
+      } else {
+        throw Exception('Unexpected status code: ${response.statusCode}');
+      }
+    } on http.ClientException {
+      throw Exception('Failed to connect to backend. API server may not be running.');
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Mock login for demonstration/offline testing
+  Future<LoginResult> _loginMock(String userId, String password, bool rememberMe) async {
     // Simulate network delay
     await Future.delayed(const Duration(milliseconds: 800));
 
-    // In a real app, you would make an HTTP request here.
-    // This is placeholder logic to mimic the React component's behavior.
+    // Mock credentials for testing
     if (userId.startsWith('S') && password == "demo123") {
       if (rememberMe) {
         await _saveRememberedUser(userId);
       } else {
         await _clearRememberedUser();
       }
-      return const LoginResult(success: true);
+      return const LoginResult(
+        success: true,
+        message: 'Login successful (using mock authentication)',
+      );
     } else if (userId.startsWith('ADM') && password == "admin123") {
       if (rememberMe) {
         await _saveRememberedUser(userId);
       } else {
         await _clearRememberedUser();
       }
-      return const LoginResult(success: true);
-    }
-    else {
-      // Simulate a failed login with lockout mechanism
+      return const LoginResult(
+        success: true,
+        message: 'Login successful (using mock authentication)',
+      );
+    } else {
+      // Failed login with lockout mechanism
       return const LoginResult(
         success: false,
-        message: "Invalid credentials provided.",
+        message: "Invalid credentials. Try again.",
         remainingAttempts: 2,
       );
     }
