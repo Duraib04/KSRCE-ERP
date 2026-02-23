@@ -13,7 +13,7 @@
   },
   "devDependencies": {},
   "engines": {
-    "node": "18"
+    "node": "24.x"
   },
   "vercel": {
     "buildCommand": "flutter build web --release",
