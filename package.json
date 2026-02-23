@@ -5,7 +5,8 @@
   "scripts": {
     "build": "flutter build web --release",
     "dev": "flutter run -d web-server",
-    "serve": "http-server ./build/web -p 3000"
+    "serve": "http-server ./build/web -p 3000",
+    "install": "flutter pub get"
   },
   "dependencies": {
     "http-server": "^14.1.1"
@@ -13,5 +14,10 @@
   "devDependencies": {},
   "engines": {
     "node": "18"
+  },
+  "vercel": {
+    "buildCommand": "flutter build web --release",
+    "outputDirectory": "build/web",
+    "installCommand": "flutter pub get"
   }
 }
