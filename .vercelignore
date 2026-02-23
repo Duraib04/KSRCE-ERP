@@ -1,0 +1,11 @@
+.git
+.gitignore
+.dart_tool
+.idea
+.vscode
+build
+*.iml
+*.lock
+node_modules
+.env.local
+.env.*.local
