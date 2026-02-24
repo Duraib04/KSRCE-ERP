@@ -51,10 +51,11 @@ import 'features/admin/presentation/pages/admin_reports_page.dart';
 import 'features/admin/presentation/pages/admin_notifications_page.dart';
 import 'features/admin/presentation/pages/admin_settings_page.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   final dataService = DataService();
-  await dataService.loadAllData();
+  // Don't block app startup - load data in background
+  dataService.loadAllData();
   runApp(KsrceErpApp(dataService: dataService));
 }
 
@@ -135,3 +136,4 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/admin/settings', builder: (c, s) => _a('/admin/settings', const AdminSettingsPage())),
   ],
 );
+
