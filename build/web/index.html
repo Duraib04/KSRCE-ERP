@@ -6,16 +6,11 @@
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="KSRCE ERP - Enterprise Resource Planning System">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="KSRCE ERP">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
-  <link rel="icon" type="image/png" href="favicon.png">
   <title>KSRCE ERP System</title>
   <link rel="manifest" href="manifest.json">
-  <!-- Preload critical resources -->
-  <link rel="preload" href="flutter.js" as="script">
-  <link rel="preload" href="main.dart.js" as="script">
   <style>
     html { height: 100%; }
     body {
@@ -26,7 +21,9 @@
     .loading-screen {
       display: flex; align-items: center; justify-content: center;
       height: 100vh; background: linear-gradient(180deg, #0A1628, #0D1F3C, #0A1628);
+      transition: opacity 0.3s ease;
     }
+    .loading-screen.fade-out { opacity: 0; pointer-events: none; }
     .loading-content { text-align: center; color: white; }
     .loading-content h1 { font-size: 28px; margin: 0; font-weight: 600; }
     .loading-content p { font-size: 14px; margin: 12px 0 0 0; opacity: 0.6; }
@@ -47,26 +44,14 @@
       <div class="spinner"></div>
     </div>
   </div>
-  <script src="flutter.js" defer></script>
+  <script src="flutter_bootstrap.js" async></script>
   <script>
-    window.addEventListener('load', function(ev) {
-      _flutter.loader.load({
-        config: {
-          renderer: "html"
-        },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine({
-            renderer: "html"
-          }).then(function(appRunner) {
-            appRunner.runApp();
-          });
-        }
-      });
-    });
-    window.addEventListener('flutter-first-frame', function() {
+    function removeLoader() {
       var el = document.getElementById('loading');
-      if (el) el.remove();
-    });
+      if (el) { el.classList.add('fade-out'); setTimeout(function() { el.remove(); }, 300); }
+    }
+    setTimeout(removeLoader, 5000);
+    window.addEventListener('flutter-first-frame', removeLoader);
   </script>
 </body>
 </html>
