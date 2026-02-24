@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
+  static const String _logoUrl = 'https://www.ksrce.ac.in/images/ksrce-logo.png';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,25 +50,25 @@ class HomePage extends StatelessWidget {
                       ],
                     ),
                     child: ClipOval(
-                      child: Image.asset(
-                        'assets/images/ksrce-logo.png',
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Color(0xFF1A2A4A),
+                      child: Container(
+                        color: const Color(0xFF1A2A4A),
+                        child: Image.network(
+                          _logoUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => const Center(
+                            child: Icon(Icons.school, size: 70, color: Color(0xFFD4A843)),
                           ),
-                          child: const Icon(
-                            Icons.school,
-                            size: 70,
-                            color: Color(0xFFD4A843),
-                          ),
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return const Center(
+                              child: Icon(Icons.school, size: 70, color: Color(0xFFD4A843)),
+                            );
+                          },
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 32),
-                  // App Title
                   const Text(
                     'KSRCE ERP',
                     style: TextStyle(
@@ -77,7 +79,6 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  // College Name
                   const Text(
                     'KSR College of Engineering',
                     style: TextStyle(
@@ -87,7 +88,6 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  // Subtitle
                   Text(
                     'Enterprise Resource Planning System',
                     style: TextStyle(
@@ -96,7 +96,6 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 60),
-                  // Ready to Get Started Section
                   const Text(
                     'Ready to Get Started?',
                     style: TextStyle(
@@ -116,7 +115,6 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 40),
-                  // Login Button
                   SizedBox(
                     width: double.infinity,
                     height: 54,
