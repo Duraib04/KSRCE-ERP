@@ -1,8 +1,10 @@
 ﻿// ignore_for_file: avoid_web_libraries_in_flutter
 import 'dart:convert';
 import 'dart:html' as html;
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:excel/excel.dart' as excel_lib;
 import '../../../../core/data_service.dart';
 
 class AdminUserManagementPage extends StatefulWidget {
@@ -19,6 +21,9 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
   Set<int> _selectedForVerification = {};
   bool _isUploading = false;
   String _uploadFileName = '';
+
+  // Preview filters (one per column)
+  Map<String, String> _columnFilters = {};
 
   // Users data (from DataService)
   List<Map<String, dynamic>> _allUsers = [];
@@ -44,7 +49,6 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
         'status': u['status'] ?? 'active',
       };
     }));
-    // Merge student names
     for (var s in ds.students) {
       final idx = _allUsers.indexWhere((u) => u['userId'] == s['studentId']);
       if (idx >= 0) {
@@ -64,7 +68,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
     super.dispose();
   }
 
-  // ===== CSV/Excel Upload =====
+  // ===== File Upload =====
   void _pickFile() {
     final input = html.FileUploadInputElement()..accept = '.csv,.xlsx,.xls';
     input.click();
@@ -72,25 +76,99 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
       final files = input.files;
       if (files == null || files.isEmpty) return;
       final file = files[0];
+      final fileName = file.name.toLowerCase();
       setState(() { _isUploading = true; _uploadFileName = file.name; });
       final reader = html.FileReader();
-      reader.onLoadEnd.listen((e) {
-        final content = reader.result as String;
-        _parseCSV(content);
-        setState(() { _isUploading = false; });
-      });
-      reader.readAsText(file);
+      if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
+        // Excel file - read as ArrayBuffer
+        reader.onLoadEnd.listen((e) {
+          final bytes = reader.result as Uint8List?;
+          if (bytes != null) {
+            _parseExcel(bytes);
+          }
+          setState(() { _isUploading = false; });
+        });
+        reader.readAsArrayBuffer(file);
+      } else {
+        // CSV file - read as text
+        reader.onLoadEnd.listen((e) {
+          final content = reader.result as String;
+          _parseCSV(content);
+          setState(() { _isUploading = false; });
+        });
+        reader.readAsText(file);
+      }
     });
+  }
+
+  void _parseExcel(Uint8List bytes) {
+    try {
+      final excelFile = excel_lib.Excel.decodeBytes(bytes);
+      if (excelFile.tables.isEmpty) {
+        _showError('No sheets found in the Excel file');
+        return;
+      }
+      // Use the first sheet
+      final sheetName = excelFile.tables.keys.first;
+      final sheet = excelFile.tables[sheetName]!;
+      if (sheet.rows.isEmpty) {
+        _showError('The sheet "$sheetName" is empty');
+        return;
+      }
+      // First row = headers
+      final headers = sheet.rows[0]
+          .map((cell) => cell?.value?.toString().trim() ?? '')
+          .where((h) => h.isNotEmpty)
+          .toList();
+      if (headers.isEmpty) {
+        _showError('No column headers found in the first row');
+        return;
+      }
+      final rows = <Map<String, String>>[];
+      for (var i = 1; i < sheet.rows.length; i++) {
+        final excelRow = sheet.rows[i];
+        // Skip empty rows
+        final hasData = excelRow.any((cell) => cell?.value != null && cell!.value.toString().trim().isNotEmpty);
+        if (!hasData) continue;
+        final row = <String, String>{};
+        for (var j = 0; j < headers.length && j < excelRow.length; j++) {
+          final cellValue = excelRow[j]?.value;
+          row[headers[j]] = cellValue?.toString().trim() ?? '';
+        }
+        rows.add(row);
+      }
+      setState(() {
+        _uploadedHeaders = headers;
+        _uploadedRows = rows;
+        _selectedForVerification = {};
+        _columnFilters = {};
+        _tabController.animateTo(1);
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Excel parsed: ${rows.length} rows from sheet "$sheetName"'), backgroundColor: const Color(0xFF4CAF50)));
+    } catch (e) {
+      _showError('Error parsing Excel file: $e');
+    }
   }
 
   void _parseCSV(String content) {
     final lines = const LineSplitter().convert(content);
     if (lines.isEmpty) return;
-    final headers = lines[0].split(',').map((h) => h.trim().replaceAll('"', '')).toList();
+    // Detect separator (comma, semicolon, tab)
+    final firstLine = lines[0];
+    String sep = ',';
+    if (firstLine.contains('\t')) sep = '\t';
+    else if (firstLine.contains(';') && !firstLine.contains(',')) sep = ';';
+
+    final headers = firstLine.split(sep).map((h) => h.trim().replaceAll('"', '')).where((h) => h.isNotEmpty).toList();
+    if (headers.isEmpty) {
+      _showError('No column headers found in the CSV');
+      return;
+    }
     final rows = <Map<String, String>>[];
     for (var i = 1; i < lines.length; i++) {
       if (lines[i].trim().isEmpty) continue;
-      final values = lines[i].split(',').map((v) => v.trim().replaceAll('"', '')).toList();
+      final values = lines[i].split(sep).map((v) => v.trim().replaceAll('"', '')).toList();
       final row = <String, String>{};
       for (var j = 0; j < headers.length && j < values.length; j++) {
         row[headers[j]] = values[j];
@@ -101,8 +179,40 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
       _uploadedHeaders = headers;
       _uploadedRows = rows;
       _selectedForVerification = {};
-      _tabController.animateTo(1); // Switch to preview tab
+      _columnFilters = {};
+      _tabController.animateTo(1);
     });
+  }
+
+  void _showError(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg), backgroundColor: Colors.red));
+  }
+
+  // Get unique values per column for filter dropdowns
+  List<String> _getColumnValues(String header) {
+    final values = <String>{};
+    for (final row in _uploadedRows) {
+      final v = row[header]?.trim() ?? '';
+      if (v.isNotEmpty) values.add(v);
+    }
+    final sorted = values.toList()..sort();
+    return sorted;
+  }
+
+  // Get filtered preview rows
+  List<Map<String, String>> get _filteredPreviewRows {
+    if (_columnFilters.isEmpty || _columnFilters.values.every((v) => v == 'All')) {
+      return _uploadedRows;
+    }
+    return _uploadedRows.where((row) {
+      for (final entry in _columnFilters.entries) {
+        if (entry.value != 'All' && entry.value.isNotEmpty) {
+          if ((row[entry.key] ?? '') != entry.value) return false;
+        }
+      }
+      return true;
+    }).toList();
   }
 
   void _toggleSelectAll(bool? val) {
@@ -125,31 +235,29 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
     int addedCount = 0;
     for (final idx in _selectedForVerification) {
       final row = _uploadedRows[idx];
-      // Add to users
-      final userId = row['userId'] ?? row['studentId'] ?? row['Student ID'] ?? row['user_id'] ?? 'NEW${idx}';
+      final userId = row['userId'] ?? row['studentId'] ?? row['Student ID'] ?? row['user_id'] ?? row['User ID'] ?? row['ID'] ?? 'NEW$idx';
       final existing = ds.users.indexWhere((u) => u['userId'] == userId);
       if (existing < 0) {
         ds.users.add({
           'userId': userId,
-          'password': row['password'] ?? 'default123',
-          'role': row['role'] ?? 'student',
+          'password': row['password'] ?? row['Password'] ?? 'default123',
+          'role': row['role'] ?? row['Role'] ?? 'student',
           'name': row['name'] ?? row['Name'] ?? '',
           'status': 'active',
         });
         addedCount++;
       }
-      // Also add to students if role is student
-      final role = row['role'] ?? 'student';
+      final role = (row['role'] ?? row['Role'] ?? 'student').toLowerCase();
       if (role == 'student') {
         final existingStu = ds.students.indexWhere((s) => s['studentId'] == userId);
         if (existingStu < 0) {
           ds.students.add({
             'studentId': userId,
             'name': row['name'] ?? row['Name'] ?? '',
-            'department': row['department'] ?? row['Department'] ?? '',
+            'department': row['department'] ?? row['Department'] ?? row['Dept'] ?? '',
             'year': int.tryParse(row['year'] ?? row['Year'] ?? '1') ?? 1,
             'email': row['email'] ?? row['Email'] ?? '',
-            'phone': row['phone'] ?? row['Phone'] ?? '',
+            'phone': row['phone'] ?? row['Phone'] ?? row['Mobile'] ?? '',
           });
         }
       }
@@ -160,10 +268,11 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
       _uploadedRows.clear();
       _uploadedHeaders.clear();
       _selectedForVerification.clear();
-      _tabController.animateTo(2); // Switch to manage tab
+      _columnFilters.clear();
+      _tabController.animateTo(2);
     });
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$addedCount users verified and added to database!'), backgroundColor: const Color(0xFF4CAF50)));
+      SnackBar(content: Text('$addedCount users verified and added!'), backgroundColor: const Color(0xFF4CAF50)));
   }
 
   // ===== User CRUD =====
@@ -297,7 +406,6 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      // Header
       Container(
         padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
         child: Row(children: [
@@ -315,7 +423,6 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
         ]),
       ),
       const SizedBox(height: 16),
-      // Tab bar
       Container(
         margin: const EdgeInsets.symmetric(horizontal: 24),
         decoration: BoxDecoration(color: const Color(0xFF0D1F3C), borderRadius: BorderRadius.circular(12)),
@@ -331,7 +438,6 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
         ),
       ),
       const SizedBox(height: 16),
-      // Tab views
       Expanded(child: TabBarView(controller: _tabController, children: [
         _buildUploadTab(),
         _buildPreviewTab(),
@@ -345,7 +451,6 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(children: [
-        // Upload area
         InkWell(
           onTap: _pickFile,
           child: Container(
@@ -363,9 +468,9 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
                     child: const Icon(Icons.cloud_upload_outlined, size: 48, color: Color(0xFF1565C0)),
                   ),
                   const SizedBox(height: 20),
-                  const Text('Click to upload CSV/Excel file', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white)),
+                  const Text('Click to upload CSV or Excel file', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white)),
                   const SizedBox(height: 8),
-                  Text('Supported formats: .csv, .xlsx, .xls', style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.5))),
+                  Text('Supported: .csv, .xlsx, .xls', style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.5))),
                   if (_uploadFileName.isNotEmpty) ...[
                     const SizedBox(height: 12),
                     Container(
@@ -378,7 +483,6 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
           ),
         ),
         const SizedBox(height: 24),
-        // CSV Format Guide
         Container(
           width: double.infinity, padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFF1E3055))),
@@ -386,10 +490,10 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
             const Row(children: [
               Icon(Icons.info_outline, color: Color(0xFFD4A843), size: 20),
               SizedBox(width: 8),
-              Text('CSV Format Guide', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+              Text('File Format Guide', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
             ]),
             const SizedBox(height: 12),
-            Text('Your CSV file should have these column headers:', style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 13)),
+            Text('Your file should have column headers in the first row. Example:', style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 13)),
             const SizedBox(height: 12),
             Container(
               width: double.infinity, padding: const EdgeInsets.all(12),
@@ -400,6 +504,8 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
               ),
             ),
             const SizedBox(height: 12),
+            Text('The first row becomes column headers and filter options in the preview.', style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12)),
+            const SizedBox(height: 12),
             Wrap(spacing: 8, runSpacing: 8, children: [
               _formatChip('userId', true), _formatChip('name', true), _formatChip('password', false),
               _formatChip('role', false), _formatChip('department', false), _formatChip('year', false),
@@ -408,7 +514,6 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
           ]),
         ),
         const SizedBox(height: 16),
-        // Download template
         SizedBox(width: double.infinity, child: OutlinedButton.icon(
           style: OutlinedButton.styleFrom(
             side: const BorderSide(color: Color(0xFF1E3055)),
@@ -444,7 +549,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
     html.Url.revokeObjectUrl(url);
   }
 
-  // ===== TAB 2: Preview & Verify =====
+  // ===== TAB 2: Preview & Verify (with filters) =====
   Widget _buildPreviewTab() {
     if (_uploadedRows.isEmpty) {
       return Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -452,9 +557,13 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
         const SizedBox(height: 16),
         Text('No data to preview', style: TextStyle(fontSize: 18, color: Colors.white.withOpacity(0.4))),
         const SizedBox(height: 8),
-        Text('Upload a CSV file first', style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.3))),
+        Text('Upload a CSV or Excel file first', style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.3))),
       ]));
     }
+
+    final filtered = _filteredPreviewRows;
+    final hasActiveFilters = _columnFilters.values.any((v) => v != 'All' && v.isNotEmpty);
+
     return Column(children: [
       // Toolbar
       Container(
@@ -462,13 +571,24 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF1E3055))),
         child: Row(children: [
-          Text('${_uploadedRows.length} records loaded', style: const TextStyle(color: Colors.white70, fontSize: 14)),
+          const Icon(Icons.table_chart, size: 18, color: Color(0xFF42A5F5)),
           const SizedBox(width: 8),
+          Text('${filtered.length}${hasActiveFilters ? " filtered" : ""} of ${_uploadedRows.length} records',
+            style: const TextStyle(color: Colors.white70, fontSize: 14)),
+          const SizedBox(width: 12),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(color: const Color(0xFF4CAF50).withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
             child: Text('${_selectedForVerification.length} selected', style: const TextStyle(color: Color(0xFF4CAF50), fontSize: 12)),
           ),
+          if (hasActiveFilters) ...[
+            const SizedBox(width: 8),
+            TextButton.icon(
+              onPressed: () => setState(() => _columnFilters.clear()),
+              icon: const Icon(Icons.clear_all, size: 16, color: Color(0xFFFF9800)),
+              label: const Text('Clear Filters', style: TextStyle(color: Color(0xFFFF9800), fontSize: 12)),
+            ),
+          ],
           const Spacer(),
           Checkbox(
             value: _selectedForVerification.length == _uploadedRows.length && _uploadedRows.isNotEmpty,
@@ -482,37 +602,97 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
             style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF4CAF50), padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12)),
             onPressed: _verifyAndSave,
             icon: const Icon(Icons.check_circle, size: 18),
-            label: const Text('Verify & Save to Database'),
+            label: const Text('Verify & Save'),
           ),
         ]),
       ),
-      const SizedBox(height: 12),
-      // Table
+      const SizedBox(height: 8),
+      // Filter row
+      Container(
+        margin: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0D1F3C),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: const Color(0xFF1E3055).withOpacity(0.5)),
+        ),
+        child: Row(children: [
+          const Icon(Icons.filter_list, size: 16, color: Color(0xFFD4A843)),
+          const SizedBox(width: 8),
+          const Text('Filters:', style: TextStyle(color: Color(0xFFD4A843), fontSize: 13, fontWeight: FontWeight.w600)),
+          const SizedBox(width: 12),
+          Expanded(child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(children: _uploadedHeaders.map((header) {
+              final values = _getColumnValues(header);
+              if (values.isEmpty) return const SizedBox.shrink();
+              final current = _columnFilters[header] ?? 'All';
+              return Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: current != 'All' ? const Color(0xFF1565C0).withOpacity(0.15) : const Color(0xFF111D35),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: current != 'All' ? const Color(0xFF1565C0) : const Color(0xFF1E3055)),
+                  ),
+                  child: DropdownButtonHideUnderline(child: DropdownButton<String>(
+                    value: current,
+                    dropdownColor: const Color(0xFF111D35),
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                    isDense: true,
+                    icon: const Icon(Icons.arrow_drop_down, size: 16, color: Colors.white38),
+                    items: [
+                      DropdownMenuItem(value: 'All', child: Text(header, style: TextStyle(color: current == 'All' ? Colors.white54 : Colors.white, fontSize: 12))),
+                      ...values.map((v) => DropdownMenuItem(value: v, child: Text(v, style: const TextStyle(fontSize: 12)))),
+                    ],
+                    onChanged: (v) => setState(() => _columnFilters[header] = v ?? 'All'),
+                  )),
+                ),
+              );
+            }).toList()),
+          )),
+        ]),
+      ),
+      const SizedBox(height: 8),
+      // Data table
       Expanded(child: Container(
         margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
         decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF1E3055))),
-        child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: SingleChildScrollView(child: DataTable(
-          headingRowColor: WidgetStateProperty.all(const Color(0xFF0D1F3C)),
-          columnSpacing: 24,
-          columns: [
-            const DataColumn(label: Text('', style: TextStyle(color: Colors.white70))),
-            const DataColumn(label: Text('#', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold))),
-            ..._uploadedHeaders.map((h) => DataColumn(label: Text(h, style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.bold)))),
-          ],
-          rows: List.generate(_uploadedRows.length, (i) {
-            final row = _uploadedRows[i];
-            final selected = _selectedForVerification.contains(i);
-            return DataRow(
-              color: WidgetStateProperty.all(selected ? const Color(0xFF1565C0).withOpacity(0.1) : Colors.transparent),
-              cells: [
-                DataCell(Checkbox(value: selected, activeColor: const Color(0xFF1565C0), side: const BorderSide(color: Colors.white54),
-                  onChanged: (v) => setState(() { if (v == true) _selectedForVerification.add(i); else _selectedForVerification.remove(i); }))),
-                DataCell(Text('${i + 1}', style: const TextStyle(color: Colors.white54))),
-                ..._uploadedHeaders.map((h) => DataCell(Text(row[h] ?? '', style: const TextStyle(color: Colors.white)))),
-              ],
-            );
-          }),
-        ))),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: SingleChildScrollView(child: DataTable(
+            headingRowColor: WidgetStateProperty.all(const Color(0xFF0D1F3C)),
+            headingRowHeight: 48,
+            dataRowMinHeight: 40,
+            dataRowMaxHeight: 48,
+            columnSpacing: 24,
+            horizontalMargin: 16,
+            columns: [
+              const DataColumn(label: SizedBox(width: 32, child: Text('', style: TextStyle(color: Colors.white70)))),
+              const DataColumn(label: Text('#', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 13))),
+              ..._uploadedHeaders.map((h) => DataColumn(
+                label: Text(h, style: const TextStyle(color: Color(0xFF42A5F5), fontWeight: FontWeight.bold, fontSize: 13)),
+              )),
+            ],
+            rows: List.generate(filtered.length, (fi) {
+              final row = filtered[fi];
+              final origIdx = _uploadedRows.indexOf(row);
+              final selected = _selectedForVerification.contains(origIdx);
+              return DataRow(
+                color: WidgetStateProperty.all(selected ? const Color(0xFF1565C0).withOpacity(0.08) : (fi.isEven ? Colors.transparent : const Color(0xFF0D1F3C).withOpacity(0.3))),
+                cells: [
+                  DataCell(Checkbox(value: selected, activeColor: const Color(0xFF1565C0), side: const BorderSide(color: Colors.white38),
+                    onChanged: (v) => setState(() { if (v == true) _selectedForVerification.add(origIdx); else _selectedForVerification.remove(origIdx); }))),
+                  DataCell(Text('${origIdx + 1}', style: const TextStyle(color: Colors.white38, fontSize: 12))),
+                  ..._uploadedHeaders.map((h) => DataCell(
+                    Text(row[h] ?? '', style: const TextStyle(color: Colors.white, fontSize: 13)),
+                  )),
+                ],
+              );
+            }),
+          ))),
+        ),
       )),
     ]);
   }
@@ -521,7 +701,6 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
   Widget _buildManageTab() {
     final filtered = _filteredUsers;
     return Column(children: [
-      // Search & Filters
       Container(
         margin: const EdgeInsets.symmetric(horizontal: 24),
         padding: const EdgeInsets.all(16),
@@ -543,7 +722,6 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
         ]),
       ),
       const SizedBox(height: 12),
-      // Users table
       Expanded(child: Container(
         margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
         decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF1E3055))),
