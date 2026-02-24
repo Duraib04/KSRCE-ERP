@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../core/api_config.dart';
+import 'package:ksrce_erp/src/core/api_config.dart';
 
 // A data class for the result of a login attempt.
 @immutable
