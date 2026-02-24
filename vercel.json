@@ -5,8 +5,42 @@
   "outputDirectory": "build/web",
   "routes": [
     {
+      "src": "/assets/(.*)",
+      "headers": { "Cache-Control": "public, max-age=31536000, immutable" },
+      "dest": "/assets/$1"
+    },
+    {
+      "src": "/canvaskit/(.*)",
+      "headers": { "Cache-Control": "public, max-age=31536000, immutable" },
+      "dest": "/canvaskit/$1"
+    },
+    {
+      "src": "/main\\.dart\\.js",
+      "headers": { "Cache-Control": "public, max-age=86400" },
+      "dest": "/main.dart.js"
+    },
+    {
+      "src": "/flutter\\.js",
+      "headers": { "Cache-Control": "public, max-age=86400" },
+      "dest": "/flutter.js"
+    },
+    {
+      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot))",
+      "headers": { "Cache-Control": "public, max-age=31536000, immutable" },
+      "dest": "/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" }
+      ]
     }
   ]
 }
