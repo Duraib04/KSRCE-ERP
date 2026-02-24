@@ -7,26 +7,31 @@ class StudentCoursesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0D1F3C),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: const [
-                Icon(Icons.menu_book, color: Color(0xFFD4A843), size: 28),
-                SizedBox(width: 12),
-                Text('My Courses', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isMobile = constraints.maxWidth < 700;
+          return SingleChildScrollView(
+            padding: EdgeInsets.all(isMobile ? 16 : 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: const [
+                    Icon(Icons.menu_book, color: Color(0xFFD4A843), size: 28),
+                    SizedBox(width: 12),
+                    Text('My Courses', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                const Text('Semester 5 - Academic Year 2025-26', style: TextStyle(color: Colors.white60, fontSize: 14)),
+                const SizedBox(height: 24),
+                _buildCourseSummary(),
+                const SizedBox(height: 24),
+                ..._buildCourseCards(isMobile),
               ],
             ),
-            const SizedBox(height: 8),
-            const Text('Semester 5 - Academic Year 2025-26', style: TextStyle(color: Colors.white60, fontSize: 14)),
-            const SizedBox(height: 24),
-            _buildCourseSummary(),
-            const SizedBox(height: 24),
-            ..._buildCourseCards(),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -62,7 +67,7 @@ class StudentCoursesPage extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildCourseCards() {
+  List<Widget> _buildCourseCards(bool isMobile) {
     final courses = [
       {
         'code': 'CS3501',
@@ -165,27 +170,49 @@ class StudentCoursesPage extends StatelessWidget {
           const SizedBox(height: 12),
           Text(c['description']!, style: const TextStyle(color: Colors.white54, fontSize: 13)),
           const SizedBox(height: 12),
-          Row(
-            children: [
-              const Icon(Icons.person, color: Colors.white54, size: 16),
-              const SizedBox(width: 6),
-              Text(c['faculty']!, style: const TextStyle(color: Colors.white70, fontSize: 13)),
-              const SizedBox(width: 24),
-              const Icon(Icons.stars, color: Colors.white54, size: 16),
-              const SizedBox(width: 6),
-              Text('${c['credits']} Credits', style: const TextStyle(color: Colors.white70, fontSize: 13)),
-              const SizedBox(width: 24),
-              const Icon(Icons.schedule, color: Colors.white54, size: 16),
-              const SizedBox(width: 6),
-              Text(c['hours']!, style: const TextStyle(color: Colors.white70, fontSize: 13)),
-              const SizedBox(width: 24),
-              const Icon(Icons.business, color: Colors.white54, size: 16),
-              const SizedBox(width: 6),
-              Text(c['dept']!, style: const TextStyle(color: Colors.white70, fontSize: 13)),
-            ],
-          ),
+          isMobile
+              ? Wrap(
+                  spacing: 12,
+                  runSpacing: 8,
+                  children: [
+                    _iconText(Icons.person, c['faculty']!),
+                    _iconText(Icons.stars, '${c['credits']} Credits'),
+                    _iconText(Icons.schedule, c['hours']!),
+                    _iconText(Icons.business, c['dept']!),
+                  ],
+                )
+              : Row(
+                  children: [
+                    const Icon(Icons.person, color: Colors.white54, size: 16),
+                    const SizedBox(width: 6),
+                    Text(c['faculty']!, style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                    const SizedBox(width: 24),
+                    const Icon(Icons.stars, color: Colors.white54, size: 16),
+                    const SizedBox(width: 6),
+                    Text('${c['credits']} Credits', style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                    const SizedBox(width: 24),
+                    const Icon(Icons.schedule, color: Colors.white54, size: 16),
+                    const SizedBox(width: 6),
+                    Text(c['hours']!, style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                    const SizedBox(width: 24),
+                    const Icon(Icons.business, color: Colors.white54, size: 16),
+                    const SizedBox(width: 6),
+                    Text(c['dept']!, style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                  ],
+                ),
         ],
       ),
     )).toList();
+  }
+
+  Widget _iconText(IconData icon, String text) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, color: Colors.white54, size: 16),
+        const SizedBox(width: 6),
+        Text(text, style: const TextStyle(color: Colors.white70, fontSize: 13)),
+      ],
+    );
   }
 }

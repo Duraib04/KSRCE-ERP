@@ -74,49 +74,54 @@ class _StudentTimetablePageState extends State<StudentTimetablePage> with Single
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0D1F3C),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: const [
-                Icon(Icons.calendar_today, color: Color(0xFFD4A843), size: 28),
-                SizedBox(width: 12),
-                Text('Weekly Timetable', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isMobile = constraints.maxWidth < 700;
+          return Padding(
+            padding: EdgeInsets.all(isMobile ? 16 : 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: const [
+                    Icon(Icons.calendar_today, color: Color(0xFFD4A843), size: 28),
+                    SizedBox(width: 12),
+                    Text('Weekly Timetable', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                const Text('Semester 5 - Academic Year 2025-26', style: TextStyle(color: Colors.white60, fontSize: 14)),
+                const SizedBox(height: 20),
+                Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF111D35),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: TabBar(
+                    controller: _tabController,
+                    isScrollable: isMobile,
+                    indicatorColor: const Color(0xFFD4A843),
+                    labelColor: const Color(0xFFD4A843),
+                    unselectedLabelColor: Colors.white54,
+                    tabs: _days.map((d) => Tab(text: d.substring(0, 3).toUpperCase())).toList(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: _days.map((day) => _buildDaySchedule(day, isMobile)).toList(),
+                  ),
+                ),
               ],
             ),
-            const SizedBox(height: 8),
-            const Text('Semester 5 - Academic Year 2025-26', style: TextStyle(color: Colors.white60, fontSize: 14)),
-            const SizedBox(height: 20),
-            Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFF111D35),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: TabBar(
-                controller: _tabController,
-                isScrollable: false,
-                indicatorColor: const Color(0xFFD4A843),
-                labelColor: const Color(0xFFD4A843),
-                unselectedLabelColor: Colors.white54,
-                tabs: _days.map((d) => Tab(text: d.substring(0, 3).toUpperCase())).toList(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: _days.map((day) => _buildDaySchedule(day)).toList(),
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildDaySchedule(String day) {
+  Widget _buildDaySchedule(String day, bool isMobile) {
     final periods = _timetable[day] ?? [];
     return ListView.builder(
       itemCount: periods.length,
@@ -126,61 +131,113 @@ class _StudentTimetablePageState extends State<StudentTimetablePage> with Single
         final isFree = p['type'] == 'Free';
         return Container(
           margin: const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(isMobile ? 12 : 16),
           decoration: BoxDecoration(
             color: const Color(0xFF111D35),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: isLab ? Colors.teal.withOpacity(0.4) : isFree ? Colors.grey.withOpacity(0.3) : const Color(0xFF1E3055)),
           ),
+          child: isMobile ? _buildMobilePeriod(p, isLab, isFree) : _buildDesktopPeriod(p, isLab, isFree),
+        );
+      },
+    );
+  }
+
+  Widget _buildDesktopPeriod(Map<String, String> p, bool isLab, bool isFree) {
+    return Row(
+      children: [
+        Container(
+          width: 4,
+          height: 50,
+          decoration: BoxDecoration(
+            color: isLab ? Colors.tealAccent : isFree ? Colors.grey : const Color(0xFF1565C0),
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 16),
+        SizedBox(
+          width: 130,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(p['time']!, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14)),
+              Text(isLab ? 'Lab Session' : isFree ? 'Free Period' : 'Lecture', style: TextStyle(color: isLab ? Colors.tealAccent : Colors.white54, fontSize: 12)),
+            ],
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Text(p['subject']!, style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500)),
+        ),
+        SizedBox(
+          width: 100,
           child: Row(
             children: [
-              Container(
-                width: 4,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: isLab ? Colors.tealAccent : isFree ? Colors.grey : const Color(0xFF1565C0),
-                  borderRadius: BorderRadius.circular(2),
-                ),
+              const Icon(Icons.room, color: Colors.white38, size: 16),
+              const SizedBox(width: 4),
+              Text(p['room']!, style: const TextStyle(color: Colors.white54, fontSize: 13)),
+            ],
+          ),
+        ),
+        SizedBox(
+          width: 150,
+          child: Row(
+            children: [
+              const Icon(Icons.person, color: Colors.white38, size: 16),
+              const SizedBox(width: 4),
+              Text(p['faculty']!, style: const TextStyle(color: Colors.white54, fontSize: 13)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMobilePeriod(Map<String, String> p, bool isLab, bool isFree) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 4,
+          height: 70,
+          decoration: BoxDecoration(
+            color: isLab ? Colors.tealAccent : isFree ? Colors.grey : const Color(0xFF1565C0),
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(p['time']!, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13)),
+                  const SizedBox(width: 8),
+                  Text(
+                    isLab ? 'Lab Session' : isFree ? 'Free Period' : 'Lecture',
+                    style: TextStyle(color: isLab ? Colors.tealAccent : Colors.white54, fontSize: 11),
+                  ),
+                ],
               ),
-              const SizedBox(width: 16),
-              SizedBox(
-                width: 130,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(p['time']!, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14)),
-                    Text(isLab ? 'Lab Session' : isFree ? 'Free Period' : 'Lecture', style: TextStyle(color: isLab ? Colors.tealAccent : Colors.white54, fontSize: 12)),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(p['subject']!, style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500)),
-              ),
-              SizedBox(
-                width: 100,
-                child: Row(
-                  children: [
-                    const Icon(Icons.room, color: Colors.white38, size: 16),
-                    const SizedBox(width: 4),
-                    Text(p['room']!, style: const TextStyle(color: Colors.white54, fontSize: 13)),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: 150,
-                child: Row(
-                  children: [
-                    const Icon(Icons.person, color: Colors.white38, size: 16),
-                    const SizedBox(width: 4),
-                    Text(p['faculty']!, style: const TextStyle(color: Colors.white54, fontSize: 13)),
-                  ],
-                ),
+              const SizedBox(height: 4),
+              Text(p['subject']!, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500)),
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  const Icon(Icons.room, color: Colors.white38, size: 14),
+                  const SizedBox(width: 3),
+                  Text(p['room']!, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+                  const SizedBox(width: 12),
+                  const Icon(Icons.person, color: Colors.white38, size: 14),
+                  const SizedBox(width: 3),
+                  Flexible(child: Text(p['faculty']!, style: const TextStyle(color: Colors.white54, fontSize: 12), overflow: TextOverflow.ellipsis)),
+                ],
               ),
             ],
           ),
-        );
-      },
+        ),
+      ],
     );
   }
 }

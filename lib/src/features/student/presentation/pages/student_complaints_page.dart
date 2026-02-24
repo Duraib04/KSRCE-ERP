@@ -23,29 +23,43 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0D1F3C),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(children: const [
-              Icon(Icons.report_problem, color: Color(0xFFD4A843), size: 28),
-              SizedBox(width: 12),
-              Text('Complaints & Grievances', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
-            ]),
-            const SizedBox(height: 8),
-            const Text('Submit and track your complaints', style: TextStyle(color: Colors.white60, fontSize: 14)),
-            const SizedBox(height: 24),
-            Row(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isMobile = constraints.maxWidth < 700;
+          return SingleChildScrollView(
+            padding: EdgeInsets.all(isMobile ? 16 : 24),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(flex: 3, child: _buildComplaintsList()),
-                const SizedBox(width: 24),
-                Expanded(flex: 2, child: _buildNewComplaintForm()),
+                Row(children: const [
+                  Icon(Icons.report_problem, color: Color(0xFFD4A843), size: 28),
+                  SizedBox(width: 12),
+                  Text('Complaints & Grievances', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                ]),
+                const SizedBox(height: 8),
+                const Text('Submit and track your complaints', style: TextStyle(color: Colors.white60, fontSize: 14)),
+                const SizedBox(height: 24),
+                if (isMobile)
+                  Column(
+                    children: [
+                      _buildComplaintsList(),
+                      const SizedBox(height: 24),
+                      _buildNewComplaintForm(),
+                    ],
+                  )
+                else
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(flex: 3, child: _buildComplaintsList()),
+                      const SizedBox(width: 24),
+                      Expanded(flex: 2, child: _buildNewComplaintForm()),
+                    ],
+                  ),
               ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class FacultyStudentsPage extends StatefulWidget {
   const FacultyStudentsPage({super.key});
@@ -53,150 +53,238 @@ class _FacultyStudentsPageState extends State<FacultyStudentsPage> {
 
     return Scaffold(
       backgroundColor: _bg,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Student List', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
-                Row(
-                  children: [
-                    OutlinedButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.download, size: 16),
-                      label: const Text('Export to CSV'),
-                      style: OutlinedButton.styleFrom(foregroundColor: _gold, side: BorderSide(color: _gold.withOpacity(0.4))),
-                    ),
-                    const SizedBox(width: 10),
-                    OutlinedButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.print, size: 16),
-                      label: const Text('Print'),
-                      style: OutlinedButton.styleFrom(foregroundColor: Colors.white70, side: const BorderSide(color: Colors.white30)),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isMobile = constraints.maxWidth < 700;
+          final pad = isMobile ? 16.0 : 24.0;
 
-            // Filters
-            Row(
+          return SingleChildScrollView(
+            padding: EdgeInsets.all(pad),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
-                    decoration: BoxDecoration(color: _card, borderRadius: BorderRadius.circular(10), border: Border.all(color: _border)),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: _selectedCourse,
-                        dropdownColor: _card,
-                        isExpanded: true,
-                        style: const TextStyle(color: Colors.white, fontSize: 14),
-                        items: [
-                          'CS3501 - Compiler Design (Sec A)',
-                          'CS3501 - Compiler Design (Sec B)',
-                          'CS3691 - Embedded Systems & IoT (Sec A)',
-                          'CS3511 - Compiler Design Lab (Sec A)',
-                          'CS3401 - Algorithms Design & Analysis (Sec C)',
-                        ].map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
-                        onChanged: (v) => setState(() => _selectedCourse = v!),
+                // Title row
+                isMobile
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Student List', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 12),
+                          Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: [
+                              OutlinedButton.icon(
+                                onPressed: () {},
+                                icon: const Icon(Icons.download, size: 16),
+                                label: const Text('Export to CSV'),
+                                style: OutlinedButton.styleFrom(foregroundColor: _gold, side: BorderSide(color: _gold.withOpacity(0.4))),
+                              ),
+                              OutlinedButton.icon(
+                                onPressed: () {},
+                                icon: const Icon(Icons.print, size: 16),
+                                label: const Text('Print'),
+                                style: OutlinedButton.styleFrom(foregroundColor: Colors.white70, side: const BorderSide(color: Colors.white30)),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Student List', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
+                          Row(
+                            children: [
+                              OutlinedButton.icon(
+                                onPressed: () {},
+                                icon: const Icon(Icons.download, size: 16),
+                                label: const Text('Export to CSV'),
+                                style: OutlinedButton.styleFrom(foregroundColor: _gold, side: BorderSide(color: _gold.withOpacity(0.4))),
+                              ),
+                              const SizedBox(width: 10),
+                              OutlinedButton.icon(
+                                onPressed: () {},
+                                icon: const Icon(Icons.print, size: 16),
+                                label: const Text('Print'),
+                                style: OutlinedButton.styleFrom(foregroundColor: Colors.white70, side: const BorderSide(color: Colors.white30)),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
+                const SizedBox(height: 20),
+
+                // Filters
+                isMobile
+                    ? Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 14),
+                            decoration: BoxDecoration(color: _card, borderRadius: BorderRadius.circular(10), border: Border.all(color: _border)),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                value: _selectedCourse,
+                                dropdownColor: _card,
+                                isExpanded: true,
+                                style: const TextStyle(color: Colors.white, fontSize: 14),
+                                items: [
+                                  'CS3501 - Compiler Design (Sec A)',
+                                  'CS3501 - Compiler Design (Sec B)',
+                                  'CS3691 - Embedded Systems & IoT (Sec A)',
+                                  'CS3511 - Compiler Design Lab (Sec A)',
+                                  'CS3401 - Algorithms Design & Analysis (Sec C)',
+                                ].map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
+                                onChanged: (v) => setState(() => _selectedCourse = v!),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Container(
+                            decoration: BoxDecoration(color: _card, borderRadius: BorderRadius.circular(10), border: Border.all(color: _border)),
+                            child: TextField(
+                              style: const TextStyle(color: Colors.white, fontSize: 14),
+                              decoration: const InputDecoration(
+                                hintText: 'Search by name or roll no...',
+                                hintStyle: TextStyle(color: Colors.white30, fontSize: 14),
+                                prefixIcon: Icon(Icons.search, color: Colors.white30, size: 20),
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                              ),
+                              onChanged: (v) => setState(() => _searchQuery = v),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 14),
+                              decoration: BoxDecoration(color: _card, borderRadius: BorderRadius.circular(10), border: Border.all(color: _border)),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  value: _selectedCourse,
+                                  dropdownColor: _card,
+                                  isExpanded: true,
+                                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                                  items: [
+                                    'CS3501 - Compiler Design (Sec A)',
+                                    'CS3501 - Compiler Design (Sec B)',
+                                    'CS3691 - Embedded Systems & IoT (Sec A)',
+                                    'CS3511 - Compiler Design Lab (Sec A)',
+                                    'CS3401 - Algorithms Design & Analysis (Sec C)',
+                                  ].map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
+                                  onChanged: (v) => setState(() => _selectedCourse = v!),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              decoration: BoxDecoration(color: _card, borderRadius: BorderRadius.circular(10), border: Border.all(color: _border)),
+                              child: TextField(
+                                style: const TextStyle(color: Colors.white, fontSize: 14),
+                                decoration: const InputDecoration(
+                                  hintText: 'Search by name or roll no...',
+                                  hintStyle: TextStyle(color: Colors.white30, fontSize: 14),
+                                  prefixIcon: Icon(Icons.search, color: Colors.white30, size: 20),
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                                ),
+                                onChanged: (v) => setState(() => _searchQuery = v),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                const SizedBox(height: 16),
+
+                // Quick Stats
+                isMobile
+                    ? Wrap(
+                        spacing: 12,
+                        runSpacing: 12,
+                        children: [
+                          SizedBox(width: (constraints.maxWidth - pad * 2 - 12) / 2, child: _QStat(label: 'Total Students', value: '${_students.length}', color: _accent)),
+                          SizedBox(width: (constraints.maxWidth - pad * 2 - 12) / 2, child: _QStat(label: 'Above 75%', value: '$above75', color: Colors.greenAccent)),
+                          SizedBox(width: (constraints.maxWidth - pad * 2 - 12) / 2, child: _QStat(label: 'Below 75%', value: '$below75', color: Colors.redAccent)),
+                          SizedBox(width: (constraints.maxWidth - pad * 2 - 12) / 2, child: _QStat(label: 'Avg Attendance', value: '${(_students.fold<double>(0, (sum, s) => sum + (s['attendance'] as double)) / _students.length).toStringAsFixed(1)}%', color: _gold)),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          _QStat(label: 'Total Students', value: '${_students.length}', color: _accent),
+                          const SizedBox(width: 12),
+                          _QStat(label: 'Above 75%', value: '$above75', color: Colors.greenAccent),
+                          const SizedBox(width: 12),
+                          _QStat(label: 'Below 75%', value: '$below75', color: Colors.redAccent),
+                          const SizedBox(width: 12),
+                          _QStat(label: 'Avg Attendance', value: '${(_students.fold<double>(0, (sum, s) => sum + (s['attendance'] as double)) / _students.length).toStringAsFixed(1)}%', color: _gold),
+                        ],
+                      ),
+                const SizedBox(height: 20),
+
+                // Data Table
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(color: _card, borderRadius: BorderRadius.circular(12), border: Border.all(color: _border)),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      headingRowColor: WidgetStateProperty.all(const Color(0xFF1A2A4A)),
+                      columns: const [
+                        DataColumn(label: Text('S.No', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Roll Number', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Student Name', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Email', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Attendance %', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Grade', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Actions', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
+                      ],
+                      rows: List.generate(filtered.length, (i) {
+                        final s = filtered[i];
+                        final att = s['attendance'] as double;
+                        final g = s['grade'] as String;
+                        Color gradeColor = Colors.white;
+                        if (g == 'O') gradeColor = Colors.greenAccent;
+                        if (g.startsWith('A')) gradeColor = Colors.lightGreenAccent;
+                        if (g.startsWith('B')) gradeColor = Colors.cyan;
+                        if (g == 'C') gradeColor = Colors.orangeAccent;
+                        if (g == 'D' || g == 'E' || g == 'F') gradeColor = Colors.redAccent;
+
+                        return DataRow(cells: [
+                          DataCell(Text('${i + 1}', style: const TextStyle(color: Colors.white54, fontSize: 13))),
+                          DataCell(Text(s['rollNo'] as String, style: const TextStyle(color: Colors.white70, fontSize: 13))),
+                          DataCell(Text(s['name'] as String, style: const TextStyle(color: Colors.white, fontSize: 13))),
+                          DataCell(Text(s['email'] as String, style: const TextStyle(color: Colors.white54, fontSize: 12))),
+                          DataCell(Text('${att.toStringAsFixed(1)}%', style: TextStyle(
+                            color: att >= 85 ? Colors.greenAccent : att >= 75 ? Colors.orangeAccent : Colors.redAccent,
+                            fontSize: 13, fontWeight: FontWeight.w500,
+                          ))),
+                          DataCell(Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(color: gradeColor.withOpacity(0.12), borderRadius: BorderRadius.circular(6)),
+                            child: Text(g, style: TextStyle(color: gradeColor, fontSize: 12, fontWeight: FontWeight.bold)),
+                          )),
+                          DataCell(IconButton(
+                            icon: const Icon(Icons.visibility, color: Colors.white38, size: 18),
+                            onPressed: () {},
+                            tooltip: 'View Details',
+                          )),
+                        ]);
+                      }),
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    decoration: BoxDecoration(color: _card, borderRadius: BorderRadius.circular(10), border: Border.all(color: _border)),
-                    child: TextField(
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                      decoration: const InputDecoration(
-                        hintText: 'Search by name or roll no...',
-                        hintStyle: TextStyle(color: Colors.white30, fontSize: 14),
-                        prefixIcon: Icon(Icons.search, color: Colors.white30, size: 20),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-                      ),
-                      onChanged: (v) => setState(() => _searchQuery = v),
-                    ),
-                  ),
-                ),
+                const SizedBox(height: 16),
               ],
             ),
-            const SizedBox(height: 16),
-
-            // Quick Stats
-            Row(
-              children: [
-                _QStat(label: 'Total Students', value: '${_students.length}', color: _accent),
-                const SizedBox(width: 12),
-                _QStat(label: 'Above 75%', value: '$above75', color: Colors.greenAccent),
-                const SizedBox(width: 12),
-                _QStat(label: 'Below 75%', value: '$below75', color: Colors.redAccent),
-                const SizedBox(width: 12),
-                _QStat(label: 'Avg Attendance', value: '${(_students.fold<double>(0, (sum, s) => sum + (s['attendance'] as double)) / _students.length).toStringAsFixed(1)}%', color: _gold),
-              ],
-            ),
-            const SizedBox(height: 20),
-
-            // Data Table
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(color: _card, borderRadius: BorderRadius.circular(12), border: Border.all(color: _border)),
-              child: DataTable(
-                headingRowColor: WidgetStateProperty.all(const Color(0xFF1A2A4A)),
-                columns: const [
-                  DataColumn(label: Text('S.No', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Roll Number', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Student Name', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Email', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Attendance %', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Grade', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Actions', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                ],
-                rows: List.generate(filtered.length, (i) {
-                  final s = filtered[i];
-                  final att = s['attendance'] as double;
-                  final g = s['grade'] as String;
-                  Color gradeColor = Colors.white;
-                  if (g == 'O') gradeColor = Colors.greenAccent;
-                  if (g.startsWith('A')) gradeColor = Colors.lightGreenAccent;
-                  if (g.startsWith('B')) gradeColor = Colors.cyan;
-                  if (g == 'C') gradeColor = Colors.orangeAccent;
-                  if (g == 'D' || g == 'E' || g == 'F') gradeColor = Colors.redAccent;
-
-                  return DataRow(cells: [
-                    DataCell(Text('${i + 1}', style: const TextStyle(color: Colors.white54, fontSize: 13))),
-                    DataCell(Text(s['rollNo'] as String, style: const TextStyle(color: Colors.white70, fontSize: 13))),
-                    DataCell(Text(s['name'] as String, style: const TextStyle(color: Colors.white, fontSize: 13))),
-                    DataCell(Text(s['email'] as String, style: const TextStyle(color: Colors.white54, fontSize: 12))),
-                    DataCell(Text('${att.toStringAsFixed(1)}%', style: TextStyle(
-                      color: att >= 85 ? Colors.greenAccent : att >= 75 ? Colors.orangeAccent : Colors.redAccent,
-                      fontSize: 13, fontWeight: FontWeight.w500,
-                    ))),
-                    DataCell(Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(color: gradeColor.withOpacity(0.12), borderRadius: BorderRadius.circular(6)),
-                      child: Text(g, style: TextStyle(color: gradeColor, fontSize: 12, fontWeight: FontWeight.bold)),
-                    )),
-                    DataCell(IconButton(
-                      icon: const Icon(Icons.visibility, color: Colors.white38, size: 18),
-                      onPressed: () {},
-                      tooltip: 'View Details',
-                    )),
-                  ]);
-                }),
-              ),
-            ),
-            const SizedBox(height: 16),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

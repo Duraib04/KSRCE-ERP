@@ -7,76 +7,120 @@ class StudentProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0D1F3C),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('My Profile', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
-            const SizedBox(height: 24),
-            _buildProfileHeader(),
-            const SizedBox(height: 24),
-            Row(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isMobile = constraints.maxWidth < 700;
+          return SingleChildScrollView(
+            padding: EdgeInsets.all(isMobile ? 16 : 24),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(child: _buildPersonalInfo()),
-                const SizedBox(width: 24),
-                Expanded(child: _buildAcademicInfo()),
+                const Text('My Profile', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                const SizedBox(height: 24),
+                _buildProfileHeader(isMobile),
+                const SizedBox(height: 24),
+                if (isMobile) ...[
+                  _buildPersonalInfo(isMobile),
+                  const SizedBox(height: 24),
+                  _buildAcademicInfo(isMobile),
+                ] else
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: _buildPersonalInfo(isMobile)),
+                      const SizedBox(width: 24),
+                      Expanded(child: _buildAcademicInfo(isMobile)),
+                    ],
+                  ),
+                const SizedBox(height: 24),
+                _buildContactInfo(),
               ],
             ),
-            const SizedBox(height: 24),
-            _buildContactInfo(),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildProfileHeader() {
+  Widget _buildProfileHeader(bool isMobile) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(isMobile ? 16 : 24),
       decoration: BoxDecoration(
         color: const Color(0xFF111D35),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xFF1E3055)),
       ),
-      child: Row(
-        children: [
-          const CircleAvatar(
-            radius: 50,
-            backgroundColor: Color(0xFFD4A843),
-            child: Text('RA', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.white)),
-          ),
-          const SizedBox(width: 24),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text('Rahul Anand', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
-              SizedBox(height: 4),
-              Text('Roll No: 727622BCS052', style: TextStyle(fontSize: 16, color: Color(0xFFD4A843))),
-              SizedBox(height: 4),
-              Text('B.E. Computer Science & Engineering', style: TextStyle(fontSize: 14, color: Colors.white70)),
-              Text('3rd Year | Semester 5 | Section B', style: TextStyle(fontSize: 14, color: Colors.white60)),
-            ],
-          ),
-          const Spacer(),
-          ElevatedButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.edit, size: 18),
-            label: const Text('Edit Profile'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF1565C0),
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: isMobile
+          ? Column(
+              children: [
+                const CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Color(0xFFD4A843),
+                  child: Text('RA', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.white)),
+                ),
+                const SizedBox(height: 16),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [
+                    Text('Rahul Anand', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
+                    SizedBox(height: 4),
+                    Text('Roll No: 727622BCS052', style: TextStyle(fontSize: 16, color: Color(0xFFD4A843))),
+                    SizedBox(height: 4),
+                    Text('B.E. Computer Science & Engineering', style: TextStyle(fontSize: 14, color: Colors.white70)),
+                    Text('3rd Year | Semester 5 | Section B', style: TextStyle(fontSize: 14, color: Colors.white60)),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.edit, size: 18),
+                  label: const Text('Edit Profile'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF1565C0),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                const CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Color(0xFFD4A843),
+                  child: Text('RA', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.white)),
+                ),
+                const SizedBox(width: 24),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text('Rahul Anand', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
+                    SizedBox(height: 4),
+                    Text('Roll No: 727622BCS052', style: TextStyle(fontSize: 16, color: Color(0xFFD4A843))),
+                    SizedBox(height: 4),
+                    Text('B.E. Computer Science & Engineering', style: TextStyle(fontSize: 14, color: Colors.white70)),
+                    Text('3rd Year | Semester 5 | Section B', style: TextStyle(fontSize: 14, color: Colors.white60)),
+                  ],
+                ),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.edit, size: 18),
+                  label: const Text('Edit Profile'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF1565C0),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 
-  Widget _buildPersonalInfo() {
+  Widget _buildPersonalInfo(bool isMobile) {
     final details = [
       {'label': 'Date of Birth', 'value': '15 March 2004'},
       {'label': 'Gender', 'value': 'Male'},
@@ -107,8 +151,8 @@ class StudentProfilePage extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 12),
             child: Row(
               children: [
-                SizedBox(width: 150, child: Text(d['label']!, style: const TextStyle(color: Colors.white54, fontSize: 14))),
-                Text(d['value']!, style: const TextStyle(color: Colors.white, fontSize: 14)),
+                SizedBox(width: isMobile ? 110 : 150, child: Text(d['label']!, style: const TextStyle(color: Colors.white54, fontSize: 14))),
+                Flexible(child: Text(d['value']!, style: const TextStyle(color: Colors.white, fontSize: 14))),
               ],
             ),
           )),
@@ -117,7 +161,7 @@ class StudentProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildAcademicInfo() {
+  Widget _buildAcademicInfo(bool isMobile) {
     final details = [
       {'label': 'Register Number', 'value': '727622BCS052'},
       {'label': 'Batch', 'value': '2022 - 2026'},
@@ -148,8 +192,8 @@ class StudentProfilePage extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 12),
             child: Row(
               children: [
-                SizedBox(width: 150, child: Text(d['label']!, style: const TextStyle(color: Colors.white54, fontSize: 14))),
-                Text(d['value']!, style: const TextStyle(color: Colors.white, fontSize: 14)),
+                SizedBox(width: isMobile ? 110 : 150, child: Text(d['label']!, style: const TextStyle(color: Colors.white54, fontSize: 14))),
+                Flexible(child: Text(d['value']!, style: const TextStyle(color: Colors.white, fontSize: 14))),
               ],
             ),
           )),

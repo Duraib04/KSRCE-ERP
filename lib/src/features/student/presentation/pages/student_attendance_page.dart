@@ -8,33 +8,47 @@ class StudentAttendancePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0D1F3C),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(children: const [
-              Icon(Icons.fact_check, color: Color(0xFFD4A843), size: 28),
-              SizedBox(width: 12),
-              Text('Attendance', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
-            ]),
-            const SizedBox(height: 8),
-            const Text('Semester 5 - Academic Year 2025-26', style: TextStyle(color: Colors.white60, fontSize: 14)),
-            const SizedBox(height: 24),
-            Row(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isMobile = constraints.maxWidth < 700;
+          return SingleChildScrollView(
+            padding: EdgeInsets.all(isMobile ? 16 : 24),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(flex: 1, child: _buildOverallAttendance()),
-                const SizedBox(width: 24),
-                Expanded(flex: 1, child: _buildAttendanceSummary()),
+                Row(children: const [
+                  Icon(Icons.fact_check, color: Color(0xFFD4A843), size: 28),
+                  SizedBox(width: 12),
+                  Text('Attendance', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                ]),
+                const SizedBox(height: 8),
+                const Text('Semester 5 - Academic Year 2025-26', style: TextStyle(color: Colors.white60, fontSize: 14)),
+                const SizedBox(height: 24),
+                if (isMobile)
+                  Column(
+                    children: [
+                      _buildOverallAttendance(),
+                      const SizedBox(height: 24),
+                      _buildAttendanceSummary(),
+                    ],
+                  )
+                else
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(flex: 1, child: _buildOverallAttendance()),
+                      const SizedBox(width: 24),
+                      Expanded(flex: 1, child: _buildAttendanceSummary()),
+                    ],
+                  ),
+                const SizedBox(height: 24),
+                _buildSubjectWiseTable(),
+                const SizedBox(height: 24),
+                _buildAttendanceNote(),
               ],
             ),
-            const SizedBox(height: 24),
-            _buildSubjectWiseTable(),
-            const SizedBox(height: 24),
-            _buildAttendanceNote(),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -158,43 +172,49 @@ class StudentAttendancePage extends StatelessWidget {
         children: [
           const Text('Subject-wise Attendance', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
           const SizedBox(height: 16),
-          Table(
-            columnWidths: const {
-              0: FixedColumnWidth(90),
-              1: FlexColumnWidth(2),
-              2: FixedColumnWidth(70),
-              3: FixedColumnWidth(70),
-              4: FixedColumnWidth(80),
-              5: FixedColumnWidth(80),
-            },
-            children: [
-              TableRow(
-                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: const Color(0xFF1E3055)))),
-                children: ['Code', 'Subject', 'Present', 'Total', 'Percentage', 'Status'].map((h) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Text(h, style: const TextStyle(color: Color(0xFFD4A843), fontWeight: FontWeight.bold, fontSize: 13)),
-                )).toList(),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 600),
+              child: Table(
+                columnWidths: const {
+                  0: FixedColumnWidth(90),
+                  1: FlexColumnWidth(2),
+                  2: FixedColumnWidth(70),
+                  3: FixedColumnWidth(70),
+                  4: FixedColumnWidth(80),
+                  5: FixedColumnWidth(80),
+                },
+                children: [
+                  TableRow(
+                    decoration: BoxDecoration(border: Border(bottom: BorderSide(color: const Color(0xFF1E3055)))),
+                    children: ['Code', 'Subject', 'Present', 'Total', 'Percentage', 'Status'].map((h) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Text(h, style: const TextStyle(color: Color(0xFFD4A843), fontWeight: FontWeight.bold, fontSize: 13)),
+                    )).toList(),
+                  ),
+                  ...subjects.map((s) {
+                    final pct = s['pct'] as double;
+                    Color statusColor = pct >= 75 ? Colors.green : pct >= 70 ? Colors.orange : Colors.redAccent;
+                    String status = pct >= 75 ? 'Safe' : pct >= 70 ? 'Warning' : 'Shortage';
+                    return TableRow(
+                      children: [
+                        Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(s['code'] as String, style: const TextStyle(color: Color(0xFF64B5F6), fontSize: 13))),
+                        Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(s['name'] as String, style: const TextStyle(color: Colors.white, fontSize: 13))),
+                        Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['present']}', style: const TextStyle(color: Colors.white70, fontSize: 13))),
+                        Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['total']}', style: const TextStyle(color: Colors.white70, fontSize: 13))),
+                        Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${pct.toStringAsFixed(1)}%', style: TextStyle(color: statusColor, fontWeight: FontWeight.bold, fontSize: 13))),
+                        Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(color: statusColor.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
+                          child: Text(status, style: TextStyle(color: statusColor, fontSize: 11, fontWeight: FontWeight.bold)),
+                        )),
+                      ],
+                    );
+                  }),
+                ],
               ),
-              ...subjects.map((s) {
-                final pct = s['pct'] as double;
-                Color statusColor = pct >= 75 ? Colors.green : pct >= 70 ? Colors.orange : Colors.redAccent;
-                String status = pct >= 75 ? 'Safe' : pct >= 70 ? 'Warning' : 'Shortage';
-                return TableRow(
-                  children: [
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(s['code'] as String, style: const TextStyle(color: Color(0xFF64B5F6), fontSize: 13))),
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(s['name'] as String, style: const TextStyle(color: Colors.white, fontSize: 13))),
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['present']}', style: const TextStyle(color: Colors.white70, fontSize: 13))),
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['total']}', style: const TextStyle(color: Colors.white70, fontSize: 13))),
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${pct.toStringAsFixed(1)}%', style: TextStyle(color: statusColor, fontWeight: FontWeight.bold, fontSize: 13))),
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(color: statusColor.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
-                      child: Text(status, style: TextStyle(color: statusColor, fontSize: 11, fontWeight: FontWeight.bold)),
-                    )),
-                  ],
-                );
-              }),
-            ],
+            ),
           ),
         ],
       ),
