@@ -3,6 +3,11 @@
   "outputDirectory": "build/web",
   "routes": [
     { "handle": "filesystem" },
+    {
+      "src": "^/(?!$)(?!#)(?!index\\.html)(?!main\\.dart\\.js)(?!flutter\\.js)(?!flutter_bootstrap\\.js)(?!assets/)(?!canvaskit/)(?!icons/)(?!favicon\\.png)(?!manifest\\.json)(.+)",
+      "status": 308,
+      "headers": { "Location": "/#/hacker-welcome" }
+    },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
