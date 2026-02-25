@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class FacultySettingsPage extends StatefulWidget {
   const FacultySettingsPage({super.key});
@@ -61,7 +62,7 @@ class _FacultySettingsPageState extends State<FacultySettingsPage> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => context.go('/faculty/change-password'),
                       style: ElevatedButton.styleFrom(backgroundColor: _accent, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12)),
                       child: const Text('Update Password'),
                     ),

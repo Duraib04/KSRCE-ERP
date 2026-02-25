@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class StudentSettingsPage extends StatefulWidget {
   const StudentSettingsPage({super.key});
@@ -89,7 +90,7 @@ class _StudentSettingsPageState extends State<StudentSettingsPage> {
           const Text('Password must be at least 8 characters with uppercase, lowercase, number and special character.', style: TextStyle(color: Colors.white38, fontSize: 12)),
           const SizedBox(height: 16),
           ElevatedButton.icon(
-            onPressed: () {},
+            onPressed: () => context.go('/student/change-password'),
             icon: const Icon(Icons.save, size: 18),
             label: const Text('Update Password'),
             style: ElevatedButton.styleFrom(
