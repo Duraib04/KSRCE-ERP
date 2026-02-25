@@ -20,20 +20,24 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   bool _isLoading = false;
   int _selectedRole = 0;
 
-  final List<String> _roles = ['Student', 'Faculty', 'HOD', 'Admin'];
-  final List<IconData> _roleIcons = [Icons.school, Icons.person, Icons.supervisor_account, Icons.admin_panel_settings];
-  final List<String> _placeholders = ['Eg. STU001', 'Eg. FAC001', 'Eg. FAC003', 'Eg. ADM001'];
+  final List<String> _roles = ['Student', 'Faculty'];
+  final List<IconData> _roleIcons = [Icons.school, Icons.person];
+  final List<String> _placeholders = ['Eg. STU001', 'Eg. FAC001'];
   final Map<String, Map<String, String>> _demoCredentials = {
     'Student': {'userId': 'STU001', 'password': 'password123'},
     'Faculty': {'userId': 'FAC001', 'password': 'facultyPass789'},
-    'HOD': {'userId': 'FAC003', 'password': 'hodPass303'},
-    'Admin': {'userId': 'ADM001', 'password': 'adminSecure101'},
   };
+  // Faculty portal demo credentials (Faculty, HOD, Admin)
+  final List<Map<String, String>> _facultyDemoList = [
+    {'label': 'Faculty', 'userId': 'FAC001', 'password': 'facultyPass789', 'icon': 'person'},
+    {'label': 'HOD', 'userId': 'FAC003', 'password': 'hodPass303', 'icon': 'supervisor_account'},
+    {'label': 'Admin', 'userId': 'ADM001', 'password': 'adminSecure101', 'icon': 'admin_panel_settings'},
+  ];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) return;
       setState(() {
@@ -89,7 +93,12 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     if (mounted) setState(() => _isLoading = false);
   }
 
-  void _fillDemo() {
+  void _fillDemo([Map<String, String>? cred]) {
+    if (cred != null) {
+      _userIdController.text = cred['userId']!;
+      _passwordController.text = cred['password']!;
+      return;
+    }
     final demo = _demoCredentials[_roles[_selectedRole]]!;
     _userIdController.text = demo['userId']!;
     _passwordController.text = demo['password']!;
@@ -126,6 +135,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                               isLoading: _isLoading,
                               obscurePassword: _obscurePassword,
                               rememberMe: _rememberMe,
+                              selectedRole: _selectedRole,
+                              facultyDemoList: _facultyDemoList,
                               onToggleRemember: (v) => setState(() => _rememberMe = v ?? false),
                               onToggleObscure: () => setState(() => _obscurePassword = !_obscurePassword),
                               onLogin: _login,
@@ -148,6 +159,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                               isLoading: _isLoading,
                               obscurePassword: _obscurePassword,
                               rememberMe: _rememberMe,
+                              selectedRole: _selectedRole,
+                              facultyDemoList: _facultyDemoList,
                               onToggleRemember: (v) => setState(() => _rememberMe = v ?? false),
                               onToggleObscure: () => setState(() => _obscurePassword = !_obscurePassword),
                               onLogin: _login,
@@ -296,10 +309,12 @@ class _LoginFormCard extends StatelessWidget {
   final bool isLoading;
   final bool obscurePassword;
   final bool rememberMe;
+  final int selectedRole;
+  final List<Map<String, String>> facultyDemoList;
   final ValueChanged<bool?> onToggleRemember;
   final VoidCallback onToggleObscure;
   final VoidCallback onLogin;
-  final VoidCallback onDemoFill;
+  final void Function([Map<String, String>?]) onDemoFill;
 
   const _LoginFormCard({
     required this.formKey,
@@ -312,6 +327,8 @@ class _LoginFormCard extends StatelessWidget {
     required this.isLoading,
     required this.obscurePassword,
     required this.rememberMe,
+    required this.selectedRole,
+    required this.facultyDemoList,
     required this.onToggleRemember,
     required this.onToggleObscure,
     required this.onLogin,
@@ -359,7 +376,7 @@ class _LoginFormCard extends StatelessWidget {
                 unselectedLabelColor: AppColors.textLight,
                 dividerColor: Colors.transparent,
                 labelStyle: Theme.of(context).textTheme.labelLarge,
-                tabs: List.generate(3, (i) => Tab(
+                tabs: List.generate(2, (i) => Tab(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -431,11 +448,50 @@ class _LoginFormCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            OutlinedButton.icon(
-              onPressed: onDemoFill,
-              icon: const Icon(Icons.auto_fix_high),
-              label: const Text('Use Demo Credentials'),
-            ),
+            if (selectedRole == 0)
+              OutlinedButton.icon(
+                onPressed: () => onDemoFill(null),
+                icon: const Icon(Icons.auto_fix_high),
+                label: const Text('Use Demo Credentials'),
+              )
+            else ...[
+              const SizedBox(height: 4),
+              Text('Quick Demo Login', style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.textLight)),
+              const SizedBox(height: 8),
+              Row(
+                children: facultyDemoList.map((cred) {
+                  final iconMap = {
+                    'person': Icons.person,
+                    'supervisor_account': Icons.supervisor_account,
+                    'admin_panel_settings': Icons.admin_panel_settings,
+                  };
+                  return Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 3),
+                      child: InkWell(
+                        onTap: () => onDemoFill(cred),
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+                          decoration: BoxDecoration(
+                            color: AppColors.surfaceVariant,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: AppColors.borderLight),
+                          ),
+                          child: Column(mainAxisSize: MainAxisSize.min, children: [
+                            Icon(iconMap[cred['icon']] ?? Icons.person, size: 20, color: AppColors.primary),
+                            const SizedBox(height: 4),
+                            Text(cred['label']!, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+                            const SizedBox(height: 2),
+                            Text(cred['userId']!, style: const TextStyle(fontSize: 10, color: AppColors.textLight)),
+                          ]),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
           ],
         ),
       ),
