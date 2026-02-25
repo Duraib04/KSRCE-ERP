@@ -1,330 +1,92 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class FacultyExamsPage extends StatelessWidget {
   const FacultyExamsPage({super.key});
 
-  static const _bg = AppColors.background;
-  static const _card = AppColors.surface;
-  static const _border = AppColors.border;
-  static const _accent = AppColors.primary;
-  static const _gold = AppColors.accent;
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _bg,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Exam Management', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            const Text('Manage exams, question papers, and invigilation duties', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
+    return Consumer<DataService>(builder: (context, ds, _) {
+      final fid = ds.currentUserId ?? '';
+      final exams = ds.getFacultyExams(fid);
+      final courses = ds.getFacultyCourses(fid);
+
+      return Scaffold(
+        backgroundColor: AppColors.background,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: const [
+              Icon(Icons.quiz, color: AppColors.primary, size: 28),
+              SizedBox(width: 12),
+              Text('Exam Management', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+            ]),
             const SizedBox(height: 24),
-
-            // Upcoming Exams
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Upcoming Exams Schedule', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-                ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.upload_file, size: 16),
-                  label: const Text('Upload Question Paper'),
-                  style: ElevatedButton.styleFrom(backgroundColor: _accent, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            _ExamCard(
-              title: 'Internal Assessment - II',
-              course: 'CS3501 - Compiler Design',
-              date: '03 Mar 2026',
-              time: '09:30 AM - 11:00 AM',
-              duration: '1.5 Hours',
-              maxMarks: '50',
-              sections: 'A, B',
-              status: 'Upcoming',
-              qpStatus: 'Submitted',
-              color: _accent,
-            ),
-            const SizedBox(height: 10),
-            _ExamCard(
-              title: 'Internal Assessment - II',
-              course: 'CS3691 - Embedded Systems & IoT',
-              date: '04 Mar 2026',
-              time: '09:30 AM - 11:00 AM',
-              duration: '1.5 Hours',
-              maxMarks: '50',
-              sections: 'A',
-              status: 'Upcoming',
-              qpStatus: 'Draft',
-              color: Colors.teal,
-            ),
-            const SizedBox(height: 10),
-            _ExamCard(
-              title: 'Internal Assessment - II',
-              course: 'CS3401 - Algorithms Design & Analysis',
-              date: '05 Mar 2026',
-              time: '02:00 PM - 03:30 PM',
-              duration: '1.5 Hours',
-              maxMarks: '50',
-              sections: 'C',
-              status: 'Upcoming',
-              qpStatus: 'Pending',
-              color: Colors.orange,
-            ),
-            const SizedBox(height: 10),
-            _ExamCard(
-              title: 'Model Examination',
-              course: 'CS3501 - Compiler Design',
-              date: '20 Apr 2026',
-              time: '09:30 AM - 12:30 PM',
-              duration: '3 Hours',
-              maxMarks: '100',
-              sections: 'A, B',
-              status: 'Scheduled',
-              qpStatus: 'Not Started',
-              color: _gold,
-            ),
-            const SizedBox(height: 28),
-
-            // Invigilation Duties
-            const Text('Invigilation Duties', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(color: _card, borderRadius: BorderRadius.circular(12), border: Border.all(color: _border)),
-              child: DataTable(
-                headingRowColor: WidgetStateProperty.all(const Color(0xFF1A2A4A)),
-                columns: const [
-                  DataColumn(label: Text('Date', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Session', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Time', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Room', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Course (Exam)', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Students', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Co-Invigilator', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                ],
-                rows: const [
-                  DataRow(cells: [
-                    DataCell(Text('03 Mar', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                    DataCell(Text('FN', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                    DataCell(Text('09:30 - 11:00', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                    DataCell(Text('Exam Hall 3', style: TextStyle(color: AppColors.textDark, fontSize: 13))),
-                    DataCell(Text('CS3501 - Compiler Design', style: TextStyle(color: AppColors.textDark, fontSize: 13))),
-                    DataCell(Text('30', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                    DataCell(Text('Dr. S. Priya', style: TextStyle(color: AppColors.textLight, fontSize: 13))),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Text('05 Mar', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                    DataCell(Text('AN', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                    DataCell(Text('14:00 - 15:30', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                    DataCell(Text('Exam Hall 1', style: TextStyle(color: AppColors.textDark, fontSize: 13))),
-                    DataCell(Text('MA3351 - Transforms & PDE (Mech)', style: TextStyle(color: AppColors.textDark, fontSize: 13))),
-                    DataCell(Text('28', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                    DataCell(Text('Prof. K. Ramesh', style: TextStyle(color: AppColors.textLight, fontSize: 13))),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Text('07 Mar', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                    DataCell(Text('FN', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                    DataCell(Text('09:30 - 11:00', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                    DataCell(Text('Exam Hall 5', style: TextStyle(color: AppColors.textDark, fontSize: 13))),
-                    DataCell(Text('CS3691 - Embedded Systems & IoT', style: TextStyle(color: AppColors.textDark, fontSize: 13))),
-                    DataCell(Text('32', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                    DataCell(Text('Dr. M. Anitha', style: TextStyle(color: AppColors.textLight, fontSize: 13))),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Text('10 Mar', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                    DataCell(Text('FN', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                    DataCell(Text('09:30 - 11:00', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                    DataCell(Text('Exam Hall 2', style: TextStyle(color: AppColors.textDark, fontSize: 13))),
-                    DataCell(Text('EC3501 - VLSI Design (ECE)', style: TextStyle(color: AppColors.textDark, fontSize: 13))),
-                    DataCell(Text('35', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                    DataCell(Text('Dr. P. Venkatesh', style: TextStyle(color: AppColors.textLight, fontSize: 13))),
-                  ]),
-                ],
-              ),
-            ),
-            const SizedBox(height: 28),
-
-            // Hall Ticket Status
-            const Text('Hall Ticket Generation Status', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 14,
-              runSpacing: 14,
-              children: [
-                _HallTicketStat(course: 'CS3501 (Sec A)', eligible: 60, detained: 5, total: 65, color: _accent),
-                _HallTicketStat(course: 'CS3501 (Sec B)', eligible: 59, detained: 4, total: 63, color: _accent),
-                _HallTicketStat(course: 'CS3691 (Sec A)', eligible: 56, detained: 6, total: 62, color: Colors.teal),
-                _HallTicketStat(course: 'CS3401 (Sec C)', eligible: 54, detained: 4, total: 58, color: Colors.orange),
-              ],
-            ),
+            Row(children: [
+              _stat('My Exams', '${exams.length}', AppColors.primary, Icons.event_note),
+              const SizedBox(width: 16),
+              _stat('Courses', '${courses.length}', Colors.green, Icons.class_),
+            ]),
             const SizedBox(height: 24),
-
-            // Question Paper Status
-            const Text('Question Paper Status', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(color: _card, borderRadius: BorderRadius.circular(12), border: Border.all(color: _border)),
-              child: DataTable(
-                headingRowColor: WidgetStateProperty.all(const Color(0xFF1A2A4A)),
-                columns: const [
-                  DataColumn(label: Text('Course', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Exam', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Status', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Deadline', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Action', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                ],
-                rows: [
-                  _qpRow('CS3501', 'IA-II', 'Submitted', '28 Feb', Colors.greenAccent),
-                  _qpRow('CS3691', 'IA-II', 'Draft', '28 Feb', Colors.orangeAccent),
-                  _qpRow('CS3401', 'IA-II', 'Pending', '28 Feb', Colors.redAccent),
-                  _qpRow('CS3501', 'Model', 'Not Started', '15 Apr', AppColors.border),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-          ],
+            _buildExamList(exams),
+          ]),
         ),
-      ),
-    );
+      );
+    });
   }
 
-  DataRow _qpRow(String course, String exam, String status, String deadline, Color color) {
-    return DataRow(cells: [
-      DataCell(Text(course, style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
-      DataCell(Text(exam, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
-      DataCell(Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-        decoration: BoxDecoration(color: color.withOpacity(0.12), borderRadius: BorderRadius.circular(6)),
-        child: Text(status, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500)),
-      )),
-      DataCell(Text(deadline, style: const TextStyle(color: AppColors.textLight, fontSize: 13))),
-      DataCell(TextButton(onPressed: () {}, child: Text(status == 'Submitted' ? 'View' : 'Upload', style: TextStyle(color: _accent, fontSize: 12)))),
-    ]);
-  }
-}
-
-class _ExamCard extends StatelessWidget {
-  final String title, course, date, time, duration, maxMarks, sections, status, qpStatus;
-  final Color color;
-  const _ExamCard({required this.title, required this.course, required this.date, required this.time,
-    required this.duration, required this.maxMarks, required this.sections, required this.status,
-    required this.qpStatus, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    Color qpColor = AppColors.border;
-    if (qpStatus == 'Submitted') qpColor = Colors.greenAccent;
-    if (qpStatus == 'Draft') qpColor = Colors.orangeAccent;
-    if (qpStatus == 'Pending') qpColor = Colors.redAccent;
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
-      child: Row(
-        children: [
-          Container(width: 4, height: 70, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2))),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
-                const SizedBox(height: 2),
-                Text(course, style: const TextStyle(color: AppColors.textDark, fontSize: 15, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    _ExInfo(Icons.calendar_today, date),
-                    const SizedBox(width: 16),
-                    _ExInfo(Icons.access_time, time),
-                    const SizedBox(width: 16),
-                    _ExInfo(Icons.timer, duration),
-                    const SizedBox(width: 16),
-                    _ExInfo(Icons.score, 'Max: $maxMarks'),
-                    const SizedBox(width: 16),
-                    _ExInfo(Icons.group, 'Sec $sections'),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Column(
-            children: [
-              Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), decoration: BoxDecoration(color: color.withOpacity(0.12), borderRadius: BorderRadius.circular(8)),
-                child: Text(status, style: TextStyle(color: color, fontSize: 12))),
-              const SizedBox(height: 6),
-              Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), decoration: BoxDecoration(color: qpColor.withOpacity(0.12), borderRadius: BorderRadius.circular(8)),
-                child: Text('QP: $qpStatus', style: TextStyle(color: qpColor, fontSize: 11))),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ExInfo extends StatelessWidget {
-  final IconData icon;
-  final String text;
-  const _ExInfo(this.icon, this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 13, color: AppColors.textLight),
-        const SizedBox(width: 4),
-        Text(text, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
-      ],
-    );
-  }
-}
-
-class _HallTicketStat extends StatelessWidget {
-  final String course;
-  final int eligible, detained, total;
-  final Color color;
-  const _HallTicketStat({required this.course, required this.eligible, required this.detained, required this.total, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 220,
+  Widget _stat(String label, String value, Color color, IconData icon) {
+    return Expanded(child: Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(course, style: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(children: [
-                Text('$eligible', style: const TextStyle(color: Colors.greenAccent, fontSize: 20, fontWeight: FontWeight.bold)),
-                const Text('Eligible', style: TextStyle(color: AppColors.textLight, fontSize: 11)),
-              ]),
-              Column(children: [
-                Text('$detained', style: const TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold)),
-                const Text('Detained', style: TextStyle(color: AppColors.textLight, fontSize: 11)),
-              ]),
-              Column(children: [
-                Text('$total', style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                const Text('Total', style: TextStyle(color: AppColors.textLight, fontSize: 11)),
-              ]),
-            ],
-          ),
-        ],
-      ),
+      child: Column(children: [
+        Icon(icon, color: color, size: 24),
+        const SizedBox(height: 8),
+        Text(value, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: color)),
+        Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+      ]),
+    ));
+  }
+
+  Widget _buildExamList(List<Map<String, dynamic>> exams) {
+    if (exams.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(40),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12)),
+        child: const Center(child: Text('No exams assigned', style: TextStyle(color: AppColors.textLight))),
+      );
+    }
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const Text('Exam Schedule', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+        const SizedBox(height: 16),
+        ...exams.map((e) {
+          final type = (e['type'] ?? '').toString();
+          final isInternal = type.toLowerCase().contains('internal');
+          final color = isInternal ? Colors.orange : Colors.redAccent;
+          return Container(
+            margin: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
+            child: Row(children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(6)),
+                child: Text(type, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(width: 14),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text('${e['courseId'] ?? ''} - ${e['examName'] ?? ''}', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w600, fontSize: 14)),
+                Text('${e['date'] ?? ''} | ${e['time'] ?? ''} | ${e['venue'] ?? ''}', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+              ])),
+            ]),
+          );
+        }),
+      ]),
     );
   }
 }

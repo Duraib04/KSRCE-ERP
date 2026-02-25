@@ -41,10 +41,13 @@ class AdminDashboardPage extends StatelessWidget {
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 const Text('Recent Activity', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
                 const SizedBox(height: 16),
-                _ActivityItem(icon: Icons.person_add, text: '5 new students registered', time: '2 hours ago', color: const Color(0xFF4CAF50)),
-                _ActivityItem(icon: Icons.upload, text: 'Bulk upload completed (120 records)', time: '5 hours ago', color: AppColors.primary),
-                _ActivityItem(icon: Icons.block, text: 'User STU003 temporarily suspended', time: '1 day ago', color: const Color(0xFFEF5350)),
-                _ActivityItem(icon: Icons.check_circle, text: '3 complaints resolved', time: '2 days ago', color: AppColors.accent),
+                ...ds.notifications.take(4).map((n) => _ActivityItem(
+                  icon: n['isRead'] == true ? Icons.check_circle : Icons.notifications_active,
+                  text: '${n['title'] ?? ''}: ${n['message'] ?? ''}',
+                  time: n['date'] ?? '',
+                  color: n['isRead'] == true ? AppColors.accent : AppColors.primary,
+                )),
+                if (ds.notifications.isEmpty) const _ActivityItem(icon: Icons.info, text: 'No recent activity', time: '', color: AppColors.textLight),
               ]),
             ),
           ],

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class FacultyAttendancePage extends StatefulWidget {
@@ -9,422 +11,135 @@ class FacultyAttendancePage extends StatefulWidget {
 }
 
 class _FacultyAttendancePageState extends State<FacultyAttendancePage> {
-  static const _bg = AppColors.background;
-  static const _card = AppColors.surface;
-  static const _border = AppColors.border;
-  static const _accent = AppColors.primary;
-  static const _gold = AppColors.accent;
-
-  String _selectedCourse = 'CS3501 - Compiler Design (Sec A)';
-  final List<String> _courses = [
-    'CS3501 - Compiler Design (Sec A)',
-    'CS3501 - Compiler Design (Sec B)',
-    'CS3691 - Embedded Systems & IoT (Sec A)',
-    'CS3511 - Compiler Design Lab (Sec A)',
-    'CS3401 - Algorithms Design & Analysis (Sec C)',
-  ];
-
-  final List<Map<String, dynamic>> _students = [
-    {'rollNo': '7376222CS101', 'name': 'Abishek R', 'present': true, 'totalPct': 92.3},
-    {'rollNo': '7376222CS102', 'name': 'Arun Kumar S', 'present': true, 'totalPct': 88.5},
-    {'rollNo': '7376222CS103', 'name': 'Bharathi M', 'present': true, 'totalPct': 95.0},
-    {'rollNo': '7376222CS104', 'name': 'Deepika V', 'present': false, 'totalPct': 71.2},
-    {'rollNo': '7376222CS105', 'name': 'Gayathri P', 'present': true, 'totalPct': 85.6},
-    {'rollNo': '7376222CS106', 'name': 'Hariharan K', 'present': true, 'totalPct': 90.1},
-    {'rollNo': '7376222CS107', 'name': 'Janani S', 'present': false, 'totalPct': 68.9},
-    {'rollNo': '7376222CS108', 'name': 'Karthikeyan M', 'present': true, 'totalPct': 82.4},
-    {'rollNo': '7376222CS109', 'name': 'Lakshmi Priya R', 'present': true, 'totalPct': 93.7},
-    {'rollNo': '7376222CS110', 'name': 'Manikandan T', 'present': true, 'totalPct': 76.3},
-    {'rollNo': '7376222CS111', 'name': 'Nithya Sri K', 'present': true, 'totalPct': 97.2},
-    {'rollNo': '7376222CS112', 'name': 'Pavithra S', 'present': false, 'totalPct': 65.8},
-    {'rollNo': '7376222CS113', 'name': 'Rajesh Kumar B', 'present': true, 'totalPct': 84.1},
-    {'rollNo': '7376222CS114', 'name': 'Sangeetha V', 'present': true, 'totalPct': 91.5},
-    {'rollNo': '7376222CS115', 'name': 'Tamilselvan R', 'present': true, 'totalPct': 79.8},
-    {'rollNo': '7376222CS116', 'name': 'Uma Maheshwari D', 'present': true, 'totalPct': 86.2},
-    {'rollNo': '7376222CS117', 'name': 'Vignesh S', 'present': false, 'totalPct': 72.5},
-    {'rollNo': '7376222CS118', 'name': 'Yuvaraj M', 'present': true, 'totalPct': 88.9},
-    {'rollNo': '7376222CS119', 'name': 'Pradeep Kumar N', 'present': true, 'totalPct': 83.6},
-    {'rollNo': '7376222CS120', 'name': 'Surya Prakash A', 'present': true, 'totalPct': 91.0},
-  ];
+  String? _selectedCourse;
 
   @override
   Widget build(BuildContext context) {
-    final presentCount = _students.where((s) => s['present'] == true).length;
-    final absentCount = _students.length - presentCount;
+    return Consumer<DataService>(builder: (context, ds, _) {
+      final fid = ds.currentUserId ?? '';
+      final courses = ds.getFacultyCourses(fid);
+      if (_selectedCourse == null && courses.isNotEmpty) {
+        _selectedCourse = courses.first['courseId'] as String?;
+      }
+      final students = _selectedCourse != null ? ds.getCourseStudents(_selectedCourse!) : <Map<String, dynamic>>[];
+      final attendance = _selectedCourse != null ? ds.getCourseAttendance(_selectedCourse!) : <Map<String, dynamic>>[];
 
-    return Scaffold(
-      backgroundColor: _bg,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final isMobile = constraints.maxWidth < 700;
-          final pagePadding = isMobile ? 16.0 : 24.0;
+      return Scaffold(
+        backgroundColor: AppColors.background,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: const [
+              Icon(Icons.fact_check, color: AppColors.primary, size: 28),
+              SizedBox(width: 12),
+              Text('Attendance Management', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+            ]),
+            const SizedBox(height: 24),
+            _buildCourseSelector(courses),
+            const SizedBox(height: 24),
+            _buildAttendanceStats(attendance),
+            const SizedBox(height: 24),
+            _buildStudentList(students, attendance),
+          ]),
+        ),
+      );
+    });
+  }
 
-          return SingleChildScrollView(
-            padding: EdgeInsets.all(pagePadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Attendance Management', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                const Text('Mark and manage student attendance', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
-                const SizedBox(height: 20),
-
-                // Filters Row
-                if (isMobile) ...[
-                  // Course dropdown full width
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
-                    decoration: BoxDecoration(
-                      color: _card,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: _border),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: _selectedCourse,
-                        dropdownColor: _card,
-                        isExpanded: true,
-                        style: const TextStyle(color: AppColors.textDark, fontSize: 14),
-                        items: _courses.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
-                        onChanged: (v) => setState(() => _selectedCourse = v!),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  // Date & Hour on second row
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: [
-                      InkWell(
-                        onTap: () {},
-                        child: Container(
-                          padding: const EdgeInsets.all(14),
-                          decoration: BoxDecoration(
-                            color: _card,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: _border),
-                          ),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.calendar_today, color: AppColors.textLight, size: 18),
-                              SizedBox(width: 8),
-                              Text('24 Feb 2026', style: TextStyle(color: AppColors.textDark, fontSize: 14)),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: _card,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: _border),
-                        ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.access_time, color: AppColors.textLight, size: 18),
-                            SizedBox(width: 8),
-                            Text('Hour: 1 (08:30 - 09:20)', style: TextStyle(color: AppColors.textDark, fontSize: 14)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ] else
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14),
-                          decoration: BoxDecoration(
-                            color: _card,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: _border),
-                          ),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              value: _selectedCourse,
-                              dropdownColor: _card,
-                              isExpanded: true,
-                              style: const TextStyle(color: AppColors.textDark, fontSize: 14),
-                              items: _courses.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
-                              onChanged: (v) => setState(() => _selectedCourse = v!),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        flex: 1,
-                        child: InkWell(
-                          onTap: () {},
-                          child: Container(
-                            padding: const EdgeInsets.all(14),
-                            decoration: BoxDecoration(
-                              color: _card,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: _border),
-                            ),
-                            child: const Row(
-                              children: [
-                                Icon(Icons.calendar_today, color: AppColors.textLight, size: 18),
-                                SizedBox(width: 8),
-                                Text('24 Feb 2026', style: TextStyle(color: AppColors.textDark, fontSize: 14)),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: _card,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: _border),
-                        ),
-                        child: const Row(
-                          children: [
-                            Icon(Icons.access_time, color: AppColors.textLight, size: 18),
-                            SizedBox(width: 8),
-                            Text('Hour: 1 (08:30 - 09:20)', style: TextStyle(color: AppColors.textDark, fontSize: 14)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                const SizedBox(height: 20),
-
-                // Attendance Summary Cards
-                if (isMobile)
-                  Wrap(
-                    spacing: 12,
-                    runSpacing: 12,
-                    children: [
-                      _AttendanceStat(label: 'Total Students', value: '${_students.length}', icon: Icons.people, color: _accent, isMobile: true),
-                      _AttendanceStat(label: 'Present', value: '$presentCount', icon: Icons.check_circle, color: Colors.greenAccent, isMobile: true),
-                      _AttendanceStat(label: 'Absent', value: '$absentCount', icon: Icons.cancel, color: Colors.redAccent, isMobile: true),
-                      _AttendanceStat(label: 'Percentage', value: '${((presentCount / _students.length) * 100).toStringAsFixed(1)}%', icon: Icons.percent, color: _gold, isMobile: true),
-                    ],
-                  )
-                else
-                  Row(
-                    children: [
-                      _AttendanceStat(label: 'Total Students', value: '${_students.length}', icon: Icons.people, color: _accent),
-                      const SizedBox(width: 12),
-                      _AttendanceStat(label: 'Present', value: '$presentCount', icon: Icons.check_circle, color: Colors.greenAccent),
-                      const SizedBox(width: 12),
-                      _AttendanceStat(label: 'Absent', value: '$absentCount', icon: Icons.cancel, color: Colors.redAccent),
-                      const SizedBox(width: 12),
-                      _AttendanceStat(label: 'Percentage', value: '${((presentCount / _students.length) * 100).toStringAsFixed(1)}%', icon: Icons.percent, color: _gold),
-                    ],
-                  ),
-                const SizedBox(height: 20),
-
-                // Quick Actions
-                if (isMobile)
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: [
-                      OutlinedButton.icon(
-                        onPressed: () => setState(() { for (var s in _students) { s['present'] = true; } }),
-                        icon: const Icon(Icons.select_all, size: 16),
-                        label: const Text('Mark All Present'),
-                        style: OutlinedButton.styleFrom(foregroundColor: Colors.greenAccent, side: const BorderSide(color: Colors.greenAccent)),
-                      ),
-                      OutlinedButton.icon(
-                        onPressed: () => setState(() { for (var s in _students) { s['present'] = false; } }),
-                        icon: const Icon(Icons.deselect, size: 16),
-                        label: const Text('Mark All Absent'),
-                        style: OutlinedButton.styleFrom(foregroundColor: Colors.redAccent, side: const BorderSide(color: Colors.redAccent)),
-                      ),
-                      const Text('Showing 20 of 65 students', style: TextStyle(color: AppColors.textLight, fontSize: 12)),
-                    ],
-                  )
-                else
-                  Row(
-                    children: [
-                      OutlinedButton.icon(
-                        onPressed: () => setState(() { for (var s in _students) { s['present'] = true; } }),
-                        icon: const Icon(Icons.select_all, size: 16),
-                        label: const Text('Mark All Present'),
-                        style: OutlinedButton.styleFrom(foregroundColor: Colors.greenAccent, side: const BorderSide(color: Colors.greenAccent)),
-                      ),
-                      const SizedBox(width: 10),
-                      OutlinedButton.icon(
-                        onPressed: () => setState(() { for (var s in _students) { s['present'] = false; } }),
-                        icon: const Icon(Icons.deselect, size: 16),
-                        label: const Text('Mark All Absent'),
-                        style: OutlinedButton.styleFrom(foregroundColor: Colors.redAccent, side: const BorderSide(color: Colors.redAccent)),
-                      ),
-                      const Spacer(),
-                      const Text('Showing 20 of 65 students', style: TextStyle(color: AppColors.textLight, fontSize: 12)),
-                    ],
-                  ),
-                const SizedBox(height: 16),
-
-                // Student List
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: _card,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: _border),
-                  ),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      headingRowColor: WidgetStateProperty.all(const Color(0xFF1A2A4A)),
-                      columns: const [
-                        DataColumn(label: Text('S.No', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Roll Number', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Student Name', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Overall %', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Status', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                      ],
-                      rows: List.generate(_students.length, (i) {
-                        final s = _students[i];
-                        final pct = s['totalPct'] as double;
-                        return DataRow(
-                          cells: [
-                            DataCell(Text('${i + 1}', style: const TextStyle(color: AppColors.textLight, fontSize: 13))),
-                            DataCell(Text(s['rollNo'] as String, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                            DataCell(Text(s['name'] as String, style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
-                            DataCell(Text('${pct.toStringAsFixed(1)}%', style: TextStyle(
-                              color: pct >= 85 ? Colors.greenAccent : pct >= 75 ? Colors.orangeAccent : Colors.redAccent,
-                              fontSize: 13, fontWeight: FontWeight.w500,
-                            ))),
-                            DataCell(
-                              InkWell(
-                                onTap: () => setState(() => s['present'] = !(s['present'] as bool)),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                                  decoration: BoxDecoration(
-                                    color: (s['present'] as bool) ? Colors.greenAccent.withOpacity(0.12) : Colors.redAccent.withOpacity(0.12),
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(color: (s['present'] as bool) ? Colors.greenAccent.withOpacity(0.3) : Colors.redAccent.withOpacity(0.3)),
-                                  ),
-                                  child: Text(
-                                    (s['present'] as bool) ? 'Present' : 'Absent',
-                                    style: TextStyle(color: (s['present'] as bool) ? Colors.greenAccent : Colors.redAccent, fontSize: 12, fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      }),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                // Submit Button
-                if (isMobile)
-                  Wrap(
-                    spacing: 12,
-                    runSpacing: 10,
-                    alignment: WrapAlignment.end,
-                    children: [
-                      OutlinedButton(
-                        onPressed: () {},
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: AppColors.textMedium,
-                          side: const BorderSide(color: AppColors.border),
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                        ),
-                        child: const Text('Save as Draft'),
-                      ),
-                      ElevatedButton.icon(
-                        onPressed: () {},
-                        icon: const Icon(Icons.check, size: 18),
-                        label: const Text('Submit Attendance'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _accent,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        ),
-                      ),
-                    ],
-                  )
-                else
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      OutlinedButton(
-                        onPressed: () {},
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: AppColors.textMedium,
-                          side: const BorderSide(color: AppColors.border),
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                        ),
-                        child: const Text('Save as Draft'),
-                      ),
-                      const SizedBox(width: 12),
-                      ElevatedButton.icon(
-                        onPressed: () {},
-                        icon: const Icon(Icons.check, size: 18),
-                        label: const Text('Submit Attendance'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _accent,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        ),
-                      ),
-                    ],
-                  ),
-                const SizedBox(height: 16),
-              ],
+  Widget _buildCourseSelector(List<Map<String, dynamic>> courses) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      child: Row(children: [
+        const Text('Select Course: ', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w600)),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.border)),
+            child: DropdownButton<String>(
+              value: _selectedCourse, isExpanded: true, dropdownColor: AppColors.surface,
+              style: const TextStyle(color: AppColors.textDark), underline: const SizedBox(),
+              items: courses.map((c) => DropdownMenuItem(value: c['courseId'] as String?, child: Text('${c['courseId']} - ${c['courseName'] ?? ''}'))).toList(),
+              onChanged: (v) => setState(() => _selectedCourse = v),
             ),
-          );
-        },
-      ),
+          ),
+        ),
+      ]),
     );
   }
-}
 
-class _AttendanceStat extends StatelessWidget {
-  final String label, value;
-  final IconData icon;
-  final Color color;
-  final bool isMobile;
-  const _AttendanceStat({required this.label, required this.value, required this.icon, required this.color, this.isMobile = false});
-
-  @override
-  Widget build(BuildContext context) {
-    final content = Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        mainAxisSize: isMobile ? MainAxisSize.min : MainAxisSize.max,
-        children: [
-          CircleAvatar(radius: 20, backgroundColor: color.withOpacity(0.12), child: Icon(icon, color: color, size: 20)),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(value, style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
-              Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
-            ],
-          ),
-        ],
-      ),
-    );
-
-    if (isMobile) {
-      return content;
+  Widget _buildAttendanceStats(List<Map<String, dynamic>> attendance) {
+    int totalStudents = 0, avgAttendance = 0;
+    if (attendance.isNotEmpty) {
+      totalStudents = attendance.length;
+      int totalPresent = 0, totalClasses = 0;
+      for (final a in attendance) {
+        totalPresent += (a['attendedClasses'] as int?) ?? 0;
+        totalClasses += (a['totalClasses'] as int?) ?? 0;
+      }
+      avgAttendance = totalClasses > 0 ? (totalPresent * 100 ~/ totalClasses) : 0;
     }
-    return Expanded(child: content);
+    final belowThreshold = attendance.where((a) {
+      final total = (a['totalClasses'] as int?) ?? 1;
+      final attended = (a['attendedClasses'] as int?) ?? 0;
+      return total > 0 && (attended / total * 100) < 75;
+    }).length;
+
+    return Row(children: [
+      _stat('Total Students', '$totalStudents', AppColors.primary, Icons.people),
+      const SizedBox(width: 16),
+      _stat('Avg Attendance', '$avgAttendance%', Colors.green, Icons.trending_up),
+      const SizedBox(width: 16),
+      _stat('Below 75%', '$belowThreshold', Colors.redAccent, Icons.warning),
+    ]);
+  }
+
+  Widget _stat(String label, String value, Color color, IconData icon) {
+    return Expanded(child: Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      child: Column(children: [
+        Icon(icon, color: color, size: 24),
+        const SizedBox(height: 8),
+        Text(value, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: color)),
+        Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+      ]),
+    ));
+  }
+
+  Widget _buildStudentList(List<Map<String, dynamic>> students, List<Map<String, dynamic>> attendance) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const Text('Student Attendance', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+        const SizedBox(height: 16),
+        if (students.isEmpty) const Center(child: Text('No students enrolled', style: TextStyle(color: AppColors.textLight))),
+        ...students.map((s) {
+          final sid = s['studentId'] as String? ?? '';
+          final att = attendance.where((a) => a['studentId'] == sid).toList();
+          int attended = 0, total = 0;
+          if (att.isNotEmpty) {
+            attended = (att.first['attendedClasses'] as int?) ?? 0;
+            total = (att.first['totalClasses'] as int?) ?? 0;
+          }
+          final pct = total > 0 ? (attended / total * 100) : 0.0;
+          final color = pct >= 75 ? Colors.green : pct >= 60 ? Colors.orange : Colors.redAccent;
+          return Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
+            child: Row(children: [
+              SizedBox(width: 100, child: Text(sid, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
+              Expanded(child: Text(s['name'] ?? '', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w500, fontSize: 14))),
+              SizedBox(width: 100, child: Text('$attended/$total', style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
+              SizedBox(width: 80, child: Text('${pct.toStringAsFixed(1)}%', style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 14))),
+              SizedBox(width: 120, child: LinearProgressIndicator(value: pct / 100, backgroundColor: AppColors.border, valueColor: AlwaysStoppedAnimation(color))),
+            ]),
+          );
+        }),
+      ]),
+    );
   }
 }

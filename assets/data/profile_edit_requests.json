@@ -1,0 +1,170 @@
+[
+  {
+    "requestId": "PER001",
+    "requesterId": "STU001",
+    "requesterName": "Rahul Sharma",
+    "requesterRole": "student",
+    "departmentId": "DEPT_CSE",
+    "changes": {
+      "phone": { "old": "9876543210", "new": "9876543211" },
+      "address": { "old": "123 Main Street, Tiruchengode", "new": "456 Park Avenue, Tiruchengode" }
+    },
+    "reason": "Shifted to new address",
+    "status": "approved",
+    "currentApprover": "classAdviser",
+    "approvalChain": [
+      {
+        "role": "mentor",
+        "approverId": "FAC001",
+        "approverName": "Dr. Amit Verma",
+        "status": "approved",
+        "date": "2026-02-10",
+        "remarks": "Verified with student"
+      },
+      {
+        "role": "classAdviser",
+        "approverId": "FAC001",
+        "approverName": "Dr. Amit Verma",
+        "status": "approved",
+        "date": "2026-02-11",
+        "remarks": "Approved"
+      }
+    ],
+    "submittedDate": "2026-02-09",
+    "lastUpdated": "2026-02-11"
+  },
+  {
+    "requestId": "PER002",
+    "requesterId": "STU002",
+    "requesterName": "Priya Patel",
+    "requesterRole": "student",
+    "departmentId": "DEPT_CSE",
+    "changes": {
+      "email": { "old": "priya.patel@ksrce.edu.in", "new": "priya.p2026@ksrce.edu.in" },
+      "parentPhone": { "old": "9876543201", "new": "9876543202" }
+    },
+    "reason": "Parent changed phone number",
+    "status": "pending_classAdviser",
+    "currentApprover": "classAdviser",
+    "approvalChain": [
+      {
+        "role": "mentor",
+        "approverId": "FAC001",
+        "approverName": "Dr. Amit Verma",
+        "status": "approved",
+        "date": "2026-02-20",
+        "remarks": "Looks good"
+      },
+      {
+        "role": "classAdviser",
+        "approverId": "FAC001",
+        "approverName": "Dr. Amit Verma",
+        "status": "pending",
+        "date": "",
+        "remarks": ""
+      }
+    ],
+    "submittedDate": "2026-02-19",
+    "lastUpdated": "2026-02-20"
+  },
+  {
+    "requestId": "PER003",
+    "requesterId": "STU004",
+    "requesterName": "Anjali Singh",
+    "requesterRole": "student",
+    "departmentId": "DEPT_CSE",
+    "changes": {
+      "phone": { "old": "9876543213", "new": "9988776655" }
+    },
+    "reason": "Changed mobile number",
+    "status": "pending_mentor",
+    "currentApprover": "mentor",
+    "approvalChain": [
+      {
+        "role": "mentor",
+        "approverId": "FAC001",
+        "approverName": "Dr. Amit Verma",
+        "status": "pending",
+        "date": "",
+        "remarks": ""
+      },
+      {
+        "role": "classAdviser",
+        "approverId": "FAC001",
+        "approverName": "Dr. Amit Verma",
+        "status": "pending",
+        "date": "",
+        "remarks": ""
+      }
+    ],
+    "submittedDate": "2026-02-24",
+    "lastUpdated": "2026-02-24"
+  },
+  {
+    "requestId": "PER004",
+    "requesterId": "FAC002",
+    "requesterName": "Prof. Sneha Desai",
+    "requesterRole": "faculty",
+    "departmentId": "DEPT_ECE",
+    "changes": {
+      "phone": { "old": "9876545678", "new": "9876549999" },
+      "qualification": { "old": "M.Tech VLSI Design", "new": "Ph.D VLSI Design (Pursuing)" }
+    },
+    "reason": "Enrolled in PhD program, updated phone",
+    "status": "pending_admin",
+    "currentApprover": "admin",
+    "approvalChain": [
+      {
+        "role": "hod",
+        "approverId": "FAC006",
+        "approverName": "Dr. K. Mohan",
+        "status": "approved",
+        "date": "2026-02-22",
+        "remarks": "Verified"
+      },
+      {
+        "role": "admin",
+        "approverId": "",
+        "approverName": "",
+        "status": "pending",
+        "date": "",
+        "remarks": ""
+      }
+    ],
+    "submittedDate": "2026-02-21",
+    "lastUpdated": "2026-02-22"
+  },
+  {
+    "requestId": "PER005",
+    "requesterId": "FAC001",
+    "requesterName": "Dr. Amit Verma",
+    "requesterRole": "faculty",
+    "departmentId": "DEPT_CSE",
+    "changes": {
+      "specialization": { "old": "Data Structures & Algorithms", "new": "Data Structures, Algorithms & AI" }
+    },
+    "reason": "Added new specialization area",
+    "status": "pending_hod",
+    "currentApprover": "hod",
+    "approvalChain": [
+      {
+        "role": "hod",
+        "approverId": "FAC003",
+        "approverName": "Dr. Rajesh Kumar",
+        "status": "pending",
+        "date": "",
+        "remarks": ""
+      },
+      {
+        "role": "admin",
+        "approverId": "",
+        "approverName": "",
+        "status": "pending",
+        "date": "",
+        "remarks": ""
+      }
+    ],
+    "submittedDate": "2026-02-23",
+    "lastUpdated": "2026-02-23"
+  }
+]

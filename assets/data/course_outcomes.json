@@ -1,0 +1,629 @@
+[
+  {
+    "courseId": "CS201",
+    "courseName": "Data Structures",
+    "facultyId": "FAC001",
+    "departmentId": "DEPT_CSE",
+    "regulation": "R2021",
+    "courseType": "core",
+    "totalCredits": 4,
+    "lectureHours": 3,
+    "tutorialHours": 1,
+    "practicalHours": 0,
+    "courseObjectives": [
+      "Understand fundamental data structures and their applications",
+      "Analyze time and space complexity of algorithms",
+      "Implement efficient data structures for real-world problems",
+      "Apply graph algorithms to solve computational problems"
+    ],
+    "courseOutcomes": [
+      {
+        "coId": "CO1",
+        "description": "Understand and implement linear data structures like arrays, linked lists, stacks and queues",
+        "bloomsLevel": "Apply",
+        "bloomsCode": "L3",
+        "knowledgeLevel": "Procedural"
+      },
+      {
+        "coId": "CO2",
+        "description": "Design and analyze tree-based data structures including BST and AVL trees",
+        "bloomsLevel": "Analyze",
+        "bloomsCode": "L4",
+        "knowledgeLevel": "Procedural"
+      },
+      {
+        "coId": "CO3",
+        "description": "Apply graph algorithms such as BFS, DFS and shortest path to solve problems",
+        "bloomsLevel": "Apply",
+        "bloomsCode": "L3",
+        "knowledgeLevel": "Conceptual"
+      },
+      {
+        "coId": "CO4",
+        "description": "Evaluate and compare sorting and searching algorithms for efficiency",
+        "bloomsLevel": "Evaluate",
+        "bloomsCode": "L5",
+        "knowledgeLevel": "Metacognitive"
+      },
+      {
+        "coId": "CO5",
+        "description": "Design solutions using advanced data structures like Tries and Segment Trees",
+        "bloomsLevel": "Create",
+        "bloomsCode": "L6",
+        "knowledgeLevel": "Metacognitive"
+      }
+    ],
+    "unitCOMapping": [
+      {
+        "unitNo": 1,
+        "coList": [
+          "CO1"
+        ],
+        "poMapping": [
+          "PO1",
+          "PO2",
+          "PO3"
+        ]
+      },
+      {
+        "unitNo": 2,
+        "coList": [
+          "CO2"
+        ],
+        "poMapping": [
+          "PO1",
+          "PO2",
+          "PO4"
+        ]
+      },
+      {
+        "unitNo": 3,
+        "coList": [
+          "CO3"
+        ],
+        "poMapping": [
+          "PO1",
+          "PO3",
+          "PO5"
+        ]
+      },
+      {
+        "unitNo": 4,
+        "coList": [
+          "CO4"
+        ],
+        "poMapping": [
+          "PO2",
+          "PO4",
+          "PO5"
+        ]
+      },
+      {
+        "unitNo": 5,
+        "coList": [
+          "CO5"
+        ],
+        "poMapping": [
+          "PO1",
+          "PO3",
+          "PO5",
+          "PO12"
+        ]
+      }
+    ],
+    "textbooks": [
+      "Data Structures and Algorithm Analysis in C - Mark Allen Weiss",
+      "Introduction to Algorithms - Cormen, Leiserson, Rivest, Stein"
+    ],
+    "references": [
+      "Fundamentals of Data Structures in C - Horowitz, Sahni",
+      "Algorithms - Robert Sedgewick"
+    ],
+    "onlineResources": [
+      "https://nptel.ac.in/courses/106/106/106106127/",
+      "https://www.geeksforgeeks.org/data-structures/"
+    ],
+    "lastUpdated": "2025-01-15"
+  },
+  {
+    "courseId": "CS202",
+    "courseName": "Operating Systems",
+    "facultyId": "FAC001",
+    "departmentId": "DEPT_CSE",
+    "regulation": "R2021",
+    "courseType": "core",
+    "totalCredits": 4,
+    "lectureHours": 3,
+    "tutorialHours": 0,
+    "practicalHours": 2,
+    "courseObjectives": [
+      "Understand the fundamental concepts of operating systems",
+      "Analyze CPU scheduling and process synchronization techniques",
+      "Evaluate memory management and virtual memory concepts",
+      "Understand file system organization and I/O management"
+    ],
+    "courseOutcomes": [
+      {
+        "coId": "CO1",
+        "description": "Explain the role of operating systems and process management concepts",
+        "bloomsLevel": "Understand",
+        "bloomsCode": "L2",
+        "knowledgeLevel": "Conceptual"
+      },
+      {
+        "coId": "CO2",
+        "description": "Analyze and apply CPU scheduling algorithms and synchronization mechanisms",
+        "bloomsLevel": "Analyze",
+        "bloomsCode": "L4",
+        "knowledgeLevel": "Procedural"
+      },
+      {
+        "coId": "CO3",
+        "description": "Evaluate memory management strategies including paging and segmentation",
+        "bloomsLevel": "Evaluate",
+        "bloomsCode": "L5",
+        "knowledgeLevel": "Metacognitive"
+      },
+      {
+        "coId": "CO4",
+        "description": "Design file system structures and understand I/O subsystems",
+        "bloomsLevel": "Apply",
+        "bloomsCode": "L3",
+        "knowledgeLevel": "Procedural"
+      },
+      {
+        "coId": "CO5",
+        "description": "Assess protection and security mechanisms in operating systems",
+        "bloomsLevel": "Evaluate",
+        "bloomsCode": "L5",
+        "knowledgeLevel": "Metacognitive"
+      }
+    ],
+    "unitCOMapping": [
+      {
+        "unitNo": 1,
+        "coList": [
+          "CO1"
+        ],
+        "poMapping": [
+          "PO1",
+          "PO2"
+        ]
+      },
+      {
+        "unitNo": 2,
+        "coList": [
+          "CO2"
+        ],
+        "poMapping": [
+          "PO1",
+          "PO2",
+          "PO3"
+        ]
+      },
+      {
+        "unitNo": 3,
+        "coList": [
+          "CO3"
+        ],
+        "poMapping": [
+          "PO1",
+          "PO4",
+          "PO5"
+        ]
+      },
+      {
+        "unitNo": 4,
+        "coList": [
+          "CO4"
+        ],
+        "poMapping": [
+          "PO2",
+          "PO3",
+          "PO5"
+        ]
+      },
+      {
+        "unitNo": 5,
+        "coList": [
+          "CO5"
+        ],
+        "poMapping": [
+          "PO1",
+          "PO6",
+          "PO10"
+        ]
+      }
+    ],
+    "textbooks": [
+      "Operating System Concepts - Silberschatz, Galvin, Gagne",
+      "Modern Operating Systems - Andrew S. Tanenbaum"
+    ],
+    "references": [
+      "Operating Systems: Internals and Design Principles - Stallings",
+      "Unix Network Programming - W. Richard Stevens"
+    ],
+    "onlineResources": [
+      "https://nptel.ac.in/courses/106/105/106105214/",
+      "https://www.geeksforgeeks.org/operating-systems/"
+    ],
+    "lastUpdated": "2025-01-20"
+  },
+  {
+    "courseId": "EC202",
+    "courseName": "Digital Electronics",
+    "facultyId": "FAC002",
+    "departmentId": "DEPT_ECE",
+    "regulation": "R2021",
+    "courseType": "core",
+    "totalCredits": 3,
+    "lectureHours": 2,
+    "tutorialHours": 0,
+    "practicalHours": 2,
+    "courseObjectives": [
+      "Understand number systems and digital logic fundamentals",
+      "Design combinational logic circuits",
+      "Analyze sequential logic circuits",
+      "Understand memory organization and PLDs"
+    ],
+    "courseOutcomes": [
+      {
+        "coId": "CO1",
+        "description": "Convert between number systems and simplify Boolean expressions",
+        "bloomsLevel": "Apply",
+        "bloomsCode": "L3",
+        "knowledgeLevel": "Procedural"
+      },
+      {
+        "coId": "CO2",
+        "description": "Analyze and design combinational circuits using logic gates",
+        "bloomsLevel": "Analyze",
+        "bloomsCode": "L4",
+        "knowledgeLevel": "Procedural"
+      },
+      {
+        "coId": "CO3",
+        "description": "Design combinational circuits including multiplexers decoders and adders",
+        "bloomsLevel": "Create",
+        "bloomsCode": "L6",
+        "knowledgeLevel": "Metacognitive"
+      },
+      {
+        "coId": "CO4",
+        "description": "Analyze sequential circuits using flip-flops counters and registers",
+        "bloomsLevel": "Analyze",
+        "bloomsCode": "L4",
+        "knowledgeLevel": "Procedural"
+      },
+      {
+        "coId": "CO5",
+        "description": "Evaluate memory technologies and programmable logic devices",
+        "bloomsLevel": "Evaluate",
+        "bloomsCode": "L5",
+        "knowledgeLevel": "Metacognitive"
+      }
+    ],
+    "unitCOMapping": [
+      {
+        "unitNo": 1,
+        "coList": [
+          "CO1"
+        ],
+        "poMapping": [
+          "PO1",
+          "PO2"
+        ]
+      },
+      {
+        "unitNo": 2,
+        "coList": [
+          "CO2"
+        ],
+        "poMapping": [
+          "PO1",
+          "PO2",
+          "PO3"
+        ]
+      },
+      {
+        "unitNo": 3,
+        "coList": [
+          "CO3"
+        ],
+        "poMapping": [
+          "PO1",
+          "PO3",
+          "PO5"
+        ]
+      },
+      {
+        "unitNo": 4,
+        "coList": [
+          "CO4"
+        ],
+        "poMapping": [
+          "PO2",
+          "PO3",
+          "PO4"
+        ]
+      },
+      {
+        "unitNo": 5,
+        "coList": [
+          "CO5"
+        ],
+        "poMapping": [
+          "PO1",
+          "PO4",
+          "PO5"
+        ]
+      }
+    ],
+    "textbooks": [
+      "Digital Design - M. Morris Mano",
+      "Digital Electronics - Floyd"
+    ],
+    "references": [
+      "Modern Digital Electronics - R.P. Jain",
+      "Digital Fundamentals - Thomas L. Floyd"
+    ],
+    "onlineResources": [
+      "https://nptel.ac.in/courses/108/105/108105132/",
+      "https://www.electronics-tutorials.ws/"
+    ],
+    "lastUpdated": "2025-02-01"
+  },
+  {
+    "courseId": "CS301",
+    "courseName": "Machine Learning",
+    "facultyId": "FAC003",
+    "departmentId": "DEPT_CSE",
+    "regulation": "R2021",
+    "courseType": "core",
+    "totalCredits": 4,
+    "lectureHours": 3,
+    "tutorialHours": 1,
+    "practicalHours": 0,
+    "courseObjectives": [
+      "Understand fundamental ML algorithms",
+      "Apply ML techniques to real-world problems",
+      "Evaluate model performance and optimize",
+      "Design neural network architectures"
+    ],
+    "courseOutcomes": [
+      {
+        "coId": "CO1",
+        "description": "Explain fundamental concepts and types of machine learning",
+        "bloomsLevel": "Understand",
+        "bloomsCode": "L2",
+        "knowledgeLevel": "Conceptual"
+      },
+      {
+        "coId": "CO2",
+        "description": "Apply supervised learning algorithms for classification and regression",
+        "bloomsLevel": "Apply",
+        "bloomsCode": "L3",
+        "knowledgeLevel": "Procedural"
+      },
+      {
+        "coId": "CO3",
+        "description": "Analyze ensemble methods and their impact on model accuracy",
+        "bloomsLevel": "Analyze",
+        "bloomsCode": "L4",
+        "knowledgeLevel": "Procedural"
+      },
+      {
+        "coId": "CO4",
+        "description": "Design and train neural networks for complex pattern recognition",
+        "bloomsLevel": "Create",
+        "bloomsCode": "L6",
+        "knowledgeLevel": "Metacognitive"
+      },
+      {
+        "coId": "CO5",
+        "description": "Evaluate advanced ML techniques like RL and generative models",
+        "bloomsLevel": "Evaluate",
+        "bloomsCode": "L5",
+        "knowledgeLevel": "Metacognitive"
+      }
+    ],
+    "unitCOMapping": [
+      {
+        "unitNo": 1,
+        "coList": [
+          "CO1"
+        ],
+        "poMapping": [
+          "PO1",
+          "PO2"
+        ]
+      },
+      {
+        "unitNo": 2,
+        "coList": [
+          "CO1",
+          "CO2"
+        ],
+        "poMapping": [
+          "PO1",
+          "PO2",
+          "PO3",
+          "PO5"
+        ]
+      },
+      {
+        "unitNo": 3,
+        "coList": [
+          "CO3"
+        ],
+        "poMapping": [
+          "PO2",
+          "PO4",
+          "PO5"
+        ]
+      },
+      {
+        "unitNo": 4,
+        "coList": [
+          "CO4"
+        ],
+        "poMapping": [
+          "PO1",
+          "PO3",
+          "PO5",
+          "PO12"
+        ]
+      },
+      {
+        "unitNo": 5,
+        "coList": [
+          "CO5"
+        ],
+        "poMapping": [
+          "PO4",
+          "PO5",
+          "PO6",
+          "PO12"
+        ]
+      }
+    ],
+    "textbooks": [
+      "Tom Mitchell - Machine Learning, McGraw Hill",
+      "Christopher Bishop - Pattern Recognition and ML, Springer"
+    ],
+    "references": [
+      "Andrew Ng - Machine Learning Yearning",
+      "Ian Goodfellow - Deep Learning, MIT Press"
+    ],
+    "onlineResources": [
+      "https://coursera.org/learn/machine-learning",
+      "https://fast.ai"
+    ],
+    "lastUpdated": "2026-02-20"
+  },
+  {
+    "courseId": "ME301",
+    "courseName": "Thermodynamics",
+    "facultyId": "FAC008",
+    "departmentId": "DEPT_MECH",
+    "regulation": "R2021",
+    "courseType": "core",
+    "totalCredits": 4,
+    "lectureHours": 3,
+    "tutorialHours": 1,
+    "practicalHours": 0,
+    "courseObjectives": [
+      "Master fundamental laws of thermodynamics",
+      "Analyze thermodynamic cycles",
+      "Apply concepts to engineering problems",
+      "Understand properties of pure substances"
+    ],
+    "courseOutcomes": [
+      {
+        "coId": "CO1",
+        "description": "Explain basic thermodynamic concepts, definitions and laws",
+        "bloomsLevel": "Understand",
+        "bloomsCode": "L2",
+        "knowledgeLevel": "Conceptual"
+      },
+      {
+        "coId": "CO2",
+        "description": "Apply first law of thermodynamics to closed and open systems",
+        "bloomsLevel": "Apply",
+        "bloomsCode": "L3",
+        "knowledgeLevel": "Procedural"
+      },
+      {
+        "coId": "CO3",
+        "description": "Analyze entropy changes and second law implications",
+        "bloomsLevel": "Analyze",
+        "bloomsCode": "L4",
+        "knowledgeLevel": "Procedural"
+      },
+      {
+        "coId": "CO4",
+        "description": "Evaluate properties of pure substances using steam tables and charts",
+        "bloomsLevel": "Evaluate",
+        "bloomsCode": "L5",
+        "knowledgeLevel": "Metacognitive"
+      },
+      {
+        "coId": "CO5",
+        "description": "Design and analyze power and refrigeration cycles",
+        "bloomsLevel": "Create",
+        "bloomsCode": "L6",
+        "knowledgeLevel": "Metacognitive"
+      }
+    ],
+    "unitCOMapping": [
+      {
+        "unitNo": 1,
+        "coList": [
+          "CO1"
+        ],
+        "poMapping": [
+          "PO1",
+          "PO2"
+        ]
+      },
+      {
+        "unitNo": 2,
+        "coList": [
+          "CO2"
+        ],
+        "poMapping": [
+          "PO1",
+          "PO2",
+          "PO3"
+        ]
+      },
+      {
+        "unitNo": 3,
+        "coList": [
+          "CO3"
+        ],
+        "poMapping": [
+          "PO2",
+          "PO3",
+          "PO4"
+        ]
+      },
+      {
+        "unitNo": 4,
+        "coList": [
+          "CO4"
+        ],
+        "poMapping": [
+          "PO1",
+          "PO4",
+          "PO5"
+        ]
+      },
+      {
+        "unitNo": 5,
+        "coList": [
+          "CO5"
+        ],
+        "poMapping": [
+          "PO3",
+          "PO4",
+          "PO5",
+          "PO12"
+        ]
+      }
+    ],
+    "textbooks": [
+      "P.K. Nag - Engineering Thermodynamics, TMH",
+      "Yunus Cengel - Thermodynamics: An Engineering Approach"
+    ],
+    "references": [
+      "Sonntag & Borgnakke - Fundamentals of Thermodynamics",
+      "Van Wylen - Fundamentals of Classical Thermodynamics"
+    ],
+    "onlineResources": [
+      "https://nptel.ac.in/courses/thermodynamics",
+      "https://ocw.mit.edu/courses/mechanical-engineering"
+    ],
+    "lastUpdated": "2026-02-18"
+  }
+]

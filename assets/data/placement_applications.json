@@ -1,0 +1,37 @@
+[
+  {
+    "applicationId": "APP001",
+    "placementId": "PLC001",
+    "studentId": "STU001",
+    "status": "applied",
+    "appliedDate": "2026-03-01"
+  },
+  {
+    "applicationId": "APP002",
+    "placementId": "PLC004",
+    "studentId": "STU001",
+    "status": "applied",
+    "appliedDate": "2026-03-05"
+  },
+  {
+    "applicationId": "APP003",
+    "placementId": "PLC005",
+    "studentId": "STU001",
+    "status": "selected",
+    "appliedDate": "2026-02-05"
+  },
+  {
+    "applicationId": "APP004",
+    "placementId": "PLC001",
+    "studentId": "STU004",
+    "status": "applied",
+    "appliedDate": "2026-03-02"
+  },
+  {
+    "applicationId": "APP005",
+    "placementId": "PLC002",
+    "studentId": "STU002",
+    "status": "applied",
+    "appliedDate": "2026-03-10"
+  }
+]

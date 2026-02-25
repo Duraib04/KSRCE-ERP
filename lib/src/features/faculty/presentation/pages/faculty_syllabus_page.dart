@@ -1,213 +1,90 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class FacultySyllabusPage extends StatelessWidget {
   const FacultySyllabusPage({super.key});
 
-  static const _bg = AppColors.background;
-  static const _card = AppColors.surface;
-  static const _border = AppColors.border;
-  static const _accent = AppColors.primary;
-  static const _gold = AppColors.accent;
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _bg,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Syllabus Management', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
-                ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.upload_file, size: 18),
-                  label: const Text('Upload Syllabus'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _accent,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  ),
-                ),
-              ],
-            ),
+    return Consumer<DataService>(builder: (context, ds, _) {
+      final fid = ds.currentUserId ?? '';
+      final syllabi = ds.getFacultySyllabus(fid);
+      final courses = ds.getFacultyCourses(fid);
+
+      return Scaffold(
+        backgroundColor: AppColors.background,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: const [
+              Icon(Icons.menu_book, color: AppColors.primary, size: 28),
+              SizedBox(width: 12),
+              Text('Syllabus Management', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+            ]),
             const SizedBox(height: 8),
-            const Text('Track syllabus completion and manage course materials', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
+            Text('${courses.length} courses | ${syllabi.length} syllabi uploaded', style: const TextStyle(color: AppColors.textLight, fontSize: 14)),
             const SizedBox(height: 24),
-
-            _SyllabusCourseCard(
-              code: 'CS3501',
-              name: 'Compiler Design',
-              overallProgress: 0.45,
-              units: const [
-                {'name': 'Unit I - Introduction to Compilers', 'topics': 'Phases of Compiler, Lexical Analysis, RE to DFA', 'progress': 1.0, 'hours': '10/10'},
-                {'name': 'Unit II - Syntax Analysis', 'topics': 'CFG, Top-Down Parsing, LL(1), Bottom-Up Parsing', 'progress': 0.80, 'hours': '8/10'},
-                {'name': 'Unit III - Intermediate Code', 'topics': 'SDT, Three Address Code, DAG, Type Checking', 'progress': 0.30, 'hours': '3/10'},
-                {'name': 'Unit IV - Code Optimization', 'topics': 'Flow Graphs, Data Flow Analysis, Loop Optimization', 'progress': 0.0, 'hours': '0/10'},
-                {'name': 'Unit V - Code Generation', 'topics': 'Register Allocation, Instruction Selection, Peephole', 'progress': 0.0, 'hours': '0/8'},
-              ],
-              color: _accent,
-            ),
-            const SizedBox(height: 16),
-
-            _SyllabusCourseCard(
-              code: 'CS3691',
-              name: 'Embedded Systems & IoT',
-              overallProgress: 0.38,
-              units: const [
-                {'name': 'Unit I - Embedded System Basics', 'topics': 'Architecture, Processors, Memory, I/O', 'progress': 1.0, 'hours': '9/9'},
-                {'name': 'Unit II - Embedded Programming', 'topics': 'C for Embedded, RTOS Concepts, Task Scheduling', 'progress': 0.60, 'hours': '5/9'},
-                {'name': 'Unit III - IoT Architecture', 'topics': 'IoT Protocols, MQTT, CoAP, REST APIs', 'progress': 0.20, 'hours': '2/9'},
-                {'name': 'Unit IV - IoT Platforms', 'topics': 'Raspberry Pi, Arduino, Sensor Interfacing', 'progress': 0.0, 'hours': '0/9'},
-                {'name': 'Unit V - IoT Applications', 'topics': 'Smart Home, Healthcare IoT, Industrial IoT', 'progress': 0.0, 'hours': '0/9'},
-              ],
-              color: Colors.teal,
-            ),
-            const SizedBox(height: 16),
-
-            _SyllabusCourseCard(
-              code: 'CS3511',
-              name: 'Compiler Design Laboratory',
-              overallProgress: 0.50,
-              units: const [
-                {'name': 'Ex 1-3: Lexical Analysis', 'topics': 'Symbol Table, Lexer using LEX, Token Recognition', 'progress': 1.0, 'hours': '6/6'},
-                {'name': 'Ex 4-5: Parsing', 'topics': 'Recursive Descent Parser, YACC implementation', 'progress': 1.0, 'hours': '4/4'},
-                {'name': 'Ex 6-7: Intermediate Code', 'topics': 'Three Address Code, Quadruple Generation', 'progress': 0.50, 'hours': '1/4'},
-                {'name': 'Ex 8-9: Optimization', 'topics': 'DAG Construction, Code Optimization techniques', 'progress': 0.0, 'hours': '0/4'},
-                {'name': 'Ex 10-12: Code Generation', 'topics': 'Assembly Code Gen, Register Allocation, Mini Project', 'progress': 0.0, 'hours': '0/6'},
-              ],
-              color: _gold,
-            ),
-            const SizedBox(height: 16),
-
-            _SyllabusCourseCard(
-              code: 'CS3401',
-              name: 'Algorithms Design & Analysis',
-              overallProgress: 0.42,
-              units: const [
-                {'name': 'Unit I - Algorithm Analysis', 'topics': 'Asymptotic Notation, Recurrences, Master Theorem', 'progress': 1.0, 'hours': '10/10'},
-                {'name': 'Unit II - Divide & Conquer', 'topics': 'Merge Sort, Quick Sort, Strassen\'s Matrix Mult.', 'progress': 0.70, 'hours': '7/10'},
-                {'name': 'Unit III - Greedy & DP', 'topics': 'Knapsack, Huffman, LCS, Matrix Chain', 'progress': 0.25, 'hours': '2/10'},
-                {'name': 'Unit IV - Graph Algorithms', 'topics': 'BFS, DFS, Dijkstra, Bellman-Ford, MST', 'progress': 0.0, 'hours': '0/10'},
-                {'name': 'Unit V - NP Problems', 'topics': 'P vs NP, Reductions, Approximation Algorithms', 'progress': 0.0, 'hours': '0/8'},
-              ],
-              color: Colors.orange,
-            ),
-            const SizedBox(height: 24),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _SyllabusCourseCard extends StatelessWidget {
-  final String code, name;
-  final double overallProgress;
-  final List<Map<String, dynamic>> units;
-  final Color color;
-  const _SyllabusCourseCard({required this.code, required this.name, required this.overallProgress, required this.units, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(8)),
-                child: Text(code, style: TextStyle(color: color, fontSize: 13, fontWeight: FontWeight.bold)),
-              ),
-              const SizedBox(width: 12),
-              Expanded(child: Text(name, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600))),
-              Text('${(overallProgress * 100).toInt()}% Complete', style: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.bold)),
-            ],
-          ),
-          const SizedBox(height: 10),
-          LinearProgressIndicator(
-            value: overallProgress,
-            backgroundColor: AppColors.border,
-            valueColor: AlwaysStoppedAnimation(color),
-            minHeight: 6,
-            borderRadius: BorderRadius.circular(3),
-          ),
-          const SizedBox(height: 16),
-          ...units.map((u) {
-            final prog = (u['progress'] as double);
-            return Container(
-              margin: const EdgeInsets.only(bottom: 10),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.background,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColors.border.withOpacity(0.5)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        prog >= 1.0 ? Icons.check_circle : prog > 0 ? Icons.timelapse : Icons.radio_button_unchecked,
-                        color: prog >= 1.0 ? Colors.greenAccent : prog > 0 ? Colors.orangeAccent : AppColors.border,
-                        size: 18,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(child: Text(u['name'] as String, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500))),
-                      Text(u['hours'] as String, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
-                      const Text(' hrs', style: TextStyle(color: AppColors.border, fontSize: 11)),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 26),
-                    child: Text(u['topics'] as String, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
-                  ),
-                  const SizedBox(height: 6),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 26),
-                    child: LinearProgressIndicator(
-                      value: prog,
-                      backgroundColor: AppColors.border,
-                      valueColor: AlwaysStoppedAnimation(prog >= 1.0 ? Colors.greenAccent : color),
-                      minHeight: 4,
-                      borderRadius: BorderRadius.circular(2),
+            if (syllabi.isEmpty && courses.isEmpty)
+              const Center(child: Padding(padding: EdgeInsets.all(40), child: Text('No courses assigned', style: TextStyle(color: AppColors.textLight, fontSize: 16)))),
+            ...courses.map((course) {
+              final cid = course['courseId'] ?? '';
+              final courseSyl = syllabi.where((s) => s['courseId'] == cid).toList();
+              if (courseSyl.isEmpty) {
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+                  child: Row(children: [
+                    Expanded(child: Text('$cid - ${course['courseName'] ?? ''}', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold))),
+                    const Text('Syllabus not uploaded', style: TextStyle(color: AppColors.textLight, fontSize: 13)),
+                  ]),
+                );
+              }
+              final syl = courseSyl.first;
+              final units = (syl['units'] as List<dynamic>?) ?? [];
+              final progress = ds.getSyllabusProgress(syl);
+              return Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Row(children: [
+                    Expanded(child: Text('$cid - ${course['courseName'] ?? syl['courseName'] ?? ''}', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 16))),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
+                      child: Text('${progress.toStringAsFixed(0)}%', style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.bold)),
                     ),
-                  ),
-                ],
-              ),
-            );
-          }),
-          const SizedBox(height: 8),
-          Align(
-            alignment: Alignment.centerRight,
-            child: OutlinedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.edit_note, size: 16),
-              label: const Text('Update Progress'),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: color,
-                side: BorderSide(color: color.withOpacity(0.4)),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+                  ]),
+                  const SizedBox(height: 10),
+                  LinearProgressIndicator(value: progress / 100, backgroundColor: AppColors.border, valueColor: const AlwaysStoppedAnimation(AppColors.primary)),
+                  const SizedBox(height: 16),
+                  ...units.map((u) {
+                    final totalH = (u['totalHours'] as int?) ?? 1;
+                    final compH = (u['completedHours'] as int?) ?? 0;
+                    final unitProg = totalH > 0 ? compH / totalH : 0.0;
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Row(children: [
+                          Expanded(child: Text('Unit ${u['unitNumber'] ?? '-'}: ${u['title'] ?? ''}', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w600, fontSize: 14))),
+                          Text('$compH/$totalH hrs', style: const TextStyle(color: AppColors.textMedium, fontSize: 12)),
+                        ]),
+                        const SizedBox(height: 6),
+                        LinearProgressIndicator(value: unitProg, backgroundColor: AppColors.border, valueColor: AlwaysStoppedAnimation(unitProg >= 1.0 ? Colors.green : AppColors.accent)),
+                      ]),
+                    );
+                  }),
+                ]),
+              );
+            }),
+          ]),
+        ),
+      );
+    });
   }
 }

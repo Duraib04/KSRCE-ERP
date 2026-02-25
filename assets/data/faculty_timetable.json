@@ -1,0 +1,344 @@
+[
+  {
+    "facultyId": "FAC001",
+    "day": "Monday",
+    "slots": [
+      {
+        "hour": 1,
+        "time": "08:30-09:20",
+        "courseId": "CS201",
+        "courseName": "Data Structures",
+        "section": "A",
+        "room": "CS-301",
+        "type": "Theory"
+      },
+      {
+        "hour": 2,
+        "time": "09:20-10:10",
+        "courseId": "CS202",
+        "courseName": "Operating Systems",
+        "section": "A",
+        "room": "CS-302",
+        "type": "Theory"
+      },
+      {
+        "hour": 5,
+        "time": "01:00-01:50",
+        "courseId": "CS201",
+        "courseName": "Data Structures",
+        "section": "B",
+        "room": "CS-301",
+        "type": "Theory"
+      }
+    ]
+  },
+  {
+    "facultyId": "FAC001",
+    "day": "Tuesday",
+    "slots": [
+      {
+        "hour": 3,
+        "time": "10:30-11:20",
+        "courseId": "CS202",
+        "courseName": "Operating Systems",
+        "section": "B",
+        "room": "CS-302",
+        "type": "Theory"
+      },
+      {
+        "hour": 4,
+        "time": "11:20-12:10",
+        "courseId": "CS201",
+        "courseName": "Data Structures",
+        "section": "A",
+        "room": "CS Lab 1",
+        "type": "Lab"
+      }
+    ]
+  },
+  {
+    "facultyId": "FAC001",
+    "day": "Wednesday",
+    "slots": [
+      {
+        "hour": 1,
+        "time": "08:30-09:20",
+        "courseId": "CS201",
+        "courseName": "Data Structures",
+        "section": "A",
+        "room": "CS-301",
+        "type": "Theory"
+      },
+      {
+        "hour": 2,
+        "time": "09:20-10:10",
+        "courseId": "CS202",
+        "courseName": "Operating Systems",
+        "section": "A",
+        "room": "CS-302",
+        "type": "Theory"
+      },
+      {
+        "hour": 6,
+        "time": "01:50-02:40",
+        "courseId": "CS202",
+        "courseName": "Operating Systems",
+        "section": "B",
+        "room": "CS-302",
+        "type": "Theory"
+      }
+    ]
+  },
+  {
+    "facultyId": "FAC001",
+    "day": "Thursday",
+    "slots": [
+      {
+        "hour": 3,
+        "time": "10:30-11:20",
+        "courseId": "CS201",
+        "courseName": "Data Structures",
+        "section": "B",
+        "room": "CS-301",
+        "type": "Theory"
+      },
+      {
+        "hour": 5,
+        "time": "01:00-01:50",
+        "courseId": "CS202",
+        "courseName": "Operating Systems",
+        "section": "A",
+        "room": "CS Lab 2",
+        "type": "Lab"
+      }
+    ]
+  },
+  {
+    "facultyId": "FAC001",
+    "day": "Friday",
+    "slots": [
+      {
+        "hour": 1,
+        "time": "08:30-09:20",
+        "courseId": "CS201",
+        "courseName": "Data Structures",
+        "section": "A",
+        "room": "CS-301",
+        "type": "Theory"
+      },
+      {
+        "hour": 4,
+        "time": "11:20-12:10",
+        "courseId": "CS202",
+        "courseName": "Operating Systems",
+        "section": "B",
+        "room": "CS-302",
+        "type": "Theory"
+      }
+    ]
+  },
+  {
+    "facultyId": "FAC001",
+    "day": "Saturday",
+    "slots": [
+      {
+        "hour": 1,
+        "time": "08:30-09:20",
+        "courseId": "CS201",
+        "courseName": "Data Structures",
+        "section": "B",
+        "room": "CS Lab 1",
+        "type": "Lab"
+      }
+    ]
+  },
+  {
+    "facultyId": "FAC002",
+    "day": "Monday",
+    "slots": [
+      {
+        "hour": 1,
+        "time": "08:30-09:20",
+        "courseId": "EC202",
+        "courseName": "Digital Electronics",
+        "section": "B",
+        "room": "EC-201",
+        "type": "Theory"
+      },
+      {
+        "hour": 3,
+        "time": "10:30-11:20",
+        "courseId": "EC202",
+        "courseName": "Digital Electronics",
+        "section": "A",
+        "room": "EC-201",
+        "type": "Theory"
+      }
+    ]
+  },
+  {
+    "facultyId": "FAC002",
+    "day": "Wednesday",
+    "slots": [
+      {
+        "hour": 2,
+        "time": "09:20-10:10",
+        "courseId": "EC202",
+        "courseName": "Digital Electronics",
+        "section": "B",
+        "room": "EC Lab 1",
+        "type": "Lab"
+      }
+    ]
+  },
+  {
+    "facultyId": "FAC002",
+    "day": "Friday",
+    "slots": [
+      {
+        "hour": 3,
+        "time": "10:30-11:20",
+        "courseId": "EC202",
+        "courseName": "Digital Electronics",
+        "section": "A",
+        "room": "EC-201",
+        "type": "Theory"
+      }
+    ]
+  },
+  {
+    "facultyId": "FAC003",
+    "day": "Monday",
+    "slots": [
+      {
+        "hour": 3,
+        "time": "10:30-11:20",
+        "courseId": "CS301",
+        "courseName": "Machine Learning",
+        "section": "A",
+        "room": "Lab-201",
+        "type": "Theory"
+      },
+      {
+        "hour": 4,
+        "time": "11:20-12:10",
+        "courseId": "CS301",
+        "courseName": "Machine Learning",
+        "section": "B",
+        "room": "Lab-201",
+        "type": "Theory"
+      }
+    ]
+  },
+  {
+    "facultyId": "FAC003",
+    "day": "Wednesday",
+    "slots": [
+      {
+        "hour": 1,
+        "time": "08:30-09:20",
+        "courseId": "CS301",
+        "courseName": "Machine Learning",
+        "section": "A",
+        "room": "Lab-201",
+        "type": "Theory"
+      },
+      {
+        "hour": 5,
+        "time": "01:00-01:50",
+        "courseId": "CS301",
+        "courseName": "Machine Learning",
+        "section": "B",
+        "room": "CS Lab 2",
+        "type": "Lab"
+      }
+    ]
+  },
+  {
+    "facultyId": "FAC003",
+    "day": "Friday",
+    "slots": [
+      {
+        "hour": 2,
+        "time": "09:20-10:10",
+        "courseId": "CS301",
+        "courseName": "Machine Learning",
+        "section": "A",
+        "room": "Lab-201",
+        "type": "Theory"
+      },
+      {
+        "hour": 3,
+        "time": "10:30-11:20",
+        "courseId": "CS301",
+        "courseName": "Machine Learning",
+        "section": "B",
+        "room": "Lab-201",
+        "type": "Theory"
+      }
+    ]
+  },
+  {
+    "facultyId": "FAC008",
+    "day": "Monday",
+    "slots": [
+      {
+        "hour": 1,
+        "time": "08:30-09:20",
+        "courseId": "ME301",
+        "courseName": "Thermodynamics",
+        "section": "C",
+        "room": "Hall-A",
+        "type": "Theory"
+      },
+      {
+        "hour": 2,
+        "time": "09:20-10:10",
+        "courseId": "ME301",
+        "courseName": "Thermodynamics",
+        "section": "C",
+        "room": "Hall-A",
+        "type": "Theory"
+      }
+    ]
+  },
+  {
+    "facultyId": "FAC008",
+    "day": "Wednesday",
+    "slots": [
+      {
+        "hour": 1,
+        "time": "08:30-09:20",
+        "courseId": "ME301",
+        "courseName": "Thermodynamics",
+        "section": "C",
+        "room": "Hall-A",
+        "type": "Theory"
+      },
+      {
+        "hour": 4,
+        "time": "11:20-12:10",
+        "courseId": "ME301",
+        "courseName": "Thermodynamics",
+        "section": "C",
+        "room": "ME Lab 1",
+        "type": "Lab"
+      }
+    ]
+  },
+  {
+    "facultyId": "FAC008",
+    "day": "Friday",
+    "slots": [
+      {
+        "hour": 3,
+        "time": "10:30-11:20",
+        "courseId": "ME301",
+        "courseName": "Thermodynamics",
+        "section": "C",
+        "room": "Hall-A",
+        "type": "Theory"
+      }
+    ]
+  }
+]

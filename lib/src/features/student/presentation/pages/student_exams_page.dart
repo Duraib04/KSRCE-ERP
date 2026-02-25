@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class StudentExamsPage extends StatelessWidget {
@@ -6,33 +8,42 @@ class StudentExamsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(children: const [
-              Icon(Icons.event_note, color: AppColors.primary, size: 28),
-              SizedBox(width: 12),
-              Text('Exam Schedule', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-            ]),
-            const SizedBox(height: 8),
-            const Text('Upcoming Internal & External Examinations', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
-            const SizedBox(height: 24),
-            _buildNextExamCountdown(),
-            const SizedBox(height: 24),
-            _buildInternalExams(),
-            const SizedBox(height: 24),
-            _buildExternalExams(),
-          ],
+    return Consumer<DataService>(builder: (context, ds, _) {
+      final uid = ds.currentUserId ?? '';
+      final exams = ds.getStudentExams(uid);
+      final internal = exams.where((e) => (e['type'] ?? '').toString().toLowerCase().contains('internal')).toList();
+      final external_ = exams.where((e) => !(e['type'] ?? '').toString().toLowerCase().contains('internal')).toList();
+      return Scaffold(
+        backgroundColor: AppColors.background,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(children: const [
+                Icon(Icons.event_note, color: AppColors.primary, size: 28),
+                SizedBox(width: 12),
+                Text('Exam Schedule', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+              ]),
+              const SizedBox(height: 8),
+              const Text('Upcoming Internal & External Examinations', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
+              const SizedBox(height: 24),
+              if (exams.isNotEmpty) _buildNextExamCountdown(exams.first),
+              const SizedBox(height: 24),
+              if (internal.isNotEmpty) _buildExamSection('Internal Assessments', internal, Colors.orange),
+              const SizedBox(height: 24),
+              if (external_.isNotEmpty) _buildExamSection('End Semester Examinations', external_, Colors.redAccent),
+              if (exams.isEmpty)
+                const Center(child: Padding(padding: EdgeInsets.all(40), child: Text('No upcoming exams', style: TextStyle(color: AppColors.textLight, fontSize: 16)))),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
-  Widget _buildNextExamCountdown() {
+  Widget _buildNextExamCountdown(Map<String, dynamic> exam) {
+    final daysLeft = DateTime.tryParse(exam['date'] ?? '')?.difference(DateTime.now()).inDays ?? 0;
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -43,23 +54,22 @@ class StudentExamsPage extends StatelessWidget {
         children: [
           const Icon(Icons.timer, color: Colors.white, size: 40),
           const SizedBox(width: 20),
-          Column(
+          Expanded(child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text('Next Exam', style: TextStyle(color: AppColors.textMedium, fontSize: 14)),
-              SizedBox(height: 4),
-              Text('CS3501 - Compiler Design (Internal Assessment 2)', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-              Text('02 March 2026 | 09:30 AM | Room 301', style: TextStyle(color: AppColors.textMedium, fontSize: 14)),
+            children: [
+              const Text('Next Exam', style: TextStyle(color: Colors.white70, fontSize: 14)),
+              const SizedBox(height: 4),
+              Text('${exam['courseId'] ?? ''} - ${exam['examName'] ?? ''}', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+              Text('${exam['date'] ?? ''} | ${exam['time'] ?? ''} | ${exam['venue'] ?? ''}', style: const TextStyle(color: Colors.white70, fontSize: 14)),
             ],
-          ),
-          const Spacer(),
+          )),
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
             child: Column(
-              children: const [
-                Text('6', style: TextStyle(color: Colors.white, fontSize: 36, fontWeight: FontWeight.bold)),
-                Text('DAYS LEFT', style: TextStyle(color: AppColors.textMedium, fontSize: 12)),
+              children: [
+                Text('$daysLeft', style: const TextStyle(color: Colors.white, fontSize: 36, fontWeight: FontWeight.bold)),
+                const Text('DAYS LEFT', style: TextStyle(color: Colors.white70, fontSize: 12)),
               ],
             ),
           ),
@@ -68,29 +78,7 @@ class StudentExamsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildInternalExams() {
-    final exams = [
-      {'date': '02 Mar 2026', 'time': '09:30 AM', 'subject': 'CS3501 - Compiler Design', 'room': 'Room 301', 'type': 'IA-2', 'syllabus': 'Units 1-3'},
-      {'date': '04 Mar 2026', 'time': '09:30 AM', 'subject': 'CS3591 - Computer Networks', 'room': 'Room 302', 'type': 'IA-2', 'syllabus': 'Units 1-3'},
-      {'date': '06 Mar 2026', 'time': '09:30 AM', 'subject': 'CS3551 - Distributed Computing', 'room': 'Room 301', 'type': 'IA-2', 'syllabus': 'Units 1-3'},
-      {'date': '09 Mar 2026', 'time': '09:30 AM', 'subject': 'MA3391 - Probability & Statistics', 'room': 'Room 201', 'type': 'IA-2', 'syllabus': 'Units 1-3'},
-      {'date': '11 Mar 2026', 'time': '09:30 AM', 'subject': 'GE3591 - Environmental Science', 'room': 'Room 105', 'type': 'IA-2', 'syllabus': 'Units 1-3'},
-    ];
-    return _buildExamSection('Internal Assessment 2 - March 2026', exams, Colors.orange);
-  }
-
-  Widget _buildExternalExams() {
-    final exams = [
-      {'date': '20 Apr 2026', 'time': '10:00 AM', 'subject': 'MA3391 - Probability & Statistics', 'room': 'TBA', 'type': 'End Sem', 'syllabus': 'All Units'},
-      {'date': '23 Apr 2026', 'time': '10:00 AM', 'subject': 'CS3501 - Compiler Design', 'room': 'TBA', 'type': 'End Sem', 'syllabus': 'All Units'},
-      {'date': '27 Apr 2026', 'time': '10:00 AM', 'subject': 'CS3591 - Computer Networks', 'room': 'TBA', 'type': 'End Sem', 'syllabus': 'All Units'},
-      {'date': '30 Apr 2026', 'time': '10:00 AM', 'subject': 'CS3551 - Distributed Computing', 'room': 'TBA', 'type': 'End Sem', 'syllabus': 'All Units'},
-      {'date': '04 May 2026', 'time': '10:00 AM', 'subject': 'GE3591 - Environmental Science', 'room': 'TBA', 'type': 'End Sem', 'syllabus': 'All Units'},
-    ];
-    return _buildExamSection('End Semester Examination - April/May 2026', exams, Colors.redAccent);
-  }
-
-  Widget _buildExamSection(String title, List<Map<String, String>> exams, Color accentColor) {
+  Widget _buildExamSection(String title, List<Map<String, dynamic>> exams, Color accentColor) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -107,39 +95,31 @@ class StudentExamsPage extends StatelessWidget {
             Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           ]),
           const SizedBox(height: 16),
-          Table(
-            columnWidths: const {
-              0: FixedColumnWidth(110),
-              1: FixedColumnWidth(90),
-              2: FlexColumnWidth(2),
-              3: FixedColumnWidth(90),
-              4: FixedColumnWidth(80),
-              5: FixedColumnWidth(90),
-            },
-            children: [
-              TableRow(
-                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColors.border))),
-                children: ['Date', 'Time', 'Subject', 'Room', 'Type', 'Syllabus'].map((h) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Text(h, style: const TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold, fontSize: 13)),
-                )).toList(),
-              ),
-              ...exams.map((e) => TableRow(
-                children: [
-                  Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(e['date']!, style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
-                  Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(e['time']!, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                  Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(e['subject']!, style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
-                  Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(e['room']!, style: const TextStyle(color: AppColors.textLight, fontSize: 13))),
-                  Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(color: accentColor.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
-                    child: Text(e['type']!, style: TextStyle(color: accentColor, fontSize: 11, fontWeight: FontWeight.bold)),
-                  )),
-                  Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(e['syllabus']!, style: const TextStyle(color: AppColors.textLight, fontSize: 13))),
-                ],
-              )),
-            ],
-          ),
+          ...exams.map((e) => Container(
+            margin: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(color: accentColor.withOpacity(0.15), borderRadius: BorderRadius.circular(6)),
+                  child: Text(e['type'] ?? '', style: TextStyle(color: accentColor, fontSize: 11, fontWeight: FontWeight.bold)),
+                ),
+                const SizedBox(width: 14),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text('${e['courseId'] ?? ''} - ${e['examName'] ?? ''}', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w600, fontSize: 14)),
+                  const SizedBox(height: 4),
+                  Text('Syllabus: ${e['syllabus'] ?? 'All Units'}', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+                ])),
+                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                  Text(e['date'] ?? '', style: const TextStyle(color: AppColors.textMedium, fontSize: 13)),
+                  const SizedBox(height: 2),
+                  Text('${e['time'] ?? ''} | ${e['venue'] ?? ''}', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+                ]),
+              ],
+            ),
+          )),
         ],
       ),
     );

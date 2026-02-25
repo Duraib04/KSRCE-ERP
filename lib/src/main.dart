@@ -44,6 +44,8 @@ import 'features/faculty/presentation/pages/faculty_complaints_page.dart';
 import 'features/faculty/presentation/pages/faculty_reports_page.dart';
 import 'features/faculty/presentation/pages/faculty_events_page.dart';
 import 'features/faculty/presentation/pages/faculty_settings_page.dart';
+import 'features/faculty/presentation/pages/faculty_course_details_page.dart';
+import 'features/faculty/presentation/pages/faculty_course_diary_page.dart';
 
 import 'features/admin/presentation/pages/admin_dashboard_page.dart';
 import 'features/admin/presentation/pages/admin_user_management_page.dart';
@@ -65,6 +67,7 @@ import 'features/hod/presentation/pages/hod_class_advisers_page.dart';
 import 'features/hod/presentation/pages/hod_mentors_page.dart';
 import 'features/hod/presentation/pages/hod_notifications_page.dart';
 import 'features/hod/presentation/pages/hod_settings_page.dart';
+import 'features/shared/presentation/pages/profile_edit_approvals_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -143,6 +146,9 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/faculty/complaints', builder: (c, s) => _f('/faculty/complaints', const FacultyComplaintsPage())),
     GoRoute(path: '/faculty/reports', builder: (c, s) => _f('/faculty/reports', const FacultyReportsPage())),
     GoRoute(path: '/faculty/events', builder: (c, s) => _f('/faculty/events', const FacultyEventsPage())),
+    GoRoute(path: '/faculty/course-details', builder: (c, s) => _f('/faculty/course-details', const FacultyCourseDetailsPage())),
+    GoRoute(path: '/faculty/course-diary', builder: (c, s) => _f('/faculty/course-diary', const FacultyCourseDiaryPage())),
+    GoRoute(path: '/faculty/profile-approvals', builder: (c, s) => _f('/faculty/profile-approvals', const ProfileEditApprovalsPage())),
     GoRoute(path: '/faculty/settings', builder: (c, s) => _f('/faculty/settings', const FacultySettingsPage())),
     // Admin routes
     GoRoute(path: '/admin/dashboard', builder: (c, s) => _a('/admin/dashboard', const AdminDashboardPage())),
@@ -155,15 +161,33 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/admin/users', builder: (c, s) => _a('/admin/users', const AdminUserManagementPage())),
     GoRoute(path: '/admin/reports', builder: (c, s) => _a('/admin/reports', const AdminReportsPage())),
     GoRoute(path: '/admin/notifications', builder: (c, s) => _a('/admin/notifications', const AdminNotificationsPage())),
+    GoRoute(path: '/admin/profile-approvals', builder: (c, s) => _a('/admin/profile-approvals', const ProfileEditApprovalsPage())),
     GoRoute(path: '/admin/settings', builder: (c, s) => _a('/admin/settings', const AdminSettingsPage())),
     // HOD routes
     GoRoute(path: '/hod/dashboard', builder: (c, s) => _h('/hod/dashboard', const HodDashboardPage())),
+    GoRoute(path: '/hod/profile', builder: (c, s) => _h('/hod/profile', const FacultyProfilePage())),
     GoRoute(path: '/hod/faculty', builder: (c, s) => _h('/hod/faculty', const HodFacultyPage())),
     GoRoute(path: '/hod/students', builder: (c, s) => _h('/hod/students', const HodStudentsPage())),
     GoRoute(path: '/hod/courses', builder: (c, s) => _h('/hod/courses', const HodCoursesPage())),
+    // HOD teaching routes (reuse faculty pages — they use ds.currentUserId)
+    GoRoute(path: '/hod/my-courses', builder: (c, s) => _h('/hod/my-courses', const FacultyCoursesPage())),
+    GoRoute(path: '/hod/timetable', builder: (c, s) => _h('/hod/timetable', const FacultyTimetablePage())),
+    GoRoute(path: '/hod/syllabus', builder: (c, s) => _h('/hod/syllabus', const FacultySyllabusPage())),
+    GoRoute(path: '/hod/course-details', builder: (c, s) => _h('/hod/course-details', const FacultyCourseDetailsPage())),
+    GoRoute(path: '/hod/course-diary', builder: (c, s) => _h('/hod/course-diary', const FacultyCourseDiaryPage())),
+    GoRoute(path: '/hod/attendance', builder: (c, s) => _h('/hod/attendance', const FacultyAttendancePage())),
+    GoRoute(path: '/hod/assignments', builder: (c, s) => _h('/hod/assignments', const FacultyAssignmentsPage())),
+    GoRoute(path: '/hod/grades', builder: (c, s) => _h('/hod/grades', const FacultyGradesPage())),
+    GoRoute(path: '/hod/exams', builder: (c, s) => _h('/hod/exams', const FacultyExamsPage())),
+    GoRoute(path: '/hod/leave', builder: (c, s) => _h('/hod/leave', const FacultyLeavePage())),
+    GoRoute(path: '/hod/research', builder: (c, s) => _h('/hod/research', const FacultyResearchPage())),
+    GoRoute(path: '/hod/reports', builder: (c, s) => _h('/hod/reports', const FacultyReportsPage())),
+    GoRoute(path: '/hod/events', builder: (c, s) => _h('/hod/events', const FacultyEventsPage())),
+    GoRoute(path: '/hod/complaints', builder: (c, s) => _h('/hod/complaints', const FacultyComplaintsPage())),
     GoRoute(path: '/hod/class-advisers', builder: (c, s) => _h('/hod/class-advisers', const HodClassAdvisersPage())),
     GoRoute(path: '/hod/mentors', builder: (c, s) => _h('/hod/mentors', const HodMentorsPage())),
     GoRoute(path: '/hod/notifications', builder: (c, s) => _h('/hod/notifications', const HodNotificationsPage())),
+    GoRoute(path: '/hod/profile-approvals', builder: (c, s) => _h('/hod/profile-approvals', const ProfileEditApprovalsPage())),
     GoRoute(path: '/hod/settings', builder: (c, s) => _h('/hod/settings', const HodSettingsPage())),
   ],
 );

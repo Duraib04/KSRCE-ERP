@@ -23,6 +23,22 @@ class DataService extends ChangeNotifier {
   List<Map<String, dynamic>> _faculty = [];
   List<Map<String, dynamic>> _classes = [];
   List<Map<String, dynamic>> _mentorAssignments = [];
+  List<Map<String, dynamic>> _exams = [];
+  List<Map<String, dynamic>> _fees = [];
+  List<Map<String, dynamic>> _certificates = [];
+  List<Map<String, dynamic>> _events = [];
+  List<Map<String, dynamic>> _eventRegistrations = [];
+  List<Map<String, dynamic>> _leave = [];
+  List<Map<String, dynamic>> _leaveBalance = [];
+  List<Map<String, dynamic>> _library = [];
+  List<Map<String, dynamic>> _placements = [];
+  List<Map<String, dynamic>> _placementApplications = [];
+  List<Map<String, dynamic>> _syllabus = [];
+  List<Map<String, dynamic>> _research = [];
+  List<Map<String, dynamic>> _facultyTimetable = [];
+  List<Map<String, dynamic>> _courseOutcomes = [];
+  List<Map<String, dynamic>> _courseDiary = [];
+  List<Map<String, dynamic>> _profileEditRequests = [];
 
   // Logged in user info
   String? _currentUserId;
@@ -44,6 +60,22 @@ class DataService extends ChangeNotifier {
   List<Map<String, dynamic>> get faculty => _faculty;
   List<Map<String, dynamic>> get classes => _classes;
   List<Map<String, dynamic>> get mentorAssignments => _mentorAssignments;
+  List<Map<String, dynamic>> get exams => _exams;
+  List<Map<String, dynamic>> get fees => _fees;
+  List<Map<String, dynamic>> get certificates => _certificates;
+  List<Map<String, dynamic>> get events => _events;
+  List<Map<String, dynamic>> get eventRegistrations => _eventRegistrations;
+  List<Map<String, dynamic>> get leave => _leave;
+  List<Map<String, dynamic>> get leaveBalance => _leaveBalance;
+  List<Map<String, dynamic>> get library => _library;
+  List<Map<String, dynamic>> get placements => _placements;
+  List<Map<String, dynamic>> get placementApplications => _placementApplications;
+  List<Map<String, dynamic>> get syllabus => _syllabus;
+  List<Map<String, dynamic>> get research => _research;
+  List<Map<String, dynamic>> get facultyTimetable => _facultyTimetable;
+  List<Map<String, dynamic>> get courseOutcomes => _courseOutcomes;
+  List<Map<String, dynamic>> get courseDiary => _courseDiary;
+  List<Map<String, dynamic>> get profileEditRequests => _profileEditRequests;
   String? get currentUserId => _currentUserId;
   String? get currentRole => _currentRole;
   Map<String, dynamic>? get currentStudent => _currentStudent;
@@ -66,6 +98,22 @@ class DataService extends ChangeNotifier {
         _loadJson('assets/data/faculty.json'),        // 10
         _loadJson('assets/data/classes.json'),        // 11
         _loadJson('assets/data/mentor_assignments.json'), // 12
+        _loadJson('assets/data/exams.json'),               // 13
+        _loadJson('assets/data/fees.json'),                 // 14
+        _loadJson('assets/data/certificates.json'),         // 15
+        _loadJson('assets/data/events.json'),               // 16
+        _loadJson('assets/data/event_registrations.json'),  // 17
+        _loadJson('assets/data/leave.json'),                // 18
+        _loadJson('assets/data/leave_balance.json'),        // 19
+        _loadJson('assets/data/library.json'),              // 20
+        _loadJson('assets/data/placements.json'),           // 21
+        _loadJson('assets/data/placement_applications.json'), // 22
+        _loadJson('assets/data/syllabus.json'),             // 23
+        _loadJson('assets/data/research.json'),             // 24
+        _loadJson('assets/data/faculty_timetable.json'),    // 25
+        _loadJson('assets/data/course_outcomes.json'),         // 26
+        _loadJson('assets/data/course_diary.json'),             // 27
+        _loadJson('assets/data/profile_edit_requests.json'),  // 28
       ]);
       _students = futures[0];
       _users = futures[1];
@@ -80,6 +128,22 @@ class DataService extends ChangeNotifier {
       _faculty = futures[10];
       _classes = futures[11];
       _mentorAssignments = futures[12];
+      _exams = futures[13];
+      _fees = futures[14];
+      _certificates = futures[15];
+      _events = futures[16];
+      _eventRegistrations = futures[17];
+      _leave = futures[18];
+      _leaveBalance = futures[19];
+      _library = futures[20];
+      _placements = futures[21];
+      _placementApplications = futures[22];
+      _syllabus = futures[23];
+      _research = futures[24];
+      _facultyTimetable = futures[25];
+      _courseOutcomes = futures[26];
+      _courseDiary = futures[27];
+      _profileEditRequests = futures[28];
       _isLoaded = true;
       notifyListeners();
     } catch (e) {
@@ -575,4 +639,589 @@ class DataService extends ChangeNotifier {
       return null;
     }
   }
+
+  // ─── EXAM QUERIES ─────────────────────────────────────
+  List<Map<String, dynamic>> getStudentExams(String studentId) {
+    final student = getStudentById(studentId);
+    if (student == null) return _exams;
+    final enrolled = (student['enrolledCourses'] as List<dynamic>?)?.cast<String>() ?? [];
+    final deptId = student['departmentId'] as String? ?? '';
+    return _exams.where((e) => enrolled.contains(e['courseId']) || e['departmentId'] == deptId).toList();
+  }
+
+  List<Map<String, dynamic>> getFacultyExams(String facultyId) {
+    return _exams.where((e) => e['facultyId'] == facultyId).toList();
+  }
+
+  // ─── FEE QUERIES ──────────────────────────────────────
+  List<Map<String, dynamic>> getStudentFees(String studentId) {
+    return _fees.where((f) => f['studentId'] == studentId).toList();
+  }
+
+  double getStudentTotalFees(String studentId) {
+    return getStudentFees(studentId).fold(0.0, (sum, f) => sum + ((f['amount'] as num?)?.toDouble() ?? 0));
+  }
+
+  double getStudentPaidFees(String studentId) {
+    return getStudentFees(studentId).fold(0.0, (sum, f) => sum + ((f['paid'] as num?)?.toDouble() ?? 0));
+  }
+
+  double getStudentPendingFees(String studentId) {
+    return getStudentFees(studentId).fold(0.0, (sum, f) => sum + ((f['pending'] as num?)?.toDouble() ?? 0));
+  }
+
+  // ─── CERTIFICATE QUERIES ──────────────────────────────
+  List<Map<String, dynamic>> getStudentCertificates(String studentId) {
+    return _certificates.where((c) => c['studentId'] == studentId).toList();
+  }
+
+  void requestCertificate(String studentId, String type, int fee, int processingDays) {
+    _certificates.add({
+      'certId': 'CERT${(_certificates.length + 1).toString().padLeft(3, '0')}',
+      'studentId': studentId,
+      'type': type,
+      'status': 'pending',
+      'requestDate': DateTime.now().toIso8601String().substring(0, 10),
+      'fee': fee,
+      'processingDays': processingDays,
+    });
+    notifyListeners();
+  }
+
+  // ─── EVENT QUERIES ────────────────────────────────────
+  List<Map<String, dynamic>> getUpcomingEvents() {
+    return _events.where((e) => e['status'] == 'upcoming').toList();
+  }
+
+  List<Map<String, dynamic>> getCompletedEvents() {
+    return _events.where((e) => e['status'] == 'completed').toList();
+  }
+
+  List<Map<String, dynamic>> getStudentRegisteredEvents(String studentId) {
+    final regIds = _eventRegistrations
+        .where((r) => r['studentId'] == studentId)
+        .map((r) => r['eventId'] as String)
+        .toSet();
+    return _events.where((e) => regIds.contains(e['eventId'])).toList();
+  }
+
+  bool isStudentRegisteredForEvent(String studentId, String eventId) {
+    return _eventRegistrations.any((r) => r['studentId'] == studentId && r['eventId'] == eventId);
+  }
+
+  void registerForEvent(String studentId, String eventId) {
+    if (isStudentRegisteredForEvent(studentId, eventId)) return;
+    _eventRegistrations.add({
+      'registrationId': 'REG${(_eventRegistrations.length + 1).toString().padLeft(3, '0')}',
+      'eventId': eventId,
+      'studentId': studentId,
+      'registeredDate': DateTime.now().toIso8601String().substring(0, 10),
+    });
+    final idx = _events.indexWhere((e) => e['eventId'] == eventId);
+    if (idx != -1) {
+      _events[idx]['registeredCount'] = ((_events[idx]['registeredCount'] as int?) ?? 0) + 1;
+    }
+    notifyListeners();
+  }
+
+  // ─── LEAVE QUERIES ────────────────────────────────────
+  List<Map<String, dynamic>> getUserLeave(String userId) {
+    return _leave.where((l) => l['userId'] == userId).toList();
+  }
+
+  List<Map<String, dynamic>> getUserLeaveBalance(String userId) {
+    return _leaveBalance.where((l) => l['userId'] == userId).toList();
+  }
+
+  List<Map<String, dynamic>> getStudentLeaveRequests(String facultyId) {
+    // Get mentees' leave requests for faculty to approve
+    final mentees = getMentees(facultyId);
+    final menteeIds = mentees.map((m) => m['studentId'] as String).toSet();
+    return _leave.where((l) => menteeIds.contains(l['userId']) && l['status'] == 'pending').toList();
+  }
+
+  void applyLeave(Map<String, dynamic> leaveEntry) {
+    leaveEntry['leaveId'] = 'LV${(_leave.length + 1).toString().padLeft(3, '0')}';
+    leaveEntry['appliedDate'] = DateTime.now().toIso8601String().substring(0, 10);
+    leaveEntry['status'] = 'pending';
+    _leave.add(leaveEntry);
+    notifyListeners();
+  }
+
+  // ─── LIBRARY QUERIES ──────────────────────────────────
+  List<Map<String, dynamic>> getStudentLibrary(String studentId) {
+    return _library.where((b) => b['studentId'] == studentId).toList();
+  }
+
+  List<Map<String, dynamic>> getStudentIssuedBooks(String studentId) {
+    return _library.where((b) => b['studentId'] == studentId && b['status'] == 'issued').toList();
+  }
+
+  List<Map<String, dynamic>> getStudentReturnedBooks(String studentId) {
+    return _library.where((b) => b['studentId'] == studentId && b['status'] == 'returned').toList();
+  }
+
+  int getStudentOverdueBooks(String studentId) {
+    return _library.where((b) => b['studentId'] == studentId && b['status'] == 'overdue').length;
+  }
+
+  double getStudentLibraryFines(String studentId) {
+    return _library.where((b) => b['studentId'] == studentId && b['fine'] != null)
+        .fold(0.0, (sum, b) => sum + ((b['fine'] as num?)?.toDouble() ?? 0));
+  }
+
+  // ─── PLACEMENT QUERIES ────────────────────────────────
+  List<Map<String, dynamic>> getUpcomingPlacements() {
+    return _placements.where((p) => p['status'] == 'upcoming').toList();
+  }
+
+  List<Map<String, dynamic>> getCompletedPlacements() {
+    return _placements.where((p) => p['status'] == 'completed').toList();
+  }
+
+  List<Map<String, dynamic>> getStudentPlacementApplications(String studentId) {
+    return _placementApplications.where((a) => a['studentId'] == studentId).toList();
+  }
+
+  Map<String, dynamic>? getPlacementById(String placementId) {
+    try {
+      return _placements.firstWhere((p) => p['placementId'] == placementId);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  void applyForPlacement(String studentId, String placementId) {
+    _placementApplications.add({
+      'applicationId': 'APP${(_placementApplications.length + 1).toString().padLeft(3, '0')}',
+      'placementId': placementId,
+      'studentId': studentId,
+      'status': 'applied',
+      'appliedDate': DateTime.now().toIso8601String().substring(0, 10),
+    });
+    notifyListeners();
+  }
+
+  // ─── SYLLABUS QUERIES ─────────────────────────────────
+  List<Map<String, dynamic>> getCourseSyllabus(String courseId) {
+    return _syllabus.where((s) => s['courseId'] == courseId).toList();
+  }
+
+  List<Map<String, dynamic>> getFacultySyllabus(String facultyId) {
+    return _syllabus.where((s) => s['facultyId'] == facultyId).toList();
+  }
+
+  double getSyllabusProgress(Map<String, dynamic> syllabusEntry) {
+    final units = (syllabusEntry['units'] as List<dynamic>?) ?? [];
+    if (units.isEmpty) return 0;
+    int totalHours = 0, completedHours = 0;
+    for (final u in units) {
+      totalHours += (u['totalHours'] as int?) ?? 0;
+      completedHours += (u['completedHours'] as int?) ?? 0;
+    }
+    return totalHours > 0 ? (completedHours / totalHours * 100) : 0;
+  }
+
+  // ─── COURSE OUTCOMES QUERIES ───────────────────────────
+  Map<String, dynamic>? getCourseOutcomeDetails(String courseId) {
+    try {
+      return _courseOutcomes.firstWhere((c) => c['courseId'] == courseId);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  List<Map<String, dynamic>> getFacultyCourseOutcomes(String facultyId) {
+    return _courseOutcomes.where((c) => c['facultyId'] == facultyId).toList();
+  }
+
+  List<Map<String, dynamic>> getCourseOutcomeCOs(String courseId) {
+    final details = getCourseOutcomeDetails(courseId);
+    if (details == null) return [];
+    return ((details['courseOutcomes'] as List<dynamic>?) ?? []).cast<Map<String, dynamic>>();
+  }
+
+  List<Map<String, dynamic>> getCourseUnitCOMapping(String courseId) {
+    final details = getCourseOutcomeDetails(courseId);
+    if (details == null) return [];
+    return ((details['unitCOMapping'] as List<dynamic>?) ?? []).cast<Map<String, dynamic>>();
+  }
+
+  void addCourseOutcomeEntry(Map<String, dynamic> entry) {
+    final idx = _courseOutcomes.indexWhere((c) => c['courseId'] == entry['courseId']);
+    if (idx >= 0) {
+      _courseOutcomes[idx] = entry;
+    } else {
+      _courseOutcomes.add(entry);
+    }
+    notifyListeners();
+  }
+
+  void updateCourseOutcome(String courseId, String coId, Map<String, dynamic> updatedCO) {
+    final details = getCourseOutcomeDetails(courseId);
+    if (details == null) return;
+    final cos = ((details['courseOutcomes'] as List<dynamic>?) ?? []);
+    final idx = cos.indexWhere((c) => c['coId'] == coId);
+    if (idx >= 0) {
+      cos[idx] = updatedCO;
+    } else {
+      cos.add(updatedCO);
+    }
+    details['courseOutcomes'] = cos;
+    details['lastUpdated'] = DateTime.now().toIso8601String().substring(0, 10);
+    notifyListeners();
+  }
+
+  void addCOToUnit(String courseId, int unitNo, String coId) {
+    final details = getCourseOutcomeDetails(courseId);
+    if (details == null) return;
+    final mappings = ((details['unitCOMapping'] as List<dynamic>?) ?? []);
+    final unitIdx = mappings.indexWhere((m) => m['unitNo'] == unitNo);
+    if (unitIdx >= 0) {
+      final coList = List<String>.from((mappings[unitIdx]['coList'] as List<dynamic>?) ?? []);
+      if (!coList.contains(coId)) {
+        coList.add(coId);
+        mappings[unitIdx]['coList'] = coList;
+      }
+    } else {
+      mappings.add({'unitNo': unitNo, 'coList': [coId], 'poMapping': []});
+    }
+    details['lastUpdated'] = DateTime.now().toIso8601String().substring(0, 10);
+    notifyListeners();
+  }
+
+  // ─── RESEARCH QUERIES ─────────────────────────────────
+
+  // ─── COURSE DIARY / TIMETABLE LOG ─────────────────────
+  List<Map<String, dynamic>> getFacultyDiary(String facultyId) {
+    return _courseDiary.where((d) => d['facultyId'] == facultyId).toList()
+      ..sort((a, b) {
+        final cmp = (b['date'] ?? '').compareTo(a['date'] ?? '');
+        if (cmp != 0) return cmp;
+        return ((a['hour'] as int?) ?? 0).compareTo((b['hour'] as int?) ?? 0);
+      });
+  }
+
+  List<Map<String, dynamic>> getCourseDiary(String courseId) {
+    return _courseDiary.where((d) => d['courseId'] == courseId).toList()
+      ..sort((a, b) {
+        final cmp = (b['date'] ?? '').compareTo(a['date'] ?? '');
+        if (cmp != 0) return cmp;
+        return ((a['hour'] as int?) ?? 0).compareTo((b['hour'] as int?) ?? 0);
+      });
+  }
+
+  List<Map<String, dynamic>> getDiaryByDate(String facultyId, String date) {
+    return _courseDiary
+        .where((d) => d['facultyId'] == facultyId && d['date'] == date)
+        .toList()
+      ..sort((a, b) => ((a['hour'] as int?) ?? 0).compareTo((b['hour'] as int?) ?? 0));
+  }
+
+  void addDiaryEntry(Map<String, dynamic> entry) {
+    entry['diaryId'] = 'DRY${(_courseDiary.length + 1).toString().padLeft(3, '0')}';
+    _courseDiary.add(Map<String, dynamic>.from(entry));
+    notifyListeners();
+  }
+
+  void updateDiaryEntry(String diaryId, Map<String, dynamic> updated) {
+    final idx = _courseDiary.indexWhere((d) => d['diaryId'] == diaryId);
+    if (idx != -1) {
+      _courseDiary[idx] = {..._courseDiary[idx], ...updated};
+      notifyListeners();
+    }
+  }
+
+  int getDiaryEntryCount(String facultyId, String courseId) {
+    return _courseDiary
+        .where((d) => d['facultyId'] == facultyId && d['courseId'] == courseId)
+        .length;
+  }
+
+  List<String> getDiaryCoveredTopics(String courseId, int unitNo) {
+    return _courseDiary
+        .where((d) => d['courseId'] == courseId && d['unitNo'] == unitNo)
+        .map((d) => d['topicCovered']?.toString() ?? '')
+        .where((t) => t.isNotEmpty)
+        .toList();
+  }
+
+  // ─── RESEARCH QUERIES (original) ──────────────────────
+  List<Map<String, dynamic>> getFacultyResearch(String facultyId) {
+    return _research.where((r) => r['facultyId'] == facultyId).toList();
+  }
+
+  List<Map<String, dynamic>> getFacultyPublications(String facultyId) {
+    return _research.where((r) => r['facultyId'] == facultyId && (r['type'] == 'journal' || r['type'] == 'conference')).toList();
+  }
+
+  List<Map<String, dynamic>> getFacultyProjects(String facultyId) {
+    return _research.where((r) => r['facultyId'] == facultyId && r['type'] == 'project').toList();
+  }
+
+  List<Map<String, dynamic>> getFacultyPhDScholars(String facultyId) {
+    return _research.where((r) => r['facultyId'] == facultyId && r['type'] == 'phdScholar').toList();
+  }
+
+  int getFacultyTotalCitations(String facultyId) {
+    return getFacultyResearch(facultyId).fold(0, (sum, r) => sum + ((r['citations'] as int?) ?? 0));
+  }
+
+  // ─── FACULTY TIMETABLE QUERIES ────────────────────────
+  List<Map<String, dynamic>> getFacultyTimetableForDay(String facultyId, String day) {
+    final entry = _facultyTimetable.where((t) => t['facultyId'] == facultyId && t['day'] == day).toList();
+    if (entry.isEmpty) return [];
+    final slots = (entry.first['slots'] as List<dynamic>?) ?? [];
+    return slots.cast<Map<String, dynamic>>();
+  }
+
+  List<String> getFacultyTimetableDays(String facultyId) {
+    return _facultyTimetable
+        .where((t) => t['facultyId'] == facultyId)
+        .map((t) => t['day'] as String)
+        .toList();
+  }
+
+  int getFacultyWeeklyHours(String facultyId) {
+    int total = 0;
+    for (final t in _facultyTimetable.where((t) => t['facultyId'] == facultyId)) {
+      total += ((t['slots'] as List<dynamic>?)?.length ?? 0);
+    }
+    return total;
+  }
+
+  // ─── FACULTY ATTENDANCE QUERIES ───────────────────────
+  List<Map<String, dynamic>> getCourseAttendance(String courseId) {
+    return _attendance.where((a) => a['courseId'] == courseId).toList();
+  }
+
+  // ─── PROFILE EDIT REQUEST WORKFLOW ────────────────────
+
+  /// Get all edit requests submitted by a user
+  List<Map<String, dynamic>> getMyEditRequests(String userId) {
+    return _profileEditRequests.where((r) => r['requesterId'] == userId).toList()
+      ..sort((a, b) => (b['submittedDate'] ?? '').compareTo(a['submittedDate'] ?? ''));
+  }
+
+  /// Get pending requests where this user is the current approver
+  /// For mentor: status == 'pending_mentor' && mentorId matches
+  /// For classAdviser: status == 'pending_classAdviser' && classAdviserId matches
+  /// For hod: status == 'pending_hod' && hod of same dept
+  /// For admin: status == 'pending_admin'
+  List<Map<String, dynamic>> getPendingApprovals(String userId, String role) {
+    return _profileEditRequests.where((r) {
+      if (role == 'admin') return r['status'] == 'pending_admin';
+      if (role == 'hod') {
+        // HOD approves faculty requests in their dept
+        final hodDept = _faculty.firstWhere(
+          (f) => f['facultyId'] == userId,
+          orElse: () => <String, dynamic>{},
+        )['departmentId'];
+        return r['status'] == 'pending_hod' &&
+            r['requesterRole'] == 'faculty' &&
+            r['departmentId'] == hodDept;
+      }
+      // Faculty as mentor or class adviser for student requests
+      if (r['requesterRole'] != 'student') return false;
+      final chain = (r['approvalChain'] as List<dynamic>?) ?? [];
+      for (final step in chain) {
+        final s = step as Map<String, dynamic>;
+        if (s['approverId'] == userId && s['status'] == 'pending') {
+          // Check if this step is the current one
+          if (s['role'] == 'mentor' && r['status'] == 'pending_mentor') return true;
+          if (s['role'] == 'classAdviser' && r['status'] == 'pending_classAdviser') return true;
+        }
+      }
+      return false;
+    }).toList()
+      ..sort((a, b) => (b['submittedDate'] ?? '').compareTo(a['submittedDate'] ?? ''));
+  }
+
+  /// Get count of pending approvals for badge
+  int getPendingApprovalCount(String userId, String role) {
+    return getPendingApprovals(userId, role).length;
+  }
+
+  /// Submit a new profile edit request
+  void submitProfileEditRequest(Map<String, dynamic> request) {
+    request['requestId'] = 'PER${(_profileEditRequests.length + 1).toString().padLeft(3, '0')}';
+    request['submittedDate'] = DateTime.now().toIso8601String().substring(0, 10);
+    request['lastUpdated'] = request['submittedDate'];
+    _profileEditRequests.add(Map<String, dynamic>.from(request));
+    notifyListeners();
+  }
+
+  /// Approve a step in the chain and advance to next or finalize
+  void approveEditRequest(String requestId, String approverId, String remarks) {
+    final idx = _profileEditRequests.indexWhere((r) => r['requestId'] == requestId);
+    if (idx == -1) return;
+    final req = _profileEditRequests[idx];
+    final chain = (req['approvalChain'] as List<dynamic>?) ?? [];
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+
+    // Find current pending step and approve it
+    for (int i = 0; i < chain.length; i++) {
+      final step = chain[i] as Map<String, dynamic>;
+      if (step['status'] == 'pending') {
+        step['status'] = 'approved';
+        step['date'] = today;
+        step['remarks'] = remarks;
+        step['approverId'] = approverId;
+
+        // Find approver name
+        final approver = _faculty.firstWhere(
+          (f) => f['facultyId'] == approverId,
+          orElse: () => <String, dynamic>{},
+        );
+        step['approverName'] = approver['name'] ?? approverId;
+
+        // Check if there's a next step
+        if (i + 1 < chain.length) {
+          final nextStep = chain[i + 1] as Map<String, dynamic>;
+          final nextRole = nextStep['role'] as String? ?? '';
+          req['status'] = 'pending_$nextRole';
+          req['currentApprover'] = nextRole;
+
+          // Auto-fill next approver for student requests
+          if (nextRole == 'classAdviser' && req['requesterRole'] == 'student') {
+            final studentId = req['requesterId'] as String;
+            final student = _students.firstWhere(
+              (s) => s['studentId'] == studentId,
+              orElse: () => <String, dynamic>{},
+            );
+            final caId = student['classAdviserId'] as String? ?? '';
+            final ca = _faculty.firstWhere(
+              (f) => f['facultyId'] == caId,
+              orElse: () => <String, dynamic>{},
+            );
+            nextStep['approverId'] = caId;
+            nextStep['approverName'] = ca['name'] ?? caId;
+          }
+        } else {
+          // Final approval — apply changes
+          _applyProfileChanges(req);
+          req['status'] = 'approved';
+        }
+        break;
+      }
+    }
+    req['lastUpdated'] = today;
+    _profileEditRequests[idx] = req;
+    notifyListeners();
+  }
+
+  /// Reject a request at any step
+  void rejectEditRequest(String requestId, String approverId, String remarks) {
+    final idx = _profileEditRequests.indexWhere((r) => r['requestId'] == requestId);
+    if (idx == -1) return;
+    final req = _profileEditRequests[idx];
+    final chain = (req['approvalChain'] as List<dynamic>?) ?? [];
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+
+    for (final step in chain) {
+      final s = step as Map<String, dynamic>;
+      if (s['status'] == 'pending') {
+        s['status'] = 'rejected';
+        s['date'] = today;
+        s['remarks'] = remarks;
+        s['approverId'] = approverId;
+        final approver = _faculty.firstWhere(
+          (f) => f['facultyId'] == approverId,
+          orElse: () => <String, dynamic>{},
+        );
+        s['approverName'] = approver['name'] ?? approverId;
+        break;
+      }
+    }
+    req['status'] = 'rejected';
+    req['lastUpdated'] = today;
+    _profileEditRequests[idx] = req;
+    notifyListeners();
+  }
+
+  /// Apply approved changes to the actual student/faculty record
+  void _applyProfileChanges(Map<String, dynamic> req) {
+    final changes = (req['changes'] as Map<String, dynamic>?) ?? {};
+    if (req['requesterRole'] == 'student') {
+      final idx = _students.indexWhere((s) => s['studentId'] == req['requesterId']);
+      if (idx != -1) {
+        for (final entry in changes.entries) {
+          final newVal = (entry.value as Map<String, dynamic>)['new'];
+          _students[idx][entry.key] = newVal;
+        }
+        // Update currentStudent if it's the same user
+        if (_currentUserId == req['requesterId']) {
+          _currentStudent = _students[idx];
+        }
+      }
+    } else if (req['requesterRole'] == 'faculty') {
+      final idx = _faculty.indexWhere((f) => f['facultyId'] == req['requesterId']);
+      if (idx != -1) {
+        for (final entry in changes.entries) {
+          final newVal = (entry.value as Map<String, dynamic>)['new'];
+          _faculty[idx][entry.key] = newVal;
+        }
+        if (_currentUserId == req['requesterId']) {
+          _currentFaculty = _faculty[idx];
+        }
+      }
+    }
+  }
+
+  /// Get the mentor and class adviser for a student
+  Map<String, String> getStudentApprovalChain(String studentId) {
+    final student = _students.firstWhere(
+      (s) => s['studentId'] == studentId,
+      orElse: () => <String, dynamic>{},
+    );
+    final mentorId = student['mentorId'] as String? ?? '';
+    final mentor = _faculty.firstWhere(
+      (f) => f['facultyId'] == mentorId,
+      orElse: () => <String, dynamic>{},
+    );
+    final caId = student['classAdviserId'] as String? ?? '';
+    final ca = _faculty.firstWhere(
+      (f) => f['facultyId'] == caId,
+      orElse: () => <String, dynamic>{},
+    );
+    return {
+      'mentorId': mentorId,
+      'mentorName': (mentor['name'] as String?) ?? mentorId,
+      'classAdviserId': caId,
+      'classAdviserName': (ca['name'] as String?) ?? caId,
+    };
+  }
+
+  /// Get the HOD for a faculty's department
+  Map<String, String> getFacultyApprovalChain(String facultyId) {
+    final fac = _faculty.firstWhere(
+      (f) => f['facultyId'] == facultyId,
+      orElse: () => <String, dynamic>{},
+    );
+    final deptId = fac['departmentId'] as String? ?? '';
+    final hod = _faculty.firstWhere(
+      (f) => f['departmentId'] == deptId && f['isHOD'] == true,
+      orElse: () => <String, dynamic>{},
+    );
+    return {
+      'hodId': (hod['facultyId'] as String?) ?? '',
+      'hodName': (hod['name'] as String?) ?? '',
+    };
+  }
+
+  // ─── FACULTY COMPLAINTS QUERIES ───────────────────────
+  List<Map<String, dynamic>> getFacultyComplaints(String facultyId) {
+    // Show complaints from students in faculty's courses or mentees
+    final mentees = getMentees(facultyId);
+    final menteeIds = mentees.map((m) => m['studentId'] as String).toSet();
+    final courseStudentIds = <String>{};
+    final facCourses = getFacultyCourses(facultyId);
+    for (final c in facCourses) {
+      final students = getCourseStudents(c['courseId'] as String);
+      courseStudentIds.addAll(students.map((s) => s['studentId'] as String));
+    }
+    final allIds = menteeIds.union(courseStudentIds);
+    return _complaints.where((c) => allIds.contains(c['studentId'])).toList();
+  }
+
 }

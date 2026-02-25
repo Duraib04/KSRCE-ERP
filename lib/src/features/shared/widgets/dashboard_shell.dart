@@ -64,6 +64,7 @@ class _DashboardShellState extends State<DashboardShell> {
         ]),
         NavItem(title: 'HOD Assignment', icon: Icons.supervisor_account, route: '/admin/hod-assignment'),
         NavItem(title: 'User Management', icon: Icons.people, route: '/admin/users'),
+        NavItem(title: 'Profile Approvals', icon: Icons.verified_user, route: '/admin/profile-approvals'),
         NavItem(title: 'Reports', icon: Icons.analytics, route: '/admin/reports'),
         NavItem(title: 'Notifications', icon: Icons.notifications, route: '/admin/notifications'),
         NavItem(title: 'Settings', icon: Icons.settings, route: '/admin/settings'),
@@ -71,16 +72,35 @@ class _DashboardShellState extends State<DashboardShell> {
     } else if (widget.role == 'hod') {
       return [
         NavItem(title: 'Dashboard', icon: Icons.dashboard, route: '/hod/dashboard'),
+        NavItem(title: 'Profile', icon: Icons.person, route: '/hod/profile'),
         NavItem(title: 'Department', icon: Icons.business, route: '', children: [
           NavItem(title: 'Faculty', icon: Icons.people, route: '/hod/faculty'),
           NavItem(title: 'Students', icon: Icons.school, route: '/hod/students'),
           NavItem(title: 'Courses', icon: Icons.menu_book, route: '/hod/courses'),
         ]),
-        NavItem(title: 'Assignments', icon: Icons.assignment_ind, route: '', children: [
+        NavItem(title: 'Teaching', icon: Icons.school, route: '', children: [
+          NavItem(title: 'My Courses', icon: Icons.book, route: '/hod/my-courses'),
+          NavItem(title: 'Timetable', icon: Icons.schedule, route: '/hod/timetable'),
+          NavItem(title: 'Syllabus', icon: Icons.description, route: '/hod/syllabus'),
+          NavItem(title: 'Course Details', icon: Icons.list_alt, route: '/hod/course-details'),
+          NavItem(title: 'Course Diary', icon: Icons.edit_calendar, route: '/hod/course-diary'),
+        ]),
+        NavItem(title: 'Management', icon: Icons.manage_accounts, route: '', children: [
+          NavItem(title: 'Attendance', icon: Icons.fact_check, route: '/hod/attendance'),
+          NavItem(title: 'Assignments', icon: Icons.assignment, route: '/hod/assignments'),
+          NavItem(title: 'Grade Entry', icon: Icons.grading, route: '/hod/grades'),
+          NavItem(title: 'Exams', icon: Icons.event_note, route: '/hod/exams'),
+        ]),
+        NavItem(title: 'Dept Admin', icon: Icons.assignment_ind, route: '', children: [
           NavItem(title: 'Class Advisers', icon: Icons.person_pin, route: '/hod/class-advisers'),
           NavItem(title: 'Mentors', icon: Icons.group, route: '/hod/mentors'),
         ]),
+        NavItem(title: 'Leave Mgmt', icon: Icons.event_busy, route: '/hod/leave'),
+        NavItem(title: 'Research', icon: Icons.science, route: '/hod/research'),
         NavItem(title: 'Notifications', icon: Icons.notifications, route: '/hod/notifications'),
+        NavItem(title: 'Profile Approvals', icon: Icons.verified_user, route: '/hod/profile-approvals'),
+        NavItem(title: 'Reports', icon: Icons.analytics, route: '/hod/reports'),
+        NavItem(title: 'Events', icon: Icons.event, route: '/hod/events'),
         NavItem(title: 'Settings', icon: Icons.settings, route: '/hod/settings'),
       ];
     } else {
@@ -100,8 +120,11 @@ class _DashboardShellState extends State<DashboardShell> {
         ]),
         NavItem(title: 'Exams', icon: Icons.event_note, route: '/faculty/exams'),
         NavItem(title: 'Leave Mgmt', icon: Icons.event_busy, route: '/faculty/leave'),
+        NavItem(title: 'Course Details', icon: Icons.list_alt, route: '/faculty/course-details'),
+        NavItem(title: 'Course Diary', icon: Icons.edit_calendar, route: '/faculty/course-diary'),
         NavItem(title: 'Research', icon: Icons.science, route: '/faculty/research'),
         NavItem(title: 'Notifications', icon: Icons.notifications, route: '/faculty/notifications'),
+        NavItem(title: 'Profile Approvals', icon: Icons.verified_user, route: '/faculty/profile-approvals'),
         NavItem(title: 'Complaints', icon: Icons.report_problem, route: '/faculty/complaints'),
         NavItem(title: 'Reports', icon: Icons.analytics, route: '/faculty/reports'),
         NavItem(title: 'Events', icon: Icons.event, route: '/faculty/events'),

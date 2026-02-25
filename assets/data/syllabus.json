@@ -1,0 +1,363 @@
+[
+  {
+    "syllabusId": "SYL001",
+    "courseId": "CS201",
+    "courseName": "Data Structures",
+    "units": [
+      {
+        "unitNo": 1,
+        "title": "Linear Data Structures",
+        "topics": [
+          "Arrays",
+          "Linked Lists",
+          "Stacks",
+          "Queues"
+        ],
+        "totalHours": 12,
+        "completedHours": 12,
+        "status": "completed"
+      },
+      {
+        "unitNo": 2,
+        "title": "Non-Linear Structures",
+        "topics": [
+          "Trees",
+          "Binary Trees",
+          "BST",
+          "AVL Trees"
+        ],
+        "totalHours": 12,
+        "completedHours": 10,
+        "status": "in-progress"
+      },
+      {
+        "unitNo": 3,
+        "title": "Graphs",
+        "topics": [
+          "Graph representation",
+          "BFS",
+          "DFS",
+          "Shortest Path"
+        ],
+        "totalHours": 10,
+        "completedHours": 4,
+        "status": "in-progress"
+      },
+      {
+        "unitNo": 4,
+        "title": "Sorting & Searching",
+        "topics": [
+          "Merge Sort",
+          "Quick Sort",
+          "Heap Sort",
+          "Hashing"
+        ],
+        "totalHours": 10,
+        "completedHours": 0,
+        "status": "not-started"
+      },
+      {
+        "unitNo": 5,
+        "title": "Advanced Topics",
+        "topics": [
+          "Tries",
+          "Segment Trees",
+          "Disjoint Sets"
+        ],
+        "totalHours": 8,
+        "completedHours": 0,
+        "status": "not-started"
+      }
+    ],
+    "facultyId": "FAC001",
+    "departmentId": "DEPT_CSE",
+    "semester": 3
+  },
+  {
+    "syllabusId": "SYL002",
+    "courseId": "CS202",
+    "courseName": "Operating Systems",
+    "units": [
+      {
+        "unitNo": 1,
+        "title": "OS Fundamentals",
+        "topics": [
+          "Introduction",
+          "Process Management",
+          "Threads"
+        ],
+        "totalHours": 10,
+        "completedHours": 10,
+        "status": "completed"
+      },
+      {
+        "unitNo": 2,
+        "title": "Scheduling & Sync",
+        "topics": [
+          "CPU Scheduling",
+          "Synchronization",
+          "Deadlocks"
+        ],
+        "totalHours": 12,
+        "completedHours": 8,
+        "status": "in-progress"
+      },
+      {
+        "unitNo": 3,
+        "title": "Memory Management",
+        "topics": [
+          "Paging",
+          "Segmentation",
+          "Virtual Memory"
+        ],
+        "totalHours": 10,
+        "completedHours": 0,
+        "status": "not-started"
+      },
+      {
+        "unitNo": 4,
+        "title": "File Systems",
+        "topics": [
+          "File Organization",
+          "Directory Structure",
+          "Allocation"
+        ],
+        "totalHours": 10,
+        "completedHours": 0,
+        "status": "not-started"
+      },
+      {
+        "unitNo": 5,
+        "title": "I/O & Protection",
+        "topics": [
+          "I/O Systems",
+          "Protection",
+          "Security"
+        ],
+        "totalHours": 8,
+        "completedHours": 0,
+        "status": "not-started"
+      }
+    ],
+    "facultyId": "FAC001",
+    "departmentId": "DEPT_CSE",
+    "semester": 3
+  },
+  {
+    "syllabusId": "SYL003",
+    "courseId": "EC202",
+    "courseName": "Digital Electronics",
+    "units": [
+      {
+        "unitNo": 1,
+        "title": "Number Systems",
+        "topics": [
+          "Binary",
+          "Octal",
+          "Hexadecimal",
+          "Conversions"
+        ],
+        "totalHours": 8,
+        "completedHours": 8,
+        "status": "completed"
+      },
+      {
+        "unitNo": 2,
+        "title": "Logic Gates",
+        "topics": [
+          "AND",
+          "OR",
+          "NOT",
+          "Universal Gates"
+        ],
+        "totalHours": 10,
+        "completedHours": 10,
+        "status": "completed"
+      },
+      {
+        "unitNo": 3,
+        "title": "Combinational Circuits",
+        "topics": [
+          "Multiplexers",
+          "Decoders",
+          "Adders"
+        ],
+        "totalHours": 12,
+        "completedHours": 6,
+        "status": "in-progress"
+      },
+      {
+        "unitNo": 4,
+        "title": "Sequential Circuits",
+        "topics": [
+          "Flip-flops",
+          "Counters",
+          "Registers"
+        ],
+        "totalHours": 12,
+        "completedHours": 0,
+        "status": "not-started"
+      },
+      {
+        "unitNo": 5,
+        "title": "Memory & PLDs",
+        "topics": [
+          "RAM",
+          "ROM",
+          "PLA",
+          "FPGA"
+        ],
+        "totalHours": 8,
+        "completedHours": 0,
+        "status": "not-started"
+      }
+    ],
+    "facultyId": "FAC002",
+    "departmentId": "DEPT_ECE",
+    "semester": 3
+  },
+  {
+    "syllabusId": "SYL004",
+    "courseId": "CS301",
+    "courseName": "Machine Learning",
+    "units": [
+      {
+        "unitNo": 1,
+        "title": "Introduction to Machine Learning",
+        "topics": [
+          "Types of ML",
+          "Supervised vs Unsupervised",
+          "Bias-Variance Tradeoff",
+          "Model Evaluation"
+        ],
+        "totalHours": 10,
+        "completedHours": 10,
+        "status": "completed"
+      },
+      {
+        "unitNo": 2,
+        "title": "Regression & Classification",
+        "topics": [
+          "Linear Regression",
+          "Logistic Regression",
+          "Decision Trees",
+          "SVM"
+        ],
+        "totalHours": 12,
+        "completedHours": 8,
+        "status": "in-progress"
+      },
+      {
+        "unitNo": 3,
+        "title": "Ensemble Methods",
+        "topics": [
+          "Random Forest",
+          "Boosting",
+          "Bagging",
+          "XGBoost"
+        ],
+        "totalHours": 10,
+        "completedHours": 0,
+        "status": "not-started"
+      },
+      {
+        "unitNo": 4,
+        "title": "Neural Networks",
+        "topics": [
+          "Perceptron",
+          "Backpropagation",
+          "CNN",
+          "RNN"
+        ],
+        "totalHours": 12,
+        "completedHours": 0,
+        "status": "not-started"
+      },
+      {
+        "unitNo": 5,
+        "title": "Advanced Topics",
+        "topics": [
+          "Dimensionality Reduction",
+          "Clustering",
+          "Reinforcement Learning",
+          "GANs"
+        ],
+        "totalHours": 10,
+        "completedHours": 0,
+        "status": "not-started"
+      }
+    ]
+  },
+  {
+    "syllabusId": "SYL005",
+    "courseId": "ME301",
+    "courseName": "Thermodynamics",
+    "units": [
+      {
+        "unitNo": 1,
+        "title": "Basic Concepts",
+        "topics": [
+          "Systems & Properties",
+          "State & Equilibrium",
+          "Processes",
+          "Zeroth Law"
+        ],
+        "totalHours": 10,
+        "completedHours": 10,
+        "status": "completed"
+      },
+      {
+        "unitNo": 2,
+        "title": "First Law of Thermodynamics",
+        "topics": [
+          "Energy Transfer",
+          "Closed Systems",
+          "Open Systems",
+          "Steady Flow"
+        ],
+        "totalHours": 12,
+        "completedHours": 12,
+        "status": "completed"
+      },
+      {
+        "unitNo": 3,
+        "title": "Second Law",
+        "topics": [
+          "Kelvin-Planck Statement",
+          "Clausius Statement",
+          "Carnot Cycle",
+          "Entropy"
+        ],
+        "totalHours": 12,
+        "completedHours": 6,
+        "status": "in-progress"
+      },
+      {
+        "unitNo": 4,
+        "title": "Properties of Pure Substances",
+        "topics": [
+          "Phase Diagrams",
+          "Steam Tables",
+          "Ideal Gas",
+          "Real Gas"
+        ],
+        "totalHours": 10,
+        "completedHours": 0,
+        "status": "not-started"
+      },
+      {
+        "unitNo": 5,
+        "title": "Power & Refrigeration Cycles",
+        "topics": [
+          "Rankine Cycle",
+          "Otto Cycle",
+          "Diesel Cycle",
+          "Vapor Compression"
+        ],
+        "totalHours": 10,
+        "completedHours": 0,
+        "status": "not-started"
+      }
+    ]
+  }
+]

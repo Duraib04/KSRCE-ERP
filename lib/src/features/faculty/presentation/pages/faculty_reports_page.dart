@@ -1,312 +1,124 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class FacultyReportsPage extends StatelessWidget {
   const FacultyReportsPage({super.key});
 
-  static const _bg = AppColors.background;
-  static const _card = AppColors.surface;
-  static const _border = AppColors.border;
-  static const _accent = AppColors.primary;
-  static const _gold = AppColors.accent;
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _bg,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Reports & Analytics', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
-                Row(
-                  children: [
-                    OutlinedButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.picture_as_pdf, size: 16),
-                      label: const Text('Export PDF'),
-                      style: OutlinedButton.styleFrom(foregroundColor: Colors.redAccent, side: const BorderSide(color: Colors.redAccent)),
-                    ),
-                    const SizedBox(width: 10),
-                    OutlinedButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.table_chart, size: 16),
-                      label: const Text('Export Excel'),
-                      style: OutlinedButton.styleFrom(foregroundColor: _gold, side: BorderSide(color: _gold.withOpacity(0.5))),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            const Text('Course-wise attendance, result analysis, and performance trends', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
+    return Consumer<DataService>(builder: (context, ds, _) {
+      final fid = ds.currentUserId ?? '';
+      final courses = ds.getFacultyCourses(fid);
+
+      // Compute attendance summary per course
+      final summaries = <Map<String, dynamic>>[];
+      for (final c in courses) {
+        final cid = c['courseId'] as String? ?? '';
+        final att = ds.getCourseAttendance(cid);
+        final students = ds.getCourseStudents(cid);
+        int totalP = 0, totalC = 0;
+        for (final a in att) {
+          totalP += (a['attendedClasses'] as int?) ?? 0;
+          totalC += (a['totalClasses'] as int?) ?? 0;
+        }
+        final avgPct = totalC > 0 ? (totalP / totalC * 100) : 0.0;
+        final below75 = att.where((a) {
+          final t = (a['totalClasses'] as int?) ?? 1;
+          final p = (a['attendedClasses'] as int?) ?? 0;
+          return t > 0 && (p / t * 100) < 75;
+        }).length;
+        summaries.add({'courseId': cid, 'courseName': c['courseName'], 'students': students.length, 'avgAttendance': avgPct, 'below75': below75});
+      }
+
+      // Result analysis
+      final resultSummary = <Map<String, dynamic>>[];
+      for (final c in courses) {
+        final cid = c['courseId'] as String? ?? '';
+        final res = ds.results.where((r) => r['courseId'] == cid).toList();
+        final passCount = res.where((r) => r['grade'] != 'F' && r['grade'] != null).length;
+        final total = res.length;
+        resultSummary.add({'courseId': cid, 'courseName': c['courseName'], 'total': total, 'pass': passCount, 'passRate': total > 0 ? (passCount / total * 100) : 0.0});
+      }
+
+      return Scaffold(
+        backgroundColor: AppColors.background,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: const [
+              Icon(Icons.analytics, color: AppColors.primary, size: 28),
+              SizedBox(width: 12),
+              Text('Reports & Analytics', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+            ]),
             const SizedBox(height: 24),
-
-            // Course-wise Attendance Report
-            const Text('Course-wise Attendance Summary', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(color: _card, borderRadius: BorderRadius.circular(12), border: Border.all(color: _border)),
-              child: DataTable(
-                headingRowColor: WidgetStateProperty.all(const Color(0xFF1A2A4A)),
-                columns: const [
-                  DataColumn(label: Text('Course', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Section', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Total Students', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Avg Attendance', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Above 90%', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('75-90%', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Below 75%', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Classes Held', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                ],
-                rows: [
-                  _attendanceRow('CS3501', 'A', '65', '84.2%', '28', '29', '8', '32', Colors.greenAccent),
-                  _attendanceRow('CS3501', 'B', '63', '81.5%', '24', '30', '9', '32', Colors.orangeAccent),
-                  _attendanceRow('CS3691', 'A', '62', '79.5%', '18', '32', '12', '28', Colors.orangeAccent),
-                  _attendanceRow('CS3511', 'A', '65', '91.0%', '48', '14', '3', '14', Colors.greenAccent),
-                  _attendanceRow('CS3401', 'C', '58', '81.7%', '22', '28', '8', '30', Colors.orangeAccent),
-                ],
-              ),
-            ),
-            const SizedBox(height: 28),
-
-            // Attendance Trends (Mock Visual)
-            const Text('Monthly Attendance Trends', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(color: _card, borderRadius: BorderRadius.circular(12), border: Border.all(color: _border)),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      _MonthBar(month: 'Jan', value: 88, color: _accent),
-                      _MonthBar(month: 'Feb', value: 84, color: _accent),
-                      _MonthBar(month: 'Mar', value: 0, color: AppColors.border),
-                      _MonthBar(month: 'Apr', value: 0, color: AppColors.border),
-                      _MonthBar(month: 'May', value: 0, color: AppColors.border),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(width: 12, height: 12, decoration: BoxDecoration(color: _accent, borderRadius: BorderRadius.circular(2))),
-                      const SizedBox(width: 6),
-                      const Text('Avg Attendance %', style: TextStyle(color: AppColors.textLight, fontSize: 12)),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 28),
-
-            // Result Analysis
-            const Text('Internal Assessment Result Analysis', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(child: _ResultCard(course: 'CS3501 (Sec A)', passPercent: 90.8, avgMark: 34.2, highest: 48, lowest: 12, maxMark: 50, color: _accent)),
-                const SizedBox(width: 14),
-                Expanded(child: _ResultCard(course: 'CS3501 (Sec B)', passPercent: 87.3, avgMark: 32.5, highest: 47, lowest: 10, maxMark: 50, color: _accent)),
-                const SizedBox(width: 14),
-                Expanded(child: _ResultCard(course: 'CS3691 (Sec A)', passPercent: 85.5, avgMark: 31.8, highest: 46, lowest: 14, maxMark: 50, color: Colors.teal)),
-                const SizedBox(width: 14),
-                Expanded(child: _ResultCard(course: 'CS3401 (Sec C)', passPercent: 89.7, avgMark: 33.1, highest: 49, lowest: 11, maxMark: 50, color: Colors.orange)),
-              ],
-            ),
-            const SizedBox(height: 28),
-
-            // Grade Distribution
-            const Text('Grade Distribution - CS3501 (IA-I)', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(color: _card, borderRadius: BorderRadius.circular(12), border: Border.all(color: _border)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _GDist(grade: 'O (91-100%)', count: 8, pct: '12.3%', color: Colors.greenAccent),
-                  _GDist(grade: 'A+ (81-90%)', count: 12, pct: '18.5%', color: Colors.lightGreenAccent),
-                  _GDist(grade: 'A (71-80%)', count: 15, pct: '23.1%', color: _accent),
-                  _GDist(grade: 'B+ (61-70%)', count: 10, pct: '15.4%', color: Colors.cyan),
-                  _GDist(grade: 'B (51-60%)', count: 8, pct: '12.3%', color: Colors.orange),
-                  _GDist(grade: 'C (41-50%)', count: 5, pct: '7.7%', color: Colors.orangeAccent),
-                  _GDist(grade: 'Below 40%', count: 7, pct: '10.8%', color: Colors.redAccent),
-                ],
-              ),
-            ),
-            const SizedBox(height: 28),
-
-            // Student Performance Trends
-            const Text('Students Requiring Attention', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 4),
-            const Text('Students with low attendance OR low marks across courses', style: TextStyle(color: AppColors.textLight, fontSize: 13)),
-            const SizedBox(height: 12),
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(color: _card, borderRadius: BorderRadius.circular(12), border: Border.all(color: _border)),
-              child: DataTable(
-                headingRowColor: WidgetStateProperty.all(const Color(0xFF1A2A4A)),
-                columns: const [
-                  DataColumn(label: Text('Roll No', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Name', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Attendance', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('IA-I Marks', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Risk Level', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Remarks', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
-                ],
-                rows: [
-                  _riskRow('CS112', 'Pavithra S', '65.8%', '15/50', 'High', 'Both attendance & marks below threshold'),
-                  _riskRow('CS107', 'Janani S', '68.9%', '18/50', 'High', 'Attendance shortage, low marks'),
-                  _riskRow('CS104', 'Deepika V', '71.2%', '22/50', 'Medium', 'Attendance below 75%'),
-                  _riskRow('CS117', 'Vignesh S', '72.5%', '24/50', 'Medium', 'Attendance below 75%'),
-                  _riskRow('CS110', 'Manikandan T', '76.3%', '28/50', 'Low', 'Marks below class average'),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-          ],
+            _buildAttendanceSummary(summaries),
+            const SizedBox(height: 24),
+            _buildResultAnalysis(resultSummary),
+          ]),
         ),
-      ),
-    );
+      );
+    });
   }
 
-  DataRow _attendanceRow(String course, String section, String total, String avg, String above90, String mid, String below75, String classes, Color color) {
-    return DataRow(cells: [
-      DataCell(Text(course, style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
-      DataCell(Text(section, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
-      DataCell(Text(total, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
-      DataCell(Text(avg, style: TextStyle(color: color, fontSize: 13, fontWeight: FontWeight.bold))),
-      DataCell(Text(above90, style: const TextStyle(color: Colors.greenAccent, fontSize: 13))),
-      DataCell(Text(mid, style: const TextStyle(color: Colors.orangeAccent, fontSize: 13))),
-      DataCell(Text(below75, style: const TextStyle(color: Colors.redAccent, fontSize: 13))),
-      DataCell(Text(classes, style: const TextStyle(color: AppColors.textLight, fontSize: 13))),
-    ]);
-  }
-
-  DataRow _riskRow(String roll, String name, String att, String marks, String risk, String remarks) {
-    Color riskColor = Colors.greenAccent;
-    if (risk == 'High') riskColor = Colors.redAccent;
-    if (risk == 'Medium') riskColor = Colors.orangeAccent;
-
-    return DataRow(cells: [
-      DataCell(Text(roll, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
-      DataCell(Text(name, style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
-      DataCell(Text(att, style: const TextStyle(color: Colors.redAccent, fontSize: 13))),
-      DataCell(Text(marks, style: const TextStyle(color: Colors.redAccent, fontSize: 13))),
-      DataCell(Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-        decoration: BoxDecoration(color: riskColor.withOpacity(0.12), borderRadius: BorderRadius.circular(6)),
-        child: Text(risk, style: TextStyle(color: riskColor, fontSize: 11, fontWeight: FontWeight.w500)),
-      )),
-      DataCell(Text(remarks, style: const TextStyle(color: AppColors.textLight, fontSize: 12))),
-    ]);
-  }
-}
-
-class _MonthBar extends StatelessWidget {
-  final String month;
-  final double value;
-  final Color color;
-  const _MonthBar({required this.month, required this.value, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        if (value > 0) Text('${value.toInt()}%', style: TextStyle(color: color, fontSize: 13, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 4),
-        Container(
-          width: 40,
-          height: value > 0 ? value * 1.5 : 20,
-          decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
-        ),
-        const SizedBox(height: 6),
-        Text(month, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
-      ],
-    );
-  }
-}
-
-class _ResultCard extends StatelessWidget {
-  final String course;
-  final double passPercent, avgMark;
-  final int highest, lowest, maxMark;
-  final Color color;
-  const _ResultCard({required this.course, required this.passPercent, required this.avgMark,
-    required this.highest, required this.lowest, required this.maxMark, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildAttendanceSummary(List<Map<String, dynamic>> summaries) {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(course, style: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 12),
-          _ResultItem('Pass %', '${passPercent.toStringAsFixed(1)}%', passPercent >= 90 ? Colors.greenAccent : Colors.orangeAccent),
-          _ResultItem('Avg. Mark', '${avgMark.toStringAsFixed(1)}/$maxMark', Colors.white),
-          _ResultItem('Highest', '$highest/$maxMark', Colors.greenAccent),
-          _ResultItem('Lowest', '$lowest/$maxMark', Colors.redAccent),
-        ],
-      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const Text('Attendance Summary', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+        const SizedBox(height: 16),
+        if (summaries.isEmpty) const Center(child: Text('No data', style: TextStyle(color: AppColors.textLight))),
+        ...summaries.map((s) {
+          final pct = (s['avgAttendance'] as double?) ?? 0;
+          final color = pct >= 75 ? Colors.green : pct >= 60 ? Colors.orange : Colors.redAccent;
+          return Container(
+            margin: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
+            child: Row(children: [
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text('${s['courseId']} - ${s['courseName'] ?? ''}', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w600, fontSize: 14)),
+                Text('${s['students']} students | ${s['below75']} below 75%', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+              ])),
+              SizedBox(width: 100, child: LinearProgressIndicator(value: pct / 100, backgroundColor: AppColors.border, valueColor: AlwaysStoppedAnimation(color))),
+              const SizedBox(width: 10),
+              Text('${pct.toStringAsFixed(1)}%', style: TextStyle(color: color, fontWeight: FontWeight.bold)),
+            ]),
+          );
+        }),
+      ]),
     );
   }
-}
 
-class _ResultItem extends StatelessWidget {
-  final String label, value;
-  final Color valueColor;
-  const _ResultItem(this.label, this.value, this.valueColor);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
-          Text(value, style: TextStyle(color: valueColor, fontSize: 13, fontWeight: FontWeight.w600)),
-        ],
-      ),
-    );
-  }
-}
-
-class _GDist extends StatelessWidget {
-  final String grade, pct;
-  final int count;
-  final Color color;
-  const _GDist({required this.grade, required this.count, required this.pct, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text('$count', style: TextStyle(color: color, fontSize: 22, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 4),
-        Container(
-          width: 36,
-          height: count.toDouble() * 5 + 10,
-          decoration: BoxDecoration(color: color.withOpacity(0.6), borderRadius: BorderRadius.circular(4)),
-        ),
-        const SizedBox(height: 6),
-        Text(grade, style: const TextStyle(color: AppColors.textLight, fontSize: 10), textAlign: TextAlign.center),
-        Text(pct, style: const TextStyle(color: AppColors.textLight, fontSize: 10)),
-      ],
+  Widget _buildResultAnalysis(List<Map<String, dynamic>> results) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const Text('Result Analysis', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+        const SizedBox(height: 16),
+        if (results.isEmpty) const Center(child: Text('No data', style: TextStyle(color: AppColors.textLight))),
+        ...results.map((r) {
+          final passRate = (r['passRate'] as double?) ?? 0;
+          final color = passRate >= 80 ? Colors.green : passRate >= 50 ? Colors.orange : Colors.redAccent;
+          return Container(
+            margin: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
+            child: Row(children: [
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text('${r['courseId']} - ${r['courseName'] ?? ''}', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w600, fontSize: 14)),
+                Text('${r['pass']}/${r['total']} passed', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+              ])),
+              SizedBox(width: 100, child: LinearProgressIndicator(value: passRate / 100, backgroundColor: AppColors.border, valueColor: AlwaysStoppedAnimation(color))),
+              const SizedBox(width: 10),
+              Text('${passRate.toStringAsFixed(1)}%', style: TextStyle(color: color, fontWeight: FontWeight.bold)),
+            ]),
+          );
+        }),
+      ]),
     );
   }
 }

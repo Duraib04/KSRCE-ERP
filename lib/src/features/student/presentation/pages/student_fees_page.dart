@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class StudentFeesPage extends StatelessWidget {
@@ -6,44 +8,47 @@ class StudentFeesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(children: const [
-              Icon(Icons.payment, color: AppColors.primary, size: 28),
-              SizedBox(width: 12),
-              Text('Fee Details', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-            ]),
-            const SizedBox(height: 8),
-            const Text('Academic Year 2025-26 | Semester 5', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
-            const SizedBox(height: 24),
-            _buildFeeSummary(),
-            const SizedBox(height: 24),
-            _buildFeeBreakdown(),
-            const SizedBox(height: 24),
-            _buildPaymentHistory(),
-            const SizedBox(height: 24),
-            _buildPayButton(),
-          ],
+    return Consumer<DataService>(builder: (context, ds, _) {
+      final uid = ds.currentUserId ?? '';
+      final fees = ds.getStudentFees(uid);
+      final total = ds.getStudentTotalFees(uid);
+      final paid = ds.getStudentPaidFees(uid);
+      final pending = ds.getStudentPendingFees(uid);
+      return Scaffold(
+        backgroundColor: AppColors.background,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(children: const [
+                Icon(Icons.payment, color: AppColors.primary, size: 28),
+                SizedBox(width: 12),
+                Text('Fee Details', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+              ]),
+              const SizedBox(height: 8),
+              const Text('Academic Year 2025-26', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
+              const SizedBox(height: 24),
+              _buildFeeSummary(total, paid, pending),
+              const SizedBox(height: 24),
+              _buildFeeBreakdown(fees),
+              const SizedBox(height: 24),
+              if (pending > 0) _buildPayButton(pending),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
-  Widget _buildFeeSummary() {
+  Widget _buildFeeSummary(double total, double paid, double pending) {
     return Row(
       children: [
-        _feeCard('Total Fee', '1,25,000', AppColors.primary, Icons.account_balance),
+        _feeCard('Total Fee', 'Rs. ${total.toStringAsFixed(0)}', AppColors.primary, Icons.account_balance),
         const SizedBox(width: 16),
-        _feeCard('Paid', '75,000', Colors.green, Icons.check_circle),
+        _feeCard('Paid', 'Rs. ${paid.toStringAsFixed(0)}', Colors.green, Icons.check_circle),
         const SizedBox(width: 16),
-        _feeCard('Pending', '50,000', Colors.redAccent, Icons.pending),
-        const SizedBox(width: 16),
-        _feeCard('Due Date', '15 Mar 2026', Colors.orange, Icons.event),
+        _feeCard('Pending', 'Rs. ${pending.toStringAsFixed(0)}', Colors.redAccent, Icons.pending),
       ],
     );
   }
@@ -61,7 +66,7 @@ class StudentFeesPage extends StatelessWidget {
           children: [
             Icon(icon, color: color, size: 28),
             const SizedBox(height: 12),
-            Text(value, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: color)),
+            Text(value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: color)),
             const SizedBox(height: 4),
             Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
           ],
@@ -70,20 +75,14 @@ class StudentFeesPage extends StatelessWidget {
     );
   }
 
-  Widget _buildFeeBreakdown() {
-    final fees = [
-      {'description': 'Tuition Fee', 'amount': '55,000', 'status': 'Paid', 'date': '15 Jul 2025'},
-      {'description': 'Laboratory Fee', 'amount': '10,000', 'status': 'Paid', 'date': '15 Jul 2025'},
-      {'description': 'Library Fee', 'amount': '3,000', 'status': 'Paid', 'date': '15 Jul 2025'},
-      {'description': 'Exam Fee', 'amount': '5,000', 'status': 'Paid', 'date': '20 Jul 2025'},
-      {'description': 'Transport Fee', 'amount': '15,000', 'status': 'Pending', 'date': '-'},
-      {'description': 'Hostel Fee', 'amount': '25,000', 'status': 'Pending', 'date': '-'},
-      {'description': 'Sports & Activities', 'amount': '2,000', 'status': 'Paid', 'date': '15 Jul 2025'},
-      {'description': 'Development Fund', 'amount': '5,000', 'status': 'Pending', 'date': '-'},
-      {'description': 'Insurance', 'amount': '2,500', 'status': 'Pending', 'date': '-'},
-      {'description': 'Identity Card', 'amount': '500', 'status': 'Pending', 'date': '-'},
-      {'description': 'Caution Deposit', 'amount': '2,000', 'status': 'Paid', 'date': '22 Jul 2022'},
-    ];
+  Widget _buildFeeBreakdown(List<Map<String, dynamic>> fees) {
+    if (fees.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+        child: const Center(child: Text('No fee records found', style: TextStyle(color: AppColors.textLight))),
+      );
+    }
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -96,94 +95,48 @@ class StudentFeesPage extends StatelessWidget {
         children: [
           const Text('Fee Breakdown', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           const SizedBox(height: 16),
-          Table(
-            columnWidths: const {
-              0: FlexColumnWidth(2),
-              1: FixedColumnWidth(100),
-              2: FixedColumnWidth(80),
-              3: FixedColumnWidth(110),
-            },
-            children: [
-              TableRow(
-                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColors.border))),
-                children: ['Description', 'Amount', 'Status', 'Date'].map((h) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Text(h, style: const TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold, fontSize: 13)),
-                )).toList(),
+          ...fees.map((f) {
+            final status = (f['status'] ?? 'pending').toString();
+            final isPaid = status.toLowerCase() == 'paid';
+            return Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
+              child: Row(
+                children: [
+                  Icon(isPaid ? Icons.check_circle : Icons.pending, color: isPaid ? Colors.green : Colors.orange, size: 20),
+                  const SizedBox(width: 12),
+                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(f['description'] ?? f['feeType'] ?? '', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w500, fontSize: 14)),
+                    Text('Semester: ${f['semester'] ?? '-'}', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+                  ])),
+                  Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                    Text('Rs. ${f['amount'] ?? 0}', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 15)),
+                    Text('Paid: Rs. ${f['paid'] ?? 0}', style: const TextStyle(color: Colors.green, fontSize: 12)),
+                    if ((f['pending'] as num?) != null && (f['pending'] as num) > 0)
+                      Text('Due: Rs. ${f['pending']}', style: const TextStyle(color: Colors.redAccent, fontSize: 12)),
+                  ]),
+                  const SizedBox(width: 10),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(color: (isPaid ? Colors.green : Colors.orange).withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
+                    child: Text(status, style: TextStyle(color: isPaid ? Colors.green : Colors.orange, fontSize: 11, fontWeight: FontWeight.bold)),
+                  ),
+                ],
               ),
-              ...fees.map((f) {
-                final isPaid = f['status'] == 'Paid';
-                return TableRow(
-                  children: [
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(f['description']!, style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(f['amount']!, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(color: (isPaid ? Colors.green : Colors.orange).withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
-                      child: Text(f['status']!, style: TextStyle(color: isPaid ? Colors.green : Colors.orange, fontSize: 11, fontWeight: FontWeight.bold)),
-                    )),
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(f['date']!, style: const TextStyle(color: AppColors.textLight, fontSize: 13))),
-                  ],
-                );
-              }),
-            ],
-          ),
+            );
+          }),
         ],
       ),
     );
   }
 
-  Widget _buildPaymentHistory() {
-    final payments = [
-      {'id': 'TXN20250715001', 'date': '15 Jul 2025', 'amount': '70,000', 'mode': 'Net Banking', 'status': 'Success'},
-      {'id': 'TXN20250720002', 'date': '20 Jul 2025', 'amount': '5,000', 'mode': 'UPI', 'status': 'Success'},
-      {'id': 'TXN20220722001', 'date': '22 Jul 2022', 'amount': '2,000', 'mode': 'Cash', 'status': 'Success'},
-    ];
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Payment History', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-          const SizedBox(height: 16),
-          ...payments.map((p) => Container(
-            margin: const EdgeInsets.only(bottom: 10),
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
-            child: Row(
-              children: [
-                const Icon(Icons.receipt_long, color: Colors.green, size: 20),
-                const SizedBox(width: 12),
-                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('Transaction: ${p['id']}', style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500)),
-                  Text('${p['date']} | ${p['mode']}', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
-                ])),
-                Text(p['amount']!, style: const TextStyle(color: Colors.green, fontSize: 16, fontWeight: FontWeight.bold)),
-                const SizedBox(width: 12),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(color: Colors.green.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
-                  child: const Text('Success', style: TextStyle(color: Colors.green, fontSize: 11, fontWeight: FontWeight.bold)),
-                ),
-              ],
-            ),
-          )),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPayButton() {
+  Widget _buildPayButton(double pending) {
     return Center(
       child: ElevatedButton.icon(
         onPressed: () {},
         icon: const Icon(Icons.payment, size: 20),
-        label: const Text('Pay Pending Fees - Rs. 50,000'),
+        label: Text('Pay Pending Fees - Rs. ${pending.toStringAsFixed(0)}'),
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           foregroundColor: Colors.white,

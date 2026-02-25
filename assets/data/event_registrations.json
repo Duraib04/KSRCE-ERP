@@ -1,0 +1,32 @@
+[
+  {
+    "registrationId": "REG001",
+    "eventId": "EVT001",
+    "studentId": "STU001",
+    "registeredDate": "2026-02-25"
+  },
+  {
+    "registrationId": "REG002",
+    "eventId": "EVT002",
+    "studentId": "STU001",
+    "registeredDate": "2026-02-28"
+  },
+  {
+    "registrationId": "REG003",
+    "eventId": "EVT005",
+    "studentId": "STU001",
+    "registeredDate": "2026-02-01"
+  },
+  {
+    "registrationId": "REG004",
+    "eventId": "EVT001",
+    "studentId": "STU002",
+    "registeredDate": "2026-03-01"
+  },
+  {
+    "registrationId": "REG005",
+    "eventId": "EVT003",
+    "studentId": "STU004",
+    "registeredDate": "2026-03-20"
+  }
+]

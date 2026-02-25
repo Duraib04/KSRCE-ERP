@@ -1,0 +1,72 @@
+[
+  {
+    "bookId": "LIB001",
+    "studentId": "STU001",
+    "title": "Introduction to Algorithms",
+    "author": "Thomas H. Cormen",
+    "isbn": "978-0262033848",
+    "issuedDate": "2026-02-10",
+    "dueDate": "2026-03-10",
+    "status": "issued",
+    "category": "Computer Science"
+  },
+  {
+    "bookId": "LIB002",
+    "studentId": "STU001",
+    "title": "Operating System Concepts",
+    "author": "Abraham Silberschatz",
+    "isbn": "978-1119800361",
+    "issuedDate": "2026-02-15",
+    "dueDate": "2026-03-15",
+    "status": "issued",
+    "category": "Computer Science"
+  },
+  {
+    "bookId": "LIB003",
+    "studentId": "STU001",
+    "title": "Database System Concepts",
+    "author": "Abraham Silberschatz",
+    "isbn": "978-0078022159",
+    "issuedDate": "2026-01-05",
+    "dueDate": "2026-02-05",
+    "returnDate": "2026-02-03",
+    "status": "returned",
+    "category": "Computer Science"
+  },
+  {
+    "bookId": "LIB004",
+    "studentId": "STU001",
+    "title": "Computer Networks",
+    "author": "Andrew S. Tanenbaum",
+    "isbn": "978-0132126953",
+    "issuedDate": "2025-11-10",
+    "dueDate": "2025-12-10",
+    "returnDate": "2025-12-15",
+    "status": "returned",
+    "fine": 25,
+    "category": "Computer Science"
+  },
+  {
+    "bookId": "LIB005",
+    "studentId": "STU002",
+    "title": "Digital Design",
+    "author": "M. Morris Mano",
+    "isbn": "978-0134549897",
+    "issuedDate": "2026-02-18",
+    "dueDate": "2026-03-18",
+    "status": "issued",
+    "category": "Electronics"
+  },
+  {
+    "bookId": "LIB006",
+    "studentId": "STU003",
+    "title": "Engineering Mechanics",
+    "author": "R.C. Hibbeler",
+    "isbn": "978-0133915426",
+    "issuedDate": "2026-02-01",
+    "dueDate": "2026-03-01",
+    "status": "overdue",
+    "fine": 50,
+    "category": "Mechanical"
+  }
+]

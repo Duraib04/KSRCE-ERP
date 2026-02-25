@@ -1,0 +1,82 @@
+[
+  {
+    "placementId": "PLC001",
+    "company": "TCS",
+    "role": "Software Developer",
+    "package": "4.5 LPA",
+    "date": "2026-03-20",
+    "deadline": "2026-03-15",
+    "eligibility": "CGPA >= 7.0",
+    "status": "upcoming",
+    "category": "IT Services",
+    "location": "Chennai",
+    "description": "Full stack development role in Digital Engineering unit."
+  },
+  {
+    "placementId": "PLC002",
+    "company": "Infosys",
+    "role": "Systems Engineer",
+    "package": "3.8 LPA",
+    "date": "2026-03-25",
+    "deadline": "2026-03-20",
+    "eligibility": "CGPA >= 6.5",
+    "status": "upcoming",
+    "category": "IT Services",
+    "location": "Mysore",
+    "description": "Core systems engineering role with training at Infosys campus."
+  },
+  {
+    "placementId": "PLC003",
+    "company": "Wipro",
+    "role": "Project Engineer",
+    "package": "3.5 LPA",
+    "date": "2026-04-02",
+    "deadline": "2026-03-28",
+    "eligibility": "CGPA >= 6.0",
+    "status": "upcoming",
+    "category": "IT Services",
+    "location": "Bangalore",
+    "description": "Project engineering role in BFSI domain."
+  },
+  {
+    "placementId": "PLC004",
+    "company": "Zoho",
+    "role": "Member Technical Staff",
+    "package": "6.2 LPA",
+    "date": "2026-04-10",
+    "deadline": "2026-04-05",
+    "eligibility": "CGPA >= 7.5",
+    "status": "upcoming",
+    "category": "Product",
+    "location": "Chennai",
+    "description": "Product development role building SaaS applications."
+  },
+  {
+    "placementId": "PLC005",
+    "company": "Cognizant",
+    "role": "Programmer Analyst",
+    "package": "4.0 LPA",
+    "date": "2026-02-15",
+    "deadline": "2026-02-10",
+    "eligibility": "CGPA >= 6.5",
+    "status": "completed",
+    "category": "IT Services",
+    "location": "Chennai",
+    "description": "Full stack web development role.",
+    "offersGiven": 18
+  },
+  {
+    "placementId": "PLC006",
+    "company": "L&T Technology",
+    "role": "Graduate Engineer Trainee",
+    "package": "5.0 LPA",
+    "date": "2026-02-20",
+    "deadline": "2026-02-15",
+    "eligibility": "CGPA >= 7.0, MECH/CIVIL only",
+    "status": "completed",
+    "category": "Core",
+    "location": "Mumbai",
+    "description": "Design engineering for infrastructure projects.",
+    "offersGiven": 8
+  }
+]
