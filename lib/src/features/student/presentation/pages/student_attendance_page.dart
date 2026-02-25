@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'dart:math';
 
@@ -7,218 +9,162 @@ class StudentAttendancePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
+    return Consumer<DataService>(builder: (context, ds, _) {
+      if (!ds.isLoaded) {
+        return const Scaffold(backgroundColor: AppColors.background, body: Center(child: CircularProgressIndicator()));
+      }
+      final attList = ds.attendance;
+      int totalClasses = 0, totalPresent = 0, totalAbsent = 0;
+      for (final a in attList) {
+        totalClasses += (a['totalClasses'] as int? ?? 0);
+        totalPresent += (a['attendedClasses'] as int? ?? 0);
+        totalAbsent += (a['absentClasses'] as int? ?? 0);
+      }
+      final overallPct = ds.overallAttendancePercentage;
+
+      return Scaffold(
+        backgroundColor: AppColors.background,
+        body: LayoutBuilder(builder: (context, constraints) {
           final isMobile = constraints.maxWidth < 700;
           return SingleChildScrollView(
             padding: EdgeInsets.all(isMobile ? 16 : 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(children: const [
-                  Icon(Icons.fact_check, color: AppColors.primary, size: 28),
-                  SizedBox(width: 12),
-                  Text('Attendance', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: const [
+                Icon(Icons.fact_check, color: AppColors.primary, size: 28),
+                SizedBox(width: 12),
+                Text('Attendance', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+              ]),
+              const SizedBox(height: 8),
+              const Text('Current Semester Attendance', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
+              const SizedBox(height: 24),
+              if (isMobile) ...[
+                _buildOverallAttendance(overallPct, totalClasses, totalPresent, totalAbsent),
+                const SizedBox(height: 24),
+                _buildSubjectBars(attList),
+              ] else
+                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Expanded(child: _buildOverallAttendance(overallPct, totalClasses, totalPresent, totalAbsent)),
+                  const SizedBox(width: 24),
+                  Expanded(child: _buildSubjectBars(attList)),
                 ]),
-                const SizedBox(height: 8),
-                const Text('Semester 5 - Academic Year 2025-26', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
-                const SizedBox(height: 24),
-                if (isMobile)
-                  Column(
-                    children: [
-                      _buildOverallAttendance(),
-                      const SizedBox(height: 24),
-                      _buildAttendanceSummary(),
-                    ],
-                  )
-                else
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(flex: 1, child: _buildOverallAttendance()),
-                      const SizedBox(width: 24),
-                      Expanded(flex: 1, child: _buildAttendanceSummary()),
-                    ],
-                  ),
-                const SizedBox(height: 24),
-                _buildSubjectWiseTable(),
-                const SizedBox(height: 24),
-                _buildAttendanceNote(),
-              ],
-            ),
+              const SizedBox(height: 24),
+              _buildSubjectWiseTable(attList),
+              const SizedBox(height: 24),
+              _buildAttendanceNote(),
+            ]),
           );
-        },
-      ),
-    );
+        }),
+      );
+    });
   }
 
-  Widget _buildOverallAttendance() {
+  Widget _buildOverallAttendance(double pct, int total, int present, int absent) {
+    Color ringColor = pct >= 85 ? Colors.green : pct >= 75 ? Colors.orange : Colors.redAccent;
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        children: [
-          const Text('Overall Attendance', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-          const SizedBox(height: 24),
-          SizedBox(
-            width: 160,
-            height: 160,
-            child: CustomPaint(
-              painter: _CircularProgressPainter(0.87),
-              child: const Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('87%', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.green)),
-                    Text('Present', style: TextStyle(color: AppColors.textLight, fontSize: 13)),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _statItem('Total Classes', '284', Colors.white),
-              _statItem('Present', '247', Colors.green),
-              _statItem('Absent', '37', Colors.redAccent),
-            ],
-          ),
-        ],
-      ),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      child: Column(children: [
+        const Text('Overall Attendance', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+        const SizedBox(height: 24),
+        SizedBox(width: 160, height: 160, child: CustomPaint(
+          painter: _CircularProgressPainter(pct / 100, ringColor),
+          child: Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Text('${pct.toStringAsFixed(0)}%', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: ringColor)),
+            const Text('Present', style: TextStyle(color: AppColors.textLight, fontSize: 13)),
+          ])),
+        )),
+        const SizedBox(height: 20),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          _statItem('Total Classes', '$total', AppColors.textDark),
+          _statItem('Present', '$present', Colors.green),
+          _statItem('Absent', '$absent', Colors.redAccent),
+        ]),
+      ]),
     );
   }
 
   Widget _statItem(String label, String value, Color color) {
-    return Column(
-      children: [
-        Text(value, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: color)),
-        const SizedBox(height: 4),
-        Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
-      ],
-    );
+    return Column(children: [
+      Text(value, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: color)),
+      const SizedBox(height: 4),
+      Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+    ]);
   }
 
-  Widget _buildAttendanceSummary() {
+  Widget _buildSubjectBars(List<Map<String, dynamic>> attList) {
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Monthly Trend', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-          const SizedBox(height: 16),
-          _monthRow('August 2025', 92),
-          _monthRow('September 2025', 88),
-          _monthRow('October 2025', 85),
-          _monthRow('November 2025', 90),
-          _monthRow('December 2025', 82),
-          _monthRow('January 2026', 86),
-          _monthRow('February 2026', 89),
-        ],
-      ),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const Text('Subject-wise Overview', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+        const SizedBox(height: 16),
+        ...attList.map((a) {
+          final pct = (a['percentage'] as num?)?.toDouble() ?? 0;
+          return _barRow(a['courseName'] as String? ?? '', pct.round());
+        }),
+      ]),
     );
   }
 
-  Widget _monthRow(String month, int pct) {
+  Widget _barRow(String label, int pct) {
     Color color = pct >= 85 ? Colors.green : pct >= 75 ? Colors.orange : Colors.redAccent;
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        children: [
-          SizedBox(width: 140, child: Text(month, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(value: pct / 100, backgroundColor: AppColors.border, valueColor: AlwaysStoppedAnimation(color), minHeight: 8),
-            ),
-          ),
-          const SizedBox(width: 12),
-          SizedBox(width: 40, child: Text('$pct%', style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 13))),
-        ],
-      ),
+      child: Row(children: [
+        SizedBox(width: 140, child: Text(label, style: const TextStyle(color: AppColors.textMedium, fontSize: 13), overflow: TextOverflow.ellipsis)),
+        Expanded(child: ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: LinearProgressIndicator(value: pct / 100, backgroundColor: AppColors.border, valueColor: AlwaysStoppedAnimation(color), minHeight: 8),
+        )),
+        const SizedBox(width: 12),
+        SizedBox(width: 40, child: Text('$pct%', style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 13))),
+      ]),
     );
   }
 
-  Widget _buildSubjectWiseTable() {
-    final subjects = [
-      {'code': 'CS3501', 'name': 'Compiler Design', 'present': 42, 'total': 48, 'pct': 87.5},
-      {'code': 'CS3591', 'name': 'Computer Networks', 'present': 44, 'total': 50, 'pct': 88.0},
-      {'code': 'CS3551', 'name': 'Distributed Computing', 'present': 35, 'total': 42, 'pct': 83.3},
-      {'code': 'MA3391', 'name': 'Probability & Statistics', 'present': 40, 'total': 48, 'pct': 83.3},
-      {'code': 'GE3591', 'name': 'Environmental Science', 'present': 30, 'total': 32, 'pct': 93.7},
-      {'code': 'CS3512', 'name': 'Compiler Design Lab', 'present': 28, 'total': 32, 'pct': 87.5},
-      {'code': 'CS3592', 'name': 'Computer Networks Lab', 'present': 28, 'total': 32, 'pct': 87.5},
-    ];
+  Widget _buildSubjectWiseTable(List<Map<String, dynamic>> attList) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Subject-wise Attendance', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-          const SizedBox(height: 16),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(minWidth: 600),
-              child: Table(
-                columnWidths: const {
-                  0: FixedColumnWidth(90),
-                  1: FlexColumnWidth(2),
-                  2: FixedColumnWidth(70),
-                  3: FixedColumnWidth(70),
-                  4: FixedColumnWidth(80),
-                  5: FixedColumnWidth(80),
-                },
-                children: [
-                  TableRow(
-                    decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColors.border))),
-                    children: ['Code', 'Subject', 'Present', 'Total', 'Percentage', 'Status'].map((h) => Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: Text(h, style: const TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold, fontSize: 13)),
-                    )).toList(),
-                  ),
-                  ...subjects.map((s) {
-                    final pct = s['pct'] as double;
-                    Color statusColor = pct >= 75 ? Colors.green : pct >= 70 ? Colors.orange : Colors.redAccent;
-                    String status = pct >= 75 ? 'Safe' : pct >= 70 ? 'Warning' : 'Shortage';
-                    return TableRow(
-                      children: [
-                        Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(s['code'] as String, style: const TextStyle(color: Color(0xFF64B5F6), fontSize: 13))),
-                        Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(s['name'] as String, style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
-                        Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['present']}', style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                        Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['total']}', style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
-                        Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${pct.toStringAsFixed(1)}%', style: TextStyle(color: statusColor, fontWeight: FontWeight.bold, fontSize: 13))),
-                        Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                          decoration: BoxDecoration(color: statusColor.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
-                          child: Text(status, style: TextStyle(color: statusColor, fontSize: 11, fontWeight: FontWeight.bold)),
-                        )),
-                      ],
-                    );
-                  }),
-                ],
-              ),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const Text('Subject-wise Attendance', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+        const SizedBox(height: 16),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minWidth: 600),
+            child: Table(
+              columnWidths: const {0: FixedColumnWidth(90), 1: FlexColumnWidth(2), 2: FixedColumnWidth(70), 3: FixedColumnWidth(70), 4: FixedColumnWidth(80), 5: FixedColumnWidth(80)},
+              children: [
+                TableRow(
+                  decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColors.border))),
+                  children: ['Code', 'Subject', 'Present', 'Total', 'Percentage', 'Status'].map((h) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Text(h, style: const TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold, fontSize: 13)),
+                  )).toList(),
+                ),
+                ...attList.map((s) {
+                  final pct = (s['percentage'] as num?)?.toDouble() ?? 0;
+                  Color statusColor = pct >= 75 ? Colors.green : pct >= 70 ? Colors.orange : Colors.redAccent;
+                  String status = pct >= 75 ? 'Safe' : pct >= 70 ? 'Warning' : 'Shortage';
+                  return TableRow(children: [
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(s['courseCode'] as String? ?? '', style: const TextStyle(color: Color(0xFF64B5F6), fontSize: 13))),
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(s['courseName'] as String? ?? '', style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['attendedClasses'] ?? 0}', style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['totalClasses'] ?? 0}', style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${pct.toStringAsFixed(1)}%', style: TextStyle(color: statusColor, fontWeight: FontWeight.bold, fontSize: 13))),
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(color: statusColor.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
+                      child: Text(status, style: TextStyle(color: statusColor, fontSize: 11, fontWeight: FontWeight.bold)),
+                    )),
+                  ]);
+                }),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ]),
     );
   }
 
@@ -226,34 +172,32 @@ class StudentAttendancePage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.orange.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
+        color: Colors.orange.withOpacity(0.1), borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.orange.withOpacity(0.3)),
       ),
-      child: Row(
-        children: const [
-          Icon(Icons.info_outline, color: Colors.orange, size: 20),
-          SizedBox(width: 12),
-          Expanded(child: Text(
-            'Minimum 75% attendance is required in each subject to be eligible for end semester examinations. Students with less than 75% may be detained.',
-            style: TextStyle(color: Colors.orange, fontSize: 13),
-          )),
-        ],
-      ),
+      child: Row(children: const [
+        Icon(Icons.info_outline, color: Colors.orange, size: 20),
+        SizedBox(width: 12),
+        Expanded(child: Text(
+          'Minimum 75% attendance is required in each subject to be eligible for end semester examinations.',
+          style: TextStyle(color: Colors.orange, fontSize: 13),
+        )),
+      ]),
     );
   }
 }
 
 class _CircularProgressPainter extends CustomPainter {
   final double progress;
-  _CircularProgressPainter(this.progress);
+  final Color color;
+  _CircularProgressPainter(this.progress, this.color);
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2 - 8;
     final bgPaint = Paint()..color = AppColors.border..style = PaintingStyle.stroke..strokeWidth = 12;
-    final fgPaint = Paint()..color = Colors.green..style = PaintingStyle.stroke..strokeWidth = 12..strokeCap = StrokeCap.round;
+    final fgPaint = Paint()..color = color..style = PaintingStyle.stroke..strokeWidth = 12..strokeCap = StrokeCap.round;
     canvas.drawCircle(center, radius, bgPaint);
     canvas.drawArc(Rect.fromCircle(center: center, radius: radius), -pi / 2, 2 * pi * progress, false, fgPaint);
   }

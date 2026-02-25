@@ -1,1 +1,98 @@
-﻿[{"label":"Student 1","id":"STU001","password":"password123","role":"student"},{"label":"Student 2","id":"STU002","password":"securePass456","role":"student"},{"label":"Faculty Member","id":"FAC001","password":"facultyPass789","role":"faculty"},{"label":"Admin User","id":"ADM001","password":"adminSecure101","role":"admin"},{"label":"Student 3","id":"STU003","password":"testPass202","role":"student"}]
+[
+  {
+    "label": "Student - Rahul Sharma",
+    "id": "STU001",
+    "password": "password123",
+    "role": "student"
+  },
+  {
+    "label": "Student - Priya Patel",
+    "id": "STU002",
+    "password": "securePass456",
+    "role": "student"
+  },
+  {
+    "label": "Student - Arjun Kumar",
+    "id": "STU003",
+    "password": "testPass202",
+    "role": "student"
+  },
+  {
+    "label": "Student - Anjali Singh",
+    "id": "STU004",
+    "password": "pass404",
+    "role": "student"
+  },
+  {
+    "label": "Student - Nikhil Gupta",
+    "id": "STU005",
+    "password": "pass505",
+    "role": "student"
+  },
+  {
+    "label": "Faculty - Dr. Amit Verma",
+    "id": "FAC001",
+    "password": "facultyPass789",
+    "role": "faculty"
+  },
+  {
+    "label": "Faculty - Prof. Sneha Desai",
+    "id": "FAC002",
+    "password": "faculty202",
+    "role": "faculty"
+  },
+  {
+    "label": "HOD CSE - Dr. Rajesh Kumar",
+    "id": "FAC003",
+    "password": "hodPass303",
+    "role": "hod"
+  },
+  {
+    "label": "Faculty - Ms. Priya Nair",
+    "id": "FAC004",
+    "password": "faculty404",
+    "role": "faculty"
+  },
+  {
+    "label": "Faculty - Dr. S. Lakshmi",
+    "id": "FAC005",
+    "password": "faculty505",
+    "role": "faculty"
+  },
+  {
+    "label": "HOD ECE - Dr. K. Mohan",
+    "id": "FAC006",
+    "password": "hodPass606",
+    "role": "hod"
+  },
+  {
+    "label": "Faculty - Dr. R. Venkat",
+    "id": "FAC007",
+    "password": "faculty707",
+    "role": "faculty"
+  },
+  {
+    "label": "HOD MECH - Dr. M. Selvam",
+    "id": "FAC008",
+    "password": "hodPass808",
+    "role": "hod"
+  },
+  {
+    "label": "Faculty - Prof. A. Devi",
+    "id": "FAC009",
+    "password": "faculty909",
+    "role": "faculty"
+  },
+  {
+    "label": "HOD CIVIL - Dr. P. Ganesh",
+    "id": "FAC010",
+    "password": "hodPass010",
+    "role": "hod"
+  },
+  {
+    "label": "Admin User",
+    "id": "ADM001",
+    "password": "adminSecure101",
+    "role": "admin"
+  }
+]

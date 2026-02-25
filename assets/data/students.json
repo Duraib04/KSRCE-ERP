@@ -1,1 +1,114 @@
-﻿[{"studentId":"STU001","name":"Rahul Sharma","email":"rahul.sharma@ksrce.edu.in","phone":"9876543210","department":"Computer Science","year":"3","section":"A","dateOfBirth":"2003-05-15","bloodGroup":"O+","address":"123 Main Street, Tiruchengode","parentName":"Vikram Sharma","parentPhone":"9876543200","admissionDate":"2021-07-10","cgpa":8.5},{"studentId":"STU002","name":"Priya Patel","email":"priya.patel@ksrce.edu.in","phone":"9123456789","department":"Electronics","year":"2","section":"B","dateOfBirth":"2004-03-22","bloodGroup":"B+","address":"456 Oak Avenue, Namakkal","parentName":"Rajesh Patel","parentPhone":"9123456779","admissionDate":"2022-07-15","cgpa":7.8},{"studentId":"STU003","name":"Arjun Kumar","email":"arjun.kumar@ksrce.edu.in","phone":"9234567890","department":"Mechanical","year":"1","section":"C","dateOfBirth":"2005-01-10","bloodGroup":"A+","address":"789 Pine Road, Salem","parentName":"Suresh Kumar","parentPhone":"9234567880","admissionDate":"2023-07-20","cgpa":8.2},{"studentId":"STU004","name":"Anjali Singh","email":"anjali.singh@ksrce.edu.in","phone":"9345678901","department":"Computer Science","year":"3","section":"A","dateOfBirth":"2003-07-25","bloodGroup":"AB+","address":"321 Maple Drive, Erode","parentName":"Harish Singh","parentPhone":"9345678891","admissionDate":"2021-07-10","cgpa":9.1},{"studentId":"STU005","name":"Nikhil Gupta","email":"nikhil.gupta@ksrce.edu.in","phone":"9456789012","department":"Civil","year":"2","section":"D","dateOfBirth":"2004-09-14","bloodGroup":"O-","address":"654 Birch Lane, Karur","parentName":"Ramesh Gupta","parentPhone":"9456789002","admissionDate":"2022-07-15","cgpa":7.5}]
+[
+  {
+    "studentId": "STU001",
+    "name": "Rahul Sharma",
+    "email": "rahul.sharma@ksrce.edu.in",
+    "phone": "9876543210",
+    "department": "Computer Science",
+    "departmentId": "DEPT_CSE",
+    "year": "3",
+    "section": "A",
+    "dateOfBirth": "2003-05-15",
+    "bloodGroup": "O+",
+    "address": "123 Main Street, Tiruchengode",
+    "parentName": "Vikram Sharma",
+    "parentPhone": "9876543200",
+    "admissionDate": "2021-07-10",
+    "cgpa": 8.5,
+    "mentorId": "FAC001",
+    "classAdviserId": "FAC001",
+    "enrolledCourses": [
+      "CS201",
+      "CS202"
+    ]
+  },
+  {
+    "studentId": "STU002",
+    "name": "Priya Patel",
+    "email": "priya.patel@ksrce.edu.in",
+    "phone": "9123456789",
+    "department": "Electronics",
+    "departmentId": "DEPT_ECE",
+    "year": "2",
+    "section": "B",
+    "dateOfBirth": "2004-03-22",
+    "bloodGroup": "B+",
+    "address": "456 Oak Avenue, Namakkal",
+    "parentName": "Rajesh Patel",
+    "parentPhone": "9123456779",
+    "admissionDate": "2022-07-15",
+    "cgpa": 7.8,
+    "mentorId": "FAC002",
+    "classAdviserId": "FAC002",
+    "enrolledCourses": [
+      "EC202"
+    ]
+  },
+  {
+    "studentId": "STU003",
+    "name": "Arjun Kumar",
+    "email": "arjun.kumar@ksrce.edu.in",
+    "phone": "9234567890",
+    "department": "Mechanical",
+    "departmentId": "DEPT_MECH",
+    "year": "1",
+    "section": "C",
+    "dateOfBirth": "2005-01-10",
+    "bloodGroup": "A+",
+    "address": "789 Pine Road, Salem",
+    "parentName": "Suresh Kumar",
+    "parentPhone": "9234567880",
+    "admissionDate": "2023-07-20",
+    "cgpa": 8.2,
+    "mentorId": "FAC008",
+    "classAdviserId": "FAC009",
+    "enrolledCourses": [
+      "ME301"
+    ]
+  },
+  {
+    "studentId": "STU004",
+    "name": "Anjali Singh",
+    "email": "anjali.singh@ksrce.edu.in",
+    "phone": "9345678901",
+    "department": "Computer Science",
+    "departmentId": "DEPT_CSE",
+    "year": "3",
+    "section": "A",
+    "dateOfBirth": "2003-07-25",
+    "bloodGroup": "AB+",
+    "address": "321 Maple Drive, Erode",
+    "parentName": "Harish Singh",
+    "parentPhone": "9345678891",
+    "admissionDate": "2021-07-10",
+    "cgpa": 9.1,
+    "mentorId": "FAC001",
+    "classAdviserId": "FAC001",
+    "enrolledCourses": [
+      "CS201",
+      "CS202"
+    ]
+  },
+  {
+    "studentId": "STU005",
+    "name": "Nikhil Gupta",
+    "email": "nikhil.gupta@ksrce.edu.in",
+    "phone": "9456789012",
+    "department": "Civil",
+    "departmentId": "DEPT_CIVIL",
+    "year": "2",
+    "section": "D",
+    "dateOfBirth": "2004-09-14",
+    "bloodGroup": "O-",
+    "address": "654 Birch Lane, Karur",
+    "parentName": "Ramesh Gupta",
+    "parentPhone": "9456789002",
+    "admissionDate": "2022-07-15",
+    "cgpa": 7.5,
+    "mentorId": "FAC004",
+    "classAdviserId": "FAC004",
+    "enrolledCourses": [
+      "CV101"
+    ]
+  }
+]

@@ -12,7 +12,7 @@ class NavItem {
 
 class DashboardShell extends StatefulWidget {
   final Widget child;
-  final String role; // 'student' or 'faculty'
+  final String role; // 'student', 'faculty', 'hod', or 'admin'
   final String currentRoute;
   const DashboardShell({super.key, required this.child, required this.role, required this.currentRoute});
 
@@ -55,10 +55,33 @@ class _DashboardShellState extends State<DashboardShell> {
     } else if (widget.role == 'admin') {
       return [
         NavItem(title: 'Dashboard', icon: Icons.dashboard, route: '/admin/dashboard'),
+        NavItem(title: 'Departments', icon: Icons.business, route: '/admin/departments'),
+        NavItem(title: 'Management', icon: Icons.manage_accounts, route: '', children: [
+          NavItem(title: 'Faculty Mgmt', icon: Icons.person_add, route: '/admin/faculty'),
+          NavItem(title: 'Student Mgmt', icon: Icons.group_add, route: '/admin/students'),
+          NavItem(title: 'Course Mgmt', icon: Icons.menu_book, route: '/admin/courses'),
+          NavItem(title: 'Class Mgmt', icon: Icons.class_, route: '/admin/classes'),
+        ]),
+        NavItem(title: 'HOD Assignment', icon: Icons.supervisor_account, route: '/admin/hod-assignment'),
         NavItem(title: 'User Management', icon: Icons.people, route: '/admin/users'),
         NavItem(title: 'Reports', icon: Icons.analytics, route: '/admin/reports'),
         NavItem(title: 'Notifications', icon: Icons.notifications, route: '/admin/notifications'),
         NavItem(title: 'Settings', icon: Icons.settings, route: '/admin/settings'),
+      ];
+    } else if (widget.role == 'hod') {
+      return [
+        NavItem(title: 'Dashboard', icon: Icons.dashboard, route: '/hod/dashboard'),
+        NavItem(title: 'Department', icon: Icons.business, route: '', children: [
+          NavItem(title: 'Faculty', icon: Icons.people, route: '/hod/faculty'),
+          NavItem(title: 'Students', icon: Icons.school, route: '/hod/students'),
+          NavItem(title: 'Courses', icon: Icons.menu_book, route: '/hod/courses'),
+        ]),
+        NavItem(title: 'Assignments', icon: Icons.assignment_ind, route: '', children: [
+          NavItem(title: 'Class Advisers', icon: Icons.person_pin, route: '/hod/class-advisers'),
+          NavItem(title: 'Mentors', icon: Icons.group, route: '/hod/mentors'),
+        ]),
+        NavItem(title: 'Notifications', icon: Icons.notifications, route: '/hod/notifications'),
+        NavItem(title: 'Settings', icon: Icons.settings, route: '/hod/settings'),
       ];
     } else {
       return [
@@ -133,7 +156,7 @@ class _DashboardShellState extends State<DashboardShell> {
     return AppBar(
       backgroundColor: AppColors.surface,
       title: Text(
-        widget.role == 'student' ? 'Student Portal' : widget.role == 'admin' ? 'Admin Portal' : 'Faculty Portal',
+        widget.role == 'student' ? 'Student Portal' : widget.role == 'admin' ? 'Admin Portal' : widget.role == 'hod' ? 'HOD Portal' : 'Faculty Portal',
         style: Theme.of(context).textTheme.titleLarge,
       ),
       iconTheme: const IconThemeData(color: AppColors.textDark),
@@ -195,8 +218,8 @@ class _DashboardShellState extends State<DashboardShell> {
               children: [
                 const CircleAvatar(radius: 30, backgroundColor: Colors.white24, child: Icon(Icons.person, size: 30, color: Colors.white)),
                 const SizedBox(height: 10),
-                Text(widget.role == 'student' ? 'Student Name' : widget.role == 'admin' ? 'Administrator' : 'Faculty Name', style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-                Text(widget.role == 'student' ? 'S20210001' : widget.role == 'admin' ? 'ADM001' : 'FAC001', style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                Text(widget.role == 'student' ? 'Student Name' : widget.role == 'admin' ? 'Administrator' : widget.role == 'hod' ? 'Head of Department' : 'Faculty Name', style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                Text(widget.role == 'student' ? 'S20210001' : widget.role == 'admin' ? 'ADM001' : widget.role == 'hod' ? 'HOD' : 'FAC001', style: const TextStyle(color: Colors.white70, fontSize: 12)),
               ],
             ),
           ),
@@ -433,7 +456,7 @@ class _DashboardShellState extends State<DashboardShell> {
       child: Row(
         children: [
           Text(
-            widget.role == 'student' ? 'Student Portal' : widget.role == 'admin' ? 'Admin Portal' : 'Faculty Portal',
+            widget.role == 'student' ? 'Student Portal' : widget.role == 'admin' ? 'Admin Portal' : widget.role == 'hod' ? 'HOD Portal' : 'Faculty Portal',
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const Spacer(),

@@ -50,6 +50,21 @@ import 'features/admin/presentation/pages/admin_user_management_page.dart';
 import 'features/admin/presentation/pages/admin_reports_page.dart';
 import 'features/admin/presentation/pages/admin_notifications_page.dart';
 import 'features/admin/presentation/pages/admin_settings_page.dart';
+import 'features/admin/presentation/pages/admin_departments_page.dart';
+import 'features/admin/presentation/pages/admin_faculty_management_page.dart';
+import 'features/admin/presentation/pages/admin_student_management_page.dart';
+import 'features/admin/presentation/pages/admin_course_management_page.dart';
+import 'features/admin/presentation/pages/admin_class_management_page.dart';
+import 'features/admin/presentation/pages/admin_hod_assignment_page.dart';
+
+import 'features/hod/presentation/pages/hod_dashboard_page.dart';
+import 'features/hod/presentation/pages/hod_faculty_page.dart';
+import 'features/hod/presentation/pages/hod_students_page.dart';
+import 'features/hod/presentation/pages/hod_courses_page.dart';
+import 'features/hod/presentation/pages/hod_class_advisers_page.dart';
+import 'features/hod/presentation/pages/hod_mentors_page.dart';
+import 'features/hod/presentation/pages/hod_notifications_page.dart';
+import 'features/hod/presentation/pages/hod_settings_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -84,6 +99,8 @@ Widget _f(String route, Widget child) =>
     DashboardShell(role: 'faculty', currentRoute: route, child: child);
 Widget _a(String route, Widget child) =>
     DashboardShell(role: 'admin', currentRoute: route, child: child);
+Widget _h(String route, Widget child) =>
+    DashboardShell(role: 'hod', currentRoute: route, child: child);
 
 final GoRouter _router = GoRouter(
   initialLocation: '/',
@@ -129,10 +146,25 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/faculty/settings', builder: (c, s) => _f('/faculty/settings', const FacultySettingsPage())),
     // Admin routes
     GoRoute(path: '/admin/dashboard', builder: (c, s) => _a('/admin/dashboard', const AdminDashboardPage())),
+    GoRoute(path: '/admin/departments', builder: (c, s) => _a('/admin/departments', const AdminDepartmentsPage())),
+    GoRoute(path: '/admin/faculty', builder: (c, s) => _a('/admin/faculty', const AdminFacultyManagementPage())),
+    GoRoute(path: '/admin/students', builder: (c, s) => _a('/admin/students', const AdminStudentManagementPage())),
+    GoRoute(path: '/admin/courses', builder: (c, s) => _a('/admin/courses', const AdminCourseManagementPage())),
+    GoRoute(path: '/admin/classes', builder: (c, s) => _a('/admin/classes', const AdminClassManagementPage())),
+    GoRoute(path: '/admin/hod-assignment', builder: (c, s) => _a('/admin/hod-assignment', const AdminHodAssignmentPage())),
     GoRoute(path: '/admin/users', builder: (c, s) => _a('/admin/users', const AdminUserManagementPage())),
     GoRoute(path: '/admin/reports', builder: (c, s) => _a('/admin/reports', const AdminReportsPage())),
     GoRoute(path: '/admin/notifications', builder: (c, s) => _a('/admin/notifications', const AdminNotificationsPage())),
     GoRoute(path: '/admin/settings', builder: (c, s) => _a('/admin/settings', const AdminSettingsPage())),
+    // HOD routes
+    GoRoute(path: '/hod/dashboard', builder: (c, s) => _h('/hod/dashboard', const HodDashboardPage())),
+    GoRoute(path: '/hod/faculty', builder: (c, s) => _h('/hod/faculty', const HodFacultyPage())),
+    GoRoute(path: '/hod/students', builder: (c, s) => _h('/hod/students', const HodStudentsPage())),
+    GoRoute(path: '/hod/courses', builder: (c, s) => _h('/hod/courses', const HodCoursesPage())),
+    GoRoute(path: '/hod/class-advisers', builder: (c, s) => _h('/hod/class-advisers', const HodClassAdvisersPage())),
+    GoRoute(path: '/hod/mentors', builder: (c, s) => _h('/hod/mentors', const HodMentorsPage())),
+    GoRoute(path: '/hod/notifications', builder: (c, s) => _h('/hod/notifications', const HodNotificationsPage())),
+    GoRoute(path: '/hod/settings', builder: (c, s) => _h('/hod/settings', const HodSettingsPage())),
   ],
 );
 

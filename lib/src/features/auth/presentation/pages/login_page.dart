@@ -6,7 +6,6 @@ import '../../../../core/theme/app_colors.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
-
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -21,19 +20,20 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   bool _isLoading = false;
   int _selectedRole = 0;
 
-  final List<String> _roles = ['Student', 'Faculty', 'Admin'];
-  final List<IconData> _roleIcons = [Icons.school, Icons.person, Icons.admin_panel_settings];
-  final List<String> _placeholders = ['Eg. STU001', 'Eg. FAC001', 'Eg. ADM001'];
+  final List<String> _roles = ['Student', 'Faculty', 'HOD', 'Admin'];
+  final List<IconData> _roleIcons = [Icons.school, Icons.person, Icons.supervisor_account, Icons.admin_panel_settings];
+  final List<String> _placeholders = ['Eg. STU001', 'Eg. FAC001', 'Eg. FAC003', 'Eg. ADM001'];
   final Map<String, Map<String, String>> _demoCredentials = {
     'Student': {'userId': 'STU001', 'password': 'password123'},
     'Faculty': {'userId': 'FAC001', 'password': 'facultyPass789'},
+    'HOD': {'userId': 'FAC003', 'password': 'hodPass303'},
     'Admin': {'userId': 'ADM001', 'password': 'adminSecure101'},
   };
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) return;
       setState(() {
@@ -69,6 +69,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
         context.go('/student/dashboard');
       } else if (role == 'admin') {
         context.go('/admin/dashboard');
+      } else if (role == 'hod') {
+        context.go('/hod/dashboard');
       } else {
         context.go('/faculty/dashboard');
       }

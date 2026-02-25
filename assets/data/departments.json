@@ -1,0 +1,26 @@
+[
+  {
+    "departmentId": "DEPT_CSE",
+    "departmentName": "Computer Science and Engineering",
+    "departmentCode": "CSE",
+    "hodId": "FAC003"
+  },
+  {
+    "departmentId": "DEPT_ECE",
+    "departmentName": "Electronics and Communication Engineering",
+    "departmentCode": "ECE",
+    "hodId": "FAC006"
+  },
+  {
+    "departmentId": "DEPT_MECH",
+    "departmentName": "Mechanical Engineering",
+    "departmentCode": "MECH",
+    "hodId": "FAC008"
+  },
+  {
+    "departmentId": "DEPT_CIVIL",
+    "departmentName": "Civil Engineering",
+    "departmentCode": "CIVIL",
+    "hodId": "FAC010"
+  }
+]
