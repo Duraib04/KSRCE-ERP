@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import '../../../core/data_service.dart';
 import '../../../core/theme/app_colors.dart';
 
 class NavItem {
@@ -231,21 +233,38 @@ class _DashboardShellState extends State<DashboardShell> {
       backgroundColor: AppColors.surface,
       child: Column(
         children: [
-          DrawerHeader(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [AppColors.primary, Color(0xFF1E3A5F)]),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                const CircleAvatar(radius: 30, backgroundColor: Colors.white24, child: Icon(Icons.person, size: 30, color: Colors.white)),
-                const SizedBox(height: 10),
-                Text(widget.role == 'student' ? 'Student Name' : widget.role == 'admin' ? 'Administrator' : widget.role == 'hod' ? 'Head of Department' : 'Faculty Name', style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-                Text(widget.role == 'student' ? 'S20210001' : widget.role == 'admin' ? 'ADM001' : widget.role == 'hod' ? 'HOD' : 'FAC001', style: const TextStyle(color: Colors.white70, fontSize: 12)),
-              ],
-            ),
-          ),
+          Builder(builder: (context) {
+            final ds = Provider.of<DataService>(context, listen: false);
+            String displayName;
+            String displayId;
+            if (widget.role == 'student') {
+              displayName = ds.currentStudent?['name']?.toString() ?? 'Student';
+              displayId = ds.currentUserId ?? '';
+            } else if (widget.role == 'admin') {
+              displayName = 'Administrator';
+              displayId = ds.currentUserId ?? 'ADM001';
+            } else {
+              displayName = ds.currentFaculty?['name']?.toString() ?? (widget.role == 'hod' ? 'Head of Department' : 'Faculty');
+              displayId = ds.currentUserId ?? '';
+            }
+            return DrawerHeader(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(colors: [AppColors.primary, Color(0xFF1E3A5F)]),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  CircleAvatar(radius: 30, backgroundColor: Colors.white24,
+                    child: Text(displayName.isNotEmpty ? displayName[0].toUpperCase() : 'U',
+                      style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold))),
+                  const SizedBox(height: 10),
+                  Text(displayName, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                  Text(displayId, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                ],
+              ),
+            );
+          }),
           Expanded(
             child: ListView(
               padding: EdgeInsets.zero,

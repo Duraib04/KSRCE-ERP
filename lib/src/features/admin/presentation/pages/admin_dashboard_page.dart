@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
@@ -13,6 +14,7 @@ class AdminDashboardPage extends StatelessWidget {
     final totalCourses = ds.courses.length;
     final pendingComplaints = ds.complaints.where((c) => c['status'] == 'pending').length;
     final activeUsers = ds.users.length;
+    final pendingApprovals = ds.getPendingApprovalCount(ds.currentUserId ?? 'ADM001', 'admin');
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
@@ -25,11 +27,11 @@ class AdminDashboardPage extends StatelessWidget {
             const SizedBox(height: 8),
             Text('Welcome back, Administrator', style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.6))),
             const SizedBox(height: 24),
-            _buildStatsGrid(isMobile, constraints.maxWidth, totalStudents, activeUsers, totalCourses, pendingComplaints),
+            _buildStatsGrid(isMobile, constraints.maxWidth, totalStudents, activeUsers, totalCourses, pendingComplaints, pendingApprovals),
             const SizedBox(height: 28),
             Text('Quick Actions', style: TextStyle(fontSize: isMobile ? 18 : 20, fontWeight: FontWeight.bold, color: Colors.white)),
             const SizedBox(height: 16),
-            _buildQuickActions(isMobile, constraints.maxWidth),
+            _buildQuickActions(context, isMobile, constraints.maxWidth),
             const SizedBox(height: 28),
             Container(
               width: double.infinity,
@@ -56,12 +58,13 @@ class AdminDashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildStatsGrid(bool isMobile, double maxWidth, int totalStudents, int activeUsers, int totalCourses, int pendingComplaints) {
+  Widget _buildStatsGrid(bool isMobile, double maxWidth, int totalStudents, int activeUsers, int totalCourses, int pendingComplaints, int pendingApprovals) {
     final cards = [
       {'icon': Icons.people, 'label': 'Total Students', 'value': '$totalStudents', 'color': AppColors.primary},
       {'icon': Icons.person, 'label': 'Active Users', 'value': '$activeUsers', 'color': const Color(0xFF4CAF50)},
       {'icon': Icons.book, 'label': 'Total Courses', 'value': '$totalCourses', 'color': AppColors.accent},
       {'icon': Icons.warning_amber, 'label': 'Pending Complaints', 'value': '$pendingComplaints', 'color': const Color(0xFFEF5350)},
+      {'icon': Icons.verified_user, 'label': 'Profile Approvals', 'value': '$pendingApprovals', 'color': const Color(0xFF7E57C2)},
     ];
     if (isMobile) {
       return GridView.count(
@@ -98,7 +101,7 @@ class AdminDashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickActions(bool isMobile, double maxWidth) {
+  Widget _buildQuickActions(BuildContext context, bool isMobile, double maxWidth) {
     final actions = [
       {'icon': Icons.upload_file, 'label': 'Upload Students\n(Excel/CSV)', 'color': AppColors.primary, 'route': '/admin/users'},
       {'icon': Icons.people, 'label': 'Manage\nUsers', 'color': const Color(0xFF4CAF50), 'route': '/admin/users'},
@@ -113,18 +116,19 @@ class AdminDashboardPage extends StatelessWidget {
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
         childAspectRatio: 1.2,
-        children: actions.map((a) => _buildActionCard(a)).toList(),
+        children: actions.map((a) => _buildActionCard(context, a)).toList(),
       );
     }
     return Wrap(spacing: 16, runSpacing: 16,
-      children: actions.map((a) => SizedBox(width: 150, child: _buildActionCard(a))).toList(),
+      children: actions.map((a) => SizedBox(width: 150, child: _buildActionCard(context, a))).toList(),
     );
   }
 
-  Widget _buildActionCard(Map<String, Object> a) {
+  Widget _buildActionCard(BuildContext context, Map<String, Object> a) {
     final color = a['color'] as Color;
+    final route = a['route'] as String;
     return InkWell(
-      onTap: () {},
+      onTap: () => GoRouter.of(context).go(route),
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(16),
