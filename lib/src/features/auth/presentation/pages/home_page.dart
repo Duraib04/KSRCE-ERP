@@ -4,8 +4,6 @@ import 'package:go_router/go_router.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  static const String _logoUrl = 'https://www.ksrce.ac.in/images/ksrce-logo.png';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,18 +50,10 @@ class HomePage extends StatelessWidget {
                     child: ClipOval(
                       child: Container(
                         color: const Color(0xFF1A2A4A),
-                        child: Image.network(
-                          _logoUrl,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => const Center(
-                            child: Icon(Icons.school, size: 70, color: Color(0xFFD4A843)),
-                          ),
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return const Center(
-                              child: Icon(Icons.school, size: 70, color: Color(0xFFD4A843)),
-                            );
-                          },
+                        child: const Icon(
+                          Icons.school,
+                          size: 70,
+                          color: Color(0xFFD4A843),
                         ),
                       ),
                     ),
