@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class FacultyResearchPage extends StatelessWidget {
   const FacultyResearchPage({super.key});
 
-  static const _bg = Color(0xFF0D1F3C);
-  static const _card = Color(0xFF111D35);
-  static const _border = Color(0xFF1E3055);
-  static const _accent = Color(0xFF1565C0);
-  static const _gold = Color(0xFFD4A843);
+  static const _bg = AppColors.background;
+  static const _card = AppColors.surface;
+  static const _border = AppColors.border;
+  static const _accent = AppColors.primary;
+  static const _gold = AppColors.accent;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class FacultyResearchPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            const Text('Manage publications, research projects, and academic contributions', style: TextStyle(color: Colors.white54, fontSize: 14)),
+            const Text('Manage publications, research projects, and academic contributions', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
             const SizedBox(height: 24),
 
             // Research Stats
@@ -179,7 +180,7 @@ class _RStat extends StatelessWidget {
     return Container(
       width: 160,
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF1E3055))),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
       child: Row(
         children: [
           CircleAvatar(radius: 18, backgroundColor: color.withOpacity(0.15), child: Icon(icon, color: color, size: 18)),
@@ -188,7 +189,7 @@ class _RStat extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(value, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-              Text(label, style: const TextStyle(color: Colors.white54, fontSize: 10)),
+              Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 10)),
             ],
           ),
         ],
@@ -210,7 +211,7 @@ class _PublicationCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF1E3055))),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -226,9 +227,9 @@ class _PublicationCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          Text(journal, style: const TextStyle(color: Colors.white54, fontSize: 13, fontStyle: FontStyle.italic)),
+          Text(journal, style: const TextStyle(color: AppColors.textLight, fontSize: 13, fontStyle: FontStyle.italic)),
           const SizedBox(height: 6),
-          Text('Co-authors: $coAuthors', style: const TextStyle(color: Colors.white38, fontSize: 12)),
+          Text('Co-authors: $coAuthors', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
           const SizedBox(height: 10),
           Row(
             children: [
@@ -259,9 +260,9 @@ class _PubInfo extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 13, color: Colors.white30),
+        Icon(icon, size: 13, color: AppColors.border),
         const SizedBox(width: 4),
-        Text(text, style: const TextStyle(color: Colors.white54, fontSize: 11)),
+        Text(text, style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
       ],
     );
   }
@@ -279,7 +280,7 @@ class _ProjectCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF1E3055))),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -287,14 +288,14 @@ class _ProjectCard extends StatelessWidget {
             children: [
               Icon(Icons.science, color: color, size: 20),
               const SizedBox(width: 10),
-              Expanded(child: Text(title, style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600))),
+              Expanded(child: Text(title, style: const TextStyle(color: AppColors.textDark, fontSize: 15, fontWeight: FontWeight.w600))),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: isOngoing ? Colors.greenAccent.withOpacity(0.12) : const Color(0xFFD4A843).withOpacity(0.12),
+                  color: isOngoing ? Colors.greenAccent.withOpacity(0.12) : AppColors.accent.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Text(status, style: TextStyle(color: isOngoing ? Colors.greenAccent : const Color(0xFFD4A843), fontSize: 12)),
+                child: Text(status, style: TextStyle(color: isOngoing ? Colors.greenAccent : AppColors.accent, fontSize: 12)),
               ),
             ],
           ),
@@ -335,10 +336,10 @@ class _ScholarCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(10), border: Border.all(color: const Color(0xFF1E3055))),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.border)),
       child: Row(
         children: [
-          CircleAvatar(radius: 22, backgroundColor: const Color(0xFF1565C0).withOpacity(0.15), child: const Icon(Icons.school, color: Color(0xFF1565C0), size: 20)),
+          CircleAvatar(radius: 22, backgroundColor: AppColors.primary.withOpacity(0.15), child: const Icon(Icons.school, color: AppColors.primary, size: 20)),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -348,13 +349,13 @@ class _ScholarCard extends StatelessWidget {
                   children: [
                     Text(name, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500)),
                     const SizedBox(width: 8),
-                    Text('($regNo)', style: const TextStyle(color: Colors.white38, fontSize: 12)),
+                    Text('($regNo)', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text(topic, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+                Text(topic, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
                 const SizedBox(height: 4),
-                Text('$university | $status | $publications publications', style: const TextStyle(color: Colors.white38, fontSize: 11)),
+                Text('$university | $status | $publications publications', style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
               ],
             ),
           ),

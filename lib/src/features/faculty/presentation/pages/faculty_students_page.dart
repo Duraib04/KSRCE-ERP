@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class FacultyStudentsPage extends StatefulWidget {
   const FacultyStudentsPage({super.key});
@@ -8,11 +9,11 @@ class FacultyStudentsPage extends StatefulWidget {
 }
 
 class _FacultyStudentsPageState extends State<FacultyStudentsPage> {
-  static const _bg = Color(0xFF0D1F3C);
-  static const _card = Color(0xFF111D35);
-  static const _border = Color(0xFF1E3055);
-  static const _accent = Color(0xFF1565C0);
-  static const _gold = Color(0xFFD4A843);
+  static const _bg = AppColors.background;
+  static const _card = AppColors.surface;
+  static const _border = AppColors.border;
+  static const _accent = AppColors.primary;
+  static const _gold = AppColors.accent;
 
   String _selectedCourse = 'CS3501 - Compiler Design (Sec A)';
   String _searchQuery = '';
@@ -84,7 +85,7 @@ class _FacultyStudentsPageState extends State<FacultyStudentsPage> {
                                 onPressed: () {},
                                 icon: const Icon(Icons.print, size: 16),
                                 label: const Text('Print'),
-                                style: OutlinedButton.styleFrom(foregroundColor: Colors.white70, side: const BorderSide(color: Colors.white30)),
+                                style: OutlinedButton.styleFrom(foregroundColor: AppColors.textMedium, side: const BorderSide(color: AppColors.border)),
                               ),
                             ],
                           ),
@@ -107,7 +108,7 @@ class _FacultyStudentsPageState extends State<FacultyStudentsPage> {
                                 onPressed: () {},
                                 icon: const Icon(Icons.print, size: 16),
                                 label: const Text('Print'),
-                                style: OutlinedButton.styleFrom(foregroundColor: Colors.white70, side: const BorderSide(color: Colors.white30)),
+                                style: OutlinedButton.styleFrom(foregroundColor: AppColors.textMedium, side: const BorderSide(color: AppColors.border)),
                               ),
                             ],
                           ),
@@ -127,7 +128,7 @@ class _FacultyStudentsPageState extends State<FacultyStudentsPage> {
                                 value: _selectedCourse,
                                 dropdownColor: _card,
                                 isExpanded: true,
-                                style: const TextStyle(color: Colors.white, fontSize: 14),
+                                style: const TextStyle(color: AppColors.textDark, fontSize: 14),
                                 items: [
                                   'CS3501 - Compiler Design (Sec A)',
                                   'CS3501 - Compiler Design (Sec B)',
@@ -143,11 +144,11 @@ class _FacultyStudentsPageState extends State<FacultyStudentsPage> {
                           Container(
                             decoration: BoxDecoration(color: _card, borderRadius: BorderRadius.circular(10), border: Border.all(color: _border)),
                             child: TextField(
-                              style: const TextStyle(color: Colors.white, fontSize: 14),
+                              style: const TextStyle(color: AppColors.textDark, fontSize: 14),
                               decoration: const InputDecoration(
                                 hintText: 'Search by name or roll no...',
-                                hintStyle: TextStyle(color: Colors.white30, fontSize: 14),
-                                prefixIcon: Icon(Icons.search, color: Colors.white30, size: 20),
+                                hintStyle: TextStyle(color: AppColors.border, fontSize: 14),
+                                prefixIcon: Icon(Icons.search, color: AppColors.border, size: 20),
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                               ),
@@ -168,7 +169,7 @@ class _FacultyStudentsPageState extends State<FacultyStudentsPage> {
                                   value: _selectedCourse,
                                   dropdownColor: _card,
                                   isExpanded: true,
-                                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                                  style: const TextStyle(color: AppColors.textDark, fontSize: 14),
                                   items: [
                                     'CS3501 - Compiler Design (Sec A)',
                                     'CS3501 - Compiler Design (Sec B)',
@@ -187,11 +188,11 @@ class _FacultyStudentsPageState extends State<FacultyStudentsPage> {
                             child: Container(
                               decoration: BoxDecoration(color: _card, borderRadius: BorderRadius.circular(10), border: Border.all(color: _border)),
                               child: TextField(
-                                style: const TextStyle(color: Colors.white, fontSize: 14),
+                                style: const TextStyle(color: AppColors.textDark, fontSize: 14),
                                 decoration: const InputDecoration(
                                   hintText: 'Search by name or roll no...',
-                                  hintStyle: TextStyle(color: Colors.white30, fontSize: 14),
-                                  prefixIcon: Icon(Icons.search, color: Colors.white30, size: 20),
+                                  hintStyle: TextStyle(color: AppColors.border, fontSize: 14),
+                                  prefixIcon: Icon(Icons.search, color: AppColors.border, size: 20),
                                   border: InputBorder.none,
                                   contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                                 ),
@@ -237,13 +238,13 @@ class _FacultyStudentsPageState extends State<FacultyStudentsPage> {
                     child: DataTable(
                       headingRowColor: WidgetStateProperty.all(const Color(0xFF1A2A4A)),
                       columns: const [
-                        DataColumn(label: Text('S.No', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Roll Number', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Student Name', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Email', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Attendance %', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Grade', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Actions', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('S.No', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Roll Number', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Student Name', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Email', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Attendance %', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Grade', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Actions', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
                       ],
                       rows: List.generate(filtered.length, (i) {
                         final s = filtered[i];
@@ -257,10 +258,10 @@ class _FacultyStudentsPageState extends State<FacultyStudentsPage> {
                         if (g == 'D' || g == 'E' || g == 'F') gradeColor = Colors.redAccent;
 
                         return DataRow(cells: [
-                          DataCell(Text('${i + 1}', style: const TextStyle(color: Colors.white54, fontSize: 13))),
-                          DataCell(Text(s['rollNo'] as String, style: const TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text(s['name'] as String, style: const TextStyle(color: Colors.white, fontSize: 13))),
-                          DataCell(Text(s['email'] as String, style: const TextStyle(color: Colors.white54, fontSize: 12))),
+                          DataCell(Text('${i + 1}', style: const TextStyle(color: AppColors.textLight, fontSize: 13))),
+                          DataCell(Text(s['rollNo'] as String, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text(s['name'] as String, style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
+                          DataCell(Text(s['email'] as String, style: const TextStyle(color: AppColors.textLight, fontSize: 12))),
                           DataCell(Text('${att.toStringAsFixed(1)}%', style: TextStyle(
                             color: att >= 85 ? Colors.greenAccent : att >= 75 ? Colors.orangeAccent : Colors.redAccent,
                             fontSize: 13, fontWeight: FontWeight.w500,
@@ -271,7 +272,7 @@ class _FacultyStudentsPageState extends State<FacultyStudentsPage> {
                             child: Text(g, style: TextStyle(color: gradeColor, fontSize: 12, fontWeight: FontWeight.bold)),
                           )),
                           DataCell(IconButton(
-                            icon: const Icon(Icons.visibility, color: Colors.white38, size: 18),
+                            icon: const Icon(Icons.visibility, color: AppColors.textLight, size: 18),
                             onPressed: () {},
                             tooltip: 'View Details',
                           )),
@@ -301,15 +302,15 @@ class _QStat extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: const Color(0xFF111D35),
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFF1E3055)),
+          border: Border.all(color: AppColors.border),
         ),
         child: Column(
           children: [
             Text(value, style: TextStyle(color: color, fontSize: 22, fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
-            Text(label, style: const TextStyle(color: Colors.white54, fontSize: 11)),
+            Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
           ],
         ),
       ),

@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 
@@ -34,16 +35,16 @@ class AdminDashboardPage extends StatelessWidget {
               width: double.infinity,
               padding: EdgeInsets.all(isMobile ? 16 : 20),
               decoration: BoxDecoration(
-                color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: const Color(0xFF1E3055)),
+                color: AppColors.surface, borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColors.border),
               ),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text('Recent Activity', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                const Text('Recent Activity', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
                 const SizedBox(height: 16),
                 _ActivityItem(icon: Icons.person_add, text: '5 new students registered', time: '2 hours ago', color: const Color(0xFF4CAF50)),
-                _ActivityItem(icon: Icons.upload, text: 'Bulk upload completed (120 records)', time: '5 hours ago', color: const Color(0xFF1565C0)),
+                _ActivityItem(icon: Icons.upload, text: 'Bulk upload completed (120 records)', time: '5 hours ago', color: AppColors.primary),
                 _ActivityItem(icon: Icons.block, text: 'User STU003 temporarily suspended', time: '1 day ago', color: const Color(0xFFEF5350)),
-                _ActivityItem(icon: Icons.check_circle, text: '3 complaints resolved', time: '2 days ago', color: const Color(0xFFD4A843)),
+                _ActivityItem(icon: Icons.check_circle, text: '3 complaints resolved', time: '2 days ago', color: AppColors.accent),
               ]),
             ),
           ],
@@ -54,9 +55,9 @@ class AdminDashboardPage extends StatelessWidget {
 
   Widget _buildStatsGrid(bool isMobile, double maxWidth, int totalStudents, int activeUsers, int totalCourses, int pendingComplaints) {
     final cards = [
-      {'icon': Icons.people, 'label': 'Total Students', 'value': '$totalStudents', 'color': const Color(0xFF1565C0)},
+      {'icon': Icons.people, 'label': 'Total Students', 'value': '$totalStudents', 'color': AppColors.primary},
       {'icon': Icons.person, 'label': 'Active Users', 'value': '$activeUsers', 'color': const Color(0xFF4CAF50)},
-      {'icon': Icons.book, 'label': 'Total Courses', 'value': '$totalCourses', 'color': const Color(0xFFD4A843)},
+      {'icon': Icons.book, 'label': 'Total Courses', 'value': '$totalCourses', 'color': AppColors.accent},
       {'icon': Icons.warning_amber, 'label': 'Pending Complaints', 'value': '$pendingComplaints', 'color': const Color(0xFFEF5350)},
     ];
     if (isMobile) {
@@ -80,14 +81,14 @@ class AdminDashboardPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        color: AppColors.surface, borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
         Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(10)),
           child: Icon(c['icon'] as IconData, color: color, size: 22)),
         const SizedBox(height: 10),
-        Text(c['value'] as String, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+        Text(c['value'] as String, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 4),
         Text(c['label'] as String, style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.6))),
       ]),
@@ -96,9 +97,9 @@ class AdminDashboardPage extends StatelessWidget {
 
   Widget _buildQuickActions(bool isMobile, double maxWidth) {
     final actions = [
-      {'icon': Icons.upload_file, 'label': 'Upload Students\n(Excel/CSV)', 'color': const Color(0xFF1565C0), 'route': '/admin/users'},
+      {'icon': Icons.upload_file, 'label': 'Upload Students\n(Excel/CSV)', 'color': AppColors.primary, 'route': '/admin/users'},
       {'icon': Icons.people, 'label': 'Manage\nUsers', 'color': const Color(0xFF4CAF50), 'route': '/admin/users'},
-      {'icon': Icons.analytics, 'label': 'View\nReports', 'color': const Color(0xFFD4A843), 'route': '/admin/reports'},
+      {'icon': Icons.analytics, 'label': 'View\nReports', 'color': AppColors.accent, 'route': '/admin/reports'},
       {'icon': Icons.notifications, 'label': 'Send\nNotification', 'color': const Color(0xFF7E57C2), 'route': '/admin/notifications'},
     ];
     if (isMobile) {
@@ -124,7 +125,7 @@ class AdminDashboardPage extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFF1E3055))),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppColors.border)),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: color.withOpacity(0.15), shape: BoxShape.circle),
             child: Icon(a['icon'] as IconData, color: color, size: 26)),
@@ -148,7 +149,7 @@ class _ActivityItem extends StatelessWidget {
           child: Icon(icon, color: color, size: 18)),
         const SizedBox(width: 12),
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(text, style: const TextStyle(color: Colors.white, fontSize: 13)),
+          Text(text, style: const TextStyle(color: AppColors.textDark, fontSize: 13)),
           const SizedBox(height: 2),
           Text(time, style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 12)),
         ])),

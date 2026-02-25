@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import 'dart:math';
 
 class StudentAttendancePage extends StatelessWidget {
@@ -7,7 +8,7 @@ class StudentAttendancePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1F3C),
+      backgroundColor: AppColors.background,
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isMobile = constraints.maxWidth < 700;
@@ -17,12 +18,12 @@ class StudentAttendancePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(children: const [
-                  Icon(Icons.fact_check, color: Color(0xFFD4A843), size: 28),
+                  Icon(Icons.fact_check, color: AppColors.primary, size: 28),
                   SizedBox(width: 12),
-                  Text('Attendance', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                  Text('Attendance', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
                 ]),
                 const SizedBox(height: 8),
-                const Text('Semester 5 - Academic Year 2025-26', style: TextStyle(color: Colors.white60, fontSize: 14)),
+                const Text('Semester 5 - Academic Year 2025-26', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
                 const SizedBox(height: 24),
                 if (isMobile)
                   Column(
@@ -57,13 +58,13 @@ class StudentAttendancePage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         children: [
-          const Text('Overall Attendance', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+          const Text('Overall Attendance', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           const SizedBox(height: 24),
           SizedBox(
             width: 160,
@@ -75,7 +76,7 @@ class StudentAttendancePage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text('87%', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.green)),
-                    Text('Present', style: TextStyle(color: Colors.white54, fontSize: 13)),
+                    Text('Present', style: TextStyle(color: AppColors.textLight, fontSize: 13)),
                   ],
                 ),
               ),
@@ -100,7 +101,7 @@ class StudentAttendancePage extends StatelessWidget {
       children: [
         Text(value, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: color)),
         const SizedBox(height: 4),
-        Text(label, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+        Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
       ],
     );
   }
@@ -109,14 +110,14 @@ class StudentAttendancePage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Monthly Trend', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+          const Text('Monthly Trend', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           const SizedBox(height: 16),
           _monthRow('August 2025', 92),
           _monthRow('September 2025', 88),
@@ -136,11 +137,11 @@ class StudentAttendancePage extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          SizedBox(width: 140, child: Text(month, style: const TextStyle(color: Colors.white70, fontSize: 13))),
+          SizedBox(width: 140, child: Text(month, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
           Expanded(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(value: pct / 100, backgroundColor: const Color(0xFF1E3055), valueColor: AlwaysStoppedAnimation(color), minHeight: 8),
+              child: LinearProgressIndicator(value: pct / 100, backgroundColor: AppColors.border, valueColor: AlwaysStoppedAnimation(color), minHeight: 8),
             ),
           ),
           const SizedBox(width: 12),
@@ -163,14 +164,14 @@ class StudentAttendancePage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Subject-wise Attendance', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+          const Text('Subject-wise Attendance', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           const SizedBox(height: 16),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -187,10 +188,10 @@ class StudentAttendancePage extends StatelessWidget {
                 },
                 children: [
                   TableRow(
-                    decoration: BoxDecoration(border: Border(bottom: BorderSide(color: const Color(0xFF1E3055)))),
+                    decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColors.border))),
                     children: ['Code', 'Subject', 'Present', 'Total', 'Percentage', 'Status'].map((h) => Padding(
                       padding: const EdgeInsets.only(bottom: 12),
-                      child: Text(h, style: const TextStyle(color: Color(0xFFD4A843), fontWeight: FontWeight.bold, fontSize: 13)),
+                      child: Text(h, style: const TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold, fontSize: 13)),
                     )).toList(),
                   ),
                   ...subjects.map((s) {
@@ -200,9 +201,9 @@ class StudentAttendancePage extends StatelessWidget {
                     return TableRow(
                       children: [
                         Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(s['code'] as String, style: const TextStyle(color: Color(0xFF64B5F6), fontSize: 13))),
-                        Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(s['name'] as String, style: const TextStyle(color: Colors.white, fontSize: 13))),
-                        Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['present']}', style: const TextStyle(color: Colors.white70, fontSize: 13))),
-                        Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['total']}', style: const TextStyle(color: Colors.white70, fontSize: 13))),
+                        Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(s['name'] as String, style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
+                        Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['present']}', style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                        Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['total']}', style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
                         Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${pct.toStringAsFixed(1)}%', style: TextStyle(color: statusColor, fontWeight: FontWeight.bold, fontSize: 13))),
                         Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -251,7 +252,7 @@ class _CircularProgressPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2 - 8;
-    final bgPaint = Paint()..color = const Color(0xFF1E3055)..style = PaintingStyle.stroke..strokeWidth = 12;
+    final bgPaint = Paint()..color = AppColors.border..style = PaintingStyle.stroke..strokeWidth = 12;
     final fgPaint = Paint()..color = Colors.green..style = PaintingStyle.stroke..strokeWidth = 12..strokeCap = StrokeCap.round;
     canvas.drawCircle(center, radius, bgPaint);
     canvas.drawArc(Rect.fromCircle(center: center, radius: radius), -pi / 2, 2 * pi * progress, false, fgPaint);

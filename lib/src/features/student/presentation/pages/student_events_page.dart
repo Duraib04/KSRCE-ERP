@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class StudentEventsPage extends StatelessWidget {
   const StudentEventsPage({super.key});
@@ -6,19 +7,19 @@ class StudentEventsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1F3C),
+      backgroundColor: AppColors.background,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(children: const [
-              Icon(Icons.event, color: Color(0xFFD4A843), size: 28),
+              Icon(Icons.event, color: AppColors.primary, size: 28),
               SizedBox(width: 12),
-              Text('Events', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+              Text('Events', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
             ]),
             const SizedBox(height: 8),
-            const Text('College events, workshops, and activities', style: TextStyle(color: Colors.white60, fontSize: 14)),
+            const Text('College events, workshops, and activities', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
             const SizedBox(height: 24),
             _buildUpcomingEvents(),
             const SizedBox(height: 24),
@@ -42,24 +43,24 @@ class StudentEventsPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: const [
-            Icon(Icons.upcoming, color: Color(0xFFD4A843), size: 20),
+            Icon(Icons.upcoming, color: AppColors.primary, size: 20),
             SizedBox(width: 8),
-            Text('Upcoming Events', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text('Upcoming Events', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           ]),
           const SizedBox(height: 16),
           ...events.map((e) => Container(
             margin: const EdgeInsets.only(bottom: 12),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF0D1F3C),
+              color: AppColors.background,
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: (e['color'] as Color).withOpacity(0.2)),
             ),
@@ -83,7 +84,7 @@ class StudentEventsPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(children: [
-                      Expanded(child: Text(e['name'] as String, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15))),
+                      Expanded(child: Text(e['name'] as String, style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 15))),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(color: (e['color'] as Color).withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
@@ -91,16 +92,16 @@ class StudentEventsPage extends StatelessWidget {
                       ),
                     ]),
                     const SizedBox(height: 6),
-                    Text(e['desc'] as String, style: const TextStyle(color: Colors.white54, fontSize: 13)),
+                    Text(e['desc'] as String, style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
                     const SizedBox(height: 8),
                     Row(children: [
-                      const Icon(Icons.calendar_today, color: Colors.white38, size: 14),
+                      const Icon(Icons.calendar_today, color: AppColors.textLight, size: 14),
                       const SizedBox(width: 4),
-                      Text(e['date'] as String, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                      Text(e['date'] as String, style: const TextStyle(color: AppColors.textMedium, fontSize: 12)),
                       const SizedBox(width: 16),
-                      const Icon(Icons.location_on, color: Colors.white38, size: 14),
+                      const Icon(Icons.location_on, color: AppColors.textLight, size: 14),
                       const SizedBox(width: 4),
-                      Text(e['venue'] as String, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                      Text(e['venue'] as String, style: const TextStyle(color: AppColors.textMedium, fontSize: 12)),
                       const Spacer(),
                       ElevatedButton(
                         onPressed: () {},
@@ -132,9 +133,9 @@ class StudentEventsPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,20 +143,20 @@ class StudentEventsPage extends StatelessWidget {
           Row(children: const [
             Icon(Icons.how_to_reg, color: Colors.green, size: 20),
             SizedBox(width: 8),
-            Text('My Registered Events', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text('My Registered Events', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           ]),
           const SizedBox(height: 16),
           ...registered.map((r) => Container(
             margin: const EdgeInsets.only(bottom: 8),
             padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(color: const Color(0xFF0D1F3C), borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
             child: Row(
               children: [
                 const Icon(Icons.check_circle, color: Colors.green, size: 20),
                 const SizedBox(width: 12),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(r['name']!, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 14)),
-                  Text('${r['date']} | ${r['team']}', style: const TextStyle(color: Colors.white54, fontSize: 12)),
+                  Text(r['name']!, style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w500, fontSize: 14)),
+                  Text('${r['date']} | ${r['team']}', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
                 ])),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
@@ -179,32 +180,32 @@ class StudentEventsPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: const [
-            Icon(Icons.history, color: Colors.white54, size: 20),
+            Icon(Icons.history, color: AppColors.textLight, size: 20),
             SizedBox(width: 8),
-            Text('Past Events', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text('Past Events', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           ]),
           const SizedBox(height: 16),
           ...past.map((p) => Container(
             margin: const EdgeInsets.only(bottom: 8),
             padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(color: const Color(0xFF0D1F3C), borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
             child: Row(
               children: [
-                const Icon(Icons.emoji_events, color: Color(0xFFD4A843), size: 20),
+                const Icon(Icons.emoji_events, color: AppColors.primary, size: 20),
                 const SizedBox(width: 12),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(p['name']!, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 14)),
-                  Text(p['date']!, style: const TextStyle(color: Colors.white38, fontSize: 12)),
+                  Text(p['name']!, style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w500, fontSize: 14)),
+                  Text(p['date']!, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
                 ])),
-                Text(p['participation']!, style: const TextStyle(color: Color(0xFFD4A843), fontSize: 12)),
+                Text(p['participation']!, style: const TextStyle(color: AppColors.accent, fontSize: 12)),
               ],
             ),
           )),

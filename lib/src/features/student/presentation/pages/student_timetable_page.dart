@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class StudentTimetablePage extends StatefulWidget {
   const StudentTimetablePage({super.key});
@@ -73,7 +74,7 @@ class _StudentTimetablePageState extends State<StudentTimetablePage> with Single
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1F3C),
+      backgroundColor: AppColors.background,
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isMobile = constraints.maxWidth < 700;
@@ -84,25 +85,25 @@ class _StudentTimetablePageState extends State<StudentTimetablePage> with Single
               children: [
                 Row(
                   children: const [
-                    Icon(Icons.calendar_today, color: Color(0xFFD4A843), size: 28),
+                    Icon(Icons.calendar_today, color: AppColors.primary, size: 28),
                     SizedBox(width: 12),
-                    Text('Weekly Timetable', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                    Text('Weekly Timetable', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
                   ],
                 ),
                 const SizedBox(height: 8),
-                const Text('Semester 5 - Academic Year 2025-26', style: TextStyle(color: Colors.white60, fontSize: 14)),
+                const Text('Semester 5 - Academic Year 2025-26', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
                 const SizedBox(height: 20),
                 Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFF111D35),
+                    color: AppColors.surface,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: TabBar(
                     controller: _tabController,
                     isScrollable: isMobile,
-                    indicatorColor: const Color(0xFFD4A843),
-                    labelColor: const Color(0xFFD4A843),
-                    unselectedLabelColor: Colors.white54,
+                    indicatorColor: AppColors.accent,
+                    labelColor: AppColors.accent,
+                    unselectedLabelColor: AppColors.textLight,
                     tabs: _days.map((d) => Tab(text: d.substring(0, 3).toUpperCase())).toList(),
                   ),
                 ),
@@ -133,9 +134,9 @@ class _StudentTimetablePageState extends State<StudentTimetablePage> with Single
           margin: const EdgeInsets.only(bottom: 8),
           padding: EdgeInsets.all(isMobile ? 12 : 16),
           decoration: BoxDecoration(
-            color: const Color(0xFF111D35),
+            color: AppColors.surface,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: isLab ? Colors.teal.withOpacity(0.4) : isFree ? Colors.grey.withOpacity(0.3) : const Color(0xFF1E3055)),
+            border: Border.all(color: isLab ? Colors.teal.withOpacity(0.4) : isFree ? Colors.grey.withOpacity(0.3) : AppColors.border),
           ),
           child: isMobile ? _buildMobilePeriod(p, isLab, isFree) : _buildDesktopPeriod(p, isLab, isFree),
         );
@@ -150,7 +151,7 @@ class _StudentTimetablePageState extends State<StudentTimetablePage> with Single
           width: 4,
           height: 50,
           decoration: BoxDecoration(
-            color: isLab ? Colors.tealAccent : isFree ? Colors.grey : const Color(0xFF1565C0),
+            color: isLab ? Colors.tealAccent : isFree ? Colors.grey : AppColors.primary,
             borderRadius: BorderRadius.circular(2),
           ),
         ),
@@ -160,22 +161,22 @@ class _StudentTimetablePageState extends State<StudentTimetablePage> with Single
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(p['time']!, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14)),
+              Text(p['time']!, style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w600, fontSize: 14)),
               Text(isLab ? 'Lab Session' : isFree ? 'Free Period' : 'Lecture', style: TextStyle(color: isLab ? Colors.tealAccent : Colors.white54, fontSize: 12)),
             ],
           ),
         ),
         const SizedBox(width: 16),
         Expanded(
-          child: Text(p['subject']!, style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500)),
+          child: Text(p['subject']!, style: const TextStyle(color: AppColors.textDark, fontSize: 15, fontWeight: FontWeight.w500)),
         ),
         SizedBox(
           width: 100,
           child: Row(
             children: [
-              const Icon(Icons.room, color: Colors.white38, size: 16),
+              const Icon(Icons.room, color: AppColors.textLight, size: 16),
               const SizedBox(width: 4),
-              Text(p['room']!, style: const TextStyle(color: Colors.white54, fontSize: 13)),
+              Text(p['room']!, style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
             ],
           ),
         ),
@@ -183,9 +184,9 @@ class _StudentTimetablePageState extends State<StudentTimetablePage> with Single
           width: 150,
           child: Row(
             children: [
-              const Icon(Icons.person, color: Colors.white38, size: 16),
+              const Icon(Icons.person, color: AppColors.textLight, size: 16),
               const SizedBox(width: 4),
-              Text(p['faculty']!, style: const TextStyle(color: Colors.white54, fontSize: 13)),
+              Text(p['faculty']!, style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
             ],
           ),
         ),
@@ -201,7 +202,7 @@ class _StudentTimetablePageState extends State<StudentTimetablePage> with Single
           width: 4,
           height: 70,
           decoration: BoxDecoration(
-            color: isLab ? Colors.tealAccent : isFree ? Colors.grey : const Color(0xFF1565C0),
+            color: isLab ? Colors.tealAccent : isFree ? Colors.grey : AppColors.primary,
             borderRadius: BorderRadius.circular(2),
           ),
         ),
@@ -212,7 +213,7 @@ class _StudentTimetablePageState extends State<StudentTimetablePage> with Single
             children: [
               Row(
                 children: [
-                  Text(p['time']!, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13)),
+                  Text(p['time']!, style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w600, fontSize: 13)),
                   const SizedBox(width: 8),
                   Text(
                     isLab ? 'Lab Session' : isFree ? 'Free Period' : 'Lecture',
@@ -225,13 +226,13 @@ class _StudentTimetablePageState extends State<StudentTimetablePage> with Single
               const SizedBox(height: 4),
               Row(
                 children: [
-                  const Icon(Icons.room, color: Colors.white38, size: 14),
+                  const Icon(Icons.room, color: AppColors.textLight, size: 14),
                   const SizedBox(width: 3),
-                  Text(p['room']!, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+                  Text(p['room']!, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
                   const SizedBox(width: 12),
-                  const Icon(Icons.person, color: Colors.white38, size: 14),
+                  const Icon(Icons.person, color: AppColors.textLight, size: 14),
                   const SizedBox(width: 3),
-                  Flexible(child: Text(p['faculty']!, style: const TextStyle(color: Colors.white54, fontSize: 12), overflow: TextOverflow.ellipsis)),
+                  Flexible(child: Text(p['faculty']!, style: const TextStyle(color: AppColors.textLight, fontSize: 12), overflow: TextOverflow.ellipsis)),
                 ],
               ),
             ],

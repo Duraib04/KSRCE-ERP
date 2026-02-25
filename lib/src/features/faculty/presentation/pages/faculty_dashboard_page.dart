@@ -1,13 +1,14 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class FacultyDashboardPage extends StatelessWidget {
   const FacultyDashboardPage({super.key});
 
-  static const _bg = Color(0xFF0D1F3C);
-  static const _card = Color(0xFF111D35);
-  static const _border = Color(0xFF1E3055);
-  static const _accent = Color(0xFF1565C0);
-  static const _gold = Color(0xFFD4A843);
+  static const _bg = AppColors.background;
+  static const _card = AppColors.surface;
+  static const _border = AppColors.border;
+  static const _accent = AppColors.primary;
+  static const _gold = AppColors.accent;
 
   @override
   Widget build(BuildContext context) {
@@ -24,15 +25,15 @@ class FacultyDashboardPage extends StatelessWidget {
               const SizedBox(height: 24),
               _buildStats(isMobile, constraints.maxWidth),
               const SizedBox(height: 28),
-              const Text("Today's Schedule", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+              Text("Today's Schedule", style: TextStyle(color: AppColors.textDark, fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 12),
               ..._buildTodaySchedule(isMobile),
               const SizedBox(height: 28),
-              const Text('Quick Actions', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+              Text('Quick Actions', style: TextStyle(color: AppColors.textDark, fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 12),
               _buildQuickActions(isMobile),
               const SizedBox(height: 28),
-              const Text('Recent Notifications', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+              Text('Recent Notifications', style: TextStyle(color: AppColors.textDark, fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 12),
               _NotificationTile(icon: Icons.event, title: 'Faculty Senate Meeting', subtitle: 'Meeting scheduled for 26 Feb 2026, 10:00 AM at Senate Hall', time: '2h ago', color: _accent),
               _NotificationTile(icon: Icons.assignment, title: 'Internal Assessment - II Deadline', subtitle: 'Marks entry deadline: 28 Feb 2026 for all courses', time: '5h ago', color: Colors.orange),
@@ -53,13 +54,14 @@ class FacultyDashboardPage extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(isMobile ? 16 : 24),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: [Color(0xFF1565C0), Color(0xFF0D47A1)]),
+        gradient: LinearGradient(colors: [AppColors.primary, const Color(0xFF1A3A5C)]),
+        boxShadow: [BoxShadow(color: AppColors.primary.withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 4))],
         borderRadius: BorderRadius.circular(16),
       ),
       child: isMobile
         ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(children: [
-              const CircleAvatar(radius: 24, backgroundColor: Colors.white24,
+              const CircleAvatar(radius: 24, backgroundColor: AppColors.border,
                 child: Text('RK', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold))),
               const SizedBox(width: 12),
               Expanded(child: Text('Welcome back, Dr. R. Kumaran', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold))),
@@ -70,7 +72,7 @@ class FacultyDashboardPage extends StatelessWidget {
             Text('Mon, 24 Feb 2026 | Even Sem 2025-26', style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 12)),
           ])
         : Row(children: [
-            const CircleAvatar(radius: 32, backgroundColor: Colors.white24,
+            const CircleAvatar(radius: 32, backgroundColor: AppColors.border,
               child: Text('RK', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold))),
             const SizedBox(width: 20),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -115,13 +117,18 @@ class FacultyDashboardPage extends StatelessWidget {
       decoration: BoxDecoration(
         color: _card, borderRadius: BorderRadius.circular(14),
         border: Border.all(color: _border),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2))],
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
-        Icon(s['icon'] as IconData, color: s['color'] as Color, size: 26),
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(color: (s['color'] as Color).withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+          child: Icon(s['icon'] as IconData, color: s['color'] as Color, size: 22),
+        ),
         const SizedBox(height: 10),
-        Text(s['value'] as String, style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+        Text(s['value'] as String, style: TextStyle(color: AppColors.textDark, fontSize: 24, fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
-        Text(s['label'] as String, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+        Text(s['label'] as String, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
       ]),
     );
   }
@@ -138,14 +145,14 @@ class FacultyDashboardPage extends StatelessWidget {
       return Container(
         margin: const EdgeInsets.only(bottom: 10),
         padding: EdgeInsets.all(isMobile ? 12 : 16),
-        decoration: BoxDecoration(color: _card, borderRadius: BorderRadius.circular(12), border: Border.all(color: _border)),
+        decoration: BoxDecoration(color: _card, borderRadius: BorderRadius.circular(12), border: Border.all(color: _border), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 6, offset: const Offset(0, 1))]),
         child: isMobile
           ? Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(width: 4, height: 50, decoration: BoxDecoration(color: isLab ? _gold : _accent, borderRadius: BorderRadius.circular(2))),
               const SizedBox(width: 12),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(children: [
-                  Text(s['time']!, style: const TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600)),
+                  Text(s['time']!, style: const TextStyle(color: AppColors.textMedium, fontSize: 12, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -154,19 +161,19 @@ class FacultyDashboardPage extends StatelessWidget {
                   ),
                 ]),
                 const SizedBox(height: 4),
-                Text(s['course']!, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
+                Text(s['course']!, style: TextStyle(color: AppColors.textDark, fontSize: 13, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 2),
-                Text('Sec ${s['section']} | ${s['room']}', style: const TextStyle(color: Colors.white54, fontSize: 11)),
+                Text('Sec ${s['section']} | ${s['room']}', style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
               ])),
             ])
           : Row(children: [
               Container(width: 4, height: 50, decoration: BoxDecoration(color: isLab ? _gold : _accent, borderRadius: BorderRadius.circular(2))),
               const SizedBox(width: 16),
-              SizedBox(width: 130, child: Text(s['time']!, style: const TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.w500))),
+              SizedBox(width: 130, child: Text(s['time']!, style: const TextStyle(color: AppColors.textMedium, fontSize: 14, fontWeight: FontWeight.w500))),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(s['course']!, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
+                Text(s['course']!, style: TextStyle(color: AppColors.textDark, fontSize: 14, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 2),
-                Text('Section ${s['section']} | ${s['room']}', style: const TextStyle(color: Colors.white54, fontSize: 12)),
+                Text('Section ${s['section']} | ${s['room']}', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
               ])),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -240,18 +247,18 @@ class _NotificationTile extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(10), border: Border.all(color: const Color(0xFF1E3055))),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.border)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CircleAvatar(radius: 18, backgroundColor: color.withOpacity(0.15), child: Icon(icon, color: color, size: 18)),
           const SizedBox(width: 12),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(title, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
+            Text(title, style: TextStyle(color: AppColors.textDark, fontSize: 13, fontWeight: FontWeight.w600)),
             const SizedBox(height: 3),
-            Text(subtitle, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+            Text(subtitle, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
           ])),
-          Text(time, style: const TextStyle(color: Colors.white38, fontSize: 11)),
+          Text(time, style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
         ],
       ),
     );

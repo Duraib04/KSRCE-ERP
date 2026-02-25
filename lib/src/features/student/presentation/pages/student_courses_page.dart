@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class StudentCoursesPage extends StatelessWidget {
   const StudentCoursesPage({super.key});
@@ -6,7 +7,7 @@ class StudentCoursesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1F3C),
+      backgroundColor: AppColors.background,
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isMobile = constraints.maxWidth < 700;
@@ -17,13 +18,13 @@ class StudentCoursesPage extends StatelessWidget {
               children: [
                 Row(
                   children: const [
-                    Icon(Icons.menu_book, color: Color(0xFFD4A843), size: 28),
+                    Icon(Icons.menu_book, color: AppColors.primary, size: 28),
                     SizedBox(width: 12),
-                    Text('My Courses', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                    Text('My Courses', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
                   ],
                 ),
                 const SizedBox(height: 8),
-                const Text('Semester 5 - Academic Year 2025-26', style: TextStyle(color: Colors.white60, fontSize: 14)),
+                const Text('Semester 5 - Academic Year 2025-26', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
                 const SizedBox(height: 24),
                 _buildCourseSummary(),
                 const SizedBox(height: 24),
@@ -40,9 +41,9 @@ class StudentCoursesPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -59,10 +60,10 @@ class StudentCoursesPage extends StatelessWidget {
   Widget _summaryItem(String label, String value, IconData icon) {
     return Column(
       children: [
-        Icon(icon, color: const Color(0xFF1565C0), size: 24),
+        Icon(icon, color: AppColors.primary, size: 24),
         const SizedBox(height: 8),
-        Text(value, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
-        Text(label, style: const TextStyle(color: Colors.white60, fontSize: 12)),
+        Text(value, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+        Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
       ],
     );
   }
@@ -135,9 +136,9 @@ class StudentCoursesPage extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,7 +148,7 @@ class StudentCoursesPage extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: c['type'] == 'Lab' ? Colors.teal.withOpacity(0.2) : const Color(0xFF1565C0).withOpacity(0.2),
+                  color: c['type'] == 'Lab' ? Colors.teal.withOpacity(0.2) : AppColors.primary.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(c['code']!, style: TextStyle(
@@ -156,7 +157,7 @@ class StudentCoursesPage extends StatelessWidget {
                 )),
               ),
               const SizedBox(width: 12),
-              Expanded(child: Text(c['name']!, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white))),
+              Expanded(child: Text(c['name']!, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark))),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
@@ -168,7 +169,7 @@ class StudentCoursesPage extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Text(c['description']!, style: const TextStyle(color: Colors.white54, fontSize: 13)),
+          Text(c['description']!, style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
           const SizedBox(height: 12),
           isMobile
               ? Wrap(
@@ -183,21 +184,21 @@ class StudentCoursesPage extends StatelessWidget {
                 )
               : Row(
                   children: [
-                    const Icon(Icons.person, color: Colors.white54, size: 16),
+                    const Icon(Icons.person, color: AppColors.textLight, size: 16),
                     const SizedBox(width: 6),
-                    Text(c['faculty']!, style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                    Text(c['faculty']!, style: const TextStyle(color: AppColors.textMedium, fontSize: 13)),
                     const SizedBox(width: 24),
-                    const Icon(Icons.stars, color: Colors.white54, size: 16),
+                    const Icon(Icons.stars, color: AppColors.textLight, size: 16),
                     const SizedBox(width: 6),
-                    Text('${c['credits']} Credits', style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                    Text('${c['credits']} Credits', style: const TextStyle(color: AppColors.textMedium, fontSize: 13)),
                     const SizedBox(width: 24),
-                    const Icon(Icons.schedule, color: Colors.white54, size: 16),
+                    const Icon(Icons.schedule, color: AppColors.textLight, size: 16),
                     const SizedBox(width: 6),
-                    Text(c['hours']!, style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                    Text(c['hours']!, style: const TextStyle(color: AppColors.textMedium, fontSize: 13)),
                     const SizedBox(width: 24),
-                    const Icon(Icons.business, color: Colors.white54, size: 16),
+                    const Icon(Icons.business, color: AppColors.textLight, size: 16),
                     const SizedBox(width: 6),
-                    Text(c['dept']!, style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                    Text(c['dept']!, style: const TextStyle(color: AppColors.textMedium, fontSize: 13)),
                   ],
                 ),
         ],
@@ -209,9 +210,9 @@ class StudentCoursesPage extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: Colors.white54, size: 16),
+        Icon(icon, color: AppColors.textLight, size: 16),
         const SizedBox(width: 6),
-        Text(text, style: const TextStyle(color: Colors.white70, fontSize: 13)),
+        Text(text, style: const TextStyle(color: AppColors.textMedium, fontSize: 13)),
       ],
     );
   }

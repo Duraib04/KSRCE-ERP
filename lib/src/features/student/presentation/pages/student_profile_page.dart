@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class StudentProfilePage extends StatelessWidget {
   const StudentProfilePage({super.key});
@@ -6,7 +7,7 @@ class StudentProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1F3C),
+      backgroundColor: AppColors.background,
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isMobile = constraints.maxWidth < 700;
@@ -15,7 +16,7 @@ class StudentProfilePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('My Profile', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                const Text('My Profile', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
                 const SizedBox(height: 24),
                 _buildProfileHeader(isMobile),
                 const SizedBox(height: 24),
@@ -46,16 +47,16 @@ class StudentProfilePage extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(isMobile ? 16 : 24),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: isMobile
           ? Column(
               children: [
                 const CircleAvatar(
                   radius: 50,
-                  backgroundColor: Color(0xFFD4A843),
+                  backgroundColor: AppColors.accent,
                   child: Text('RA', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.white)),
                 ),
                 const SizedBox(height: 16),
@@ -64,10 +65,10 @@ class StudentProfilePage extends StatelessWidget {
                   children: const [
                     Text('Rahul Anand', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
                     SizedBox(height: 4),
-                    Text('Roll No: 727622BCS052', style: TextStyle(fontSize: 16, color: Color(0xFFD4A843))),
+                    Text('Roll No: 727622BCS052', style: TextStyle(fontSize: 16, color: AppColors.accent)),
                     SizedBox(height: 4),
-                    Text('B.E. Computer Science & Engineering', style: TextStyle(fontSize: 14, color: Colors.white70)),
-                    Text('3rd Year | Semester 5 | Section B', style: TextStyle(fontSize: 14, color: Colors.white60)),
+                    Text('B.E. Computer Science & Engineering', style: TextStyle(fontSize: 14, color: AppColors.textMedium)),
+                    Text('3rd Year | Semester 5 | Section B', style: TextStyle(fontSize: 14, color: AppColors.textLight)),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -76,7 +77,7 @@ class StudentProfilePage extends StatelessWidget {
                   icon: const Icon(Icons.edit, size: 18),
                   label: const Text('Edit Profile'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1565C0),
+                    backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -88,7 +89,7 @@ class StudentProfilePage extends StatelessWidget {
               children: [
                 const CircleAvatar(
                   radius: 50,
-                  backgroundColor: Color(0xFFD4A843),
+                  backgroundColor: AppColors.accent,
                   child: Text('RA', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.white)),
                 ),
                 const SizedBox(width: 24),
@@ -97,10 +98,10 @@ class StudentProfilePage extends StatelessWidget {
                   children: const [
                     Text('Rahul Anand', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
                     SizedBox(height: 4),
-                    Text('Roll No: 727622BCS052', style: TextStyle(fontSize: 16, color: Color(0xFFD4A843))),
+                    Text('Roll No: 727622BCS052', style: TextStyle(fontSize: 16, color: AppColors.accent)),
                     SizedBox(height: 4),
-                    Text('B.E. Computer Science & Engineering', style: TextStyle(fontSize: 14, color: Colors.white70)),
-                    Text('3rd Year | Semester 5 | Section B', style: TextStyle(fontSize: 14, color: Colors.white60)),
+                    Text('B.E. Computer Science & Engineering', style: TextStyle(fontSize: 14, color: AppColors.textMedium)),
+                    Text('3rd Year | Semester 5 | Section B', style: TextStyle(fontSize: 14, color: AppColors.textLight)),
                   ],
                 ),
                 const Spacer(),
@@ -109,7 +110,7 @@ class StudentProfilePage extends StatelessWidget {
                   icon: const Icon(Icons.edit, size: 18),
                   label: const Text('Edit Profile'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1565C0),
+                    backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -134,25 +135,25 @@ class StudentProfilePage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: const [
-            Icon(Icons.person, color: Color(0xFFD4A843), size: 20),
+            Icon(Icons.person, color: AppColors.primary, size: 20),
             SizedBox(width: 8),
-            Text('Personal Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text('Personal Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           ]),
           const SizedBox(height: 16),
           ...details.map((d) => Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: Row(
               children: [
-                SizedBox(width: isMobile ? 110 : 150, child: Text(d['label']!, style: const TextStyle(color: Colors.white54, fontSize: 14))),
-                Flexible(child: Text(d['value']!, style: const TextStyle(color: Colors.white, fontSize: 14))),
+                SizedBox(width: isMobile ? 110 : 150, child: Text(d['label']!, style: const TextStyle(color: AppColors.textLight, fontSize: 14))),
+                Flexible(child: Text(d['value']!, style: const TextStyle(color: AppColors.textDark, fontSize: 14))),
               ],
             ),
           )),
@@ -175,25 +176,25 @@ class StudentProfilePage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: const [
-            Icon(Icons.school, color: Color(0xFFD4A843), size: 20),
+            Icon(Icons.school, color: AppColors.primary, size: 20),
             SizedBox(width: 8),
-            Text('Academic Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text('Academic Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           ]),
           const SizedBox(height: 16),
           ...details.map((d) => Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: Row(
               children: [
-                SizedBox(width: isMobile ? 110 : 150, child: Text(d['label']!, style: const TextStyle(color: Colors.white54, fontSize: 14))),
-                Flexible(child: Text(d['value']!, style: const TextStyle(color: Colors.white, fontSize: 14))),
+                SizedBox(width: isMobile ? 110 : 150, child: Text(d['label']!, style: const TextStyle(color: AppColors.textLight, fontSize: 14))),
+                Flexible(child: Text(d['value']!, style: const TextStyle(color: AppColors.textDark, fontSize: 14))),
               ],
             ),
           )),
@@ -212,17 +213,17 @@ class StudentProfilePage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: const [
-            Icon(Icons.contact_mail, color: Color(0xFFD4A843), size: 20),
+            Icon(Icons.contact_mail, color: AppColors.primary, size: 20),
             SizedBox(width: 8),
-            Text('Contact Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text('Contact Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           ]),
           const SizedBox(height: 16),
           Wrap(
@@ -231,10 +232,10 @@ class StudentProfilePage extends StatelessWidget {
             children: details.map((d) => Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(d['icon'] as IconData, color: const Color(0xFF1565C0), size: 18),
+                Icon(d['icon'] as IconData, color: AppColors.primary, size: 18),
                 const SizedBox(width: 8),
-                Text('${d['label']}: ', style: const TextStyle(color: Colors.white54, fontSize: 14)),
-                Text(d['value'] as String, style: const TextStyle(color: Colors.white, fontSize: 14)),
+                Text('${d['label']}: ', style: const TextStyle(color: AppColors.textLight, fontSize: 14)),
+                Text(d['value'] as String, style: const TextStyle(color: AppColors.textDark, fontSize: 14)),
               ],
             )).toList(),
           ),

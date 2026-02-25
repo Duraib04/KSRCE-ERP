@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class StudentSyllabusPage extends StatefulWidget {
   const StudentSyllabusPage({super.key});
@@ -68,7 +69,7 @@ class _StudentSyllabusPageState extends State<StudentSyllabusPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1F3C),
+      backgroundColor: AppColors.background,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -76,13 +77,13 @@ class _StudentSyllabusPageState extends State<StudentSyllabusPage> {
           children: [
             Row(
               children: const [
-                Icon(Icons.library_books, color: Color(0xFFD4A843), size: 28),
+                Icon(Icons.library_books, color: AppColors.primary, size: 28),
                 SizedBox(width: 12),
-                Text('Syllabus', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                Text('Syllabus', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
               ],
             ),
             const SizedBox(height: 8),
-            const Text('Semester 5 - Course Syllabus with Completion Tracking', style: TextStyle(color: Colors.white60, fontSize: 14)),
+            const Text('Semester 5 - Course Syllabus with Completion Tracking', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
             const SizedBox(height: 24),
             ..._courses.map((course) => _buildCourseSection(course)),
           ],
@@ -98,9 +99,9 @@ class _StudentSyllabusPageState extends State<StudentSyllabusPage> {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         children: [
@@ -112,7 +113,7 @@ class _StudentSyllabusPageState extends State<StudentSyllabusPage> {
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(color: const Color(0xFF1565C0).withOpacity(0.2), borderRadius: BorderRadius.circular(6)),
+                    decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.2), borderRadius: BorderRadius.circular(6)),
                     child: Text(code, style: const TextStyle(color: Color(0xFF64B5F6), fontWeight: FontWeight.bold)),
                   ),
                   const SizedBox(width: 12),
@@ -120,7 +121,7 @@ class _StudentSyllabusPageState extends State<StudentSyllabusPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(course['name'] as String, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-                      Text(course['faculty'] as String, style: const TextStyle(color: Colors.white54, fontSize: 13)),
+                      Text(course['faculty'] as String, style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
                     ],
                   )),
                   SizedBox(
@@ -129,7 +130,7 @@ class _StudentSyllabusPageState extends State<StudentSyllabusPage> {
                       children: [
                         LinearProgressIndicator(
                           value: completion / 100,
-                          backgroundColor: const Color(0xFF1E3055),
+                          backgroundColor: AppColors.border,
                           valueColor: AlwaysStoppedAnimation(completion >= 75 ? Colors.green : completion >= 50 ? Colors.orange : Colors.redAccent),
                         ),
                         const SizedBox(height: 4),
@@ -138,7 +139,7 @@ class _StudentSyllabusPageState extends State<StudentSyllabusPage> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Icon(isExpanded ? Icons.expand_less : Icons.expand_more, color: Colors.white54),
+                  Icon(isExpanded ? Icons.expand_less : Icons.expand_more, color: AppColors.textLight),
                 ],
               ),
             ),
@@ -147,7 +148,7 @@ class _StudentSyllabusPageState extends State<StudentSyllabusPage> {
             margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: const Color(0xFF0D1F3C),
+              color: AppColors.background,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -155,7 +156,7 @@ class _StudentSyllabusPageState extends State<StudentSyllabusPage> {
               children: [
                 Row(
                   children: [
-                    Expanded(child: Text(unit['name'] as String, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14))),
+                    Expanded(child: Text(unit['name'] as String, style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w600, fontSize: 14))),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
@@ -170,7 +171,7 @@ class _StudentSyllabusPageState extends State<StudentSyllabusPage> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                Text(unit['topics'] as String, style: const TextStyle(color: Colors.white54, fontSize: 13)),
+                Text(unit['topics'] as String, style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
               ],
             ),
           )),

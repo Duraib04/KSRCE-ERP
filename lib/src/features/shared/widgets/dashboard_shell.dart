@@ -1,5 +1,6 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/theme/app_colors.dart';
 
 class NavItem {
   final String title;
@@ -97,11 +98,7 @@ class _DashboardShellState extends State<DashboardShell> {
         drawer: _buildDrawer(),
         body: Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xFF0A1628), Color(0xFF0D1F3C)],
-            ),
+            color: AppColors.background,
           ),
           child: widget.child,
         ),
@@ -119,11 +116,7 @@ class _DashboardShellState extends State<DashboardShell> {
                 Expanded(
                   child: Container(
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Color(0xFF0D1F3C), Color(0xFF0A1628)],
-                      ),
+                      color: AppColors.background,
                     ),
                     child: widget.child,
                   ),
@@ -138,12 +131,12 @@ class _DashboardShellState extends State<DashboardShell> {
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      backgroundColor: const Color(0xFF111D35),
+      backgroundColor: AppColors.surface,
       title: Text(
         widget.role == 'student' ? 'Student Portal' : widget.role == 'admin' ? 'Admin Portal' : 'Faculty Portal',
-        style: const TextStyle(color: Colors.white, fontSize: 18),
+        style: Theme.of(context).textTheme.titleLarge,
       ),
-      iconTheme: const IconThemeData(color: Colors.white),
+      iconTheme: const IconThemeData(color: AppColors.textDark),
       actions: [
         IconButton(icon: const Icon(Icons.notifications_outlined), onPressed: () {
           context.go('/${widget.role}/notifications');
@@ -157,26 +150,26 @@ class _DashboardShellState extends State<DashboardShell> {
     return PopupMenuButton<String>(
       icon: const CircleAvatar(
         radius: 16,
-        backgroundColor: Color(0xFF1565C0),
+        backgroundColor: AppColors.primary,
         child: Icon(Icons.person, size: 18, color: Colors.white),
       ),
-      color: const Color(0xFF111D35),
+      color: AppColors.surface,
       itemBuilder: (context) => [
         PopupMenuItem(value: 'profile', child: Row(children: [
-          Icon(Icons.person_outline, color: Colors.white70, size: 18),
+          const Icon(Icons.person_outline, color: AppColors.textMedium, size: 18),
           const SizedBox(width: 8),
-          const Text('Profile', style: TextStyle(color: Colors.white)),
+          const Text('Profile', style: TextStyle(color: AppColors.textDark)),
         ])),
         PopupMenuItem(value: 'settings', child: Row(children: [
-          Icon(Icons.settings_outlined, color: Colors.white70, size: 18),
+          const Icon(Icons.settings_outlined, color: AppColors.textMedium, size: 18),
           const SizedBox(width: 8),
-          const Text('Settings', style: TextStyle(color: Colors.white)),
+          const Text('Settings', style: TextStyle(color: AppColors.textDark)),
         ])),
         const PopupMenuDivider(),
         PopupMenuItem(value: 'logout', child: Row(children: [
-          Icon(Icons.logout, color: Colors.red.shade300, size: 18),
+          Icon(Icons.logout, color: AppColors.error, size: 18),
           const SizedBox(width: 8),
-          Text('Logout', style: TextStyle(color: Colors.red.shade300)),
+          Text('Logout', style: TextStyle(color: AppColors.error)),
         ])),
       ],
       onSelected: (value) {
@@ -189,12 +182,12 @@ class _DashboardShellState extends State<DashboardShell> {
 
   Widget _buildDrawer() {
     return Drawer(
-      backgroundColor: const Color(0xFF111D35),
+      backgroundColor: AppColors.surface,
       child: Column(
         children: [
           DrawerHeader(
             decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [Color(0xFF1565C0), Color(0xFF0D47A1)]),
+              gradient: LinearGradient(colors: [AppColors.primary, Color(0xFF1E3A5F)]),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,10 +206,10 @@ class _DashboardShellState extends State<DashboardShell> {
               children: _navItems.map((item) => _buildDrawerItem(item)).toList(),
             ),
           ),
-          const Divider(color: Color(0xFF1E3055)),
+          const Divider(color: AppColors.border),
           ListTile(
-            leading: Icon(Icons.logout, color: Colors.red.shade300),
-            title: Text('Logout', style: TextStyle(color: Colors.red.shade300)),
+            leading: const Icon(Icons.logout, color: AppColors.error),
+            title: const Text('Logout', style: TextStyle(color: AppColors.error)),
             onTap: () => context.go('/login'),
           ),
           const SizedBox(height: 8),
@@ -228,15 +221,15 @@ class _DashboardShellState extends State<DashboardShell> {
   Widget _buildDrawerItem(NavItem item) {
     if (item.children != null && item.children!.isNotEmpty) {
       return ExpansionTile(
-        leading: Icon(item.icon, color: Colors.white70, size: 20),
-        title: Text(item.title, style: const TextStyle(color: Colors.white, fontSize: 14)),
-        iconColor: Colors.white54,
-        collapsedIconColor: Colors.white54,
+        leading: Icon(item.icon, color: AppColors.textLight, size: 20),
+        title: Text(item.title, style: const TextStyle(color: AppColors.textDark, fontSize: 14)),
+        iconColor: AppColors.textLight,
+        collapsedIconColor: AppColors.textLight,
         children: item.children!.map((child) => ListTile(
           contentPadding: const EdgeInsets.only(left: 56),
-          leading: Icon(child.icon, color: widget.currentRoute == child.route ? const Color(0xFF42A5F5) : Colors.white54, size: 18),
+          leading: Icon(child.icon, color: widget.currentRoute == child.route ? AppColors.primary : AppColors.textLight, size: 18),
           title: Text(child.title, style: TextStyle(
-            color: widget.currentRoute == child.route ? const Color(0xFF42A5F5) : Colors.white70,
+            color: widget.currentRoute == child.route ? AppColors.primary : AppColors.textMedium,
             fontSize: 13,
           )),
           selected: widget.currentRoute == child.route,
@@ -245,14 +238,14 @@ class _DashboardShellState extends State<DashboardShell> {
       );
     }
     return ListTile(
-      leading: Icon(item.icon, color: widget.currentRoute == item.route ? const Color(0xFF42A5F5) : Colors.white70, size: 20),
+      leading: Icon(item.icon, color: widget.currentRoute == item.route ? AppColors.primary : AppColors.textLight, size: 20),
       title: Text(item.title, style: TextStyle(
-        color: widget.currentRoute == item.route ? const Color(0xFF42A5F5) : Colors.white,
+        color: widget.currentRoute == item.route ? AppColors.primary : AppColors.textDark,
         fontSize: 14,
         fontWeight: widget.currentRoute == item.route ? FontWeight.w600 : FontWeight.normal,
       )),
       selected: widget.currentRoute == item.route,
-      selectedTileColor: const Color(0xFF1565C0).withOpacity(0.15),
+      selectedTileColor: AppColors.primaryOverlay(opacity: 0.08),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       onTap: () { Navigator.pop(context); context.go(item.route); },
     );
@@ -264,8 +257,8 @@ class _DashboardShellState extends State<DashboardShell> {
       duration: const Duration(milliseconds: 200),
       width: sidebarWidth,
       decoration: const BoxDecoration(
-        color: Color(0xFF111D35),
-        border: Border(right: BorderSide(color: Color(0xFF1E3055))),
+        color: AppColors.surface,
+        border: Border(right: BorderSide(color: AppColors.border)),
       ),
       child: Column(
         children: [
@@ -278,21 +271,21 @@ class _DashboardShellState extends State<DashboardShell> {
                 if (!_isSidebarCollapsed) ...[
                   Container(
                     width: 32, height: 32,
-                    decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: const Color(0xFFD4A843), width: 1.5)),
-                    child: const Icon(Icons.school, size: 18, color: Color(0xFFD4A843)),
+                    decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: AppColors.primary, width: 1.5)),
+                    child: const Icon(Icons.school, size: 18, color: AppColors.primary),
                   ),
                   const SizedBox(width: 10),
-                  const Text('KSRCE ERP', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                  const Text('KSRCE ERP', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 16)),
                 ],
                 const Spacer(),
                 IconButton(
-                  icon: Icon(_isSidebarCollapsed ? Icons.menu : Icons.menu_open, color: Colors.white70, size: 20),
+                  icon: Icon(_isSidebarCollapsed ? Icons.menu : Icons.menu_open, color: AppColors.textLight, size: 20),
                   onPressed: () => setState(() => _isSidebarCollapsed = !_isSidebarCollapsed),
                 ),
               ],
             ),
           ),
-          const Divider(color: Color(0xFF1E3055), height: 1),
+          const Divider(color: AppColors.border, height: 1),
           // Nav Items
           Expanded(
             child: ListView(
@@ -300,7 +293,7 @@ class _DashboardShellState extends State<DashboardShell> {
               children: _navItems.map((item) => _buildSidebarItem(item)).toList(),
             ),
           ),
-          const Divider(color: Color(0xFF1E3055), height: 1),
+          const Divider(color: AppColors.border, height: 1),
           // Logout
           Padding(
             padding: const EdgeInsets.all(8),
@@ -334,21 +327,21 @@ class _DashboardShellState extends State<DashboardShell> {
         return PopupMenuButton<String>(
           tooltip: item.title,
           position: PopupMenuPosition.over,
-          color: const Color(0xFF111D35),
+          color: AppColors.surface,
           offset: const Offset(60, 0),
           itemBuilder: (context) => item.children!.map((child) => PopupMenuItem(
             value: child.route,
             child: Row(children: [
-              Icon(child.icon, size: 16, color: widget.currentRoute == child.route ? const Color(0xFF42A5F5) : Colors.white70),
+              Icon(child.icon, size: 16, color: widget.currentRoute == child.route ? AppColors.primary : AppColors.textLight),
               const SizedBox(width: 8),
-              Text(child.title, style: TextStyle(color: widget.currentRoute == child.route ? const Color(0xFF42A5F5) : Colors.white, fontSize: 13)),
+              Text(child.title, style: TextStyle(color: widget.currentRoute == child.route ? AppColors.primary : AppColors.textDark, fontSize: 13)),
             ]),
           )).toList(),
           onSelected: (route) => context.go(route),
           child: Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Icon(item.icon, color: isChildActive ? const Color(0xFF42A5F5) : Colors.white70, size: 22),
+            child: Icon(item.icon, color: isChildActive ? AppColors.primary : AppColors.textLight, size: 22),
           ),
         );
       }
@@ -362,10 +355,10 @@ class _DashboardShellState extends State<DashboardShell> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(
-              color: isActive ? const Color(0xFF1565C0).withOpacity(0.2) : null,
+              color: isActive ? AppColors.primaryOverlay(opacity: 0.12) : null,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(item.icon, color: isActive ? const Color(0xFF42A5F5) : Colors.white70, size: 22),
+            child: Icon(item.icon, color: isActive ? AppColors.primary : AppColors.textLight, size: 22),
           ),
         ),
       );
@@ -380,15 +373,15 @@ class _DashboardShellState extends State<DashboardShell> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                color: isChildActive ? const Color(0xFF1565C0).withOpacity(0.1) : null,
+                color: isChildActive ? AppColors.primaryOverlay(opacity: 0.08) : null,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
                 children: [
-                  Icon(item.icon, color: isChildActive ? const Color(0xFF42A5F5) : Colors.white70, size: 20),
+                  Icon(item.icon, color: isChildActive ? AppColors.primary : AppColors.textLight, size: 20),
                   const SizedBox(width: 12),
-                  Expanded(child: Text(item.title, style: TextStyle(color: isChildActive ? const Color(0xFF42A5F5) : Colors.white, fontSize: 14))),
-                  Icon(isExpanded ? Icons.expand_less : Icons.expand_more, color: Colors.white54, size: 18),
+                  Expanded(child: Text(item.title, style: TextStyle(color: isChildActive ? AppColors.primary : AppColors.textDark, fontSize: 14))),
+                  Icon(isExpanded ? Icons.expand_less : Icons.expand_more, color: AppColors.textLight, size: 18),
                 ],
               ),
             ),
@@ -401,10 +394,10 @@ class _DashboardShellState extends State<DashboardShell> {
                 child: ListTile(
                   dense: true,
                   visualDensity: const VisualDensity(vertical: -2),
-                  leading: Icon(child.icon, size: 16, color: childActive ? const Color(0xFF42A5F5) : Colors.white54),
-                  title: Text(child.title, style: TextStyle(color: childActive ? const Color(0xFF42A5F5) : Colors.white70, fontSize: 13)),
+                  leading: Icon(child.icon, size: 16, color: childActive ? AppColors.primary : AppColors.textLight),
+                  title: Text(child.title, style: TextStyle(color: childActive ? AppColors.primary : AppColors.textMedium, fontSize: 13)),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  selectedTileColor: const Color(0xFF1565C0).withOpacity(0.15),
+                  selectedTileColor: AppColors.primaryOverlay(opacity: 0.08),
                   selected: childActive,
                   onTap: () => context.go(child.route),
                 ),
@@ -416,14 +409,14 @@ class _DashboardShellState extends State<DashboardShell> {
 
     return ListTile(
       dense: true,
-      leading: Icon(item.icon, color: isActive ? const Color(0xFF42A5F5) : Colors.white70, size: 20),
+      leading: Icon(item.icon, color: isActive ? AppColors.primary : AppColors.textLight, size: 20),
       title: Text(item.title, style: TextStyle(
-        color: isActive ? const Color(0xFF42A5F5) : Colors.white,
+        color: isActive ? AppColors.primary : AppColors.textDark,
         fontSize: 14,
         fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
       )),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      selectedTileColor: const Color(0xFF1565C0).withOpacity(0.15),
+      selectedTileColor: AppColors.primaryOverlay(opacity: 0.08),
       selected: isActive,
       onTap: () => context.go(item.route),
     );
@@ -433,19 +426,19 @@ class _DashboardShellState extends State<DashboardShell> {
     return Container(
       height: 56,
       decoration: const BoxDecoration(
-        color: Color(0xFF111D35),
-        border: Border(bottom: BorderSide(color: Color(0xFF1E3055))),
+        color: AppColors.surface,
+        border: Border(bottom: BorderSide(color: AppColors.border)),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         children: [
           Text(
             widget.role == 'student' ? 'Student Portal' : widget.role == 'admin' ? 'Admin Portal' : 'Faculty Portal',
-            style: const TextStyle(color: Colors.white70, fontSize: 14),
+            style: Theme.of(context).textTheme.bodySmall,
           ),
           const Spacer(),
           IconButton(
-            icon: const Icon(Icons.notifications_outlined, color: Colors.white70),
+            icon: const Icon(Icons.notifications_outlined, color: AppColors.textMedium),
             onPressed: () => context.go('/${widget.role}/notifications'),
           ),
           const SizedBox(width: 8),

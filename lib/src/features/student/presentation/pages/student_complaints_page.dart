@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class StudentComplaintsPage extends StatefulWidget {
   const StudentComplaintsPage({super.key});
@@ -22,7 +23,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1F3C),
+      backgroundColor: AppColors.background,
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isMobile = constraints.maxWidth < 700;
@@ -32,12 +33,12 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(children: const [
-                  Icon(Icons.report_problem, color: Color(0xFFD4A843), size: 28),
+                  Icon(Icons.report_problem, color: AppColors.primary, size: 28),
                   SizedBox(width: 12),
-                  Text('Complaints & Grievances', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                  Text('Complaints & Grievances', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
                 ]),
                 const SizedBox(height: 8),
-                const Text('Submit and track your complaints', style: TextStyle(color: Colors.white60, fontSize: 14)),
+                const Text('Submit and track your complaints', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
                 const SizedBox(height: 24),
                 if (isMobile)
                   Column(
@@ -68,14 +69,14 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('My Complaints', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+          const Text('My Complaints', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           const SizedBox(height: 16),
           ..._complaints.map((c) {
             Color statusColor;
@@ -90,7 +91,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
               margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFF0D1F3C),
+                color: AppColors.background,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: statusColor.withOpacity(0.2)),
               ),
@@ -111,21 +112,21 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text(c['subject']!, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+                  Text(c['subject']!, style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 15)),
                   const SizedBox(height: 4),
-                  Text(c['description']!, style: const TextStyle(color: Colors.white54, fontSize: 13)),
+                  Text(c['description']!, style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
                   const SizedBox(height: 8),
                   Row(
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(color: const Color(0xFF1565C0).withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
+                        decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
                         child: Text(c['category']!, style: const TextStyle(color: Color(0xFF64B5F6), fontSize: 11)),
                       ),
                       const SizedBox(width: 12),
-                      const Icon(Icons.calendar_today, color: Colors.white38, size: 14),
+                      const Icon(Icons.calendar_today, color: AppColors.textLight, size: 14),
                       const SizedBox(width: 4),
-                      Text(c['date']!, style: const TextStyle(color: Colors.white38, fontSize: 12)),
+                      Text(c['date']!, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
                     ],
                   ),
                 ],
@@ -142,24 +143,24 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('File New Complaint', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+          const Text('File New Complaint', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           const SizedBox(height: 20),
-          const Text('Category', style: TextStyle(color: Colors.white70, fontSize: 13)),
+          const Text('Category', style: TextStyle(color: AppColors.textMedium, fontSize: 13)),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(color: const Color(0xFF0D1F3C), borderRadius: BorderRadius.circular(8), border: Border.all(color: const Color(0xFF1E3055))),
+            decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.border)),
             child: DropdownButton<String>(
               value: _selectedCategory,
               isExpanded: true,
-              dropdownColor: const Color(0xFF111D35),
+              dropdownColor: AppColors.surface,
               style: const TextStyle(color: Colors.white),
               underline: const SizedBox(),
               items: categories.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
@@ -167,21 +168,21 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
             ),
           ),
           const SizedBox(height: 16),
-          const Text('Subject', style: TextStyle(color: Colors.white70, fontSize: 13)),
+          const Text('Subject', style: TextStyle(color: AppColors.textMedium, fontSize: 13)),
           const SizedBox(height: 8),
           TextField(
             controller: _subjectController,
             style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
               hintText: 'Brief subject of complaint',
-              hintStyle: const TextStyle(color: Colors.white38),
-              filled: true, fillColor: const Color(0xFF0D1F3C),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: const Color(0xFF1E3055))),
-              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: const Color(0xFF1E3055))),
+              hintStyle: const TextStyle(color: AppColors.textLight),
+              filled: true, fillColor: AppColors.background,
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.border)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.border)),
             ),
           ),
           const SizedBox(height: 16),
-          const Text('Description', style: TextStyle(color: Colors.white70, fontSize: 13)),
+          const Text('Description', style: TextStyle(color: AppColors.textMedium, fontSize: 13)),
           const SizedBox(height: 8),
           TextField(
             controller: _descController,
@@ -189,10 +190,10 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
             maxLines: 5,
             decoration: InputDecoration(
               hintText: 'Describe your complaint in detail...',
-              hintStyle: const TextStyle(color: Colors.white38),
-              filled: true, fillColor: const Color(0xFF0D1F3C),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: const Color(0xFF1E3055))),
-              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: const Color(0xFF1E3055))),
+              hintStyle: const TextStyle(color: AppColors.textLight),
+              filled: true, fillColor: AppColors.background,
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.border)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.border)),
             ),
           ),
           const SizedBox(height: 20),
@@ -203,7 +204,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
               icon: const Icon(Icons.send, size: 18),
               label: const Text('Submit Complaint'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1565C0),
+                backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),

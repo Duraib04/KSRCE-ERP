@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class FacultyEventsPage extends StatelessWidget {
   const FacultyEventsPage({super.key});
 
-  static const _bg = Color(0xFF0D1F3C);
-  static const _card = Color(0xFF111D35);
-  static const _border = Color(0xFF1E3055);
-  static const _accent = Color(0xFF1565C0);
-  static const _gold = Color(0xFFD4A843);
+  static const _bg = AppColors.background;
+  static const _card = AppColors.surface;
+  static const _border = AppColors.border;
+  static const _accent = AppColors.primary;
+  static const _gold = AppColors.accent;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class FacultyEventsPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            const Text('Department events, seminars, workshops, and coordination', style: TextStyle(color: Colors.white54, fontSize: 14)),
+            const Text('Department events, seminars, workshops, and coordination', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
             const SizedBox(height: 24),
 
             // Upcoming Events
@@ -174,12 +175,12 @@ class _EventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Color statusColor = Colors.greenAccent;
     if (status == 'Planning') statusColor = Colors.orangeAccent;
-    if (status == 'Scheduled') statusColor = const Color(0xFF1565C0);
+    if (status == 'Scheduled') statusColor = AppColors.primary;
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(14), border: Border.all(color: const Color(0xFF1E3055))),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(14), border: Border.all(color: AppColors.border)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -197,13 +198,13 @@ class _EventCard extends StatelessWidget {
                 child: Text(status, style: TextStyle(color: statusColor, fontSize: 12)),
               ),
               const Spacer(),
-              Text('Your Role: $role', style: TextStyle(color: const Color(0xFFD4A843), fontSize: 12, fontWeight: FontWeight.w500)),
+              Text('Your Role: $role', style: TextStyle(color: AppColors.accent, fontSize: 12, fontWeight: FontWeight.w500)),
             ],
           ),
           const SizedBox(height: 10),
           Text(title, style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
-          Text(description, style: const TextStyle(color: Colors.white54, fontSize: 13)),
+          Text(description, style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -223,8 +224,8 @@ class _EventCard extends StatelessWidget {
               runSpacing: 6,
               children: events.map((e) => Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(6), border: Border.all(color: Colors.white12)),
-                child: Text(e, style: const TextStyle(color: Colors.white54, fontSize: 11)),
+                decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(6), border: Border.all(color: AppColors.border)),
+                child: Text(e, style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
               )).toList(),
             ),
           ],
@@ -244,9 +245,9 @@ class _EvInfo extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 14, color: Colors.white38),
+        Icon(icon, size: 14, color: AppColors.textLight),
         const SizedBox(width: 4),
-        Text(text, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+        Text(text, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
       ],
     );
   }
@@ -262,7 +263,7 @@ class _PastEventTile extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(10), border: Border.all(color: const Color(0xFF1E3055))),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.border)),
       child: Row(
         children: [
           CircleAvatar(radius: 20, backgroundColor: color.withOpacity(0.15), child: Icon(Icons.event, color: color, size: 20)),
@@ -273,7 +274,7 @@ class _PastEventTile extends StatelessWidget {
               children: [
                 Text(title, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500)),
                 const SizedBox(height: 3),
-                Text('$date | $venue', style: const TextStyle(color: Colors.white38, fontSize: 12)),
+                Text('$date | $venue', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
               ],
             ),
           ),
@@ -297,19 +298,19 @@ class _EField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Colors.white70, fontSize: 13)),
+        Text(label, style: const TextStyle(color: AppColors.textMedium, fontSize: 13)),
         const SizedBox(height: 6),
         Container(
           decoration: BoxDecoration(
-            color: const Color(0xFF0D1F3C),
+            color: AppColors.background,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: const Color(0xFF1E3055)),
+            border: Border.all(color: AppColors.border),
           ),
           child: TextField(
-            style: const TextStyle(color: Colors.white, fontSize: 14),
+            style: const TextStyle(color: AppColors.textDark, fontSize: 14),
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: const TextStyle(color: Colors.white24, fontSize: 13),
+              hintStyle: const TextStyle(color: AppColors.border, fontSize: 13),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             ),

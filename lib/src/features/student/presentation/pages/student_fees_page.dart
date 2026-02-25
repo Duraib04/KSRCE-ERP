@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class StudentFeesPage extends StatelessWidget {
   const StudentFeesPage({super.key});
@@ -6,19 +7,19 @@ class StudentFeesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1F3C),
+      backgroundColor: AppColors.background,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(children: const [
-              Icon(Icons.payment, color: Color(0xFFD4A843), size: 28),
+              Icon(Icons.payment, color: AppColors.primary, size: 28),
               SizedBox(width: 12),
-              Text('Fee Details', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+              Text('Fee Details', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
             ]),
             const SizedBox(height: 8),
-            const Text('Academic Year 2025-26 | Semester 5', style: TextStyle(color: Colors.white60, fontSize: 14)),
+            const Text('Academic Year 2025-26 | Semester 5', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
             const SizedBox(height: 24),
             _buildFeeSummary(),
             const SizedBox(height: 24),
@@ -36,7 +37,7 @@ class StudentFeesPage extends StatelessWidget {
   Widget _buildFeeSummary() {
     return Row(
       children: [
-        _feeCard('Total Fee', '1,25,000', const Color(0xFF1565C0), Icons.account_balance),
+        _feeCard('Total Fee', '1,25,000', AppColors.primary, Icons.account_balance),
         const SizedBox(width: 16),
         _feeCard('Paid', '75,000', Colors.green, Icons.check_circle),
         const SizedBox(width: 16),
@@ -52,9 +53,9 @@ class StudentFeesPage extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: const Color(0xFF111D35),
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFF1E3055)),
+          border: Border.all(color: AppColors.border),
         ),
         child: Column(
           children: [
@@ -62,7 +63,7 @@ class StudentFeesPage extends StatelessWidget {
             const SizedBox(height: 12),
             Text(value, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: color)),
             const SizedBox(height: 4),
-            Text(label, style: const TextStyle(color: Colors.white60, fontSize: 13)),
+            Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
           ],
         ),
       ),
@@ -86,14 +87,14 @@ class StudentFeesPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Fee Breakdown', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+          const Text('Fee Breakdown', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           const SizedBox(height: 16),
           Table(
             columnWidths: const {
@@ -104,24 +105,24 @@ class StudentFeesPage extends StatelessWidget {
             },
             children: [
               TableRow(
-                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: const Color(0xFF1E3055)))),
+                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColors.border))),
                 children: ['Description', 'Amount', 'Status', 'Date'].map((h) => Padding(
                   padding: const EdgeInsets.only(bottom: 12),
-                  child: Text(h, style: const TextStyle(color: Color(0xFFD4A843), fontWeight: FontWeight.bold, fontSize: 13)),
+                  child: Text(h, style: const TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold, fontSize: 13)),
                 )).toList(),
               ),
               ...fees.map((f) {
                 final isPaid = f['status'] == 'Paid';
                 return TableRow(
                   children: [
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(f['description']!, style: const TextStyle(color: Colors.white, fontSize: 13))),
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(f['amount']!, style: const TextStyle(color: Colors.white70, fontSize: 13))),
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(f['description']!, style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(f['amount']!, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
                     Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(color: (isPaid ? Colors.green : Colors.orange).withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
                       child: Text(f['status']!, style: TextStyle(color: isPaid ? Colors.green : Colors.orange, fontSize: 11, fontWeight: FontWeight.bold)),
                     )),
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(f['date']!, style: const TextStyle(color: Colors.white54, fontSize: 13))),
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(f['date']!, style: const TextStyle(color: AppColors.textLight, fontSize: 13))),
                   ],
                 );
               }),
@@ -141,26 +142,26 @@ class StudentFeesPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Payment History', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+          const Text('Payment History', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           const SizedBox(height: 16),
           ...payments.map((p) => Container(
             margin: const EdgeInsets.only(bottom: 10),
             padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(color: const Color(0xFF0D1F3C), borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
             child: Row(
               children: [
                 const Icon(Icons.receipt_long, color: Colors.green, size: 20),
                 const SizedBox(width: 12),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('Transaction: ${p['id']}', style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500)),
-                  Text('${p['date']} | ${p['mode']}', style: const TextStyle(color: Colors.white54, fontSize: 12)),
+                  Text('${p['date']} | ${p['mode']}', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
                 ])),
                 Text(p['amount']!, style: const TextStyle(color: Colors.green, fontSize: 16, fontWeight: FontWeight.bold)),
                 const SizedBox(width: 12),
@@ -184,7 +185,7 @@ class StudentFeesPage extends StatelessWidget {
         icon: const Icon(Icons.payment, size: 20),
         label: const Text('Pay Pending Fees - Rs. 50,000'),
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF1565C0),
+          backgroundColor: AppColors.primary,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 18),
           textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

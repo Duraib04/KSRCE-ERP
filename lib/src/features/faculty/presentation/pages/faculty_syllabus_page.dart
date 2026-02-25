@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class FacultySyllabusPage extends StatelessWidget {
   const FacultySyllabusPage({super.key});
 
-  static const _bg = Color(0xFF0D1F3C);
-  static const _card = Color(0xFF111D35);
-  static const _border = Color(0xFF1E3055);
-  static const _accent = Color(0xFF1565C0);
-  static const _gold = Color(0xFFD4A843);
+  static const _bg = AppColors.background;
+  static const _card = AppColors.surface;
+  static const _border = AppColors.border;
+  static const _accent = AppColors.primary;
+  static const _gold = AppColors.accent;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,7 @@ class FacultySyllabusPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            const Text('Track syllabus completion and manage course materials', style: TextStyle(color: Colors.white54, fontSize: 14)),
+            const Text('Track syllabus completion and manage course materials', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
             const SizedBox(height: 24),
 
             _SyllabusCourseCard(
@@ -117,9 +118,9 @@ class _SyllabusCourseCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,7 +140,7 @@ class _SyllabusCourseCard extends StatelessWidget {
           const SizedBox(height: 10),
           LinearProgressIndicator(
             value: overallProgress,
-            backgroundColor: Colors.white12,
+            backgroundColor: AppColors.border,
             valueColor: AlwaysStoppedAnimation(color),
             minHeight: 6,
             borderRadius: BorderRadius.circular(3),
@@ -151,9 +152,9 @@ class _SyllabusCourseCard extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 10),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFF0D1F3C),
+                color: AppColors.background,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFF1E3055).withOpacity(0.5)),
+                border: Border.all(color: AppColors.border.withOpacity(0.5)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,26 +163,26 @@ class _SyllabusCourseCard extends StatelessWidget {
                     children: [
                       Icon(
                         prog >= 1.0 ? Icons.check_circle : prog > 0 ? Icons.timelapse : Icons.radio_button_unchecked,
-                        color: prog >= 1.0 ? Colors.greenAccent : prog > 0 ? Colors.orangeAccent : Colors.white30,
+                        color: prog >= 1.0 ? Colors.greenAccent : prog > 0 ? Colors.orangeAccent : AppColors.border,
                         size: 18,
                       ),
                       const SizedBox(width: 8),
                       Expanded(child: Text(u['name'] as String, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500))),
-                      Text(u['hours'] as String, style: const TextStyle(color: Colors.white38, fontSize: 12)),
-                      const Text(' hrs', style: TextStyle(color: Colors.white24, fontSize: 11)),
+                      Text(u['hours'] as String, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+                      const Text(' hrs', style: TextStyle(color: AppColors.border, fontSize: 11)),
                     ],
                   ),
                   const SizedBox(height: 4),
                   Padding(
                     padding: const EdgeInsets.only(left: 26),
-                    child: Text(u['topics'] as String, style: const TextStyle(color: Colors.white38, fontSize: 12)),
+                    child: Text(u['topics'] as String, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
                   ),
                   const SizedBox(height: 6),
                   Padding(
                     padding: const EdgeInsets.only(left: 26),
                     child: LinearProgressIndicator(
                       value: prog,
-                      backgroundColor: Colors.white10,
+                      backgroundColor: AppColors.border,
                       valueColor: AlwaysStoppedAnimation(prog >= 1.0 ? Colors.greenAccent : color),
                       minHeight: 4,
                       borderRadius: BorderRadius.circular(2),

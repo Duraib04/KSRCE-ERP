@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class FacultyLeavePage extends StatelessWidget {
   const FacultyLeavePage({super.key});
 
-  static const _bg = Color(0xFF0D1F3C);
-  static const _card = Color(0xFF111D35);
-  static const _border = Color(0xFF1E3055);
-  static const _accent = Color(0xFF1565C0);
-  static const _gold = Color(0xFFD4A843);
+  static const _bg = AppColors.background;
+  static const _card = AppColors.surface;
+  static const _border = AppColors.border;
+  static const _accent = AppColors.primary;
+  static const _gold = AppColors.accent;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class FacultyLeavePage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            const Text('View leave balance, apply for leave, and manage student leave requests', style: TextStyle(color: Colors.white54, fontSize: 14)),
+            const Text('View leave balance, apply for leave, and manage student leave requests', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
             const SizedBox(height: 24),
 
             // Leave Balance Cards
@@ -61,13 +62,13 @@ class FacultyLeavePage extends StatelessWidget {
               child: DataTable(
                 headingRowColor: WidgetStateProperty.all(const Color(0xFF1A2A4A)),
                 columns: const [
-                  DataColumn(label: Text('Leave ID', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Type', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('From', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('To', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Days', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Reason', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Status', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('Leave ID', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('Type', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('From', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('To', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('Days', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('Reason', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('Status', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
                 ],
                 rows: [
                   _leaveRow('LV-2026-042', 'CL', '20 Feb', '20 Feb', '1', 'Personal work', 'Approved', Colors.greenAccent),
@@ -180,16 +181,16 @@ class FacultyLeavePage extends StatelessWidget {
 
   DataRow _leaveRow(String id, String type, String from, String to, String days, String reason, String status, Color statusColor) {
     return DataRow(cells: [
-      DataCell(Text(id, style: const TextStyle(color: Colors.white70, fontSize: 13))),
+      DataCell(Text(id, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
       DataCell(Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
         decoration: BoxDecoration(color: _accent.withOpacity(0.12), borderRadius: BorderRadius.circular(6)),
         child: Text(type, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500)),
       )),
-      DataCell(Text(from, style: const TextStyle(color: Colors.white70, fontSize: 13))),
-      DataCell(Text(to, style: const TextStyle(color: Colors.white70, fontSize: 13))),
-      DataCell(Text(days, style: const TextStyle(color: Colors.white, fontSize: 13))),
-      DataCell(Text(reason, style: const TextStyle(color: Colors.white54, fontSize: 13))),
+      DataCell(Text(from, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
+      DataCell(Text(to, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
+      DataCell(Text(days, style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
+      DataCell(Text(reason, style: const TextStyle(color: AppColors.textLight, fontSize: 13))),
       DataCell(Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
         decoration: BoxDecoration(color: statusColor.withOpacity(0.12), borderRadius: BorderRadius.circular(6)),
@@ -211,23 +212,23 @@ class _LeaveBalanceCard extends StatelessWidget {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(18),
-        decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF1E3055))),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
         child: Column(
           children: [
             Text(type, style: TextStyle(color: color, fontSize: 13, fontWeight: FontWeight.w600)),
             const SizedBox(height: 12),
             Text('$remaining', style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
-            const Text('Remaining', style: TextStyle(color: Colors.white38, fontSize: 11)),
+            const Text('Remaining', style: TextStyle(color: AppColors.textLight, fontSize: 11)),
             const SizedBox(height: 8),
             LinearProgressIndicator(
               value: used / total,
-              backgroundColor: Colors.white10,
+              backgroundColor: AppColors.border,
               valueColor: AlwaysStoppedAnimation(color),
               minHeight: 5,
               borderRadius: BorderRadius.circular(3),
             ),
             const SizedBox(height: 6),
-            Text('$used / $total used', style: const TextStyle(color: Colors.white38, fontSize: 11)),
+            Text('$used / $total used', style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
           ],
         ),
       ),
@@ -244,19 +245,19 @@ class _FormField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Colors.white70, fontSize: 13)),
+        Text(label, style: const TextStyle(color: AppColors.textMedium, fontSize: 13)),
         const SizedBox(height: 6),
         Container(
           decoration: BoxDecoration(
-            color: const Color(0xFF0D1F3C),
+            color: AppColors.background,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: const Color(0xFF1E3055)),
+            border: Border.all(color: AppColors.border),
           ),
           child: TextField(
-            style: const TextStyle(color: Colors.white, fontSize: 14),
+            style: const TextStyle(color: AppColors.textDark, fontSize: 14),
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: const TextStyle(color: Colors.white24, fontSize: 13),
+              hintStyle: const TextStyle(color: AppColors.border, fontSize: 13),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             ),
@@ -278,9 +279,9 @@ class _StudentLeaveRequest extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: isPending ? Colors.orangeAccent.withOpacity(0.3) : const Color(0xFF1E3055)),
+        border: Border.all(color: isPending ? Colors.orangeAccent.withOpacity(0.3) : AppColors.border),
       ),
       child: Row(
         children: [
@@ -294,13 +295,13 @@ class _StudentLeaveRequest extends StatelessWidget {
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(color: const Color(0xFF1565C0).withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
-                      child: Text(type, style: const TextStyle(color: Color(0xFF1565C0), fontSize: 11)),
+                      decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
+                      child: Text(type, style: const TextStyle(color: AppColors.primary, fontSize: 11)),
                     ),
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text('$dates ($days days) - $reason', style: const TextStyle(color: Colors.white54, fontSize: 12)),
+                Text('$dates ($days days) - $reason', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
               ],
             ),
           ),

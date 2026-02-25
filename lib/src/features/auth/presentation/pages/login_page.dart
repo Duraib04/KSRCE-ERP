@@ -1,10 +1,12 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -50,7 +52,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     super.dispose();
   }
 
-  void _login() async {
+  Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
 
@@ -61,22 +63,21 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     await Future.delayed(const Duration(milliseconds: 400));
 
     if (ds.login(userId, password)) {
-      if (mounted) {
-        final role = ds.currentRole;
-        if (role == 'student') {
-          context.go('/student/dashboard');
-        } else if (role == 'admin') {
-          context.go('/admin/dashboard');
-        } else {
-          context.go('/faculty/dashboard');
-        }
+      if (!mounted) return;
+      final role = ds.currentRole;
+      if (role == 'student') {
+        context.go('/student/dashboard');
+      } else if (role == 'admin') {
+        context.go('/admin/dashboard');
+      } else {
+        context.go('/faculty/dashboard');
       }
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('Invalid credentials. Try demo credentials below.'),
-            backgroundColor: Colors.red.shade700,
+            backgroundColor: AppColors.error,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           ),
@@ -95,184 +96,367 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final isWide = screenWidth > 800;
+    final isWide = screenWidth > 960;
+
     return Scaffold(
-      body: Container(
-        width: double.infinity, height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter, end: Alignment.bottomCenter,
-            colors: [Color(0xFF0A1628), Color(0xFF0D1F3C), Color(0xFF0A1628)],
-          ),
-        ),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Container(
-                width: isWide ? 460 : double.infinity,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF111D35),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: const Color(0xFF1E3055)),
-                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 30, offset: const Offset(0, 10))],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(32),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(children: [
-                          IconButton(onPressed: () => context.go('/'), icon: const Icon(Icons.arrow_back_ios, color: Colors.white70, size: 18)),
-                          const Spacer(),
-                        ]),
-                        Container(
-                          width: 80, height: 80,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: const Color(0xFFD4A843), width: 2),
-                            boxShadow: [BoxShadow(color: const Color(0xFFD4A843).withOpacity(0.2), blurRadius: 15, spreadRadius: 3)],
-                          ),
-                          child: ClipOval(
-                            child: Container(
-                              color: const Color(0xFF1A2A4A),
-                              child: Image.network(
-                                'https://www.ksrce.ac.in/images/ksrce-logo.png',
-                                fit: BoxFit.cover,
-                                errorBuilder: (c, e, s) => const Center(child: Icon(Icons.school, size: 40, color: Color(0xFFD4A843))),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        const Text('ERP Login', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white)),
-                        const SizedBox(height: 6),
-                        Text('Access your college ERP portal', style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.5))),
-                        const SizedBox(height: 28),
-                        Container(
-                          decoration: BoxDecoration(color: const Color(0xFF0A1628), borderRadius: BorderRadius.circular(12)),
-                          child: TabBar(
-                            controller: _tabController,
-                            indicator: BoxDecoration(color: const Color(0xFF1565C0), borderRadius: BorderRadius.circular(12)),
-                            indicatorSize: TabBarIndicatorSize.tab,
-                            labelColor: Colors.white, unselectedLabelColor: Colors.white54,
-                            dividerColor: Colors.transparent,
-                            labelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-                            tabs: List.generate(3, (i) => Tab(
-                              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                Icon(_roleIcons[i], size: 18), const SizedBox(width: 6), Text(_roles[i]),
-                              ]),
+      body: Stack(
+        children: [
+          const _LoginBackground(),
+          SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1100),
+                  child: isWide
+                      ? Row(
+                          children: [
+                            const Expanded(flex: 3, child: _BrandPanel()),
+                            const SizedBox(width: 24),
+                            Expanded(flex: 2, child: _LoginFormCard(
+                              formKey: _formKey,
+                              tabController: _tabController,
+                              roles: _roles,
+                              roleIcons: _roleIcons,
+                              placeholders: _placeholders,
+                              userIdController: _userIdController,
+                              passwordController: _passwordController,
+                              isLoading: _isLoading,
+                              obscurePassword: _obscurePassword,
+                              rememberMe: _rememberMe,
+                              onToggleRemember: (v) => setState(() => _rememberMe = v ?? false),
+                              onToggleObscure: () => setState(() => _obscurePassword = !_obscurePassword),
+                              onLogin: _login,
+                              onDemoFill: _fillDemo,
                             )),
-                          ),
-                        ),
-                        const SizedBox(height: 28),
-                        Align(alignment: Alignment.centerLeft, child: Text('User ID', style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14, fontWeight: FontWeight.w500))),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          controller: _userIdController, style: const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: _placeholders[_selectedRole], hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
-                            prefixIcon: Icon(Icons.person_outline, color: Colors.white.withOpacity(0.5)),
-                            filled: true, fillColor: const Color(0xFF0A1628),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFF1E3055))),
-                            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFF1E3055))),
-                            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFF1565C0), width: 2)),
-                          ),
-                          validator: (v) => (v == null || v.isEmpty) ? 'Please enter your User ID' : null,
-                        ),
-                        const SizedBox(height: 20),
-                        Align(alignment: Alignment.centerLeft, child: Text('Password', style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14, fontWeight: FontWeight.w500))),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          controller: _passwordController, obscureText: _obscurePassword, style: const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: 'Enter your password', hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
-                            prefixIcon: Icon(Icons.lock_outline, color: Colors.white.withOpacity(0.5)),
-                            suffixIcon: IconButton(
-                              icon: Icon(_obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined, color: Colors.white.withOpacity(0.5)),
-                              onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                          ],
+                        )
+                      : Column(
+                          children: [
+                            const _BrandPanel(),
+                            const SizedBox(height: 24),
+                            _LoginFormCard(
+                              formKey: _formKey,
+                              tabController: _tabController,
+                              roles: _roles,
+                              roleIcons: _roleIcons,
+                              placeholders: _placeholders,
+                              userIdController: _userIdController,
+                              passwordController: _passwordController,
+                              isLoading: _isLoading,
+                              obscurePassword: _obscurePassword,
+                              rememberMe: _rememberMe,
+                              onToggleRemember: (v) => setState(() => _rememberMe = v ?? false),
+                              onToggleObscure: () => setState(() => _obscurePassword = !_obscurePassword),
+                              onLogin: _login,
+                              onDemoFill: _fillDemo,
                             ),
-                            filled: true, fillColor: const Color(0xFF0A1628),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFF1E3055))),
-                            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFF1E3055))),
-                            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFF1565C0), width: 2)),
-                          ),
-                          validator: (v) => (v == null || v.isEmpty) ? 'Please enter your password' : null,
+                          ],
                         ),
-                        const SizedBox(height: 16),
-                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                          Row(children: [
-                            SizedBox(width: 20, height: 20, child: Checkbox(
-                              value: _rememberMe, onChanged: (v) => setState(() => _rememberMe = v ?? false),
-                              activeColor: const Color(0xFF1565C0), side: const BorderSide(color: Colors.white38),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                            )),
-                            const SizedBox(width: 8),
-                            Text('Remember me', style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 13)),
-                          ]),
-                          TextButton(onPressed: () {}, child: const Text('Forgot Password?', style: TextStyle(color: Color(0xFF42A5F5), fontSize: 13))),
-                        ]),
-                        const SizedBox(height: 20),
-                        SizedBox(
-                          width: double.infinity, height: 50,
-                          child: ElevatedButton(
-                            onPressed: _isLoading ? null : _login,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF1565C0), foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                              elevation: 4, disabledBackgroundColor: const Color(0xFF1565C0).withOpacity(0.6),
-                            ),
-                            child: _isLoading
-                              ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                              : const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                  Icon(Icons.login, size: 20), SizedBox(width: 8),
-                                  Text('Sign In', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                                ]),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        Container(
-                          width: double.infinity, padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF0A1628), borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: const Color(0xFF1E3055)),
-                          ),
-                          child: Column(children: [
-                            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                              Row(children: [
-                                Icon(Icons.info_outline, size: 16, color: Colors.white.withOpacity(0.5)),
-                                const SizedBox(width: 8),
-                                Text('Demo Credentials (${_roles[_selectedRole]})',
-                                  style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 13, fontWeight: FontWeight.w500)),
-                              ]),
-                              TextButton(
-                                onPressed: _fillDemo,
-                                style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4), minimumSize: Size.zero),
-                                child: const Text('Auto Fill', style: TextStyle(color: Color(0xFF42A5F5), fontSize: 12)),
-                              ),
-                            ]),
-                            const SizedBox(height: 8),
-                            Row(children: [
-                              Text('ID: ', style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 12)),
-                              Text(_demoCredentials[_roles[_selectedRole]]!['userId']!, style: const TextStyle(color: Color(0xFFD4A843), fontSize: 12, fontFamily: 'monospace')),
-                              const SizedBox(width: 20),
-                              Text('Pass: ', style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 12)),
-                              Text(_demoCredentials[_roles[_selectedRole]]!['password']!, style: const TextStyle(color: Color(0xFFD4A843), fontSize: 12, fontFamily: 'monospace')),
-                            ]),
-                          ]),
-                        ),
-                      ],
-                    ),
-                  ),
                 ),
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LoginBackground extends StatelessWidget {
+  const _LoginBackground();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFFF8FAFC),
+            Color(0xFFEFF6FF),
+            Color(0xFFF8FAFC),
+          ],
+        ),
+      ),
+      child: CustomPaint(
+        painter: _GridPainter(),
+        child: const SizedBox.expand(),
+      ),
+    );
+  }
+}
+
+class _BrandPanel extends StatelessWidget {
+  const _BrandPanel();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(28),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.border),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 24,
+            offset: const Offset(0, 14),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 46,
+                height: 46,
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(Icons.school, color: Colors.white),
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('KSRCE ERP', style: Theme.of(context).textTheme.titleLarge),
+                  Text('Enterprise Campus Suite', style: Theme.of(context).textTheme.bodySmall),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'Secure access for students, faculty, and administrators.',
+            style: Theme.of(context).textTheme.displaySmall,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Role-aware dashboards, academic tracking, and operational workflows in one unified platform.',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          const SizedBox(height: 20),
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: const [
+              _InfoBadge(icon: Icons.lock, text: 'Secure Access'),
+              _InfoBadge(icon: Icons.analytics, text: 'Analytics Ready'),
+              _InfoBadge(icon: Icons.school, text: 'Academic Core'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InfoBadge extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  const _InfoBadge({required this.icon, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceVariant,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.borderLight),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: AppColors.primary),
+          const SizedBox(width: 6),
+          Text(text, style: Theme.of(context).textTheme.bodySmall),
+        ],
+      ),
+    );
+  }
+}
+
+class _LoginFormCard extends StatelessWidget {
+  final GlobalKey<FormState> formKey;
+  final TabController tabController;
+  final List<String> roles;
+  final List<IconData> roleIcons;
+  final List<String> placeholders;
+  final TextEditingController userIdController;
+  final TextEditingController passwordController;
+  final bool isLoading;
+  final bool obscurePassword;
+  final bool rememberMe;
+  final ValueChanged<bool?> onToggleRemember;
+  final VoidCallback onToggleObscure;
+  final VoidCallback onLogin;
+  final VoidCallback onDemoFill;
+
+  const _LoginFormCard({
+    required this.formKey,
+    required this.tabController,
+    required this.roles,
+    required this.roleIcons,
+    required this.placeholders,
+    required this.userIdController,
+    required this.passwordController,
+    required this.isLoading,
+    required this.obscurePassword,
+    required this.rememberMe,
+    required this.onToggleRemember,
+    required this.onToggleObscure,
+    required this.onLogin,
+    required this.onDemoFill,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.border),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 20,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: Form(
+        key: formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Secure Login', style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 6),
+            Text('Select your portal and sign in.', style: Theme.of(context).textTheme.bodySmall),
+            const SizedBox(height: 20),
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.surfaceVariant,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.borderLight),
+              ),
+              child: TabBar(
+                controller: tabController,
+                indicator: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                labelColor: Colors.white,
+                unselectedLabelColor: AppColors.textLight,
+                dividerColor: Colors.transparent,
+                labelStyle: Theme.of(context).textTheme.labelLarge,
+                tabs: List.generate(3, (i) => Tab(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(roleIcons[i], size: 18),
+                      const SizedBox(width: 6),
+                      Text(roles[i]),
+                    ],
+                  ),
+                )),
+              ),
+            ),
+            const SizedBox(height: 22),
+            Text('User ID', style: Theme.of(context).textTheme.labelLarge),
+            const SizedBox(height: 8),
+            TextFormField(
+              controller: userIdController,
+              decoration: InputDecoration(
+                hintText: placeholders[tabController.index],
+                prefixIcon: const Icon(Icons.person_outline),
+              ),
+              validator: (v) => (v == null || v.isEmpty) ? 'Please enter your User ID' : null,
+            ),
+            const SizedBox(height: 18),
+            Text('Password', style: Theme.of(context).textTheme.labelLarge),
+            const SizedBox(height: 8),
+            TextFormField(
+              controller: passwordController,
+              obscureText: obscurePassword,
+              decoration: InputDecoration(
+                hintText: 'Enter your password',
+                prefixIcon: const Icon(Icons.lock_outline),
+                suffixIcon: IconButton(
+                  icon: Icon(obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined),
+                  onPressed: onToggleObscure,
+                ),
+              ),
+              validator: (v) => (v == null || v.isEmpty) ? 'Please enter your password' : null,
+            ),
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                Checkbox(
+                  value: rememberMe,
+                  onChanged: onToggleRemember,
+                  activeColor: AppColors.primary,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                ),
+                Text('Remember me', style: Theme.of(context).textTheme.bodySmall),
+                const Spacer(),
+                TextButton(
+                  onPressed: () {},
+                  child: Text('Forgot Password?', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.primary)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 18),
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton(
+                onPressed: isLoading ? null : onLogin,
+                child: isLoading
+                    ? const SizedBox(
+                        height: 22,
+                        width: 22,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      )
+                    : const Text('Sign In'),
+              ),
+            ),
+            const SizedBox(height: 12),
+            OutlinedButton.icon(
+              onPressed: onDemoFill,
+              icon: const Icon(Icons.auto_fix_high),
+              label: const Text('Use Demo Credentials'),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
+class _GridPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = const Color(0xFF2C5282).withOpacity(0.06)
+      ..strokeWidth = 1;
+
+    const gap = 42.0;
+    for (double x = 0; x < size.width; x += gap) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+    }
+    for (double y = 0; y < size.height; y += gap) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class FacultyTimetablePage extends StatefulWidget {
   const FacultyTimetablePage({super.key});
@@ -8,11 +9,11 @@ class FacultyTimetablePage extends StatefulWidget {
 }
 
 class _FacultyTimetablePageState extends State<FacultyTimetablePage> with SingleTickerProviderStateMixin {
-  static const _bg = Color(0xFF0D1F3C);
-  static const _card = Color(0xFF111D35);
-  static const _border = Color(0xFF1E3055);
-  static const _accent = Color(0xFF1565C0);
-  static const _gold = Color(0xFFD4A843);
+  static const _bg = AppColors.background;
+  static const _card = AppColors.surface;
+  static const _border = AppColors.border;
+  static const _accent = AppColors.primary;
+  static const _gold = AppColors.accent;
 
   late TabController _tabController;
   final List<String> _days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -102,7 +103,7 @@ class _FacultyTimetablePageState extends State<FacultyTimetablePage> with Single
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                   decoration: BoxDecoration(color: _accent.withOpacity(0.15), borderRadius: BorderRadius.circular(10)),
-                  child: const Text('Even Semester 2025-26', style: TextStyle(color: Color(0xFF1565C0), fontSize: 13, fontWeight: FontWeight.w500)),
+                  child: const Text('Even Semester 2025-26', style: TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.w500)),
                 ),
               ],
             ),
@@ -110,7 +111,7 @@ class _FacultyTimetablePageState extends State<FacultyTimetablePage> with Single
           const SizedBox(height: 8),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 24),
-            child: Text('Total: 18 hours/week | 14 Theory + 4 Lab', style: TextStyle(color: Colors.white54, fontSize: 14)),
+            child: Text('Total: 18 hours/week | 14 Theory + 4 Lab', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
           ),
           const SizedBox(height: 16),
           Container(
@@ -126,7 +127,7 @@ class _FacultyTimetablePageState extends State<FacultyTimetablePage> with Single
               indicatorColor: _accent,
               indicatorWeight: 3,
               labelColor: Colors.white,
-              unselectedLabelColor: Colors.white54,
+              unselectedLabelColor: AppColors.textLight,
               labelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
               unselectedLabelStyle: const TextStyle(fontSize: 13),
               tabs: _days.map((d) => Tab(text: d.substring(0, 3))).toList(),
@@ -148,8 +149,8 @@ class _FacultyTimetablePageState extends State<FacultyTimetablePage> with Single
                     final isLab = slot['type'] == 'Lab';
 
                     Color barColor = _accent;
-                    if (isBreak) barColor = Colors.white24;
-                    if (isFree) barColor = Colors.white12;
+                    if (isBreak) barColor = AppColors.border;
+                    if (isFree) barColor = AppColors.border;
                     if (isLab) barColor = _gold;
 
                     return Container(
@@ -170,7 +171,7 @@ class _FacultyTimetablePageState extends State<FacultyTimetablePage> with Single
                           ),
                           Expanded(
                             child: Text(slot['course']!, style: TextStyle(
-                              color: isBreak ? Colors.white30 : isFree ? Colors.white38 : Colors.white,
+                              color: isBreak ? AppColors.border : isFree ? Colors.white38 : Colors.white,
                               fontSize: 14,
                               fontWeight: isBreak || isFree ? FontWeight.normal : FontWeight.w500,
                               fontStyle: isFree ? FontStyle.italic : FontStyle.normal,
@@ -181,10 +182,10 @@ class _FacultyTimetablePageState extends State<FacultyTimetablePage> with Single
                               margin: const EdgeInsets.only(right: 10),
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                               decoration: BoxDecoration(color: _accent.withOpacity(0.12), borderRadius: BorderRadius.circular(6)),
-                              child: Text('Sec ${slot['section']}', style: const TextStyle(color: Colors.white54, fontSize: 11)),
+                              child: Text('Sec ${slot['section']}', style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
                             ),
                           if (slot['room']!.isNotEmpty)
-                            Text(slot['room']!, style: const TextStyle(color: Colors.white38, fontSize: 12)),
+                            Text(slot['room']!, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
                         ],
                       ),
                     );

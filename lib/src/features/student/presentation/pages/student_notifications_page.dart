@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class StudentNotificationsPage extends StatefulWidget {
   const StudentNotificationsPage({super.key});
@@ -12,7 +13,7 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
     {'title': 'Internal Assessment 2 Schedule Released', 'desc': 'IA-2 examinations for Semester 5 will commence from 02 March 2026. Detailed schedule has been uploaded.', 'time': '2 hours ago', 'type': 'Academic', 'icon': Icons.event_note, 'color': Colors.orange, 'read': false},
     {'title': 'CS3501 Assignment 3 - Lexical Analyzer', 'desc': 'New assignment posted for Compiler Design. Implement a Lexical Analyzer using Lex tool. Due: 25 Feb 2026.', 'time': '5 hours ago', 'type': 'Academic', 'icon': Icons.assignment, 'color': Colors.blue, 'read': false},
     {'title': 'Library Book Return Reminder', 'desc': 'Your book "Probability & Statistics for Engineers" is overdue. Please return it at the earliest to avoid fine accumulation.', 'time': '1 day ago', 'type': 'Administrative', 'icon': Icons.local_library, 'color': Colors.redAccent, 'read': false},
-    {'title': 'TCS Campus Drive - 28 Feb 2026', 'desc': 'TCS is visiting campus for recruitment on 28th February. Eligible: B.E/B.Tech (CSE, IT, ECE) with CGPA >= 7.0. Register before 26 Feb.', 'time': '2 days ago', 'type': 'Events', 'icon': Icons.business, 'color': const Color(0xFFD4A843), 'read': true},
+    {'title': 'TCS Campus Drive - 28 Feb 2026', 'desc': 'TCS is visiting campus for recruitment on 28th February. Eligible: B.E/B.Tech (CSE, IT, ECE) with CGPA >= 7.0. Register before 26 Feb.', 'time': '2 days ago', 'type': 'Events', 'icon': Icons.business, 'color': AppColors.accent, 'read': true},
     {'title': 'Semester Fee Payment Reminder', 'desc': 'Pending fee amount of Rs. 50,000 for Semester 5 is due by 15 March 2026. Late payment will attract a penalty of Rs. 100/day.', 'time': '3 days ago', 'type': 'Administrative', 'icon': Icons.payment, 'color': Colors.orange, 'read': true},
     {'title': 'Annual Sports Day - 10 March 2026', 'desc': 'Annual Sports Day will be held on 10 March 2026 at the college ground. All students are encouraged to participate. Register events by 05 March.', 'time': '4 days ago', 'type': 'Events', 'icon': Icons.sports, 'color': Colors.green, 'read': true},
     {'title': 'CS3591 Guest Lecture', 'desc': 'Guest lecture on "5G and Beyond" by Dr. Arvind Kumar from IIT Madras on 27 Feb 2026 at Seminar Hall. Attendance is mandatory for CN students.', 'time': '5 days ago', 'type': 'Academic', 'icon': Icons.school, 'color': Colors.purple, 'read': true},
@@ -25,7 +26,7 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
   Widget build(BuildContext context) {
     int unread = _notifications.where((n) => !(n['read'] as bool)).length;
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1F3C),
+      backgroundColor: AppColors.background,
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -33,9 +34,9 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
           children: [
             Row(
               children: [
-                const Icon(Icons.notifications, color: Color(0xFFD4A843), size: 28),
+                const Icon(Icons.notifications, color: AppColors.primary, size: 28),
                 const SizedBox(width: 12),
-                const Text('Notifications', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                const Text('Notifications', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
                 const SizedBox(width: 12),
                 if (unread > 0) Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -47,12 +48,12 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
                   onPressed: () => setState(() { for (var n in _notifications) n['read'] = true; }),
                   icon: const Icon(Icons.done_all, size: 16),
                   label: const Text('Mark all as read'),
-                  style: TextButton.styleFrom(foregroundColor: const Color(0xFF1565C0)),
+                  style: TextButton.styleFrom(foregroundColor: AppColors.primary),
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            const Text('Stay updated with academic and college activities', style: TextStyle(color: Colors.white60, fontSize: 14)),
+            const Text('Stay updated with academic and college activities', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
             const SizedBox(height: 20),
             _buildFilterChips(),
             const SizedBox(height: 16),
@@ -77,10 +78,10 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
           label: Text(f),
           selected: f == 'All',
           onSelected: (v) {},
-          selectedColor: const Color(0xFF1565C0).withOpacity(0.3),
-          backgroundColor: const Color(0xFF111D35),
+          selectedColor: AppColors.primary.withOpacity(0.3),
+          backgroundColor: AppColors.surface,
           labelStyle: TextStyle(color: f == 'All' ? const Color(0xFF64B5F6) : Colors.white54, fontSize: 13),
-          side: BorderSide(color: f == 'All' ? const Color(0xFF1565C0) : const Color(0xFF1E3055)),
+          side: BorderSide(color: f == 'All' ? AppColors.primary : AppColors.border),
         ),
       )).toList(),
     );
@@ -92,9 +93,9 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isRead ? const Color(0xFF111D35) : const Color(0xFF111D35).withOpacity(0.8),
+        color: isRead ? AppColors.surface : AppColors.surface.withOpacity(0.8),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: isRead ? const Color(0xFF1E3055) : (n['color'] as Color).withOpacity(0.3)),
+        border: Border.all(color: isRead ? AppColors.border : (n['color'] as Color).withOpacity(0.3)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,8 +113,8 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(children: [
-                if (!isRead) Container(width: 8, height: 8, margin: const EdgeInsets.only(right: 8), decoration: BoxDecoration(color: const Color(0xFF1565C0), borderRadius: BorderRadius.circular(4))),
-                Expanded(child: Text(n['title'] as String, style: TextStyle(color: Colors.white, fontWeight: isRead ? FontWeight.normal : FontWeight.bold, fontSize: 14))),
+                if (!isRead) Container(width: 8, height: 8, margin: const EdgeInsets.only(right: 8), decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(4))),
+                Expanded(child: Text(n['title'] as String, style: TextStyle(color: AppColors.textDark, fontWeight: isRead ? FontWeight.normal : FontWeight.bold, fontSize: 14))),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(color: (n['color'] as Color).withOpacity(0.1), borderRadius: BorderRadius.circular(4)),
@@ -121,9 +122,9 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
                 ),
               ]),
               const SizedBox(height: 6),
-              Text(n['desc'] as String, style: const TextStyle(color: Colors.white54, fontSize: 13)),
+              Text(n['desc'] as String, style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
               const SizedBox(height: 6),
-              Text(n['time'] as String, style: const TextStyle(color: Colors.white38, fontSize: 11)),
+              Text(n['time'] as String, style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
             ],
           )),
         ],

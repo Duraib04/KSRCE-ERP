@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class AdminSettingsPage extends StatefulWidget {
   const AdminSettingsPage({super.key});
@@ -19,7 +20,7 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('Admin Settings', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
         const SizedBox(height: 8),
-        const Text('Configure system settings', style: TextStyle(fontSize: 14, color: Colors.white54)),
+        const Text('Configure system settings', style: TextStyle(fontSize: 14, color: AppColors.textLight)),
         const SizedBox(height: 32),
         _settingsSection('General', [
           _toggleTile('Maintenance Mode', 'Put the system in maintenance mode', Icons.engineering, _maintenanceMode, (v) => setState(() => _maintenanceMode = v)),
@@ -32,19 +33,19 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
         ]),
         const SizedBox(height: 24),
         _settingsSection('Data Management', [
-          _actionTile('Export All Data', 'Download all data as CSV', Icons.download, const Color(0xFF1565C0), () {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data export started...'), backgroundColor: Color(0xFF1565C0)));
+          _actionTile('Export All Data', 'Download all data as CSV', Icons.download, AppColors.primary, () {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data export started...'), backgroundColor: AppColors.primary));
           }),
           _actionTile('Clear Cache', 'Clear all cached data', Icons.cleaning_services, const Color(0xFFFF9800), () {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Cache cleared!'), backgroundColor: Color(0xFF4CAF50)));
           }),
           _actionTile('Reset Database', 'Reset all data to defaults (DANGER)', Icons.warning, Colors.red, () {
             showDialog(context: context, builder: (ctx) => AlertDialog(
-              backgroundColor: const Color(0xFF111D35),
+              backgroundColor: AppColors.surface,
               title: const Text('Confirm Reset', style: TextStyle(color: Colors.white)),
-              content: const Text('This will erase ALL data. Are you sure?', style: TextStyle(color: Colors.white70)),
+              content: const Text('This will erase ALL data. Are you sure?', style: TextStyle(color: AppColors.textMedium)),
               actions: [
-                TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel', style: TextStyle(color: Colors.white54))),
+                TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel', style: TextStyle(color: AppColors.textLight))),
                 ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.red), onPressed: () => Navigator.pop(ctx), child: const Text('Reset')),
               ],
             ));
@@ -57,9 +58,9 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
   Widget _settingsSection(String title, List<Widget> children) {
     return Container(
       width: double.infinity, padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFF1E3055))),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppColors.border)),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+        Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 16),
         ...children,
       ]),
@@ -73,10 +74,10 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
         Icon(icon, color: const Color(0xFF42A5F5), size: 22),
         const SizedBox(width: 12),
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
-          Text(subtitle, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+          Text(title, style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w500)),
+          Text(subtitle, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
         ])),
-        Switch(value: value, onChanged: onChanged, activeColor: const Color(0xFF1565C0)),
+        Switch(value: value, onChanged: onChanged, activeColor: AppColors.primary),
       ]),
     );
   }
@@ -88,15 +89,15 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
         Icon(icon, color: const Color(0xFF42A5F5), size: 22),
         const SizedBox(width: 12),
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
-          Text(subtitle, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+          Text(title, style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w500)),
+          Text(subtitle, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
         ])),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(color: const Color(0xFF0D1F3C), borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
           child: DropdownButtonHideUnderline(child: DropdownButton<String>(
-            value: value, dropdownColor: const Color(0xFF0D1F3C),
-            style: const TextStyle(color: Colors.white, fontSize: 13),
+            value: value, dropdownColor: AppColors.background,
+            style: const TextStyle(color: AppColors.textDark, fontSize: 13),
             items: items.map((i) => DropdownMenuItem(value: i, child: Text(i))).toList(),
             onChanged: onChanged,
           )),
@@ -114,8 +115,8 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
           Icon(icon, color: color, size: 22),
           const SizedBox(width: 12),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
-            Text(subtitle, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+            Text(title, style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w500)),
+            Text(subtitle, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
           ])),
           Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.3)),
         ]),

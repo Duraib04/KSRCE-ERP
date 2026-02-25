@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class FacultyGradesPage extends StatefulWidget {
   const FacultyGradesPage({super.key});
@@ -8,11 +9,11 @@ class FacultyGradesPage extends StatefulWidget {
 }
 
 class _FacultyGradesPageState extends State<FacultyGradesPage> {
-  static const _bg = Color(0xFF0D1F3C);
-  static const _card = Color(0xFF111D35);
-  static const _border = Color(0xFF1E3055);
-  static const _accent = Color(0xFF1565C0);
-  static const _gold = Color(0xFFD4A843);
+  static const _bg = AppColors.background;
+  static const _card = AppColors.surface;
+  static const _border = AppColors.border;
+  static const _accent = AppColors.primary;
+  static const _gold = AppColors.accent;
 
   String _selectedCourse = 'CS3501 - Compiler Design (Sec A)';
   String _selectedExam = 'Internal Assessment - II';
@@ -68,7 +69,7 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
                                 onPressed: () {},
                                 icon: const Icon(Icons.download, size: 16),
                                 label: const Text('Download Template'),
-                                style: OutlinedButton.styleFrom(foregroundColor: Colors.white70, side: const BorderSide(color: Colors.white30)),
+                                style: OutlinedButton.styleFrom(foregroundColor: AppColors.textMedium, side: const BorderSide(color: AppColors.border)),
                               ),
                             ],
                           ),
@@ -91,14 +92,14 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
                                 onPressed: () {},
                                 icon: const Icon(Icons.download, size: 16),
                                 label: const Text('Download Template'),
-                                style: OutlinedButton.styleFrom(foregroundColor: Colors.white70, side: const BorderSide(color: Colors.white30)),
+                                style: OutlinedButton.styleFrom(foregroundColor: AppColors.textMedium, side: const BorderSide(color: AppColors.border)),
                               ),
                             ],
                           ),
                         ],
                       ),
                 const SizedBox(height: 8),
-                const Text('Enter and manage student marks for internal assessments', style: TextStyle(color: Colors.white54, fontSize: 14)),
+                const Text('Enter and manage student marks for internal assessments', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
                 const SizedBox(height: 20),
 
                 // Selectors
@@ -113,7 +114,7 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
                                 value: _selectedCourse,
                                 dropdownColor: _card,
                                 isExpanded: true,
-                                style: const TextStyle(color: Colors.white, fontSize: 14),
+                                style: const TextStyle(color: AppColors.textDark, fontSize: 14),
                                 items: [
                                   'CS3501 - Compiler Design (Sec A)',
                                   'CS3501 - Compiler Design (Sec B)',
@@ -133,7 +134,7 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
                                 value: _selectedExam,
                                 dropdownColor: _card,
                                 isExpanded: true,
-                                style: const TextStyle(color: Colors.white, fontSize: 14),
+                                style: const TextStyle(color: AppColors.textDark, fontSize: 14),
                                 items: [
                                   'Internal Assessment - I',
                                   'Internal Assessment - II',
@@ -158,7 +159,7 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
                                   value: _selectedCourse,
                                   dropdownColor: _card,
                                   isExpanded: true,
-                                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                                  style: const TextStyle(color: AppColors.textDark, fontSize: 14),
                                   items: [
                                     'CS3501 - Compiler Design (Sec A)',
                                     'CS3501 - Compiler Design (Sec B)',
@@ -180,7 +181,7 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
                                   value: _selectedExam,
                                   dropdownColor: _card,
                                   isExpanded: true,
-                                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                                  style: const TextStyle(color: AppColors.textDark, fontSize: 14),
                                   items: [
                                     'Internal Assessment - I',
                                     'Internal Assessment - II',
@@ -242,14 +243,14 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
                       headingRowColor: WidgetStateProperty.all(const Color(0xFF1A2A4A)),
                       columnSpacing: 20,
                       columns: const [
-                        DataColumn(label: Text('S.No', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-                        DataColumn(label: Text('Roll No', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-                        DataColumn(label: Text('Name', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-                        DataColumn(label: Text('IA-I (50)', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-                        DataColumn(label: Text('IA-II (50)', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-                        DataColumn(label: Text('Assign (20)', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-                        DataColumn(label: Text('Total', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-                        DataColumn(label: Text('Grade', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
+                        DataColumn(label: Text('S.No', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 12))),
+                        DataColumn(label: Text('Roll No', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 12))),
+                        DataColumn(label: Text('Name', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 12))),
+                        DataColumn(label: Text('IA-I (50)', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 12))),
+                        DataColumn(label: Text('IA-II (50)', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 12))),
+                        DataColumn(label: Text('Assign (20)', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 12))),
+                        DataColumn(label: Text('Total', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 12))),
+                        DataColumn(label: Text('Grade', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 12))),
                       ],
                       rows: List.generate(_students.length, (i) {
                         final s = _students[i];
@@ -263,12 +264,12 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
                         if (g == 'E' || g == 'F') gradeColor = Colors.redAccent;
 
                         return DataRow(cells: [
-                          DataCell(Text('${i + 1}', style: const TextStyle(color: Colors.white54, fontSize: 12))),
-                          DataCell(Text(s['rollNo'] as String, style: const TextStyle(color: Colors.white70, fontSize: 12))),
-                          DataCell(Text(s['name'] as String, style: const TextStyle(color: Colors.white, fontSize: 12))),
-                          DataCell(Text('${s['ia1']}', style: const TextStyle(color: Colors.white70, fontSize: 12))),
-                          DataCell(Text('${s['ia2']}', style: const TextStyle(color: Colors.white70, fontSize: 12))),
-                          DataCell(Text('${s['assignment']}', style: const TextStyle(color: Colors.white70, fontSize: 12))),
+                          DataCell(Text('${i + 1}', style: const TextStyle(color: AppColors.textLight, fontSize: 12))),
+                          DataCell(Text(s['rollNo'] as String, style: const TextStyle(color: AppColors.textMedium, fontSize: 12))),
+                          DataCell(Text(s['name'] as String, style: const TextStyle(color: AppColors.textDark, fontSize: 12))),
+                          DataCell(Text('${s['ia1']}', style: const TextStyle(color: AppColors.textMedium, fontSize: 12))),
+                          DataCell(Text('${s['ia2']}', style: const TextStyle(color: AppColors.textMedium, fontSize: 12))),
+                          DataCell(Text('${s['assignment']}', style: const TextStyle(color: AppColors.textMedium, fontSize: 12))),
                           DataCell(Text('$total', style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold))),
                           DataCell(Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -287,7 +288,7 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Text('Showing 15 of 65 students', style: TextStyle(color: Colors.white38, fontSize: 12)),
+                          Text('Showing 15 of 65 students', style: TextStyle(color: AppColors.textLight, fontSize: 12)),
                           const SizedBox(height: 12),
                           Wrap(
                             spacing: 12,
@@ -295,7 +296,7 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
                             children: [
                               OutlinedButton(
                                 onPressed: () {},
-                                style: OutlinedButton.styleFrom(foregroundColor: Colors.white70, side: const BorderSide(color: Colors.white30), padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14)),
+                                style: OutlinedButton.styleFrom(foregroundColor: AppColors.textMedium, side: const BorderSide(color: AppColors.border), padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14)),
                                 child: const Text('Save Draft'),
                               ),
                               ElevatedButton.icon(
@@ -316,12 +317,12 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Showing 15 of 65 students', style: TextStyle(color: Colors.white38, fontSize: 12)),
+                          Text('Showing 15 of 65 students', style: TextStyle(color: AppColors.textLight, fontSize: 12)),
                           Row(
                             children: [
                               OutlinedButton(
                                 onPressed: () {},
-                                style: OutlinedButton.styleFrom(foregroundColor: Colors.white70, side: const BorderSide(color: Colors.white30), padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14)),
+                                style: OutlinedButton.styleFrom(foregroundColor: AppColors.textMedium, side: const BorderSide(color: AppColors.border), padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14)),
                                 child: const Text('Save Draft'),
                               ),
                               const SizedBox(width: 12),
@@ -379,7 +380,7 @@ class _GradeBar extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
-        Text(grade, style: const TextStyle(color: Colors.white54, fontSize: 11)),
+        Text(grade, style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
       ],
     );
   }

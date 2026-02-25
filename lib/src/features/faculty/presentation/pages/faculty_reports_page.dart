@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class FacultyReportsPage extends StatelessWidget {
   const FacultyReportsPage({super.key});
 
-  static const _bg = Color(0xFF0D1F3C);
-  static const _card = Color(0xFF111D35);
-  static const _border = Color(0xFF1E3055);
-  static const _accent = Color(0xFF1565C0);
-  static const _gold = Color(0xFFD4A843);
+  static const _bg = AppColors.background;
+  static const _card = AppColors.surface;
+  static const _border = AppColors.border;
+  static const _accent = AppColors.primary;
+  static const _gold = AppColors.accent;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,7 @@ class FacultyReportsPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            const Text('Course-wise attendance, result analysis, and performance trends', style: TextStyle(color: Colors.white54, fontSize: 14)),
+            const Text('Course-wise attendance, result analysis, and performance trends', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
             const SizedBox(height: 24),
 
             // Course-wise Attendance Report
@@ -54,14 +55,14 @@ class FacultyReportsPage extends StatelessWidget {
               child: DataTable(
                 headingRowColor: WidgetStateProperty.all(const Color(0xFF1A2A4A)),
                 columns: const [
-                  DataColumn(label: Text('Course', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Section', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Total Students', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Avg Attendance', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Above 90%', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('75-90%', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Below 75%', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Classes Held', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('Course', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('Section', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('Total Students', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('Avg Attendance', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('Above 90%', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('75-90%', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('Below 75%', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('Classes Held', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
                 ],
                 rows: [
                   _attendanceRow('CS3501', 'A', '65', '84.2%', '28', '29', '8', '32', Colors.greenAccent),
@@ -89,9 +90,9 @@ class FacultyReportsPage extends StatelessWidget {
                     children: [
                       _MonthBar(month: 'Jan', value: 88, color: _accent),
                       _MonthBar(month: 'Feb', value: 84, color: _accent),
-                      _MonthBar(month: 'Mar', value: 0, color: Colors.white12),
-                      _MonthBar(month: 'Apr', value: 0, color: Colors.white12),
-                      _MonthBar(month: 'May', value: 0, color: Colors.white12),
+                      _MonthBar(month: 'Mar', value: 0, color: AppColors.border),
+                      _MonthBar(month: 'Apr', value: 0, color: AppColors.border),
+                      _MonthBar(month: 'May', value: 0, color: AppColors.border),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -100,7 +101,7 @@ class FacultyReportsPage extends StatelessWidget {
                     children: [
                       Container(width: 12, height: 12, decoration: BoxDecoration(color: _accent, borderRadius: BorderRadius.circular(2))),
                       const SizedBox(width: 6),
-                      const Text('Avg Attendance %', style: TextStyle(color: Colors.white54, fontSize: 12)),
+                      const Text('Avg Attendance %', style: TextStyle(color: AppColors.textLight, fontSize: 12)),
                     ],
                   ),
                 ],
@@ -149,7 +150,7 @@ class FacultyReportsPage extends StatelessWidget {
             // Student Performance Trends
             const Text('Students Requiring Attention', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
-            const Text('Students with low attendance OR low marks across courses', style: TextStyle(color: Colors.white54, fontSize: 13)),
+            const Text('Students with low attendance OR low marks across courses', style: TextStyle(color: AppColors.textLight, fontSize: 13)),
             const SizedBox(height: 12),
             Container(
               width: double.infinity,
@@ -157,12 +158,12 @@ class FacultyReportsPage extends StatelessWidget {
               child: DataTable(
                 headingRowColor: WidgetStateProperty.all(const Color(0xFF1A2A4A)),
                 columns: const [
-                  DataColumn(label: Text('Roll No', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Name', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Attendance', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('IA-I Marks', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Risk Level', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                  DataColumn(label: Text('Remarks', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('Roll No', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('Name', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('Attendance', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('IA-I Marks', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('Risk Level', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                  DataColumn(label: Text('Remarks', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
                 ],
                 rows: [
                   _riskRow('CS112', 'Pavithra S', '65.8%', '15/50', 'High', 'Both attendance & marks below threshold'),
@@ -182,14 +183,14 @@ class FacultyReportsPage extends StatelessWidget {
 
   DataRow _attendanceRow(String course, String section, String total, String avg, String above90, String mid, String below75, String classes, Color color) {
     return DataRow(cells: [
-      DataCell(Text(course, style: const TextStyle(color: Colors.white, fontSize: 13))),
-      DataCell(Text(section, style: const TextStyle(color: Colors.white70, fontSize: 13))),
-      DataCell(Text(total, style: const TextStyle(color: Colors.white70, fontSize: 13))),
+      DataCell(Text(course, style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
+      DataCell(Text(section, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
+      DataCell(Text(total, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
       DataCell(Text(avg, style: TextStyle(color: color, fontSize: 13, fontWeight: FontWeight.bold))),
       DataCell(Text(above90, style: const TextStyle(color: Colors.greenAccent, fontSize: 13))),
       DataCell(Text(mid, style: const TextStyle(color: Colors.orangeAccent, fontSize: 13))),
       DataCell(Text(below75, style: const TextStyle(color: Colors.redAccent, fontSize: 13))),
-      DataCell(Text(classes, style: const TextStyle(color: Colors.white54, fontSize: 13))),
+      DataCell(Text(classes, style: const TextStyle(color: AppColors.textLight, fontSize: 13))),
     ]);
   }
 
@@ -199,8 +200,8 @@ class FacultyReportsPage extends StatelessWidget {
     if (risk == 'Medium') riskColor = Colors.orangeAccent;
 
     return DataRow(cells: [
-      DataCell(Text(roll, style: const TextStyle(color: Colors.white70, fontSize: 13))),
-      DataCell(Text(name, style: const TextStyle(color: Colors.white, fontSize: 13))),
+      DataCell(Text(roll, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
+      DataCell(Text(name, style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
       DataCell(Text(att, style: const TextStyle(color: Colors.redAccent, fontSize: 13))),
       DataCell(Text(marks, style: const TextStyle(color: Colors.redAccent, fontSize: 13))),
       DataCell(Container(
@@ -208,7 +209,7 @@ class FacultyReportsPage extends StatelessWidget {
         decoration: BoxDecoration(color: riskColor.withOpacity(0.12), borderRadius: BorderRadius.circular(6)),
         child: Text(risk, style: TextStyle(color: riskColor, fontSize: 11, fontWeight: FontWeight.w500)),
       )),
-      DataCell(Text(remarks, style: const TextStyle(color: Colors.white54, fontSize: 12))),
+      DataCell(Text(remarks, style: const TextStyle(color: AppColors.textLight, fontSize: 12))),
     ]);
   }
 }
@@ -231,7 +232,7 @@ class _MonthBar extends StatelessWidget {
           decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
         ),
         const SizedBox(height: 6),
-        Text(month, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+        Text(month, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
       ],
     );
   }
@@ -249,7 +250,7 @@ class _ResultCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF1E3055))),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -277,7 +278,7 @@ class _ResultItem extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+          Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
           Text(value, style: TextStyle(color: valueColor, fontSize: 13, fontWeight: FontWeight.w600)),
         ],
       ),
@@ -303,8 +304,8 @@ class _GDist extends StatelessWidget {
           decoration: BoxDecoration(color: color.withOpacity(0.6), borderRadius: BorderRadius.circular(4)),
         ),
         const SizedBox(height: 6),
-        Text(grade, style: const TextStyle(color: Colors.white54, fontSize: 10), textAlign: TextAlign.center),
-        Text(pct, style: const TextStyle(color: Colors.white38, fontSize: 10)),
+        Text(grade, style: const TextStyle(color: AppColors.textLight, fontSize: 10), textAlign: TextAlign.center),
+        Text(pct, style: const TextStyle(color: AppColors.textLight, fontSize: 10)),
       ],
     );
   }

@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class StudentAssignmentsPage extends StatefulWidget {
   const StudentAssignmentsPage({super.key});
@@ -45,7 +46,7 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> with Si
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1F3C),
+      backgroundColor: AppColors.background,
       body: LayoutBuilder(
         builder: (context, constraints) {
           final bool isMobile = constraints.maxWidth < 700;
@@ -55,22 +56,22 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> with Si
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(children: const [
-                  Icon(Icons.assignment, color: Color(0xFFD4A843), size: 28),
+                  Icon(Icons.assignment, color: AppColors.primary, size: 28),
                   SizedBox(width: 12),
-                  Text('Assignments', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                  Text('Assignments', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
                 ]),
                 const SizedBox(height: 8),
-                const Text('Manage your assignments and submissions', style: TextStyle(color: Colors.white60, fontSize: 14)),
+                const Text('Manage your assignments and submissions', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
                 const SizedBox(height: 20),
                 _buildSummaryRow(isMobile),
                 const SizedBox(height: 20),
                 Container(
-                  decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(8)),
                   child: TabBar(
                     controller: _tabController,
-                    indicatorColor: const Color(0xFFD4A843),
-                    labelColor: const Color(0xFFD4A843),
-                    unselectedLabelColor: Colors.white54,
+                    indicatorColor: AppColors.accent,
+                    labelColor: AppColors.accent,
+                    unselectedLabelColor: AppColors.textLight,
                     tabs: const [Tab(text: 'Pending'), Tab(text: 'Submitted'), Tab(text: 'All')],
                   ),
                 ),
@@ -104,7 +105,7 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> with Si
       _summaryCard('Pending', '$pending', Colors.orange, Icons.hourglass_empty),
       _summaryCard('Submitted', '$submitted', Colors.blue, Icons.upload_file),
       _summaryCard('Graded', '$graded', Colors.green, Icons.grading),
-      _summaryCard('Total', '${_assignments.length}', const Color(0xFFD4A843), Icons.assignment),
+      _summaryCard('Total', '${_assignments.length}', AppColors.accent, Icons.assignment),
     ];
 
     if (isMobile) {
@@ -135,9 +136,9 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> with Si
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Row(
         children: [
@@ -145,7 +146,7 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> with Si
           const SizedBox(width: 12),
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(value, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: color)),
-            Text(label, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+            Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
           ]),
         ],
       ),
@@ -159,9 +160,9 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> with Si
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: a['status'] == 'Pending' ? Colors.orange.withOpacity(0.3) : const Color(0xFF1E3055)),
+        border: Border.all(color: a['status'] == 'Pending' ? Colors.orange.withOpacity(0.3) : AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,7 +171,7 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> with Si
             children: [
               Icon(statusIcon, color: statusColor, size: 20),
               const SizedBox(width: 10),
-              Expanded(child: Text(a['title'], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15))),
+              Expanded(child: Text(a['title'], style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 15))),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(color: statusColor.withOpacity(0.15), borderRadius: BorderRadius.circular(20)),
@@ -190,15 +191,15 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> with Si
   Widget _buildCardInfoDesktop(Map<String, dynamic> a, Color statusColor) {
     return Row(
       children: [
-        const Icon(Icons.book, color: Colors.white38, size: 16),
+        const Icon(Icons.book, color: AppColors.textLight, size: 16),
         const SizedBox(width: 6),
-        Text(a['course'], style: const TextStyle(color: Colors.white54, fontSize: 13)),
+        Text(a['course'], style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
         const SizedBox(width: 20),
-        const Icon(Icons.person, color: Colors.white38, size: 16),
+        const Icon(Icons.person, color: AppColors.textLight, size: 16),
         const SizedBox(width: 6),
-        Text(a['faculty'], style: const TextStyle(color: Colors.white54, fontSize: 13)),
+        Text(a['faculty'], style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
         const SizedBox(width: 20),
-        const Icon(Icons.calendar_today, color: Colors.white38, size: 16),
+        const Icon(Icons.calendar_today, color: AppColors.textLight, size: 16),
         const SizedBox(width: 6),
         Text('Due: ${a['due']}', style: TextStyle(color: a['status'] == 'Pending' ? Colors.orange : Colors.white54, fontSize: 13)),
         const Spacer(),
@@ -208,7 +209,7 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> with Si
           icon: const Icon(Icons.upload, size: 16),
           label: const Text('Upload'),
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF1565C0),
+            backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             textStyle: const TextStyle(fontSize: 12),
@@ -229,17 +230,17 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> with Si
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.book, color: Colors.white38, size: 16),
+                const Icon(Icons.book, color: AppColors.textLight, size: 16),
                 const SizedBox(width: 6),
-                Flexible(child: Text(a['course'], style: const TextStyle(color: Colors.white54, fontSize: 13))),
+                Flexible(child: Text(a['course'], style: const TextStyle(color: AppColors.textLight, fontSize: 13))),
               ],
             ),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.person, color: Colors.white38, size: 16),
+                const Icon(Icons.person, color: AppColors.textLight, size: 16),
                 const SizedBox(width: 6),
-                Flexible(child: Text(a['faculty'], style: const TextStyle(color: Colors.white54, fontSize: 13))),
+                Flexible(child: Text(a['faculty'], style: const TextStyle(color: AppColors.textLight, fontSize: 13))),
               ],
             ),
           ],
@@ -247,7 +248,7 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> with Si
         const SizedBox(height: 8),
         Row(
           children: [
-            const Icon(Icons.calendar_today, color: Colors.white38, size: 16),
+            const Icon(Icons.calendar_today, color: AppColors.textLight, size: 16),
             const SizedBox(width: 6),
             Text('Due: ${a['due']}', style: TextStyle(color: a['status'] == 'Pending' ? Colors.orange : Colors.white54, fontSize: 13)),
           ],
@@ -262,7 +263,7 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> with Si
               icon: const Icon(Icons.upload, size: 16),
               label: const Text('Upload'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1565C0),
+                backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 textStyle: const TextStyle(fontSize: 12),

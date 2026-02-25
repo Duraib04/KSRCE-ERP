@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import 'package:go_router/go_router.dart';
 
 class StudentSettingsPage extends StatefulWidget {
@@ -24,19 +25,19 @@ class _StudentSettingsPageState extends State<StudentSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1F3C),
+      backgroundColor: AppColors.background,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(children: const [
-              Icon(Icons.settings, color: Color(0xFFD4A843), size: 28),
+              Icon(Icons.settings, color: AppColors.primary, size: 28),
               SizedBox(width: 12),
-              Text('Settings', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+              Text('Settings', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
             ]),
             const SizedBox(height: 8),
-            const Text('Manage your account preferences', style: TextStyle(color: Colors.white60, fontSize: 14)),
+            const Text('Manage your account preferences', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
             const SizedBox(height: 24),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,17 +69,17 @@ class _StudentSettingsPageState extends State<StudentSettingsPage> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: const [
-            Icon(Icons.lock, color: Color(0xFFD4A843), size: 20),
+            Icon(Icons.lock, color: AppColors.primary, size: 20),
             SizedBox(width: 8),
-            Text('Change Password', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text('Change Password', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           ]),
           const SizedBox(height: 20),
           _pwdField('Current Password', _currentPwdController),
@@ -87,14 +88,14 @@ class _StudentSettingsPageState extends State<StudentSettingsPage> {
           const SizedBox(height: 14),
           _pwdField('Confirm New Password', _confirmPwdController),
           const SizedBox(height: 8),
-          const Text('Password must be at least 8 characters with uppercase, lowercase, number and special character.', style: TextStyle(color: Colors.white38, fontSize: 12)),
+          const Text('Password must be at least 8 characters with uppercase, lowercase, number and special character.', style: TextStyle(color: AppColors.textLight, fontSize: 12)),
           const SizedBox(height: 16),
           ElevatedButton.icon(
             onPressed: () => context.go('/student/change-password'),
             icon: const Icon(Icons.save, size: 18),
             label: const Text('Update Password'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF1565C0),
+              backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -109,7 +110,7 @@ class _StudentSettingsPageState extends State<StudentSettingsPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Colors.white70, fontSize: 13)),
+        Text(label, style: const TextStyle(color: AppColors.textMedium, fontSize: 13)),
         const SizedBox(height: 6),
         TextField(
           controller: controller,
@@ -117,12 +118,12 @@ class _StudentSettingsPageState extends State<StudentSettingsPage> {
           style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
             hintText: 'Enter $label',
-            hintStyle: const TextStyle(color: Colors.white38, fontSize: 13),
-            filled: true, fillColor: const Color(0xFF0D1F3C),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: const Color(0xFF1E3055))),
-            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: const Color(0xFF1E3055))),
+            hintStyle: const TextStyle(color: AppColors.textLight, fontSize: 13),
+            filled: true, fillColor: AppColors.background,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.border)),
+            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.border)),
             contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            suffixIcon: const Icon(Icons.visibility_off, color: Colors.white38, size: 20),
+            suffixIcon: const Icon(Icons.visibility_off, color: AppColors.textLight, size: 20),
           ),
         ),
       ],
@@ -133,17 +134,17 @@ class _StudentSettingsPageState extends State<StudentSettingsPage> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: const [
-            Icon(Icons.notifications_active, color: Color(0xFFD4A843), size: 20),
+            Icon(Icons.notifications_active, color: AppColors.primary, size: 20),
             SizedBox(width: 8),
-            Text('Notification Preferences', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text('Notification Preferences', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           ]),
           const SizedBox(height: 16),
           _toggleItem('Academic Notifications', 'Classes, syllabus, course updates', _academicNotif, (v) => setState(() => _academicNotif = v)),
@@ -163,16 +164,16 @@ class _StudentSettingsPageState extends State<StudentSettingsPage> {
       child: Row(
         children: [
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(title, style: const TextStyle(color: Colors.white, fontSize: 14)),
-            Text(subtitle, style: const TextStyle(color: Colors.white38, fontSize: 12)),
+            Text(title, style: const TextStyle(color: AppColors.textDark, fontSize: 14)),
+            Text(subtitle, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
           ])),
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: const Color(0xFF1565C0),
-            activeTrackColor: const Color(0xFF1565C0).withOpacity(0.3),
-            inactiveTrackColor: const Color(0xFF1E3055),
-            inactiveThumbColor: Colors.white38,
+            activeColor: AppColors.primary,
+            activeTrackColor: AppColors.primary.withOpacity(0.3),
+            inactiveTrackColor: AppColors.border,
+            inactiveThumbColor: AppColors.textLight,
           ),
         ],
       ),
@@ -183,30 +184,30 @@ class _StudentSettingsPageState extends State<StudentSettingsPage> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: const [
-            Icon(Icons.palette, color: Color(0xFFD4A843), size: 20),
+            Icon(Icons.palette, color: AppColors.primary, size: 20),
             SizedBox(width: 8),
-            Text('Appearance', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text('Appearance', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           ]),
           const SizedBox(height: 16),
           Row(
             children: [
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-                Text('Dark Theme', style: TextStyle(color: Colors.white, fontSize: 14)),
-                Text('Use dark color scheme', style: TextStyle(color: Colors.white38, fontSize: 12)),
+                Text('Dark Theme', style: TextStyle(color: AppColors.textDark, fontSize: 14)),
+                Text('Use dark color scheme', style: TextStyle(color: AppColors.textLight, fontSize: 12)),
               ])),
               Switch(
                 value: _darkTheme,
                 onChanged: (v) => setState(() => _darkTheme = v),
-                activeColor: const Color(0xFF1565C0),
-                activeTrackColor: const Color(0xFF1565C0).withOpacity(0.3),
+                activeColor: AppColors.primary,
+                activeTrackColor: AppColors.primary.withOpacity(0.3),
               ),
             ],
           ),
@@ -214,15 +215,15 @@ class _StudentSettingsPageState extends State<StudentSettingsPage> {
           Row(
             children: [
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-                Text('Language', style: TextStyle(color: Colors.white, fontSize: 14)),
-                Text('Select display language', style: TextStyle(color: Colors.white38, fontSize: 12)),
+                Text('Language', style: TextStyle(color: AppColors.textDark, fontSize: 14)),
+                Text('Select display language', style: TextStyle(color: AppColors.textLight, fontSize: 12)),
               ])),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(color: const Color(0xFF0D1F3C), borderRadius: BorderRadius.circular(8), border: Border.all(color: const Color(0xFF1E3055))),
+                decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.border)),
                 child: DropdownButton<String>(
                   value: _language,
-                  dropdownColor: const Color(0xFF111D35),
+                  dropdownColor: AppColors.surface,
                   style: const TextStyle(color: Colors.white),
                   underline: const SizedBox(),
                   items: ['English', 'Tamil', 'Hindi'].map((l) => DropdownMenuItem(value: l, child: Text(l))).toList(),
@@ -240,17 +241,17 @@ class _StudentSettingsPageState extends State<StudentSettingsPage> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: const [
-            Icon(Icons.info_outline, color: Color(0xFFD4A843), size: 20),
+            Icon(Icons.info_outline, color: AppColors.primary, size: 20),
             SizedBox(width: 8),
-            Text('Account Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text('Account Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           ]),
           const SizedBox(height: 16),
           _infoRow('Username', '727622BCS052'),
@@ -284,8 +285,8 @@ class _StudentSettingsPageState extends State<StudentSettingsPage> {
       padding: const EdgeInsets.only(bottom: 10),
       child: Row(
         children: [
-          SizedBox(width: 140, child: Text(label, style: const TextStyle(color: Colors.white54, fontSize: 13))),
-          Text(value, style: const TextStyle(color: Colors.white, fontSize: 13)),
+          SizedBox(width: 140, child: Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 13))),
+          Text(value, style: const TextStyle(color: AppColors.textDark, fontSize: 13)),
         ],
       ),
     );

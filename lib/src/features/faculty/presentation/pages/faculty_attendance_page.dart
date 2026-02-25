@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class FacultyAttendancePage extends StatefulWidget {
   const FacultyAttendancePage({super.key});
@@ -8,11 +9,11 @@ class FacultyAttendancePage extends StatefulWidget {
 }
 
 class _FacultyAttendancePageState extends State<FacultyAttendancePage> {
-  static const _bg = Color(0xFF0D1F3C);
-  static const _card = Color(0xFF111D35);
-  static const _border = Color(0xFF1E3055);
-  static const _accent = Color(0xFF1565C0);
-  static const _gold = Color(0xFFD4A843);
+  static const _bg = AppColors.background;
+  static const _card = AppColors.surface;
+  static const _border = AppColors.border;
+  static const _accent = AppColors.primary;
+  static const _gold = AppColors.accent;
 
   String _selectedCourse = 'CS3501 - Compiler Design (Sec A)';
   final List<String> _courses = [
@@ -65,7 +66,7 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> {
               children: [
                 const Text('Attendance Management', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
-                const Text('Mark and manage student attendance', style: TextStyle(color: Colors.white54, fontSize: 14)),
+                const Text('Mark and manage student attendance', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
                 const SizedBox(height: 20),
 
                 // Filters Row
@@ -83,7 +84,7 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> {
                         value: _selectedCourse,
                         dropdownColor: _card,
                         isExpanded: true,
-                        style: const TextStyle(color: Colors.white, fontSize: 14),
+                        style: const TextStyle(color: AppColors.textDark, fontSize: 14),
                         items: _courses.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
                         onChanged: (v) => setState(() => _selectedCourse = v!),
                       ),
@@ -107,9 +108,9 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> {
                           child: const Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.calendar_today, color: Colors.white54, size: 18),
+                              Icon(Icons.calendar_today, color: AppColors.textLight, size: 18),
                               SizedBox(width: 8),
-                              Text('24 Feb 2026', style: TextStyle(color: Colors.white, fontSize: 14)),
+                              Text('24 Feb 2026', style: TextStyle(color: AppColors.textDark, fontSize: 14)),
                             ],
                           ),
                         ),
@@ -124,9 +125,9 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> {
                         child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.access_time, color: Colors.white54, size: 18),
+                            Icon(Icons.access_time, color: AppColors.textLight, size: 18),
                             SizedBox(width: 8),
-                            Text('Hour: 1 (08:30 - 09:20)', style: TextStyle(color: Colors.white, fontSize: 14)),
+                            Text('Hour: 1 (08:30 - 09:20)', style: TextStyle(color: AppColors.textDark, fontSize: 14)),
                           ],
                         ),
                       ),
@@ -149,7 +150,7 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> {
                               value: _selectedCourse,
                               dropdownColor: _card,
                               isExpanded: true,
-                              style: const TextStyle(color: Colors.white, fontSize: 14),
+                              style: const TextStyle(color: AppColors.textDark, fontSize: 14),
                               items: _courses.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
                               onChanged: (v) => setState(() => _selectedCourse = v!),
                             ),
@@ -170,9 +171,9 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> {
                             ),
                             child: const Row(
                               children: [
-                                Icon(Icons.calendar_today, color: Colors.white54, size: 18),
+                                Icon(Icons.calendar_today, color: AppColors.textLight, size: 18),
                                 SizedBox(width: 8),
-                                Text('24 Feb 2026', style: TextStyle(color: Colors.white, fontSize: 14)),
+                                Text('24 Feb 2026', style: TextStyle(color: AppColors.textDark, fontSize: 14)),
                               ],
                             ),
                           ),
@@ -188,9 +189,9 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> {
                         ),
                         child: const Row(
                           children: [
-                            Icon(Icons.access_time, color: Colors.white54, size: 18),
+                            Icon(Icons.access_time, color: AppColors.textLight, size: 18),
                             SizedBox(width: 8),
-                            Text('Hour: 1 (08:30 - 09:20)', style: TextStyle(color: Colors.white, fontSize: 14)),
+                            Text('Hour: 1 (08:30 - 09:20)', style: TextStyle(color: AppColors.textDark, fontSize: 14)),
                           ],
                         ),
                       ),
@@ -242,7 +243,7 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> {
                         label: const Text('Mark All Absent'),
                         style: OutlinedButton.styleFrom(foregroundColor: Colors.redAccent, side: const BorderSide(color: Colors.redAccent)),
                       ),
-                      const Text('Showing 20 of 65 students', style: TextStyle(color: Colors.white38, fontSize: 12)),
+                      const Text('Showing 20 of 65 students', style: TextStyle(color: AppColors.textLight, fontSize: 12)),
                     ],
                   )
                 else
@@ -262,7 +263,7 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> {
                         style: OutlinedButton.styleFrom(foregroundColor: Colors.redAccent, side: const BorderSide(color: Colors.redAccent)),
                       ),
                       const Spacer(),
-                      const Text('Showing 20 of 65 students', style: TextStyle(color: Colors.white38, fontSize: 12)),
+                      const Text('Showing 20 of 65 students', style: TextStyle(color: AppColors.textLight, fontSize: 12)),
                     ],
                   ),
                 const SizedBox(height: 16),
@@ -280,20 +281,20 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> {
                     child: DataTable(
                       headingRowColor: WidgetStateProperty.all(const Color(0xFF1A2A4A)),
                       columns: const [
-                        DataColumn(label: Text('S.No', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Roll Number', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Student Name', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Overall %', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Status', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('S.No', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Roll Number', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Student Name', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Overall %', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Status', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
                       ],
                       rows: List.generate(_students.length, (i) {
                         final s = _students[i];
                         final pct = s['totalPct'] as double;
                         return DataRow(
                           cells: [
-                            DataCell(Text('${i + 1}', style: const TextStyle(color: Colors.white54, fontSize: 13))),
-                            DataCell(Text(s['rollNo'] as String, style: const TextStyle(color: Colors.white70, fontSize: 13))),
-                            DataCell(Text(s['name'] as String, style: const TextStyle(color: Colors.white, fontSize: 13))),
+                            DataCell(Text('${i + 1}', style: const TextStyle(color: AppColors.textLight, fontSize: 13))),
+                            DataCell(Text(s['rollNo'] as String, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                            DataCell(Text(s['name'] as String, style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
                             DataCell(Text('${pct.toStringAsFixed(1)}%', style: TextStyle(
                               color: pct >= 85 ? Colors.greenAccent : pct >= 75 ? Colors.orangeAccent : Colors.redAccent,
                               fontSize: 13, fontWeight: FontWeight.w500,
@@ -333,8 +334,8 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> {
                       OutlinedButton(
                         onPressed: () {},
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.white70,
-                          side: const BorderSide(color: Colors.white30),
+                          foregroundColor: AppColors.textMedium,
+                          side: const BorderSide(color: AppColors.border),
                           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                         ),
                         child: const Text('Save as Draft'),
@@ -359,8 +360,8 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> {
                       OutlinedButton(
                         onPressed: () {},
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.white70,
-                          side: const BorderSide(color: Colors.white30),
+                          foregroundColor: AppColors.textMedium,
+                          side: const BorderSide(color: AppColors.border),
                           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                         ),
                         child: const Text('Save as Draft'),
@@ -401,9 +402,9 @@ class _AttendanceStat extends StatelessWidget {
     final content = Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Row(
         mainAxisSize: isMobile ? MainAxisSize.min : MainAxisSize.max,
@@ -414,7 +415,7 @@ class _AttendanceStat extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(value, style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
-              Text(label, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+              Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
             ],
           ),
         ],

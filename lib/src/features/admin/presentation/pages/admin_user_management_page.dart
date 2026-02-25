@@ -1,8 +1,9 @@
-﻿// ignore_for_file: avoid_web_libraries_in_flutter
+// ignore_for_file: avoid_web_libraries_in_flutter
 import 'dart:convert';
 import 'dart:html' as html;
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:excel/excel.dart' as excel_lib;
 import '../../../../core/data_service.dart';
@@ -292,7 +293,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
 
     showDialog(context: context, builder: (ctx) => StatefulBuilder(builder: (ctx, setDState) {
       return AlertDialog(
-        backgroundColor: const Color(0xFF111D35),
+        backgroundColor: AppColors.surface,
         title: Text(isEdit ? 'Edit User' : 'Add New User', style: const TextStyle(color: Colors.white)),
         content: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 400, minWidth: MediaQuery.of(ctx).size.width < 500 ? MediaQuery.of(ctx).size.width * 0.85 : 400),
@@ -302,7 +303,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
             _dialogField('Password', passCtrl, obscure: true),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              value: role, dropdownColor: const Color(0xFF0D1F3C),
+              value: role, dropdownColor: AppColors.background,
               decoration: _inputDeco('Role'),
               style: const TextStyle(color: Colors.white),
               items: ['student', 'faculty', 'admin'].map((r) => DropdownMenuItem(value: r, child: Text(r.toUpperCase()))).toList(),
@@ -314,9 +315,9 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
             _dialogField('Phone', phoneCtrl),
           ]))),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel', style: TextStyle(color: Colors.white54))),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel', style: TextStyle(color: AppColors.textLight))),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1565C0)),
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
             onPressed: () {
               if (idCtrl.text.isEmpty || nameCtrl.text.isEmpty) return;
               final ds = Provider.of<DataService>(context, listen: false);
@@ -345,11 +346,11 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
 
   void _deleteUser(int index) {
     showDialog(context: context, builder: (ctx) => AlertDialog(
-      backgroundColor: const Color(0xFF111D35),
+      backgroundColor: AppColors.surface,
       title: const Text('Remove User', style: TextStyle(color: Colors.white)),
-      content: Text('Are you sure you want to permanently remove ${_allUsers[index]['name']}?', style: const TextStyle(color: Colors.white70)),
+      content: Text('Are you sure you want to permanently remove ${_allUsers[index]['name']}?', style: const TextStyle(color: AppColors.textMedium)),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel', style: TextStyle(color: Colors.white54))),
+        TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel', style: TextStyle(color: AppColors.textLight))),
         ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
           onPressed: () {
@@ -375,7 +376,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
       ds.notifyListeners();
       _loadUsers();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('User status changed to $newStatus'), backgroundColor: const Color(0xFF1565C0)));
+        SnackBar(content: Text('User status changed to $newStatus'), backgroundColor: AppColors.primary));
     }
   }
 
@@ -389,11 +390,11 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
   }
 
   InputDecoration _inputDeco(String label) => InputDecoration(
-    labelText: label, labelStyle: const TextStyle(color: Colors.white54),
-    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Color(0xFF1E3055))),
-    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Color(0xFF1565C0))),
-    disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Color(0xFF1E3055))),
-    filled: true, fillColor: const Color(0xFF0D1F3C),
+    labelText: label, labelStyle: const TextStyle(color: AppColors.textLight),
+    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: AppColors.border)),
+    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: AppColors.primary)),
+    disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: AppColors.border)),
+    filled: true, fillColor: AppColors.background,
   );
 
   List<Map<String, dynamic>> get _filteredUsers {
@@ -414,12 +415,12 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
           padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
           child: isMobile
             ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text('User Management', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                const Text('User Management', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
                 const SizedBox(height: 4),
-                const Text('Upload, verify, and manage all users', style: TextStyle(fontSize: 14, color: Colors.white54)),
+                const Text('Upload, verify, and manage all users', style: TextStyle(fontSize: 14, color: AppColors.textLight)),
                 const SizedBox(height: 12),
                 SizedBox(width: double.infinity, child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1565C0), padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14)),
+                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14)),
                   onPressed: _addUser,
                   icon: const Icon(Icons.person_add, size: 18),
                   label: const Text('Add User'),
@@ -429,10 +430,10 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
                 const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('User Management', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
                   SizedBox(height: 4),
-                  Text('Upload, verify, and manage all users', style: TextStyle(fontSize: 14, color: Colors.white54)),
+                  Text('Upload, verify, and manage all users', style: TextStyle(fontSize: 14, color: AppColors.textLight)),
                 ])),
                 ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1565C0), padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14)),
+                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14)),
                   onPressed: _addUser,
                   icon: const Icon(Icons.person_add, size: 18),
                   label: const Text('Add User'),
@@ -442,11 +443,11 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
         const SizedBox(height: 16),
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 24),
-          decoration: BoxDecoration(color: const Color(0xFF0D1F3C), borderRadius: BorderRadius.circular(12)),
+          decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(12)),
           child: TabBar(
             controller: _tabController,
-            indicator: BoxDecoration(color: const Color(0xFF1565C0), borderRadius: BorderRadius.circular(12)),
-            labelColor: Colors.white, unselectedLabelColor: Colors.white54,
+            indicator: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(12)),
+            labelColor: Colors.white, unselectedLabelColor: AppColors.textLight,
             tabs: isMobile
               ? [
                   Tab(icon: const Icon(Icons.upload_file, size: 20), child: null),
@@ -480,16 +481,16 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
           child: Container(
             width: double.infinity, height: 250,
             decoration: BoxDecoration(
-              color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFF1E3055), width: 2, strokeAlign: BorderSide.strokeAlignInside),
+              color: AppColors.surface, borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: AppColors.border, width: 2, strokeAlign: BorderSide.strokeAlignInside),
             ),
             child: _isUploading
-              ? const Center(child: CircularProgressIndicator(color: Color(0xFF1565C0)))
+              ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
               : Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Container(
                     padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(color: const Color(0xFF1565C0).withOpacity(0.15), shape: BoxShape.circle),
-                    child: const Icon(Icons.cloud_upload_outlined, size: 48, color: Color(0xFF1565C0)),
+                    decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.15), shape: BoxShape.circle),
+                    child: const Icon(Icons.cloud_upload_outlined, size: 48, color: AppColors.primary),
                   ),
                   const SizedBox(height: 20),
                   const Text('Click to upload CSV or Excel file', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white)),
@@ -509,19 +510,19 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
         const SizedBox(height: 24),
         Container(
           width: double.infinity, padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFF1E3055))),
+          decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppColors.border)),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const Row(children: [
-              Icon(Icons.info_outline, color: Color(0xFFD4A843), size: 20),
+              Icon(Icons.info_outline, color: AppColors.primary, size: 20),
               SizedBox(width: 8),
-              Text('File Format Guide', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+              Text('File Format Guide', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
             ]),
             const SizedBox(height: 12),
             Text('Your file should have column headers in the first row. Example:', style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 13)),
             const SizedBox(height: 12),
             Container(
               width: double.infinity, padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(color: const Color(0xFF0A1628), borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
               child: const SelectableText(
                 'userId,name,password,role,department,year,email,phone\nSTU006,John Doe,pass123,student,CSE,2,john@email.com,9876543210\nFAC002,Dr. Smith,fac456,faculty,ECE,,,',
                 style: TextStyle(fontFamily: 'monospace', fontSize: 12, color: Color(0xFF4CAF50)),
@@ -540,12 +541,12 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
         const SizedBox(height: 16),
         SizedBox(width: double.infinity, child: OutlinedButton.icon(
           style: OutlinedButton.styleFrom(
-            side: const BorderSide(color: Color(0xFF1E3055)),
+            side: const BorderSide(color: AppColors.border),
             padding: const EdgeInsets.symmetric(vertical: 16),
           ),
           onPressed: _downloadTemplate,
-          icon: const Icon(Icons.download, color: Color(0xFF1565C0)),
-          label: const Text('Download CSV Template', style: TextStyle(color: Color(0xFF1565C0))),
+          icon: const Icon(Icons.download, color: AppColors.primary),
+          label: const Text('Download CSV Template', style: TextStyle(color: AppColors.primary)),
         )),
       ]),
     );
@@ -555,9 +556,9 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: required ? const Color(0xFF1565C0).withOpacity(0.15) : const Color(0xFF1E3055),
+        color: required ? AppColors.primary.withOpacity(0.15) : AppColors.border,
         borderRadius: BorderRadius.circular(12),
-        border: required ? Border.all(color: const Color(0xFF1565C0).withOpacity(0.3)) : null,
+        border: required ? Border.all(color: AppColors.primary.withOpacity(0.3)) : null,
       ),
       child: Text('$label${required ? " *" : ""}',
         style: TextStyle(fontSize: 12, color: required ? const Color(0xFF42A5F5) : Colors.white54)),
@@ -595,14 +596,14 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 24),
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF1E3055))),
+          decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
           child: isMobile
             ? Wrap(spacing: 8, runSpacing: 8, crossAxisAlignment: WrapCrossAlignment.center, children: [
                 Row(mainAxisSize: MainAxisSize.min, children: [
                   const Icon(Icons.table_chart, size: 18, color: Color(0xFF42A5F5)),
                   const SizedBox(width: 8),
                   Text('${filtered.length}${hasActiveFilters ? " filtered" : ""} of ${_uploadedRows.length}',
-                    style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                    style: const TextStyle(color: AppColors.textMedium, fontSize: 13)),
                 ]),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -619,10 +620,10 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
                   Checkbox(
                     value: _selectedForVerification.length == _uploadedRows.length && _uploadedRows.isNotEmpty,
                     onChanged: _toggleSelectAll,
-                    activeColor: const Color(0xFF1565C0),
-                    side: const BorderSide(color: Colors.white54),
+                    activeColor: AppColors.primary,
+                    side: const BorderSide(color: AppColors.textLight),
                   ),
-                  const Text('Select All', style: TextStyle(color: Colors.white70, fontSize: 13)),
+                  const Text('Select All', style: TextStyle(color: AppColors.textMedium, fontSize: 13)),
                 ]),
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF4CAF50), padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10)),
@@ -635,7 +636,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
                 const Icon(Icons.table_chart, size: 18, color: Color(0xFF42A5F5)),
                 const SizedBox(width: 8),
                 Text('${filtered.length}${hasActiveFilters ? " filtered" : ""} of ${_uploadedRows.length} records',
-                  style: const TextStyle(color: Colors.white70, fontSize: 14)),
+                  style: const TextStyle(color: AppColors.textMedium, fontSize: 14)),
                 const SizedBox(width: 12),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -654,10 +655,10 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
                 Checkbox(
                   value: _selectedForVerification.length == _uploadedRows.length && _uploadedRows.isNotEmpty,
                   onChanged: _toggleSelectAll,
-                  activeColor: const Color(0xFF1565C0),
-                  side: const BorderSide(color: Colors.white54),
+                  activeColor: AppColors.primary,
+                  side: const BorderSide(color: AppColors.textLight),
                 ),
-                const Text('Select All', style: TextStyle(color: Colors.white70, fontSize: 13)),
+                const Text('Select All', style: TextStyle(color: AppColors.textMedium, fontSize: 13)),
                 const SizedBox(width: 16),
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF4CAF50), padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12)),
@@ -673,14 +674,14 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
           margin: const EdgeInsets.symmetric(horizontal: 24),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: BoxDecoration(
-            color: const Color(0xFF0D1F3C),
+            color: AppColors.background,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: const Color(0xFF1E3055).withOpacity(0.5)),
+            border: Border.all(color: AppColors.border.withOpacity(0.5)),
           ),
           child: Row(children: [
-            const Icon(Icons.filter_list, size: 16, color: Color(0xFFD4A843)),
+            const Icon(Icons.filter_list, size: 16, color: AppColors.accent),
             const SizedBox(width: 8),
-            const Text('Filters:', style: TextStyle(color: Color(0xFFD4A843), fontSize: 13, fontWeight: FontWeight.w600)),
+            const Text('Filters:', style: TextStyle(color: AppColors.accent, fontSize: 13, fontWeight: FontWeight.w600)),
             const SizedBox(width: 12),
             Expanded(child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -693,16 +694,16 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
-                      color: current != 'All' ? const Color(0xFF1565C0).withOpacity(0.15) : const Color(0xFF111D35),
+                      color: current != 'All' ? AppColors.primary.withOpacity(0.15) : AppColors.surface,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: current != 'All' ? const Color(0xFF1565C0) : const Color(0xFF1E3055)),
+                      border: Border.all(color: current != 'All' ? AppColors.primary : AppColors.border),
                     ),
                     child: DropdownButtonHideUnderline(child: DropdownButton<String>(
                       value: current,
-                      dropdownColor: const Color(0xFF111D35),
-                      style: const TextStyle(color: Colors.white, fontSize: 12),
+                      dropdownColor: AppColors.surface,
+                      style: const TextStyle(color: AppColors.textDark, fontSize: 12),
                       isDense: true,
-                      icon: const Icon(Icons.arrow_drop_down, size: 16, color: Colors.white38),
+                      icon: const Icon(Icons.arrow_drop_down, size: 16, color: AppColors.textLight),
                       items: [
                         DropdownMenuItem(value: 'All', child: Text(header, style: TextStyle(color: current == 'All' ? Colors.white54 : Colors.white, fontSize: 12))),
                         ...values.map((v) => DropdownMenuItem(value: v, child: Text(v, style: const TextStyle(fontSize: 12)))),
@@ -719,19 +720,19 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
         // Data table
         Expanded(child: Container(
           margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-          decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF1E3055))),
+          decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: SingleChildScrollView(child: DataTable(
-              headingRowColor: WidgetStateProperty.all(const Color(0xFF0D1F3C)),
+              headingRowColor: WidgetStateProperty.all(AppColors.background),
               headingRowHeight: 48,
               dataRowMinHeight: 40,
               dataRowMaxHeight: 48,
               columnSpacing: 24,
               horizontalMargin: 16,
               columns: [
-                const DataColumn(label: SizedBox(width: 32, child: Text('', style: TextStyle(color: Colors.white70)))),
-                const DataColumn(label: Text('#', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 13))),
+                const DataColumn(label: SizedBox(width: 32, child: Text('', style: TextStyle(color: AppColors.textMedium)))),
+                const DataColumn(label: Text('#', style: TextStyle(color: AppColors.textMedium, fontWeight: FontWeight.bold, fontSize: 13))),
                 ..._uploadedHeaders.map((h) => DataColumn(
                   label: Text(h, style: const TextStyle(color: Color(0xFF42A5F5), fontWeight: FontWeight.bold, fontSize: 13)),
                 )),
@@ -741,13 +742,13 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
                 final origIdx = _uploadedRows.indexOf(row);
                 final selected = _selectedForVerification.contains(origIdx);
                 return DataRow(
-                  color: WidgetStateProperty.all(selected ? const Color(0xFF1565C0).withOpacity(0.08) : (fi.isEven ? Colors.transparent : const Color(0xFF0D1F3C).withOpacity(0.3))),
+                  color: WidgetStateProperty.all(selected ? AppColors.primary.withOpacity(0.08) : (fi.isEven ? Colors.transparent : AppColors.background.withOpacity(0.3))),
                   cells: [
-                    DataCell(Checkbox(value: selected, activeColor: const Color(0xFF1565C0), side: const BorderSide(color: Colors.white38),
+                    DataCell(Checkbox(value: selected, activeColor: AppColors.primary, side: const BorderSide(color: AppColors.textLight),
                       onChanged: (v) => setState(() { if (v == true) _selectedForVerification.add(origIdx); else _selectedForVerification.remove(origIdx); }))),
-                    DataCell(Text('${origIdx + 1}', style: const TextStyle(color: Colors.white38, fontSize: 12))),
+                    DataCell(Text('${origIdx + 1}', style: const TextStyle(color: AppColors.textLight, fontSize: 12))),
                     ..._uploadedHeaders.map((h) => DataCell(
-                      Text(row[h] ?? '', style: const TextStyle(color: Colors.white, fontSize: 13)),
+                      Text(row[h] ?? '', style: const TextStyle(color: AppColors.textDark, fontSize: 13)),
                     )),
                   ],
                 );
@@ -768,16 +769,16 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 24),
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF1E3055))),
+          decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
           child: Wrap(spacing: 12, runSpacing: 12, children: [
             ConstrainedBox(
               constraints: BoxConstraints(maxWidth: isMobile ? constraints.maxWidth - 80 : 300),
               child: TextField(
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  hintText: 'Search users...', hintStyle: const TextStyle(color: Colors.white38),
-                  prefixIcon: const Icon(Icons.search, color: Colors.white38),
-                  filled: true, fillColor: const Color(0xFF0D1F3C),
+                  hintText: 'Search users...', hintStyle: const TextStyle(color: AppColors.textLight),
+                  prefixIcon: const Icon(Icons.search, color: AppColors.textLight),
+                  filled: true, fillColor: AppColors.background,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
                 ),
                 onChanged: (v) => setState(() => _searchQuery = v),
@@ -785,37 +786,37 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
             ),
             _filterDropdown('Status', _statusFilter, ['All', 'Active', 'Suspended', 'Terminated'], (v) => setState(() => _statusFilter = v!)),
             _filterDropdown('Role', _roleFilter, ['All', 'Student', 'Faculty', 'Admin'], (v) => setState(() => _roleFilter = v!)),
-            Text('${filtered.length} users', style: const TextStyle(color: Colors.white54, fontSize: 13)),
+            Text('${filtered.length} users', style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
           ]),
         ),
         const SizedBox(height: 12),
         Expanded(child: Container(
           margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-          decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF1E3055))),
+          decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
           child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: SingleChildScrollView(child: DataTable(
-            headingRowColor: WidgetStateProperty.all(const Color(0xFF0D1F3C)),
+            headingRowColor: WidgetStateProperty.all(AppColors.background),
             columnSpacing: 20,
             columns: const [
-              DataColumn(label: Text('#', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold))),
-              DataColumn(label: Text('User ID', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold))),
-              DataColumn(label: Text('Name', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold))),
-              DataColumn(label: Text('Role', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold))),
-              DataColumn(label: Text('Department', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold))),
-              DataColumn(label: Text('Status', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold))),
-              DataColumn(label: Text('Actions', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold))),
+              DataColumn(label: Text('#', style: TextStyle(color: AppColors.textMedium, fontWeight: FontWeight.bold))),
+              DataColumn(label: Text('User ID', style: TextStyle(color: AppColors.textMedium, fontWeight: FontWeight.bold))),
+              DataColumn(label: Text('Name', style: TextStyle(color: AppColors.textMedium, fontWeight: FontWeight.bold))),
+              DataColumn(label: Text('Role', style: TextStyle(color: AppColors.textMedium, fontWeight: FontWeight.bold))),
+              DataColumn(label: Text('Department', style: TextStyle(color: AppColors.textMedium, fontWeight: FontWeight.bold))),
+              DataColumn(label: Text('Status', style: TextStyle(color: AppColors.textMedium, fontWeight: FontWeight.bold))),
+              DataColumn(label: Text('Actions', style: TextStyle(color: AppColors.textMedium, fontWeight: FontWeight.bold))),
             ],
             rows: List.generate(filtered.length, (i) {
               final u = filtered[i];
               final origIdx = _allUsers.indexOf(u);
               return DataRow(cells: [
-                DataCell(Text('${i + 1}', style: const TextStyle(color: Colors.white54))),
+                DataCell(Text('${i + 1}', style: const TextStyle(color: AppColors.textLight))),
                 DataCell(Text(u['userId'] ?? '', style: const TextStyle(color: Color(0xFF42A5F5), fontWeight: FontWeight.w500))),
                 DataCell(Text(u['name'] ?? '', style: const TextStyle(color: Colors.white))),
                 DataCell(_roleBadge(u['role'] ?? 'student')),
-                DataCell(Text(u['department'] ?? '-', style: const TextStyle(color: Colors.white70))),
+                DataCell(Text(u['department'] ?? '-', style: const TextStyle(color: AppColors.textMedium))),
                 DataCell(_statusBadge(u['status'] ?? 'active')),
                 DataCell(Row(mainAxisSize: MainAxisSize.min, children: [
-                  _actionBtn(Icons.edit, 'Edit', const Color(0xFF1565C0), () => _editUser(origIdx)),
+                  _actionBtn(Icons.edit, 'Edit', AppColors.primary, () => _editUser(origIdx)),
                   _actionBtn(Icons.pause_circle, 'Suspend', const Color(0xFFFF9800), () => _changeStatus(origIdx, 'suspended')),
                   _actionBtn(Icons.block, 'Terminate', const Color(0xFFEF5350), () => _changeStatus(origIdx, 'terminated')),
                   _actionBtn(Icons.play_circle, 'Activate', const Color(0xFF4CAF50), () => _changeStatus(origIdx, 'active')),
@@ -832,10 +833,10 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
   Widget _filterDropdown(String label, String value, List<String> items, ValueChanged<String?> onChanged) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(color: const Color(0xFF0D1F3C), borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
       child: DropdownButtonHideUnderline(child: DropdownButton<String>(
-        value: value, dropdownColor: const Color(0xFF0D1F3C),
-        style: const TextStyle(color: Colors.white, fontSize: 13),
+        value: value, dropdownColor: AppColors.background,
+        style: const TextStyle(color: AppColors.textDark, fontSize: 13),
         items: items.map((i) => DropdownMenuItem(value: i, child: Text('$label: $i'))).toList(),
         onChanged: onChanged,
       )),
@@ -843,7 +844,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
   }
 
   Widget _roleBadge(String role) {
-    final color = role == 'admin' ? const Color(0xFFD4A843) : role == 'faculty' ? const Color(0xFF7E57C2) : const Color(0xFF1565C0);
+    final color = role == 'admin' ? AppColors.accent : role == 'faculty' ? const Color(0xFF7E57C2) : AppColors.primary;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),

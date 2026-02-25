@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class StudentExamsPage extends StatelessWidget {
   const StudentExamsPage({super.key});
@@ -6,19 +7,19 @@ class StudentExamsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1F3C),
+      backgroundColor: AppColors.background,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(children: const [
-              Icon(Icons.event_note, color: Color(0xFFD4A843), size: 28),
+              Icon(Icons.event_note, color: AppColors.primary, size: 28),
               SizedBox(width: 12),
-              Text('Exam Schedule', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+              Text('Exam Schedule', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
             ]),
             const SizedBox(height: 8),
-            const Text('Upcoming Internal & External Examinations', style: TextStyle(color: Colors.white60, fontSize: 14)),
+            const Text('Upcoming Internal & External Examinations', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
             const SizedBox(height: 24),
             _buildNextExamCountdown(),
             const SizedBox(height: 24),
@@ -35,7 +36,7 @@ class StudentExamsPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: [Color(0xFF1565C0), Color(0xFF0D47A1)]),
+        gradient: const LinearGradient(colors: [AppColors.primary, AppColors.primary]),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -45,10 +46,10 @@ class StudentExamsPage extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
-              Text('Next Exam', style: TextStyle(color: Colors.white70, fontSize: 14)),
+              Text('Next Exam', style: TextStyle(color: AppColors.textMedium, fontSize: 14)),
               SizedBox(height: 4),
               Text('CS3501 - Compiler Design (Internal Assessment 2)', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-              Text('02 March 2026 | 09:30 AM | Room 301', style: TextStyle(color: Colors.white70, fontSize: 14)),
+              Text('02 March 2026 | 09:30 AM | Room 301', style: TextStyle(color: AppColors.textMedium, fontSize: 14)),
             ],
           ),
           const Spacer(),
@@ -58,7 +59,7 @@ class StudentExamsPage extends StatelessWidget {
             child: Column(
               children: const [
                 Text('6', style: TextStyle(color: Colors.white, fontSize: 36, fontWeight: FontWeight.bold)),
-                Text('DAYS LEFT', style: TextStyle(color: Colors.white70, fontSize: 12)),
+                Text('DAYS LEFT', style: TextStyle(color: AppColors.textMedium, fontSize: 12)),
               ],
             ),
           ),
@@ -93,9 +94,9 @@ class StudentExamsPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,7 +104,7 @@ class StudentExamsPage extends StatelessWidget {
           Row(children: [
             Container(width: 4, height: 20, decoration: BoxDecoration(color: accentColor, borderRadius: BorderRadius.circular(2))),
             const SizedBox(width: 10),
-            Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           ]),
           const SizedBox(height: 16),
           Table(
@@ -117,24 +118,24 @@ class StudentExamsPage extends StatelessWidget {
             },
             children: [
               TableRow(
-                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: const Color(0xFF1E3055)))),
+                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColors.border))),
                 children: ['Date', 'Time', 'Subject', 'Room', 'Type', 'Syllabus'].map((h) => Padding(
                   padding: const EdgeInsets.only(bottom: 12),
-                  child: Text(h, style: const TextStyle(color: Color(0xFFD4A843), fontWeight: FontWeight.bold, fontSize: 13)),
+                  child: Text(h, style: const TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold, fontSize: 13)),
                 )).toList(),
               ),
               ...exams.map((e) => TableRow(
                 children: [
-                  Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(e['date']!, style: const TextStyle(color: Colors.white, fontSize: 13))),
-                  Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(e['time']!, style: const TextStyle(color: Colors.white70, fontSize: 13))),
-                  Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(e['subject']!, style: const TextStyle(color: Colors.white, fontSize: 13))),
-                  Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(e['room']!, style: const TextStyle(color: Colors.white54, fontSize: 13))),
+                  Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(e['date']!, style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
+                  Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(e['time']!, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                  Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(e['subject']!, style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
+                  Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(e['room']!, style: const TextStyle(color: AppColors.textLight, fontSize: 13))),
                   Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(color: accentColor.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
                     child: Text(e['type']!, style: TextStyle(color: accentColor, fontSize: 11, fontWeight: FontWeight.bold)),
                   )),
-                  Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(e['syllabus']!, style: const TextStyle(color: Colors.white54, fontSize: 13))),
+                  Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(e['syllabus']!, style: const TextStyle(color: AppColors.textLight, fontSize: 13))),
                 ],
               )),
             ],

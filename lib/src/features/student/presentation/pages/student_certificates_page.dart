@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class StudentCertificatesPage extends StatelessWidget {
   const StudentCertificatesPage({super.key});
@@ -6,19 +7,19 @@ class StudentCertificatesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1F3C),
+      backgroundColor: AppColors.background,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(children: const [
-              Icon(Icons.card_membership, color: Color(0xFFD4A843), size: 28),
+              Icon(Icons.card_membership, color: AppColors.primary, size: 28),
               SizedBox(width: 12),
-              Text('Certificates', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+              Text('Certificates', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
             ]),
             const SizedBox(height: 8),
-            const Text('Request and download academic certificates', style: TextStyle(color: Colors.white60, fontSize: 14)),
+            const Text('Request and download academic certificates', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
             const SizedBox(height: 24),
             _buildAvailableCertificates(),
             const SizedBox(height: 24),
@@ -41,14 +42,14 @@ class StudentCertificatesPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Available Certificates', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+          const Text('Available Certificates', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           const SizedBox(height: 16),
           Wrap(
             spacing: 16,
@@ -58,29 +59,29 @@ class StudentCertificatesPage extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0D1F3C),
+                  color: AppColors.background,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFF1E3055)),
+                  border: Border.all(color: AppColors.border),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(children: [
-                      Icon(c['icon'] as IconData, color: const Color(0xFFD4A843), size: 24),
+                      Icon(c['icon'] as IconData, color: AppColors.accent, size: 24),
                       const SizedBox(width: 10),
-                      Expanded(child: Text(c['name'] as String, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15))),
+                      Expanded(child: Text(c['name'] as String, style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 15))),
                     ]),
                     const SizedBox(height: 8),
-                    Text(c['desc'] as String, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+                    Text(c['desc'] as String, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
                     const SizedBox(height: 10),
                     Row(children: [
-                      const Icon(Icons.monetization_on, color: Colors.white38, size: 14),
+                      const Icon(Icons.monetization_on, color: AppColors.textLight, size: 14),
                       const SizedBox(width: 4),
-                      Text('Fee: ${c['fee']}', style: const TextStyle(color: Colors.white38, fontSize: 12)),
+                      Text('Fee: ${c['fee']}', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
                       const SizedBox(width: 16),
-                      const Icon(Icons.schedule, color: Colors.white38, size: 14),
+                      const Icon(Icons.schedule, color: AppColors.textLight, size: 14),
                       const SizedBox(width: 4),
-                      Text(c['time'] as String, style: const TextStyle(color: Colors.white38, fontSize: 12)),
+                      Text(c['time'] as String, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
                     ]),
                     const SizedBox(height: 12),
                     SizedBox(
@@ -88,7 +89,7 @@ class StudentCertificatesPage extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1565C0),
+                          backgroundColor: AppColors.primary,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           textStyle: const TextStyle(fontSize: 13),
@@ -117,14 +118,14 @@ class StudentCertificatesPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Request History', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+          const Text('Request History', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           const SizedBox(height: 16),
           Table(
             columnWidths: const {
@@ -137,10 +138,10 @@ class StudentCertificatesPage extends StatelessWidget {
             },
             children: [
               TableRow(
-                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: const Color(0xFF1E3055)))),
+                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColors.border))),
                 children: ['Ref No', 'Certificate', 'Date', 'Purpose', 'Status', 'Action'].map((h) => Padding(
                   padding: const EdgeInsets.only(bottom: 12),
-                  child: Text(h, style: const TextStyle(color: Color(0xFFD4A843), fontWeight: FontWeight.bold, fontSize: 13)),
+                  child: Text(h, style: const TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold, fontSize: 13)),
                 )).toList(),
               ),
               ...requests.map((r) {
@@ -148,9 +149,9 @@ class StudentCertificatesPage extends StatelessWidget {
                 return TableRow(
                   children: [
                     Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(r['refNo']!, style: const TextStyle(color: Color(0xFF64B5F6), fontSize: 12))),
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(r['cert']!, style: const TextStyle(color: Colors.white, fontSize: 13))),
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(r['date']!, style: const TextStyle(color: Colors.white70, fontSize: 13))),
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(r['purpose']!, style: const TextStyle(color: Colors.white54, fontSize: 13))),
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(r['cert']!, style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(r['date']!, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(r['purpose']!, style: const TextStyle(color: AppColors.textLight, fontSize: 13))),
                     Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(color: (isReady ? Colors.green : Colors.grey).withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
@@ -158,7 +159,7 @@ class StudentCertificatesPage extends StatelessWidget {
                     )),
                     Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: isReady
                       ? TextButton.icon(onPressed: () {}, icon: const Icon(Icons.download, size: 16), label: const Text('Download', style: TextStyle(fontSize: 12)), style: TextButton.styleFrom(foregroundColor: Colors.green))
-                      : const Text('-', style: TextStyle(color: Colors.white38)),
+                      : const Text('-', style: TextStyle(color: AppColors.textLight)),
                     ),
                   ],
                 );

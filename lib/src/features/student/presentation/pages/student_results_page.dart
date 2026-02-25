@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class StudentResultsPage extends StatefulWidget {
   const StudentResultsPage({super.key});
@@ -61,7 +62,7 @@ class _StudentResultsPageState extends State<StudentResultsPage> {
     final semData = _results[_selectedSemester]!;
     final subjects = semData['subjects'] as List<Map<String, dynamic>>;
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1F3C),
+      backgroundColor: AppColors.background,
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isMobile = constraints.maxWidth < 700;
@@ -71,12 +72,12 @@ class _StudentResultsPageState extends State<StudentResultsPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(children: const [
-                  Icon(Icons.assessment, color: Color(0xFFD4A843), size: 28),
+                  Icon(Icons.assessment, color: AppColors.primary, size: 28),
                   SizedBox(width: 12),
-                  Text('Examination Results', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                  Text('Examination Results', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
                 ]),
                 const SizedBox(height: 8),
-                const Text('Anna University Examination Results', style: TextStyle(color: Colors.white60, fontSize: 14)),
+                const Text('Anna University Examination Results', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
                 const SizedBox(height: 24),
                 _buildGPASummary(isMobile),
                 const SizedBox(height: 24),
@@ -85,17 +86,17 @@ class _StudentResultsPageState extends State<StudentResultsPage> {
                   spacing: 12,
                   runSpacing: 8,
                   children: [
-                    const Text('Select Semester: ', style: TextStyle(color: Colors.white70, fontSize: 14)),
+                    const Text('Select Semester: ', style: TextStyle(color: AppColors.textMedium, fontSize: 14)),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF111D35),
+                        color: AppColors.surface,
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: const Color(0xFF1E3055)),
+                        border: Border.all(color: AppColors.border),
                       ),
                       child: DropdownButton<String>(
                         value: _selectedSemester,
-                        dropdownColor: const Color(0xFF111D35),
+                        dropdownColor: AppColors.surface,
                         style: const TextStyle(color: Colors.white),
                         underline: const SizedBox(),
                         items: _results.keys.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
@@ -125,15 +126,15 @@ class _StudentResultsPageState extends State<StudentResultsPage> {
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xFFD4A843).withOpacity(0.15),
+          color: AppColors.accent.withOpacity(0.15),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: const Color(0xFFD4A843).withOpacity(0.4)),
+          border: Border.all(color: AppColors.accent.withOpacity(0.4)),
         ),
         child: Column(
           children: const [
-            Text('CGPA', style: TextStyle(color: Color(0xFFD4A843), fontSize: 14, fontWeight: FontWeight.bold)),
+            Text('CGPA', style: TextStyle(color: AppColors.accent, fontSize: 14, fontWeight: FontWeight.bold)),
             SizedBox(height: 4),
-            Text('8.42', style: TextStyle(color: Color(0xFFD4A843), fontSize: 28, fontWeight: FontWeight.bold)),
+            Text('8.42', style: TextStyle(color: AppColors.accent, fontSize: 28, fontWeight: FontWeight.bold)),
           ],
         ),
       ),
@@ -142,9 +143,9 @@ class _StudentResultsPageState extends State<StudentResultsPage> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: isMobile
           ? Wrap(
@@ -163,10 +164,10 @@ class _StudentResultsPageState extends State<StudentResultsPage> {
   Widget _gpaCard(String sem, String gpa) {
     return Column(
       children: [
-        Text(sem, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+        Text(sem, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
         const SizedBox(height: 4),
         Text(gpa, style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
-        const Text('SGPA', style: TextStyle(color: Colors.white38, fontSize: 11)),
+        const Text('SGPA', style: TextStyle(color: AppColors.textLight, fontSize: 11)),
       ],
     );
   }
@@ -185,10 +186,10 @@ class _StudentResultsPageState extends State<StudentResultsPage> {
       },
       children: [
         TableRow(
-          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: const Color(0xFF1E3055)))),
+          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColors.border))),
           children: ['Code', 'Subject', 'Internal', 'External', 'Total', 'Grade', 'GP', 'Credits'].map((h) => Padding(
             padding: const EdgeInsets.only(bottom: 12),
-            child: Text(h, style: const TextStyle(color: Color(0xFFD4A843), fontWeight: FontWeight.bold, fontSize: 12)),
+            child: Text(h, style: const TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold, fontSize: 12)),
           )).toList(),
         ),
         ...subjects.map((s) {
@@ -196,13 +197,13 @@ class _StudentResultsPageState extends State<StudentResultsPage> {
           return TableRow(
             children: [
               Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(s['code'], style: const TextStyle(color: Color(0xFF64B5F6), fontSize: 12))),
-              Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(s['name'], style: const TextStyle(color: Colors.white, fontSize: 12))),
-              Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['int']}', style: const TextStyle(color: Colors.white70, fontSize: 12))),
-              Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['ext']}', style: const TextStyle(color: Colors.white70, fontSize: 12))),
-              Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['total']}', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
+              Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(s['name'], style: const TextStyle(color: AppColors.textDark, fontSize: 12))),
+              Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['int']}', style: const TextStyle(color: AppColors.textMedium, fontSize: 12))),
+              Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['ext']}', style: const TextStyle(color: AppColors.textMedium, fontSize: 12))),
+              Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['total']}', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 12))),
               Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(s['grade'], style: TextStyle(color: gradeColor, fontWeight: FontWeight.bold, fontSize: 12))),
-              Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['gp']}', style: const TextStyle(color: Colors.white70, fontSize: 12))),
-              Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['credits']}', style: const TextStyle(color: Colors.white70, fontSize: 12))),
+              Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['gp']}', style: const TextStyle(color: AppColors.textMedium, fontSize: 12))),
+              Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['credits']}', style: const TextStyle(color: AppColors.textMedium, fontSize: 12))),
             ],
           );
         }),
@@ -212,14 +213,14 @@ class _StudentResultsPageState extends State<StudentResultsPage> {
     return Container(
       padding: EdgeInsets.all(isMobile ? 12 : 20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('$_selectedSemester Results', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+          Text('$_selectedSemester Results', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           const SizedBox(height: 16),
           isMobile
               ? SingleChildScrollView(
@@ -239,9 +240,9 @@ class _StudentResultsPageState extends State<StudentResultsPage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF1565C0).withOpacity(0.15),
+        color: AppColors.primary.withOpacity(0.15),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFF1565C0).withOpacity(0.3)),
+        border: Border.all(color: AppColors.primary.withOpacity(0.3)),
       ),
       child: isMobile
           ? Column(
@@ -249,10 +250,10 @@ class _StudentResultsPageState extends State<StudentResultsPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.emoji_events, color: Color(0xFFD4A843)),
+                    const Icon(Icons.emoji_events, color: AppColors.accent),
                     const SizedBox(width: 12),
                     Flexible(
-                      child: Text('$_selectedSemester SGPA: ', style: const TextStyle(color: Colors.white70, fontSize: 16)),
+                      child: Text('$_selectedSemester SGPA: ', style: const TextStyle(color: AppColors.textMedium, fontSize: 16)),
                     ),
                     Text(sgpa.toStringAsFixed(2), style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
                   ],
@@ -261,8 +262,8 @@ class _StudentResultsPageState extends State<StudentResultsPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
-                    Text('CGPA: ', style: TextStyle(color: Colors.white70, fontSize: 16)),
-                    Text('8.42', style: TextStyle(color: Color(0xFFD4A843), fontSize: 24, fontWeight: FontWeight.bold)),
+                    Text('CGPA: ', style: TextStyle(color: AppColors.textMedium, fontSize: 16)),
+                    Text('8.42', style: TextStyle(color: AppColors.accent, fontSize: 24, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ],
@@ -270,13 +271,13 @@ class _StudentResultsPageState extends State<StudentResultsPage> {
           : Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.emoji_events, color: Color(0xFFD4A843)),
+                const Icon(Icons.emoji_events, color: AppColors.accent),
                 const SizedBox(width: 12),
-                Text('$_selectedSemester SGPA: ', style: const TextStyle(color: Colors.white70, fontSize: 16)),
+                Text('$_selectedSemester SGPA: ', style: const TextStyle(color: AppColors.textMedium, fontSize: 16)),
                 Text(sgpa.toStringAsFixed(2), style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
                 const SizedBox(width: 40),
-                const Text('CGPA: ', style: TextStyle(color: Colors.white70, fontSize: 16)),
-                const Text('8.42', style: TextStyle(color: Color(0xFFD4A843), fontSize: 24, fontWeight: FontWeight.bold)),
+                const Text('CGPA: ', style: TextStyle(color: AppColors.textMedium, fontSize: 16)),
+                const Text('8.42', style: TextStyle(color: AppColors.accent, fontSize: 24, fontWeight: FontWeight.bold)),
               ],
             ),
     );

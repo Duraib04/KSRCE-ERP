@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class FacultyNotificationsPage extends StatelessWidget {
   const FacultyNotificationsPage({super.key});
 
-  static const _bg = Color(0xFF0D1F3C);
-  static const _card = Color(0xFF111D35);
-  static const _border = Color(0xFF1E3055);
-  static const _accent = Color(0xFF1565C0);
-  static const _gold = Color(0xFFD4A843);
+  static const _bg = AppColors.background;
+  static const _card = AppColors.surface;
+  static const _border = AppColors.border;
+  static const _accent = AppColors.primary;
+  static const _gold = AppColors.accent;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class FacultyNotificationsPage extends StatelessWidget {
           children: [
             const Text('Notifications', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            const Text('View notifications and send announcements to students', style: TextStyle(color: Colors.white54, fontSize: 14)),
+            const Text('View notifications and send announcements to students', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
             const SizedBox(height: 24),
 
             // Send Notification Form
@@ -37,7 +38,7 @@ class FacultyNotificationsPage extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.send, color: Color(0xFF1565C0), size: 20),
+                      const Icon(Icons.send, color: AppColors.primary, size: 20),
                       const SizedBox(width: 8),
                       const Text('Send Notification to Students', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
                     ],
@@ -49,7 +50,7 @@ class FacultyNotificationsPage extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Target', style: TextStyle(color: Colors.white70, fontSize: 13)),
+                            const Text('Target', style: TextStyle(color: AppColors.textMedium, fontSize: 13)),
                             const SizedBox(height: 6),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -59,7 +60,7 @@ class FacultyNotificationsPage extends StatelessWidget {
                                   value: 'CS3501 - Sec A',
                                   dropdownColor: _card,
                                   isExpanded: true,
-                                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                                  style: const TextStyle(color: AppColors.textDark, fontSize: 14),
                                   items: [
                                     'All My Students',
                                     'CS3501 - Sec A',
@@ -80,7 +81,7 @@ class FacultyNotificationsPage extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Category', style: TextStyle(color: Colors.white70, fontSize: 13)),
+                            const Text('Category', style: TextStyle(color: AppColors.textMedium, fontSize: 13)),
                             const SizedBox(height: 6),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -90,7 +91,7 @@ class FacultyNotificationsPage extends StatelessWidget {
                                   value: 'Assignment',
                                   dropdownColor: _card,
                                   isExpanded: true,
-                                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                                  style: const TextStyle(color: AppColors.textDark, fontSize: 14),
                                   items: ['Assignment', 'Exam', 'General', 'Attendance', 'Event', 'Urgent'].map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
                                   onChanged: (_) {},
                                 ),
@@ -102,24 +103,24 @@ class FacultyNotificationsPage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 14),
-                  const Text('Title', style: TextStyle(color: Colors.white70, fontSize: 13)),
+                  const Text('Title', style: TextStyle(color: AppColors.textMedium, fontSize: 13)),
                   const SizedBox(height: 6),
                   Container(
                     decoration: BoxDecoration(color: _bg, borderRadius: BorderRadius.circular(8), border: Border.all(color: _border)),
                     child: const TextField(
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                      decoration: InputDecoration(hintText: 'Notification title...', hintStyle: TextStyle(color: Colors.white24), border: InputBorder.none, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12)),
+                      style: TextStyle(color: AppColors.textDark, fontSize: 14),
+                      decoration: InputDecoration(hintText: 'Notification title...', hintStyle: TextStyle(color: AppColors.border), border: InputBorder.none, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12)),
                     ),
                   ),
                   const SizedBox(height: 14),
-                  const Text('Message', style: TextStyle(color: Colors.white70, fontSize: 13)),
+                  const Text('Message', style: TextStyle(color: AppColors.textMedium, fontSize: 13)),
                   const SizedBox(height: 6),
                   Container(
                     decoration: BoxDecoration(color: _bg, borderRadius: BorderRadius.circular(8), border: Border.all(color: _border)),
                     child: const TextField(
                       maxLines: 3,
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                      decoration: InputDecoration(hintText: 'Type your message...', hintStyle: TextStyle(color: Colors.white24), border: InputBorder.none, contentPadding: EdgeInsets.all(12)),
+                      style: TextStyle(color: AppColors.textDark, fontSize: 14),
+                      decoration: InputDecoration(hintText: 'Type your message...', hintStyle: TextStyle(color: AppColors.border), border: InputBorder.none, contentPadding: EdgeInsets.all(12)),
                     ),
                   ),
                   const SizedBox(height: 14),
@@ -221,7 +222,7 @@ class _SentNotification extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(10), border: Border.all(color: const Color(0xFF1E3055))),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.border)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -234,27 +235,27 @@ class _SentNotification extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(title, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
-                    Text('To: $target | $category', style: const TextStyle(color: Colors.white38, fontSize: 11)),
+                    Text('To: $target | $category', style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
                   ],
                 ),
               ),
-              Text(time, style: const TextStyle(color: Colors.white30, fontSize: 11)),
+              Text(time, style: const TextStyle(color: AppColors.border, fontSize: 11)),
             ],
           ),
           const SizedBox(height: 8),
-          Text(message, style: const TextStyle(color: Colors.white54, fontSize: 13)),
+          Text(message, style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
           const SizedBox(height: 8),
           Row(
             children: [
-              Icon(Icons.visibility, size: 14, color: Colors.white30),
+              Icon(Icons.visibility, size: 14, color: AppColors.border),
               const SizedBox(width: 4),
-              Text('Read by $readCount/$totalCount students', style: const TextStyle(color: Colors.white30, fontSize: 11)),
+              Text('Read by $readCount/$totalCount students', style: const TextStyle(color: AppColors.border, fontSize: 11)),
               const SizedBox(width: 8),
               SizedBox(
                 width: 80,
                 child: LinearProgressIndicator(
                   value: readCount / totalCount,
-                  backgroundColor: Colors.white10,
+                  backgroundColor: AppColors.border,
                   valueColor: AlwaysStoppedAnimation(color),
                   minHeight: 3,
                   borderRadius: BorderRadius.circular(2),
@@ -281,9 +282,9 @@ class _ReceivedNotification extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: isRead ? const Color(0xFF1E3055) : color.withOpacity(0.4)),
+        border: Border.all(color: isRead ? AppColors.border : color.withOpacity(0.4)),
       ),
       child: Row(
         children: [
@@ -294,14 +295,14 @@ class _ReceivedNotification extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title, style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: isRead ? FontWeight.normal : FontWeight.bold)),
-                Text('From: $from', style: const TextStyle(color: Colors.white38, fontSize: 12)),
+                Text('From: $from', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
               ],
             ),
           ),
           if (!isRead)
             Container(width: 8, height: 8, decoration: BoxDecoration(shape: BoxShape.circle, color: color)),
           const SizedBox(width: 8),
-          Text(time, style: const TextStyle(color: Colors.white30, fontSize: 11)),
+          Text(time, style: const TextStyle(color: AppColors.border, fontSize: 11)),
         ],
       ),
     );

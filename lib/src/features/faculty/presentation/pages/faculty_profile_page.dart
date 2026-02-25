@@ -1,13 +1,14 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class FacultyProfilePage extends StatelessWidget {
   const FacultyProfilePage({super.key});
 
-  static const _bg = Color(0xFF0D1F3C);
-  static const _card = Color(0xFF111D35);
-  static const _border = Color(0xFF1E3055);
-  static const _accent = Color(0xFF1565C0);
-  static const _gold = Color(0xFFD4A843);
+  static const _bg = AppColors.background;
+  static const _card = AppColors.surface;
+  static const _border = AppColors.border;
+  static const _accent = AppColors.primary;
+  static const _gold = AppColors.accent;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class FacultyProfilePage extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(28),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(colors: [Color(0xFF1565C0), Color(0xFF0D47A1)]),
+                gradient: const LinearGradient(colors: [AppColors.primary, AppColors.primary]),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Row(
@@ -36,8 +37,8 @@ class FacultyProfilePage extends StatelessWidget {
                     height: 100,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white24,
-                      border: Border.all(color: Colors.white30, width: 3),
+                      color: AppColors.border,
+                      border: Border.all(color: AppColors.border, width: 3),
                     ),
                     child: const Center(
                       child: Text('RK', style: TextStyle(color: Colors.white, fontSize: 36, fontWeight: FontWeight.bold)),
@@ -195,9 +196,9 @@ class _ProfileBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: Colors.white70),
+          Icon(icon, size: 14, color: AppColors.textMedium),
           const SizedBox(width: 5),
-          Text(label, style: const TextStyle(color: Colors.white, fontSize: 12)),
+          Text(label, style: const TextStyle(color: AppColors.textDark, fontSize: 12)),
         ],
       ),
     );
@@ -216,16 +217,16 @@ class _InfoCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(icon, color: const Color(0xFF1565C0), size: 20),
+              Icon(icon, color: AppColors.primary, size: 20),
               const SizedBox(width: 8),
               Text(title, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
             ],
@@ -238,10 +239,10 @@ class _InfoCard extends StatelessWidget {
               children: [
                 SizedBox(
                   width: 140,
-                  child: Text(item['label']!, style: const TextStyle(color: Colors.white54, fontSize: 13)),
+                  child: Text(item['label']!, style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
                 ),
                 Expanded(
-                  child: Text(item['value']!, style: const TextStyle(color: Colors.white, fontSize: 13)),
+                  child: Text(item['value']!, style: const TextStyle(color: AppColors.textDark, fontSize: 13)),
                 ),
               ],
             ),
@@ -265,9 +266,9 @@ class _ResearchStat extends StatelessWidget {
       width: 160,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Row(
         children: [
@@ -277,7 +278,7 @@ class _ResearchStat extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(value, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-              Text(label, style: const TextStyle(color: Colors.white54, fontSize: 11)),
+              Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
             ],
           ),
         ],

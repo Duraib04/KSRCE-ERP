@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class StudentLibraryPage extends StatelessWidget {
   const StudentLibraryPage({super.key});
@@ -6,19 +7,19 @@ class StudentLibraryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1F3C),
+      backgroundColor: AppColors.background,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(children: const [
-              Icon(Icons.local_library, color: Color(0xFFD4A843), size: 28),
+              Icon(Icons.local_library, color: AppColors.primary, size: 28),
               SizedBox(width: 12),
-              Text('Library', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+              Text('Library', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
             ]),
             const SizedBox(height: 8),
-            const Text('Book Issues, Returns & Search', style: TextStyle(color: Colors.white60, fontSize: 14)),
+            const Text('Book Issues, Returns & Search', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
             const SizedBox(height: 24),
             _buildLibrarySummary(),
             const SizedBox(height: 24),
@@ -36,7 +37,7 @@ class StudentLibraryPage extends StatelessWidget {
   Widget _buildLibrarySummary() {
     return Row(
       children: [
-        _summaryCard('Books Issued', '4', const Color(0xFF1565C0), Icons.book),
+        _summaryCard('Books Issued', '4', AppColors.primary, Icons.book),
         const SizedBox(width: 16),
         _summaryCard('Books Returned', '12', Colors.green, Icons.assignment_return),
         const SizedBox(width: 16),
@@ -52,16 +53,16 @@ class StudentLibraryPage extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xFF111D35),
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFF1E3055)),
+          border: Border.all(color: AppColors.border),
         ),
         child: Column(
           children: [
             Icon(icon, color: color, size: 24),
             const SizedBox(height: 8),
             Text(value, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: color)),
-            Text(label, style: const TextStyle(color: Colors.white60, fontSize: 12)),
+            Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
           ],
         ),
       ),
@@ -78,14 +79,14 @@ class StudentLibraryPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Currently Issued Books', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+          const Text('Currently Issued Books', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           const SizedBox(height: 16),
           Table(
             columnWidths: const {
@@ -98,20 +99,20 @@ class StudentLibraryPage extends StatelessWidget {
             },
             children: [
               TableRow(
-                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: const Color(0xFF1E3055)))),
+                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColors.border))),
                 children: ['Book Title', 'Author', 'ISBN', 'Issue Date', 'Due Date', 'Status'].map((h) => Padding(
                   padding: const EdgeInsets.only(bottom: 12),
-                  child: Text(h, style: const TextStyle(color: Color(0xFFD4A843), fontWeight: FontWeight.bold, fontSize: 13)),
+                  child: Text(h, style: const TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold, fontSize: 13)),
                 )).toList(),
               ),
               ...books.map((b) {
                 final isOverdue = b['status'] == 'Overdue';
                 return TableRow(
                   children: [
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(b['title']!, style: const TextStyle(color: Colors.white, fontSize: 13))),
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(b['author']!, style: const TextStyle(color: Colors.white70, fontSize: 13))),
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(b['isbn']!, style: const TextStyle(color: Colors.white54, fontSize: 12))),
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(b['issue']!, style: const TextStyle(color: Colors.white70, fontSize: 13))),
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(b['title']!, style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(b['author']!, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(b['isbn']!, style: const TextStyle(color: AppColors.textLight, fontSize: 12))),
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(b['issue']!, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
                     Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(b['due']!, style: TextStyle(color: isOverdue ? Colors.redAccent : Colors.white70, fontSize: 13, fontWeight: isOverdue ? FontWeight.bold : FontWeight.normal))),
                     Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -145,7 +146,7 @@ class StudentLibraryPage extends StatelessWidget {
             children: [
               Text('Overdue Fine Notice', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 14)),
               SizedBox(height: 4),
-              Text('"Probability & Statistics for Engineers" is overdue by 9 days. Fine: Rs. 5/day. Current fine: Rs. 50. Please return immediately to avoid further charges.', style: TextStyle(color: Colors.white70, fontSize: 13)),
+              Text('"Probability & Statistics for Engineers" is overdue by 9 days. Fine: Rs. 5/day. Current fine: Rs. 50. Please return immediately to avoid further charges.', style: TextStyle(color: AppColors.textMedium, fontSize: 13)),
             ],
           )),
         ],
@@ -163,41 +164,41 @@ class StudentLibraryPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Search Books', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+          const Text('Search Books', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
           const SizedBox(height: 16),
           TextField(
             style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
               hintText: 'Search by title, author, or ISBN...',
-              hintStyle: const TextStyle(color: Colors.white38),
-              prefixIcon: const Icon(Icons.search, color: Colors.white38),
+              hintStyle: const TextStyle(color: AppColors.textLight),
+              prefixIcon: const Icon(Icons.search, color: AppColors.textLight),
               filled: true,
-              fillColor: const Color(0xFF0D1F3C),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: const Color(0xFF1E3055))),
-              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: const Color(0xFF1E3055))),
+              fillColor: AppColors.background,
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.border)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.border)),
             ),
           ),
           const SizedBox(height: 16),
           ...searchResults.map((r) => Container(
             margin: const EdgeInsets.only(bottom: 8),
             padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(color: const Color(0xFF0D1F3C), borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
             child: Row(
               children: [
-                const Icon(Icons.menu_book, color: Color(0xFF1565C0), size: 20),
+                const Icon(Icons.menu_book, color: AppColors.primary, size: 20),
                 const SizedBox(width: 12),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text(r['title'] as String, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500)),
-                  Text(r['author'] as String, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+                  Text(r['author'] as String, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
                 ])),
-                Text('Shelf: ${r['shelf']}', style: const TextStyle(color: Colors.white38, fontSize: 12)),
+                Text('Shelf: ${r['shelf']}', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
                 const SizedBox(width: 12),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class StudentDashboardPage extends StatelessWidget {
   const StudentDashboardPage({super.key});
@@ -6,7 +7,7 @@ class StudentDashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1F3C),
+      backgroundColor: AppColors.background,
       body: LayoutBuilder(builder: (context, constraints) {
         final isMobile = constraints.maxWidth < 700;
         return SingleChildScrollView(
@@ -44,13 +45,14 @@ class StudentDashboardPage extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(isMobile ? 16 : 24),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: [Color(0xFF1565C0), Color(0xFF0D47A1)]),
+        gradient: const LinearGradient(colors: [AppColors.primary, Color(0xFF1A3A5C)]),
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: AppColors.primary.withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 4))],
       ),
       child: isMobile
         ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(children: [
-              const CircleAvatar(radius: 24, backgroundColor: Color(0xFFD4A843),
+              const CircleAvatar(radius: 24, backgroundColor: AppColors.accent,
                 child: Text('RA', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white))),
               const SizedBox(width: 12),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
@@ -65,7 +67,7 @@ class StudentDashboardPage extends StatelessWidget {
             Text('Tuesday, 24 Feb 2026', style: const TextStyle(color: Colors.white70, fontSize: 12)),
           ])
         : Row(children: [
-            const CircleAvatar(radius: 32, backgroundColor: Color(0xFFD4A843),
+            const CircleAvatar(radius: 32, backgroundColor: AppColors.accent,
               child: Text('RA', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white))),
             const SizedBox(width: 20),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
@@ -85,10 +87,10 @@ class StudentDashboardPage extends StatelessWidget {
 
   Widget _buildStatsRow(bool isMobile, double maxWidth) {
     final stats = [
-      {'title': 'Attendance', 'value': '87%', 'icon': Icons.check_circle_outline, 'color': Colors.green},
-      {'title': 'CGPA', 'value': '8.42', 'icon': Icons.school, 'color': const Color(0xFFD4A843)},
-      {'title': 'Pending Tasks', 'value': '3', 'icon': Icons.assignment_late, 'color': Colors.orange},
-      {'title': 'Exams', 'value': '2', 'icon': Icons.event_note, 'color': Colors.redAccent},
+      {'title': 'Attendance', 'value': '87%', 'icon': Icons.check_circle_outline, 'color': AppColors.secondary},
+      {'title': 'CGPA', 'value': '8.42', 'icon': Icons.school, 'color': AppColors.primary},
+      {'title': 'Pending Tasks', 'value': '3', 'icon': Icons.assignment_late, 'color': AppColors.accent},
+      {'title': 'Exams', 'value': '2', 'icon': Icons.event_note, 'color': AppColors.error},
     ];
     if (isMobile) {
       return GridView.count(
@@ -109,18 +111,24 @@ class StudentDashboardPage extends StatelessWidget {
   }
 
   Widget _statCard(Map<String, Object> s) {
+    final color = s['color'] as Color;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        color: AppColors.surface, borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2))],
       ),
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Icon(s['icon'] as IconData, color: s['color'] as Color, size: 28),
-        const SizedBox(height: 8),
-        Text(s['value'] as String, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+          child: Icon(s['icon'] as IconData, color: color, size: 24),
+        ),
+        const SizedBox(height: 10),
+        Text(s['value'] as String, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 4),
-        Text(s['title'] as String, style: const TextStyle(color: Colors.white70, fontSize: 12), textAlign: TextAlign.center),
+        Text(s['title'] as String, style: TextStyle(color: AppColors.textMedium, fontSize: 12), textAlign: TextAlign.center),
       ]),
     );
   }
@@ -137,44 +145,45 @@ class StudentDashboardPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        color: AppColors.surface, borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2))],
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(children: const [
-          Icon(Icons.today, color: Color(0xFFD4A843), size: 20),
-          SizedBox(width: 8),
-          Text("Today's Timetable", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+        Row(children: [
+          Icon(Icons.today, color: AppColors.primary, size: 20),
+          const SizedBox(width: 8),
+          Text("Today's Timetable", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         ]),
-        const SizedBox(height: 12),
+        const Divider(height: 20),
         ...periods.map((p) {
           final isCurrent = p['current'] as bool;
           return Container(
             margin: const EdgeInsets.only(bottom: 8),
             padding: EdgeInsets.all(isMobile ? 10 : 12),
             decoration: BoxDecoration(
-              color: isCurrent ? const Color(0xFF1565C0).withOpacity(0.2) : Colors.transparent,
+              color: isCurrent ? AppColors.primary.withOpacity(0.08) : Colors.transparent,
               borderRadius: BorderRadius.circular(8),
-              border: isCurrent ? Border.all(color: const Color(0xFF1565C0)) : null,
+              border: isCurrent ? Border.all(color: AppColors.primary.withOpacity(0.3)) : null,
             ),
             child: isMobile
               ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Row(children: [
-                    Text(p['time'] as String, style: TextStyle(color: isCurrent ? Colors.white : Colors.white70, fontSize: 12, fontWeight: FontWeight.w600)),
+                    Text(p['time'] as String, style: TextStyle(color: isCurrent ? AppColors.primary : AppColors.textMedium, fontSize: 12, fontWeight: FontWeight.w600)),
                     const Spacer(),
-                    if (isCurrent) Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: const Color(0xFF1565C0), borderRadius: BorderRadius.circular(4)), child: const Text('NOW', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold))),
-                    Text(p['room'] as String, style: const TextStyle(color: Colors.white54, fontSize: 11)),
+                    if (isCurrent) Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(4)), child: const Text('NOW', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold))),
+                    Text(p['room'] as String, style: TextStyle(color: AppColors.textLight, fontSize: 11)),
                   ]),
                   const SizedBox(height: 4),
-                  Text(p['subject'] as String, style: TextStyle(color: isCurrent ? Colors.white : Colors.white70, fontSize: 13, fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal)),
-                  Text(p['faculty'] as String, style: const TextStyle(color: Colors.white38, fontSize: 11)),
+                  Text(p['subject'] as String, style: TextStyle(color: isCurrent ? AppColors.primary : AppColors.textDark, fontSize: 13, fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal)),
+                  Text(p['faculty'] as String, style: TextStyle(color: AppColors.textLight, fontSize: 11)),
                 ])
               : Row(children: [
-                  SizedBox(width: 120, child: Text(p['time'] as String, style: TextStyle(color: isCurrent ? Colors.white : Colors.white70, fontSize: 13, fontWeight: FontWeight.w500))),
-                  Expanded(child: Text(p['subject'] as String, style: TextStyle(color: isCurrent ? Colors.white : Colors.white70, fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal))),
-                  SizedBox(width: 80, child: Text(p['room'] as String, style: const TextStyle(color: Colors.white54, fontSize: 13))),
-                  SizedBox(width: 140, child: Text(p['faculty'] as String, style: const TextStyle(color: Colors.white54, fontSize: 13))),
-                  if (isCurrent) Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), decoration: BoxDecoration(color: const Color(0xFF1565C0), borderRadius: BorderRadius.circular(4)), child: const Text('NOW', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold))),
+                  SizedBox(width: 120, child: Text(p['time'] as String, style: TextStyle(color: isCurrent ? AppColors.primary : AppColors.textMedium, fontSize: 13, fontWeight: FontWeight.w500))),
+                  Expanded(child: Text(p['subject'] as String, style: TextStyle(color: isCurrent ? AppColors.primary : AppColors.textDark, fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal))),
+                  SizedBox(width: 80, child: Text(p['room'] as String, style: TextStyle(color: AppColors.textLight, fontSize: 13))),
+                  SizedBox(width: 140, child: Text(p['faculty'] as String, style: TextStyle(color: AppColors.textLight, fontSize: 13))),
+                  if (isCurrent) Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(4)), child: const Text('NOW', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold))),
                 ]),
           );
         }),
@@ -184,35 +193,40 @@ class StudentDashboardPage extends StatelessWidget {
 
   Widget _buildRecentNotifications() {
     final notifications = [
-      {'title': 'Internal Assessment 2 Schedule Released', 'time': '2 hours ago', 'icon': Icons.event_note, 'color': Colors.orange},
-      {'title': 'CS3501 Assignment 3 Due Tomorrow', 'time': '5 hours ago', 'icon': Icons.assignment_late, 'color': Colors.redAccent},
-      {'title': 'Library Book Return Reminder', 'time': '1 day ago', 'icon': Icons.local_library, 'color': Colors.blue},
-      {'title': 'Placement Drive: TCS on 28 Feb', 'time': '2 days ago', 'icon': Icons.business, 'color': const Color(0xFFD4A843)},
+      {'title': 'Internal Assessment 2 Schedule Released', 'time': '2 hours ago', 'icon': Icons.event_note, 'color': AppColors.accent},
+      {'title': 'CS3501 Assignment 3 Due Tomorrow', 'time': '5 hours ago', 'icon': Icons.assignment_late, 'color': AppColors.error},
+      {'title': 'Library Book Return Reminder', 'time': '1 day ago', 'icon': Icons.local_library, 'color': AppColors.primary},
+      {'title': 'Placement Drive: TCS on 28 Feb', 'time': '2 days ago', 'icon': Icons.business, 'color': AppColors.secondary},
     ];
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        color: AppColors.surface, borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2))],
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(children: const [
-          Icon(Icons.notifications_active, color: Color(0xFFD4A843), size: 20),
-          SizedBox(width: 8),
-          Text('Recent Notifications', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+        Row(children: [
+          Icon(Icons.notifications_active, color: AppColors.accent, size: 20),
+          const SizedBox(width: 8),
+          Text('Recent Notifications', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         ]),
-        const SizedBox(height: 12),
+        const Divider(height: 20),
         ...notifications.map((n) => Container(
           margin: const EdgeInsets.only(bottom: 10),
           padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(color: const Color(0xFF0D1F3C), borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
           child: Row(children: [
-            Icon(n['icon'] as IconData, color: n['color'] as Color, size: 20),
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(color: (n['color'] as Color).withOpacity(0.1), borderRadius: BorderRadius.circular(6)),
+              child: Icon(n['icon'] as IconData, color: n['color'] as Color, size: 18),
+            ),
             const SizedBox(width: 10),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(n['title'] as String, style: const TextStyle(color: Colors.white, fontSize: 13)),
+              Text(n['title'] as String, style: TextStyle(color: AppColors.textDark, fontSize: 13, fontWeight: FontWeight.w500)),
               const SizedBox(height: 2),
-              Text(n['time'] as String, style: const TextStyle(color: Colors.white54, fontSize: 11)),
+              Text(n['time'] as String, style: TextStyle(color: AppColors.textLight, fontSize: 11)),
             ])),
           ]),
         )),
@@ -222,29 +236,31 @@ class StudentDashboardPage extends StatelessWidget {
 
   Widget _buildQuickActions() {
     final actions = [
-      {'label': 'Attendance', 'icon': Icons.fact_check, 'color': Colors.green},
-      {'label': 'Results', 'icon': Icons.assessment, 'color': const Color(0xFFD4A843)},
-      {'label': 'Courses', 'icon': Icons.menu_book, 'color': Colors.blue},
-      {'label': 'Assignments', 'icon': Icons.assignment, 'color': Colors.orange},
-      {'label': 'Exams', 'icon': Icons.event, 'color': Colors.redAccent},
-      {'label': 'Fee Payment', 'icon': Icons.payment, 'color': Colors.teal},
+      {'label': 'Attendance', 'icon': Icons.fact_check, 'color': AppColors.secondary},
+      {'label': 'Results', 'icon': Icons.assessment, 'color': AppColors.primary},
+      {'label': 'Courses', 'icon': Icons.menu_book, 'color': const Color(0xFF3B82F6)},
+      {'label': 'Assignments', 'icon': Icons.assignment, 'color': AppColors.accent},
+      {'label': 'Exams', 'icon': Icons.event, 'color': AppColors.error},
+      {'label': 'Fee Payment', 'icon': Icons.payment, 'color': const Color(0xFF14B8A6)},
     ];
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35), borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        color: AppColors.surface, borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2))],
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Text('Quick Actions', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
-        const SizedBox(height: 12),
+        Text('Quick Actions', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+        const Divider(height: 20),
         Wrap(spacing: 10, runSpacing: 10, children: actions.map((a) => ElevatedButton.icon(
           onPressed: () {},
           icon: Icon(a['icon'] as IconData, size: 16),
           label: Text(a['label'] as String, style: const TextStyle(fontSize: 12)),
           style: ElevatedButton.styleFrom(
-            backgroundColor: (a['color'] as Color).withOpacity(0.15),
+            backgroundColor: (a['color'] as Color).withOpacity(0.1),
             foregroundColor: a['color'] as Color,
+            elevation: 0,
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),

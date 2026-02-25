@@ -26,7 +26,6 @@ import 'features/student/presentation/pages/student_certificates_page.dart';
 import 'features/student/presentation/pages/student_placements_page.dart';
 import 'features/student/presentation/pages/student_events_page.dart';
 import 'features/student/presentation/pages/student_settings_page.dart';
-import 'features/auth/presentation/pages/change_password_page.dart';
 
 import 'features/faculty/presentation/pages/faculty_dashboard_page.dart';
 import 'features/faculty/presentation/pages/faculty_profile_page.dart';
@@ -71,8 +70,7 @@ class KsrceErpApp extends StatelessWidget {
       child: MaterialApp.router(
         title: 'KSRCE ERP',
         theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.dark,
+        themeMode: ThemeMode.light,
         routerConfig: _router,
         debugShowCheckedModeBanner: false,
       ),
@@ -111,7 +109,6 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/student/placements', builder: (c, s) => _s('/student/placements', const StudentPlacementsPage())),
     GoRoute(path: '/student/events', builder: (c, s) => _s('/student/events', const StudentEventsPage())),
     GoRoute(path: '/student/settings', builder: (c, s) => _s('/student/settings', const StudentSettingsPage())),
-    GoRoute(path: '/student/change-password', builder: (c, s) => _s('/student/change-password', const ChangePasswordPage())),
     // Faculty routes
     GoRoute(path: '/faculty/dashboard', builder: (c, s) => _f('/faculty/dashboard', const FacultyDashboardPage())),
     GoRoute(path: '/faculty/profile', builder: (c, s) => _f('/faculty/profile', const FacultyProfilePage())),
@@ -130,14 +127,12 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/faculty/reports', builder: (c, s) => _f('/faculty/reports', const FacultyReportsPage())),
     GoRoute(path: '/faculty/events', builder: (c, s) => _f('/faculty/events', const FacultyEventsPage())),
     GoRoute(path: '/faculty/settings', builder: (c, s) => _f('/faculty/settings', const FacultySettingsPage())),
-    GoRoute(path: '/faculty/change-password', builder: (c, s) => _f('/faculty/change-password', const ChangePasswordPage())),
     // Admin routes
     GoRoute(path: '/admin/dashboard', builder: (c, s) => _a('/admin/dashboard', const AdminDashboardPage())),
     GoRoute(path: '/admin/users', builder: (c, s) => _a('/admin/users', const AdminUserManagementPage())),
     GoRoute(path: '/admin/reports', builder: (c, s) => _a('/admin/reports', const AdminReportsPage())),
     GoRoute(path: '/admin/notifications', builder: (c, s) => _a('/admin/notifications', const AdminNotificationsPage())),
     GoRoute(path: '/admin/settings', builder: (c, s) => _a('/admin/settings', const AdminSettingsPage())),
-    GoRoute(path: '/admin/change-password', builder: (c, s) => _a('/admin/change-password', const ChangePasswordPage())),
   ],
 );
 

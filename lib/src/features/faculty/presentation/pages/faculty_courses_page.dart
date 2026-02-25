@@ -1,13 +1,14 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class FacultyCoursesPage extends StatelessWidget {
   const FacultyCoursesPage({super.key});
 
-  static const _bg = Color(0xFF0D1F3C);
-  static const _card = Color(0xFF111D35);
-  static const _border = Color(0xFF1E3055);
-  static const _accent = Color(0xFF1565C0);
-  static const _gold = Color(0xFFD4A843);
+  static const _bg = AppColors.background;
+  static const _card = AppColors.surface;
+  static const _border = AppColors.border;
+  static const _accent = AppColors.primary;
+  static const _gold = AppColors.accent;
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +32,12 @@ class FacultyCoursesPage extends StatelessWidget {
                         color: _accent.withOpacity(0.15),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Text('Even Semester 2025-26', style: TextStyle(color: Color(0xFF1565C0), fontSize: 13, fontWeight: FontWeight.w500)),
+                      child: const Text('Even Semester 2025-26', style: TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.w500)),
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
-                const Text('Courses assigned for the current semester', style: TextStyle(color: Colors.white54, fontSize: 14)),
+                const Text('Courses assigned for the current semester', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
                 const SizedBox(height: 20),
 
                 // Summary stats
@@ -130,50 +131,50 @@ class FacultyCoursesPage extends StatelessWidget {
                     child: DataTable(
                       headingRowColor: WidgetStateProperty.all(const Color(0xFF1A2A4A)),
                       columns: const [
-                        DataColumn(label: Text('Code', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Course Name', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Sem', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Section', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Students', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Credits', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
-                        DataColumn(label: Text('Type', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Code', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Course Name', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Sem', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Section', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Students', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Credits', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
+                        DataColumn(label: Text('Type', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 13))),
                       ],
                       rows: const [
                         DataRow(cells: [
-                          DataCell(Text('CS3501', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('Compiler Design', style: TextStyle(color: Colors.white, fontSize: 13))),
-                          DataCell(Text('V', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('A, B', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('128', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('4', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('Theory', style: TextStyle(color: Colors.white70, fontSize: 13))),
+                          DataCell(Text('CS3501', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('Compiler Design', style: TextStyle(color: AppColors.textDark, fontSize: 13))),
+                          DataCell(Text('V', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('A, B', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('128', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('4', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('Theory', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
                         ]),
                         DataRow(cells: [
-                          DataCell(Text('CS3691', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('Embedded Systems & IoT', style: TextStyle(color: Colors.white, fontSize: 13))),
-                          DataCell(Text('VI', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('A', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('62', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('3', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('Theory', style: TextStyle(color: Colors.white70, fontSize: 13))),
+                          DataCell(Text('CS3691', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('Embedded Systems & IoT', style: TextStyle(color: AppColors.textDark, fontSize: 13))),
+                          DataCell(Text('VI', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('A', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('62', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('3', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('Theory', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
                         ]),
                         DataRow(cells: [
-                          DataCell(Text('CS3511', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('Compiler Design Lab', style: TextStyle(color: Colors.white, fontSize: 13))),
-                          DataCell(Text('V', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('A', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('65', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('2', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('Lab', style: TextStyle(color: Colors.white70, fontSize: 13))),
+                          DataCell(Text('CS3511', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('Compiler Design Lab', style: TextStyle(color: AppColors.textDark, fontSize: 13))),
+                          DataCell(Text('V', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('A', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('65', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('2', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('Lab', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
                         ]),
                         DataRow(cells: [
-                          DataCell(Text('CS3401', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('Algorithms Design & Analysis', style: TextStyle(color: Colors.white, fontSize: 13))),
-                          DataCell(Text('IV', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('C', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('58', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('4', style: TextStyle(color: Colors.white70, fontSize: 13))),
-                          DataCell(Text('Theory', style: TextStyle(color: Colors.white70, fontSize: 13))),
+                          DataCell(Text('CS3401', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('Algorithms Design & Analysis', style: TextStyle(color: AppColors.textDark, fontSize: 13))),
+                          DataCell(Text('IV', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('C', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('58', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('4', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
+                          DataCell(Text('Theory', style: TextStyle(color: AppColors.textMedium, fontSize: 13))),
                         ]),
                       ],
                     ),
@@ -201,9 +202,9 @@ class _MiniStat extends StatelessWidget {
       width: 155,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Row(
         children: [
@@ -213,7 +214,7 @@ class _MiniStat extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(value, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-              Text(label, style: const TextStyle(color: Colors.white54, fontSize: 11)),
+              Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
             ],
           ),
         ],
@@ -249,9 +250,9 @@ class _CourseCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF111D35),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF1E3055)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -267,10 +268,10 @@ class _CourseCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(8)),
-                child: Text(type, style: TextStyle(color: type == 'Lab' ? const Color(0xFFD4A843) : Colors.white70, fontSize: 12)),
+                child: Text(type, style: TextStyle(color: type == 'Lab' ? AppColors.accent : Colors.white70, fontSize: 12)),
               ),
               const Spacer(),
-              Text(semester, style: const TextStyle(color: Colors.white54, fontSize: 13)),
+              Text(semester, style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
             ],
           ),
           const SizedBox(height: 12),
@@ -303,14 +304,14 @@ class _CourseCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Syllabus Progress', style: TextStyle(color: Colors.white54, fontSize: 12)),
-                        Text('${(syllabusProgress * 100).toInt()}%', style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                        const Text('Syllabus Progress', style: TextStyle(color: AppColors.textLight, fontSize: 12)),
+                        Text('${(syllabusProgress * 100).toInt()}%', style: const TextStyle(color: AppColors.textMedium, fontSize: 12)),
                       ],
                     ),
                     const SizedBox(height: 4),
                     LinearProgressIndicator(
                       value: syllabusProgress,
-                      backgroundColor: Colors.white12,
+                      backgroundColor: AppColors.border,
                       valueColor: AlwaysStoppedAnimation(color),
                       minHeight: 6,
                       borderRadius: BorderRadius.circular(3),
@@ -322,7 +323,7 @@ class _CourseCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  const Text('Avg Attendance', style: TextStyle(color: Colors.white54, fontSize: 12)),
+                  const Text('Avg Attendance', style: TextStyle(color: AppColors.textLight, fontSize: 12)),
                   Text('${avgAttendance.toStringAsFixed(1)}%',
                     style: TextStyle(color: avgAttendance >= 80 ? Colors.greenAccent : Colors.orangeAccent, fontSize: 16, fontWeight: FontWeight.bold)),
                 ],
@@ -345,9 +346,9 @@ class _CourseInfo extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 14, color: Colors.white38),
+        Icon(icon, size: 14, color: AppColors.textLight),
         const SizedBox(width: 4),
-        Text(text, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+        Text(text, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
       ],
     );
   }

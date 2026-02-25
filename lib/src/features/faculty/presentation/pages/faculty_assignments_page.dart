@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class FacultyAssignmentsPage extends StatefulWidget {
   const FacultyAssignmentsPage({super.key});
@@ -8,11 +9,11 @@ class FacultyAssignmentsPage extends StatefulWidget {
 }
 
 class _FacultyAssignmentsPageState extends State<FacultyAssignmentsPage> {
-  static const _bg = Color(0xFF0D1F3C);
-  static const _card = Color(0xFF111D35);
-  static const _border = Color(0xFF1E3055);
-  static const _accent = Color(0xFF1565C0);
-  static const _gold = Color(0xFFD4A843);
+  static const _bg = AppColors.background;
+  static const _card = AppColors.surface;
+  static const _border = AppColors.border;
+  static const _accent = AppColors.primary;
+  static const _gold = AppColors.accent;
 
   String _selectedFilter = 'All Courses';
 
@@ -125,7 +126,7 @@ class _FacultyAssignmentsPageState extends State<FacultyAssignmentsPage> {
               ],
             ),
             const SizedBox(height: 8),
-            const Text('Create, manage and grade student assignments', style: TextStyle(color: Colors.white54, fontSize: 14)),
+            const Text('Create, manage and grade student assignments', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
             const SizedBox(height: 20),
 
             // Summary Stats
@@ -156,7 +157,7 @@ class _FacultyAssignmentsPageState extends State<FacultyAssignmentsPage> {
                     child: DropdownButton<String>(
                       value: _selectedFilter,
                       dropdownColor: _card,
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                      style: const TextStyle(color: AppColors.textDark, fontSize: 14),
                       items: ['All Courses', 'CS3501', 'CS3691', 'CS3511', 'CS3401'].map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
                       onChanged: (v) => setState(() => _selectedFilter = v!),
                     ),
@@ -171,7 +172,7 @@ class _FacultyAssignmentsPageState extends State<FacultyAssignmentsPage> {
                     selectedColor: _accent.withOpacity(0.2),
                     backgroundColor: _card,
                     side: BorderSide(color: _border),
-                    labelStyle: const TextStyle(color: Colors.white70),
+                    labelStyle: const TextStyle(color: AppColors.textMedium),
                     onSelected: (_) {},
                   ),
                 )),
@@ -202,7 +203,7 @@ class _FacultyAssignmentsPageState extends State<FacultyAssignmentsPage> {
                     Row(
                       children: [
                         Expanded(
-                          child: Text(a['title'] as String, style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600)),
+                          child: Text(a['title'] as String, style: const TextStyle(color: AppColors.textDark, fontSize: 15, fontWeight: FontWeight.w600)),
                         ),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -233,14 +234,14 @@ class _FacultyAssignmentsPageState extends State<FacultyAssignmentsPage> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('Submissions: ${a['submissions']}/${a['total']}', style: const TextStyle(color: Colors.white54, fontSize: 12)),
-                                  Text('${((a['submissions'] as int) / (a['total'] as int) * 100).toStringAsFixed(0)}%', style: const TextStyle(color: Colors.white54, fontSize: 12)),
+                                  Text('Submissions: ${a['submissions']}/${a['total']}', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+                                  Text('${((a['submissions'] as int) / (a['total'] as int) * 100).toStringAsFixed(0)}%', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
                                 ],
                               ),
                               const SizedBox(height: 4),
                               LinearProgressIndicator(
                                 value: (a['submissions'] as int) / (a['total'] as int),
-                                backgroundColor: Colors.white10,
+                                backgroundColor: AppColors.border,
                                 valueColor: AlwaysStoppedAnimation(statusColor),
                                 minHeight: 5,
                                 borderRadius: BorderRadius.circular(3),
@@ -283,15 +284,15 @@ class _AStat extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xFF111D35),
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFF1E3055)),
+          border: Border.all(color: AppColors.border),
         ),
         child: Column(
           children: [
             Text(value, style: TextStyle(color: color, fontSize: 28, fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
-            Text(label, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+            Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
           ],
         ),
       ),
@@ -309,9 +310,9 @@ class _AInfo extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 14, color: Colors.white38),
+        Icon(icon, size: 14, color: AppColors.textLight),
         const SizedBox(width: 4),
-        Text(text, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+        Text(text, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
       ],
     );
   }
