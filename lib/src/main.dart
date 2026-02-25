@@ -68,6 +68,7 @@ import 'features/hod/presentation/pages/hod_mentors_page.dart';
 import 'features/hod/presentation/pages/hod_notifications_page.dart';
 import 'features/hod/presentation/pages/hod_settings_page.dart';
 import 'features/shared/presentation/pages/profile_edit_approvals_page.dart';
+import 'features/shared/presentation/pages/hacker_welcome_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -105,10 +106,38 @@ Widget _a(String route, Widget child) =>
 Widget _h(String route, Widget child) =>
     DashboardShell(role: 'hod', currentRoute: route, child: child);
 
+// Suspicious query params & patterns that indicate hacking attempts
+bool _isSuspiciousUri(Uri uri) {
+  // Any query parameters on our routes = suspicious (we don't use any)
+  if (uri.queryParameters.isNotEmpty) return true;
+  // Check for common attack patterns in the full URL
+  final full = uri.toString().toLowerCase();
+  final attackPatterns = [
+    'select ', 'union ', 'drop ', 'insert ', 'delete ', 'update ',
+    ' or ', "' or ", '1=1', '--', '/*', '*/', 'xp_', 'exec(',
+    '<script', 'javascript:', 'onerror', 'onload', 'eval(',
+    '../', '..\\', '%2e%2e', '%00', 'etc/passwd', 'cmd.exe',
+    'admin=true', 'role=admin', 'token=', 'password=', 'passwd=',
+    'debug=', 'test=', 'hack', 'exploit', 'inject', 'payload',
+  ];
+  for (final pattern in attackPatterns) {
+    if (full.contains(pattern)) return true;
+  }
+  return false;
+}
+
 final GoRouter _router = GoRouter(
   initialLocation: '/',
+  redirect: (context, state) {
+    if (_isSuspiciousUri(state.uri)) {
+      return '/hacker-welcome';
+    }
+    return null;
+  },
   routes: [
+    GoRoute(path: '/hacker-welcome', builder: (c, s) => const HackerWelcomePage()),
     GoRoute(path: '/', builder: (c, s) => const HomePage()),
+    // Catch-all for unknown paths handled by errorBuilder below
     GoRoute(path: '/login', builder: (c, s) => const LoginPage()),
     // Student routes
     GoRoute(path: '/student/dashboard', builder: (c, s) => _s('/student/dashboard', const StudentDashboardPage())),
@@ -190,5 +219,6 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/hod/profile-approvals', builder: (c, s) => _h('/hod/profile-approvals', const ProfileEditApprovalsPage())),
     GoRoute(path: '/hod/settings', builder: (c, s) => _h('/hod/settings', const HodSettingsPage())),
   ],
+  errorBuilder: (context, state) => const HackerWelcomePage(),
 );
 
