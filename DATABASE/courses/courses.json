@@ -1,0 +1,111 @@
+[
+  {
+    "courseId": "CS201",
+    "courseCode": "CS201",
+    "courseName": "Data Structures",
+    "facultyName": "Dr. Amit Verma",
+    "facultyId": "FAC001",
+    "credits": 4,
+    "department": "Computer Science",
+    "departmentId": "DEPT_CSE",
+    "semester": 3,
+    "sections": [
+      "A"
+    ],
+    "schedule": "Mon, Wed, Fri 10:00-11:00",
+    "room": "Lab-101",
+    "totalClasses": 45,
+    "attendedClasses": 42
+  },
+  {
+    "courseId": "EC202",
+    "courseCode": "EC202",
+    "courseName": "Digital Electronics",
+    "facultyName": "Prof. Sneha Desai",
+    "facultyId": "FAC002",
+    "credits": 3,
+    "department": "Electronics",
+    "departmentId": "DEPT_ECE",
+    "semester": 2,
+    "sections": [
+      "B"
+    ],
+    "schedule": "Tue, Thu 14:00-15:30",
+    "room": "Room-201",
+    "totalClasses": 30,
+    "attendedClasses": 28
+  },
+  {
+    "courseId": "ME301",
+    "courseCode": "ME301",
+    "courseName": "Thermodynamics",
+    "facultyName": "Dr. M. Selvam",
+    "facultyId": "FAC008",
+    "credits": 4,
+    "department": "Mechanical",
+    "departmentId": "DEPT_MECH",
+    "semester": 1,
+    "sections": [
+      "C"
+    ],
+    "schedule": "Mon, Wed 09:00-10:30",
+    "room": "Hall-A",
+    "totalClasses": 40,
+    "attendedClasses": 38
+  },
+  {
+    "courseId": "CV101",
+    "courseCode": "CV101",
+    "courseName": "Engineering Drawing",
+    "facultyName": "Ms. Priya Nair",
+    "facultyId": "FAC004",
+    "credits": 2,
+    "department": "Civil",
+    "departmentId": "DEPT_CIVIL",
+    "semester": 2,
+    "sections": [
+      "D"
+    ],
+    "schedule": "Wed, Fri 11:00-12:30",
+    "room": "Studio-1",
+    "totalClasses": 30,
+    "attendedClasses": 25
+  },
+  {
+    "courseId": "CS202",
+    "courseCode": "CS202",
+    "courseName": "Database Management Systems",
+    "facultyName": "Dr. Amit Verma",
+    "facultyId": "FAC001",
+    "credits": 4,
+    "department": "Computer Science",
+    "departmentId": "DEPT_CSE",
+    "semester": 3,
+    "sections": [
+      "A"
+    ],
+    "schedule": "Tue, Thu 15:00-16:30",
+    "room": "Lab-102",
+    "totalClasses": 45,
+    "attendedClasses": 40
+  },
+  {
+    "courseId": "CS301",
+    "courseCode": "CS301",
+    "courseName": "Machine Learning",
+    "facultyName": "Dr. Rajesh Kumar",
+    "facultyId": "FAC003",
+    "credits": 4,
+    "department": "Computer Science",
+    "departmentId": "DEPT_CSE",
+    "semester": 5,
+    "sections": [
+      "A",
+      "B"
+    ],
+    "schedule": "Mon, Wed, Fri 11:00-12:00",
+    "room": "Lab-201",
+    "totalClasses": 40,
+    "attendedClasses": 36
+  }
+]

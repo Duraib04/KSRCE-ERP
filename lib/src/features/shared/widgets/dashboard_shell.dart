@@ -52,6 +52,7 @@ class _DashboardShellState extends State<DashboardShell> {
         ]),
         NavItem(title: 'Placements', icon: Icons.work, route: '/student/placements'),
         NavItem(title: 'Events', icon: Icons.event, route: '/student/events'),
+        NavItem(title: 'Files', icon: Icons.cloud_upload, route: '/student/files'),
         NavItem(title: 'Settings', icon: Icons.settings, route: '/student/settings'),
       ];
     } else if (widget.role == 'admin') {
@@ -69,6 +70,7 @@ class _DashboardShellState extends State<DashboardShell> {
         NavItem(title: 'Profile Approvals', icon: Icons.verified_user, route: '/admin/profile-approvals'),
         NavItem(title: 'Reports', icon: Icons.analytics, route: '/admin/reports'),
         NavItem(title: 'Notifications', icon: Icons.notifications, route: '/admin/notifications'),
+        NavItem(title: 'Files', icon: Icons.cloud_upload, route: '/admin/files'),
         NavItem(title: 'Settings', icon: Icons.settings, route: '/admin/settings'),
       ];
     } else if (widget.role == 'hod') {
@@ -103,6 +105,7 @@ class _DashboardShellState extends State<DashboardShell> {
         NavItem(title: 'Profile Approvals', icon: Icons.verified_user, route: '/hod/profile-approvals'),
         NavItem(title: 'Reports', icon: Icons.analytics, route: '/hod/reports'),
         NavItem(title: 'Events', icon: Icons.event, route: '/hod/events'),
+        NavItem(title: 'Files', icon: Icons.cloud_upload, route: '/hod/files'),
         NavItem(title: 'Settings', icon: Icons.settings, route: '/hod/settings'),
       ];
     } else {
@@ -130,6 +133,7 @@ class _DashboardShellState extends State<DashboardShell> {
         NavItem(title: 'Complaints', icon: Icons.report_problem, route: '/faculty/complaints'),
         NavItem(title: 'Reports', icon: Icons.analytics, route: '/faculty/reports'),
         NavItem(title: 'Events', icon: Icons.event, route: '/faculty/events'),
+        NavItem(title: 'Files', icon: Icons.cloud_upload, route: '/faculty/files'),
         NavItem(title: 'Settings', icon: Icons.settings, route: '/faculty/settings'),
       ];
     }

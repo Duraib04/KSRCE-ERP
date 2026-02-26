@@ -144,10 +144,21 @@ class DataService extends ChangeNotifier {
       _courseOutcomes = futures[26];
       _courseDiary = futures[27];
       _profileEditRequests = futures[28];
+      // Apply changes from any pre-approved profile edit requests
+      _applyAllPreApprovedChanges();
       _isLoaded = true;
       notifyListeners();
     } catch (e) {
       debugPrint('Error loading data: $e');
+    }
+  }
+
+  /// Apply changes from requests that were already approved in the JSON data
+  void _applyAllPreApprovedChanges() {
+    for (final req in _profileEditRequests) {
+      if (req['status'] == 'approved') {
+        _applyProfileChanges(req);
+      }
     }
   }
 
@@ -1012,14 +1023,28 @@ class DataService extends ChangeNotifier {
     return _profileEditRequests.where((r) {
       if (role == 'admin') return r['status'] == 'pending_admin';
       if (role == 'hod') {
-        // HOD approves faculty requests in their dept
         final hodDept = _faculty.firstWhere(
           (f) => f['facultyId'] == userId,
           orElse: () => <String, dynamic>{},
         )['departmentId'];
-        return r['status'] == 'pending_hod' &&
+        // HOD approves faculty requests in their dept
+        if (r['status'] == 'pending_hod' &&
             r['requesterRole'] == 'faculty' &&
-            r['departmentId'] == hodDept;
+            r['departmentId'] == hodDept) {
+          return true;
+        }
+        // HOD can also be a mentor or class adviser for student requests
+        if (r['requesterRole'] == 'student') {
+          final chain = (r['approvalChain'] as List<dynamic>?) ?? [];
+          for (final step in chain) {
+            final s = step as Map<String, dynamic>;
+            if (s['approverId'] == userId && s['status'] == 'pending') {
+              if (s['role'] == 'mentor' && r['status'] == 'pending_mentor') return true;
+              if (s['role'] == 'classAdviser' && r['status'] == 'pending_classAdviser') return true;
+            }
+          }
+        }
+        return false;
       }
       // Faculty as mentor or class adviser for student requests
       if (r['requesterRole'] != 'student') return false;
@@ -1027,7 +1052,6 @@ class DataService extends ChangeNotifier {
       for (final step in chain) {
         final s = step as Map<String, dynamic>;
         if (s['approverId'] == userId && s['status'] == 'pending') {
-          // Check if this step is the current one
           if (s['role'] == 'mentor' && r['status'] == 'pending_mentor') return true;
           if (s['role'] == 'classAdviser' && r['status'] == 'pending_classAdviser') return true;
         }
@@ -1207,6 +1231,96 @@ class DataService extends ChangeNotifier {
       'hodId': (hod['facultyId'] as String?) ?? '',
       'hodName': (hod['name'] as String?) ?? '',
     };
+  }
+
+  // ─── USER CRUD OPERATIONS ────────────────────────────
+  void deleteStudent(String studentId) {
+    _students.removeWhere((s) => s['studentId'] == studentId);
+    _users.removeWhere((u) => u['id'] == studentId);
+    // Remove from class lists
+    for (final c in _classes) {
+      final ids = (c['studentIds'] as List<dynamic>?) ?? [];
+      ids.remove(studentId);
+    }
+    // Remove from mentor assignments
+    for (final m in _mentorAssignments) {
+      final ids = (m['menteeIds'] as List<dynamic>?) ?? [];
+      ids.remove(studentId);
+    }
+    // Remove from faculty menteeIds
+    for (final f in _faculty) {
+      final ids = (f['menteeIds'] as List<dynamic>?) ?? [];
+      ids.remove(studentId);
+    }
+    if (_currentUserId == studentId) logout();
+    notifyListeners();
+  }
+
+  void deleteFaculty(String facultyId) {
+    final fac = _faculty.firstWhere((f) => f['facultyId'] == facultyId, orElse: () => <String, dynamic>{});
+    _faculty.removeWhere((f) => f['facultyId'] == facultyId);
+    _users.removeWhere((u) => u['id'] == facultyId);
+    // Remove HOD assignment
+    if (fac['isHOD'] == true) {
+      final deptIdx = _departments.indexWhere((d) => d['hodId'] == facultyId);
+      if (deptIdx != -1) _departments[deptIdx]['hodId'] = null;
+    }
+    // Remove class adviser assignment
+    for (final c in _classes) {
+      if (c['classAdviserId'] == facultyId) c['classAdviserId'] = null;
+    }
+    // Remove mentor assignments
+    _mentorAssignments.removeWhere((m) => m['mentorId'] == facultyId);
+    // Clear students' references
+    for (final s in _students) {
+      if (s['mentorId'] == facultyId) s['mentorId'] = null;
+      if (s['classAdviserId'] == facultyId) s['classAdviserId'] = null;
+    }
+    if (_currentUserId == facultyId) logout();
+    notifyListeners();
+  }
+
+  void updateStudent(String studentId, Map<String, dynamic> updates) {
+    final idx = _students.indexWhere((s) => s['studentId'] == studentId);
+    if (idx != -1) {
+      _students[idx].addAll(updates);
+      if (_currentUserId == studentId) _currentStudent = _students[idx];
+      notifyListeners();
+    }
+  }
+
+  void updateFaculty(String facultyId, Map<String, dynamic> updates) {
+    final idx = _faculty.indexWhere((f) => f['facultyId'] == facultyId);
+    if (idx != -1) {
+      _faculty[idx].addAll(updates);
+      if (_currentUserId == facultyId) _currentFaculty = _faculty[idx];
+      notifyListeners();
+    }
+  }
+
+  // ─── UPLOADED FILES STORAGE ───────────────────────────
+  final List<Map<String, dynamic>> _uploadedFiles = [];
+  List<Map<String, dynamic>> get uploadedFiles => _uploadedFiles;
+
+  void addUploadedFile(Map<String, dynamic> fileData) {
+    fileData['fileId'] = 'FILE${(_uploadedFiles.length + 1).toString().padLeft(4, '0')}';
+    fileData['uploadedAt'] = DateTime.now().toIso8601String();
+    _uploadedFiles.add(fileData);
+    notifyListeners();
+  }
+
+  List<Map<String, dynamic>> getUploadedFiles({String? userId, String? category}) {
+    return _uploadedFiles.where((f) {
+      if (userId != null && f['uploadedBy'] != userId) return false;
+      if (category != null && f['category'] != category) return false;
+      return true;
+    }).toList()
+      ..sort((a, b) => (b['uploadedAt'] ?? '').compareTo(a['uploadedAt'] ?? ''));
+  }
+
+  void deleteUploadedFile(String fileId) {
+    _uploadedFiles.removeWhere((f) => f['fileId'] == fileId);
+    notifyListeners();
   }
 
   // ─── FACULTY COMPLAINTS QUERIES ───────────────────────

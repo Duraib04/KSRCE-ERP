@@ -69,6 +69,7 @@ import 'features/hod/presentation/pages/hod_notifications_page.dart';
 import 'features/hod/presentation/pages/hod_settings_page.dart';
 import 'features/shared/presentation/pages/profile_edit_approvals_page.dart';
 import 'features/shared/presentation/pages/hacker_welcome_page.dart';
+import 'features/shared/presentation/pages/file_manager_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -158,6 +159,7 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/student/placements', builder: (c, s) => _s('/student/placements', const StudentPlacementsPage())),
     GoRoute(path: '/student/events', builder: (c, s) => _s('/student/events', const StudentEventsPage())),
     GoRoute(path: '/student/settings', builder: (c, s) => _s('/student/settings', const StudentSettingsPage())),
+    GoRoute(path: '/student/files', builder: (c, s) => _s('/student/files', const FileManagerPage())),
     // Faculty routes
     GoRoute(path: '/faculty/dashboard', builder: (c, s) => _f('/faculty/dashboard', const FacultyDashboardPage())),
     GoRoute(path: '/faculty/profile', builder: (c, s) => _f('/faculty/profile', const FacultyProfilePage())),
@@ -179,6 +181,7 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/faculty/course-diary', builder: (c, s) => _f('/faculty/course-diary', const FacultyCourseDiaryPage())),
     GoRoute(path: '/faculty/profile-approvals', builder: (c, s) => _f('/faculty/profile-approvals', const ProfileEditApprovalsPage())),
     GoRoute(path: '/faculty/settings', builder: (c, s) => _f('/faculty/settings', const FacultySettingsPage())),
+    GoRoute(path: '/faculty/files', builder: (c, s) => _f('/faculty/files', const FileManagerPage())),
     // Admin routes
     GoRoute(path: '/admin/dashboard', builder: (c, s) => _a('/admin/dashboard', const AdminDashboardPage())),
     GoRoute(path: '/admin/departments', builder: (c, s) => _a('/admin/departments', const AdminDepartmentsPage())),
@@ -192,6 +195,7 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/admin/notifications', builder: (c, s) => _a('/admin/notifications', const AdminNotificationsPage())),
     GoRoute(path: '/admin/profile-approvals', builder: (c, s) => _a('/admin/profile-approvals', const ProfileEditApprovalsPage())),
     GoRoute(path: '/admin/settings', builder: (c, s) => _a('/admin/settings', const AdminSettingsPage())),
+    GoRoute(path: '/admin/files', builder: (c, s) => _a('/admin/files', const FileManagerPage())),
     // HOD routes
     GoRoute(path: '/hod/dashboard', builder: (c, s) => _h('/hod/dashboard', const HodDashboardPage())),
     GoRoute(path: '/hod/profile', builder: (c, s) => _h('/hod/profile', const FacultyProfilePage())),
@@ -218,6 +222,7 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/hod/notifications', builder: (c, s) => _h('/hod/notifications', const HodNotificationsPage())),
     GoRoute(path: '/hod/profile-approvals', builder: (c, s) => _h('/hod/profile-approvals', const ProfileEditApprovalsPage())),
     GoRoute(path: '/hod/settings', builder: (c, s) => _h('/hod/settings', const HodSettingsPage())),
+    GoRoute(path: '/hod/files', builder: (c, s) => _h('/hod/files', const FileManagerPage())),
   ],
   errorBuilder: (context, state) => const HackerWelcomePage(),
 );

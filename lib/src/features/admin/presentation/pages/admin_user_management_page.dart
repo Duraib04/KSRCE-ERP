@@ -43,10 +43,10 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
     final ds = Provider.of<DataService>(context, listen: false);
     _allUsers = List<Map<String, dynamic>>.from(ds.users.map((u) {
       return {
-        'userId': u['userId'] ?? '',
+        'userId': u['id'] ?? '',
         'password': u['password'] ?? '',
         'role': u['role'] ?? 'student',
-        'name': u['name'] ?? u['userId'] ?? '',
+        'name': u['label'] ?? u['id'] ?? '',
         'status': u['status'] ?? 'active',
       };
     }));
@@ -58,6 +58,15 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
         _allUsers[idx]['email'] = s['email'] ?? '';
         _allUsers[idx]['phone'] = s['phone'] ?? '';
         _allUsers[idx]['year'] = '${s['year'] ?? ''}';
+      }
+    }
+    for (var f in ds.faculty) {
+      final idx = _allUsers.indexWhere((u) => u['userId'] == f['facultyId']);
+      if (idx >= 0) {
+        _allUsers[idx]['name'] = f['name'] ?? _allUsers[idx]['name'];
+        _allUsers[idx]['department'] = ds.getDepartmentName(f['departmentId'] as String? ?? '');
+        _allUsers[idx]['email'] = f['email'] ?? '';
+        _allUsers[idx]['phone'] = f['phone'] ?? '';
       }
     }
     setState(() {});
@@ -237,13 +246,13 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
     for (final idx in _selectedForVerification) {
       final row = _uploadedRows[idx];
       final userId = row['userId'] ?? row['studentId'] ?? row['Student ID'] ?? row['user_id'] ?? row['User ID'] ?? row['ID'] ?? 'NEW$idx';
-      final existing = ds.users.indexWhere((u) => u['userId'] == userId);
+      final existing = ds.users.indexWhere((u) => u['id'] == userId);
       if (existing < 0) {
         ds.users.add({
-          'userId': userId,
+          'id': userId,
           'password': row['password'] ?? row['Password'] ?? 'default123',
           'role': row['role'] ?? row['Role'] ?? 'student',
-          'name': row['name'] ?? row['Name'] ?? '',
+          'label': row['name'] ?? row['Name'] ?? '',
           'status': 'active',
         });
         addedCount++;
@@ -294,7 +303,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
     showDialog(context: context, builder: (ctx) => StatefulBuilder(builder: (ctx, setDState) {
       return AlertDialog(
         backgroundColor: AppColors.surface,
-        title: Text(isEdit ? 'Edit User' : 'Add New User', style: const TextStyle(color: Colors.white)),
+        title: Text(isEdit ? 'Edit User' : 'Add New User', style: const TextStyle(color: AppColors.textDark)),
         content: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 400, minWidth: MediaQuery.of(ctx).size.width < 500 ? MediaQuery.of(ctx).size.width * 0.85 : 400),
           child: SingleChildScrollView(child: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -322,14 +331,16 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
               if (idCtrl.text.isEmpty || nameCtrl.text.isEmpty) return;
               final ds = Provider.of<DataService>(context, listen: false);
               if (isEdit) {
-                final uIdx = ds.users.indexWhere((u) => u['userId'] == _allUsers[editIndex]['userId']);
+                final uIdx = ds.users.indexWhere((u) => u['id'] == _allUsers[editIndex]['userId']);
                 if (uIdx >= 0) {
-                  ds.users[uIdx] = {'userId': idCtrl.text, 'password': passCtrl.text, 'role': role, 'name': nameCtrl.text, 'status': _allUsers[editIndex]['status'] ?? 'active'};
+                  ds.users[uIdx] = {'id': idCtrl.text, 'password': passCtrl.text, 'role': role, 'label': nameCtrl.text, 'status': _allUsers[editIndex]['status'] ?? 'active'};
                 }
               } else {
-                ds.users.add({'userId': idCtrl.text, 'password': passCtrl.text.isEmpty ? 'default123' : passCtrl.text, 'role': role, 'name': nameCtrl.text, 'status': 'active'});
+                ds.users.add({'id': idCtrl.text, 'password': passCtrl.text.isEmpty ? 'default123' : passCtrl.text, 'role': role, 'label': nameCtrl.text, 'status': 'active'});
                 if (role == 'student') {
-                  ds.students.add({'studentId': idCtrl.text, 'name': nameCtrl.text, 'department': deptCtrl.text, 'email': emailCtrl.text, 'phone': phoneCtrl.text, 'year': 1});
+                  ds.addStudent({'name': nameCtrl.text, 'department': deptCtrl.text, 'departmentId': '', 'email': emailCtrl.text, 'phone': phoneCtrl.text, 'year': '1', 'section': 'A'});
+                } else if (role == 'faculty') {
+                  ds.addFaculty({'name': nameCtrl.text, 'email': emailCtrl.text, 'phone': phoneCtrl.text, 'departmentId': '', 'designation': '', 'qualification': ''});
                 }
               }
               ds.notifyListeners();
@@ -347,7 +358,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
   void _deleteUser(int index) {
     showDialog(context: context, builder: (ctx) => AlertDialog(
       backgroundColor: AppColors.surface,
-      title: const Text('Remove User', style: TextStyle(color: Colors.white)),
+      title: const Text('Remove User', style: TextStyle(color: AppColors.textDark)),
       content: Text('Are you sure you want to permanently remove ${_allUsers[index]['name']}?', style: const TextStyle(color: AppColors.textMedium)),
       actions: [
         TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel', style: TextStyle(color: AppColors.textLight))),
@@ -355,8 +366,10 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
           style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
           onPressed: () {
             final ds = Provider.of<DataService>(context, listen: false);
-            ds.users.removeWhere((u) => u['userId'] == _allUsers[index]['userId']);
-            ds.students.removeWhere((s) => s['studentId'] == _allUsers[index]['userId']);
+            final uid = _allUsers[index]['userId'] as String? ?? '';
+            ds.users.removeWhere((u) => u['id'] == uid);
+            ds.students.removeWhere((s) => s['studentId'] == uid);
+            ds.faculty.removeWhere((f) => f['facultyId'] == uid);
             ds.notifyListeners();
             _loadUsers();
             Navigator.pop(ctx);
@@ -370,7 +383,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
 
   void _changeStatus(int index, String newStatus) {
     final ds = Provider.of<DataService>(context, listen: false);
-    final uIdx = ds.users.indexWhere((u) => u['userId'] == _allUsers[index]['userId']);
+    final uIdx = ds.users.indexWhere((u) => u['id'] == _allUsers[index]['userId']);
     if (uIdx >= 0) {
       ds.users[uIdx]['status'] = newStatus;
       ds.notifyListeners();
@@ -384,7 +397,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: TextField(controller: ctrl, obscureText: obscure, enabled: enabled,
-        style: const TextStyle(color: Colors.white),
+        style: const TextStyle(color: AppColors.textDark),
         decoration: _inputDeco(label)),
     );
   }
@@ -428,7 +441,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
               ])
             : Row(children: [
                 const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('User Management', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
+                  Text('User Management', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textDark)),
                   SizedBox(height: 4),
                   Text('Upload, verify, and manage all users', style: TextStyle(fontSize: 14, color: AppColors.textLight)),
                 ])),
@@ -518,7 +531,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
               Text('File Format Guide', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
             ]),
             const SizedBox(height: 12),
-            Text('Your file should have column headers in the first row. Example:', style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 13)),
+            Text('Your file should have column headers in the first row. Example:', style: TextStyle(color: AppColors.textMedium, fontSize: 13)),
             const SizedBox(height: 12),
             Container(
               width: double.infinity, padding: const EdgeInsets.all(12),
@@ -529,7 +542,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
               ),
             ),
             const SizedBox(height: 12),
-            Text('The first row becomes column headers and filter options in the preview.', style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12)),
+            Text('The first row becomes column headers and filter options in the preview.', style: TextStyle(color: AppColors.textLight, fontSize: 12)),
             const SizedBox(height: 12),
             Wrap(spacing: 8, runSpacing: 8, children: [
               _formatChip('userId', true), _formatChip('name', true), _formatChip('password', false),
@@ -561,7 +574,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
         border: required ? Border.all(color: AppColors.primary.withOpacity(0.3)) : null,
       ),
       child: Text('$label${required ? " *" : ""}',
-        style: TextStyle(fontSize: 12, color: required ? const Color(0xFF42A5F5) : Colors.white54)),
+        style: TextStyle(fontSize: 12, color: required ? const Color(0xFF42A5F5) : AppColors.textLight)),
     );
   }
 
@@ -578,11 +591,11 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
   Widget _buildPreviewTab() {
     if (_uploadedRows.isEmpty) {
       return Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Icon(Icons.table_chart_outlined, size: 64, color: Colors.white.withOpacity(0.2)),
+        Icon(Icons.table_chart_outlined, size: 64, color: AppColors.textLight.withOpacity(0.3)),
         const SizedBox(height: 16),
-        Text('No data to preview', style: TextStyle(fontSize: 18, color: Colors.white.withOpacity(0.4))),
+        Text('No data to preview', style: TextStyle(fontSize: 18, color: AppColors.textLight)),
         const SizedBox(height: 8),
-        Text('Upload a CSV or Excel file first', style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.3))),
+        Text('Upload a CSV or Excel file first', style: TextStyle(fontSize: 13, color: AppColors.textLight.withOpacity(0.6))),
       ]));
     }
 
@@ -774,7 +787,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
             ConstrainedBox(
               constraints: BoxConstraints(maxWidth: isMobile ? constraints.maxWidth - 80 : 300),
               child: TextField(
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: AppColors.textDark),
                 decoration: InputDecoration(
                   hintText: 'Search users...', hintStyle: const TextStyle(color: AppColors.textLight),
                   prefixIcon: const Icon(Icons.search, color: AppColors.textLight),
@@ -811,7 +824,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
               return DataRow(cells: [
                 DataCell(Text('${i + 1}', style: const TextStyle(color: AppColors.textLight))),
                 DataCell(Text(u['userId'] ?? '', style: const TextStyle(color: Color(0xFF42A5F5), fontWeight: FontWeight.w500))),
-                DataCell(Text(u['name'] ?? '', style: const TextStyle(color: Colors.white))),
+                DataCell(Text(u['name'] ?? '', style: const TextStyle(color: AppColors.textDark))),
                 DataCell(_roleBadge(u['role'] ?? 'student')),
                 DataCell(Text(u['department'] ?? '-', style: const TextStyle(color: AppColors.textMedium))),
                 DataCell(_statusBadge(u['status'] ?? 'active')),
