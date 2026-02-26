@@ -16,8 +16,7 @@ class FileUploadService {
   FileUploadService._internal();
 
   // ── CLOUDINARY CONFIGURATION ─────────────────────────
-  // Replace with your Cloudinary credentials:
-  String _cloudName = 'ksrce-erp';
+  String _cloudName = 'dklnaegqd';
   String _uploadPreset = 'ksrce_unsigned';
 
   String get cloudName => _cloudName;
