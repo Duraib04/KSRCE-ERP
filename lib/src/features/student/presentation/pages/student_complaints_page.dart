@@ -1,7 +1,11 @@
+// ignore_for_file: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/services/file_upload_service.dart';
+import '../../../shared/widgets/file_upload_widget.dart';
 
 class StudentComplaintsPage extends StatefulWidget {
   const StudentComplaintsPage({super.key});
@@ -14,6 +18,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
   String _selectedCategory = 'infrastructure';
   final _subjectController = TextEditingController();
   final _descController = TextEditingController();
+  final List<UploadResult> _attachedFiles = [];
 
   @override
   Widget build(BuildContext context) {
@@ -111,6 +116,27 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
                     Flexible(child: Text('Response: ${c['response']}', style: const TextStyle(color: AppColors.secondary, fontSize: 11))),
                   ],
                 ]),
+                // Show attachments if any
+                if (c['attachments'] != null && (c['attachments'] as List).isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Wrap(spacing: 6, runSpacing: 6, children: (c['attachments'] as List).map((att) {
+                    final a = att as Map<String, dynamic>;
+                    return InkWell(
+                      onTap: () => html.window.open(a['url'] as String, '_blank'),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(6)),
+                        child: Row(mainAxisSize: MainAxisSize.min, children: [
+                          Icon(FileUploadService.getFileIcon(a['format'] as String? ?? ''), size: 14, color: AppColors.primary),
+                          const SizedBox(width: 4),
+                          Text(a['name'] as String? ?? 'File', style: const TextStyle(color: AppColors.primary, fontSize: 11, decoration: TextDecoration.underline)),
+                          const SizedBox(width: 2),
+                          const Icon(Icons.open_in_new, size: 10, color: AppColors.primary),
+                        ]),
+                      ),
+                    );
+                  }).toList()),
+                ],
               ]),
             );
           }),
@@ -165,19 +191,80 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
             enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.border)),
           ),
         ),
+        const SizedBox(height: 16),
+        // ── Attachment Section ──
+        const Text('Attachments (optional)', style: TextStyle(color: AppColors.textMedium, fontSize: 13)),
+        const SizedBox(height: 8),
+        if (_attachedFiles.isNotEmpty) ...[
+          Wrap(spacing: 8, runSpacing: 8, children: _attachedFiles.map((f) {
+            return Chip(
+              avatar: Icon(FileUploadService.getFileIcon(f.format), size: 16, color: AppColors.primary),
+              label: Text(f.originalName, style: const TextStyle(fontSize: 12, color: AppColors.textDark)),
+              deleteIcon: const Icon(Icons.close, size: 14),
+              onDeleted: () => setState(() => _attachedFiles.remove(f)),
+              backgroundColor: AppColors.background,
+              side: BorderSide(color: AppColors.border),
+            );
+          }).toList()),
+          const SizedBox(height: 8),
+        ],
+        OutlinedButton.icon(
+          onPressed: () async {
+            final service = FileUploadService();
+            final file = await service.pickFile(accept: '.pdf,.doc,.docx,.jpg,.jpeg,.png,.gif');
+            if (file == null) return;
+            try {
+              final result = await service.uploadFile(file, folder: 'ksrce/complaints');
+              setState(() => _attachedFiles.add(result));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('${result.originalName} attached'), backgroundColor: AppColors.secondary, duration: const Duration(seconds: 2)),
+              );
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Upload failed: $e'), backgroundColor: Colors.red),
+              );
+            }
+          },
+          icon: const Icon(Icons.attach_file, size: 16),
+          label: Text(_attachedFiles.isEmpty ? 'Attach Evidence' : 'Add More Files', style: const TextStyle(fontSize: 13)),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: AppColors.primary,
+            side: BorderSide(color: AppColors.primary.withOpacity(0.4)),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          ),
+        ),
         const SizedBox(height: 20),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
             onPressed: () {
               if (_subjectController.text.isNotEmpty && _descController.text.isNotEmpty) {
+                final attachments = _attachedFiles.map((f) => {
+                  'url': f.url,
+                  'name': f.originalName,
+                  'format': f.format,
+                  'size': f.sizeBytes,
+                }).toList();
                 ds.addComplaint({
                   'title': _subjectController.text,
                   'description': _descController.text,
                   'category': _selectedCategory,
+                  if (attachments.isNotEmpty) 'attachments': attachments,
                 });
+                // Also save to uploaded files
+                for (final f in _attachedFiles) {
+                  ds.addUploadedFile({
+                    'url': f.url,
+                    'originalName': f.originalName,
+                    'format': f.format,
+                    'sizeBytes': f.sizeBytes,
+                    'category': 'complaints',
+                    'uploadedBy': ds.currentUserId ?? '',
+                  });
+                }
                 _subjectController.clear();
                 _descController.clear();
+                setState(() => _attachedFiles.clear());
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Complaint submitted successfully!'), backgroundColor: AppColors.secondary),
                 );

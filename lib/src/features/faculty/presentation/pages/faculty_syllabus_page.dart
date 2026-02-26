@@ -1,10 +1,22 @@
+// ignore_for_file: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/services/file_upload_service.dart';
+import '../../../shared/widgets/file_upload_widget.dart';
 
-class FacultySyllabusPage extends StatelessWidget {
+class FacultySyllabusPage extends StatefulWidget {
   const FacultySyllabusPage({super.key});
+
+  @override
+  State<FacultySyllabusPage> createState() => _FacultySyllabusPageState();
+}
+
+class _FacultySyllabusPageState extends State<FacultySyllabusPage> {
+  final Map<String, String> _uploadedSyllabus = {}; // courseId -> url
+  final Map<String, String> _uploadedNames = {};    // courseId -> fileName
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +44,38 @@ class FacultySyllabusPage extends StatelessWidget {
               final cid = course['courseId'] ?? '';
               final courseSyl = syllabi.where((s) => s['courseId'] == cid).toList();
               if (courseSyl.isEmpty) {
+                final hasUpload = _uploadedSyllabus.containsKey(cid);
                 return Container(
                   margin: const EdgeInsets.only(bottom: 16),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
-                  child: Row(children: [
-                    Expanded(child: Text('$cid - ${course['courseName'] ?? ''}', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold))),
-                    const Text('Syllabus not uploaded', style: TextStyle(color: AppColors.textLight, fontSize: 13)),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Row(children: [
+                      Expanded(child: Text('$cid - ${course['courseName'] ?? ''}', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold))),
+                      if (!hasUpload)
+                        ElevatedButton.icon(
+                          onPressed: () => _showUploadDialog(context, ds, cid, course['courseName'] ?? ''),
+                          icon: const Icon(Icons.upload_file, size: 16),
+                          label: const Text('Upload Syllabus'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary, foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                            textStyle: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                    ]),
+                    if (hasUpload) ...[
+                      const SizedBox(height: 10),
+                      FileLink(
+                        url: _uploadedSyllabus[cid]!,
+                        fileName: _uploadedNames[cid] ?? 'Syllabus PDF',
+                        format: 'pdf',
+                      ),
+                    ] else
+                      const Padding(
+                        padding: EdgeInsets.only(top: 6),
+                        child: Text('Syllabus not uploaded', style: TextStyle(color: AppColors.textLight, fontSize: 13)),
+                      ),
                   ]),
                 );
               }
@@ -86,5 +123,48 @@ class FacultySyllabusPage extends StatelessWidget {
         ),
       );
     });
+  }
+
+  void _showUploadDialog(BuildContext context, DataService ds, String courseId, String courseName) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text('Upload Syllabus — $courseId', style: const TextStyle(color: AppColors.textDark, fontSize: 18)),
+        content: SizedBox(
+          width: 400,
+          child: FileUploadWidget(
+            category: 'syllabus',
+            folder: 'ksrce/syllabus/$courseId',
+            accept: '.pdf,.doc,.docx',
+            label: 'Upload Syllabus PDF',
+            onUploaded: (result) {
+              setState(() {
+                _uploadedSyllabus[courseId] = result.url;
+                _uploadedNames[courseId] = result.originalName;
+              });
+              ds.addUploadedFile({
+                'url': result.url,
+                'originalName': result.originalName,
+                'format': result.format,
+                'sizeBytes': result.sizeBytes,
+                'category': 'syllabus',
+                'uploadedBy': ds.currentUserId ?? '',
+                'courseId': courseId,
+                'courseName': courseName,
+              });
+              Navigator.of(ctx).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Syllabus for $courseId uploaded!'), backgroundColor: AppColors.secondary),
+              );
+            },
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Cancel')),
+        ],
+      ),
+    );
   }
 }

@@ -1,7 +1,10 @@
+// ignore_for_file: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/services/file_upload_service.dart';
 
 class StudentProfilePage extends StatefulWidget {
   const StudentProfilePage({super.key});
@@ -12,6 +15,8 @@ class StudentProfilePage extends StatefulWidget {
 class _StudentProfilePageState extends State<StudentProfilePage> {
   bool _showEditForm = false;
   bool _showMyRequests = false;
+  String? _profilePhotoUrl;
+  bool _uploadingPhoto = false;
   final _phoneCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
   final _addressCtrl = TextEditingController();
@@ -283,12 +288,32 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
   }
 
   Widget _profileHeader(bool isMobile, String name, String initials, String rollNo, String dept, String year, String section) {
+    Widget avatarWidget = Stack(
+      children: [
+        _profilePhotoUrl != null
+          ? CircleAvatar(radius: 50, backgroundImage: NetworkImage(_profilePhotoUrl!))
+          : CircleAvatar(radius: 50, backgroundColor: AppColors.accent, child: Text(initials, style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.white))),
+        Positioned(
+          bottom: 0, right: 0,
+          child: InkWell(
+            onTap: _uploadingPhoto ? null : _handlePhotoUpload,
+            child: Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(color: AppColors.primary, shape: BoxShape.circle, border: Border.all(color: Colors.white, width: 2)),
+              child: _uploadingPhoto
+                ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                : const Icon(Icons.camera_alt, color: Colors.white, size: 16),
+            ),
+          ),
+        ),
+      ],
+    );
     return Container(
       padding: EdgeInsets.all(isMobile ? 16 : 24),
       decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
       child: isMobile
         ? Column(children: [
-            CircleAvatar(radius: 50, backgroundColor: AppColors.accent, child: Text(initials, style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.white))),
+            avatarWidget,
             const SizedBox(height: 16),
             Text(name, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textDark)),
             const SizedBox(height: 4),
@@ -297,7 +322,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
             Text('$dept | Year $year | Sec $section', style: const TextStyle(fontSize: 14, color: AppColors.textMedium)),
           ])
         : Row(children: [
-            CircleAvatar(radius: 50, backgroundColor: AppColors.accent, child: Text(initials, style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.white))),
+            avatarWidget,
             const SizedBox(width: 24),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(name, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textDark)),
@@ -308,6 +333,37 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
             ]),
           ]),
     );
+  }
+
+  Future<void> _handlePhotoUpload() async {
+    final service = FileUploadService();
+    final file = await service.pickImage();
+    if (file == null) return;
+    setState(() => _uploadingPhoto = true);
+    try {
+      final url = await service.uploadImageAndGetUrl(file, folder: 'ksrce/profiles');
+      setState(() {
+        _profilePhotoUrl = url;
+        _uploadingPhoto = false;
+      });
+      final ds = Provider.of<DataService>(context, listen: false);
+      ds.addUploadedFile({
+        'url': url,
+        'originalName': file.name,
+        'format': file.name.split('.').last,
+        'sizeBytes': file.size,
+        'category': 'profile_photos',
+        'uploadedBy': ds.currentUserId ?? '',
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile photo updated!'), backgroundColor: AppColors.secondary),
+      );
+    } catch (e) {
+      setState(() => _uploadingPhoto = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Upload failed: $e'), backgroundColor: Colors.red),
+      );
+    }
   }
 
   Widget _personalInfo(bool isMobile, String dob, String bloodGroup) {

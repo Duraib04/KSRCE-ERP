@@ -23,13 +23,13 @@ class AdminDashboardPage extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Admin Dashboard', style: TextStyle(fontSize: isMobile ? 22 : 28, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text('Admin Dashboard', style: TextStyle(fontSize: isMobile ? 22 : 28, fontWeight: FontWeight.bold, color: AppColors.textDark)),
             const SizedBox(height: 8),
-            Text('Welcome back, Administrator', style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.6))),
+            Text('Welcome back, Administrator', style: TextStyle(fontSize: 14, color: AppColors.textLight)),
             const SizedBox(height: 24),
             _buildStatsGrid(isMobile, constraints.maxWidth, totalStudents, activeUsers, totalCourses, pendingComplaints, pendingApprovals),
             const SizedBox(height: 28),
-            Text('Quick Actions', style: TextStyle(fontSize: isMobile ? 18 : 20, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text('Quick Actions', style: TextStyle(fontSize: isMobile ? 18 : 20, fontWeight: FontWeight.bold, color: AppColors.textDark)),
             const SizedBox(height: 16),
             _buildQuickActions(context, isMobile, constraints.maxWidth),
             const SizedBox(height: 28),
@@ -96,7 +96,7 @@ class AdminDashboardPage extends StatelessWidget {
         const SizedBox(height: 10),
         Text(c['value'] as String, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 4),
-        Text(c['label'] as String, style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.6))),
+        Text(c['label'] as String, style: const TextStyle(fontSize: 12, color: AppColors.textLight)),
       ]),
     );
   }
@@ -137,7 +137,7 @@ class AdminDashboardPage extends StatelessWidget {
           Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: color.withOpacity(0.15), shape: BoxShape.circle),
             child: Icon(a['icon'] as IconData, color: color, size: 26)),
           const SizedBox(height: 10),
-          Text(a['label'] as String, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500)),
+          Text(a['label'] as String, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textDark, fontSize: 12, fontWeight: FontWeight.w500)),
         ]),
       ),
     );
@@ -158,7 +158,7 @@ class _ActivityItem extends StatelessWidget {
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(text, style: const TextStyle(color: AppColors.textDark, fontSize: 13)),
           const SizedBox(height: 2),
-          Text(time, style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 12)),
+          Text(time, style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
         ])),
       ]),
     );
