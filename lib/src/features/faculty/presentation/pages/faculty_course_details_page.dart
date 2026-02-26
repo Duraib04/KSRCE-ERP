@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 
 /// Faculty page to enter, view, and manage Course Outcome (CO) details
 /// for each assigned course. Each unit maps to COs (CO1–CO5+) with
@@ -156,11 +157,7 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
   Widget _buildCourseSelector(List<Map<String, dynamic>> courses) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
+      decoration: AppCardStyles.elevated,
       child: Row(
         children: [
           const Icon(Icons.class_, color: AppColors.primary, size: 20),
@@ -312,11 +309,7 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
   Widget _buildNoCourseDetails() {
     return Container(
       padding: const EdgeInsets.all(32),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
+      decoration: AppCardStyles.elevated,
       child: Column(
         children: [
           const Icon(Icons.add_circle_outline,
@@ -381,11 +374,7 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
         (details['courseObjectives'] as List<dynamic>?)?.cast<String>() ?? [];
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
+      decoration: AppCardStyles.elevated,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -467,11 +456,7 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
       List<Map<String, dynamic>> cos, DataService ds) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
+      decoration: AppCardStyles.elevated,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -769,11 +754,7 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
 
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
+      decoration: AppCardStyles.elevated,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -880,11 +861,7 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
 
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
+      decoration: AppCardStyles.elevated,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -981,11 +958,7 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
 
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
+      decoration: AppCardStyles.elevated,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

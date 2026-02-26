@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 import 'dart:math';
 
 class StudentAttendancePage extends StatelessWidget {
@@ -62,7 +63,7 @@ class StudentAttendancePage extends StatelessWidget {
     Color ringColor = pct >= 85 ? Colors.green : pct >= 75 ? Colors.orange : Colors.redAccent;
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(children: [
         const Text('Overall Attendance', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 24),
@@ -94,7 +95,7 @@ class StudentAttendancePage extends StatelessWidget {
   Widget _buildSubjectBars(List<Map<String, dynamic>> attList) {
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('Subject-wise Overview', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 16),
@@ -125,7 +126,7 @@ class StudentAttendancePage extends StatelessWidget {
   Widget _buildSubjectWiseTable(List<Map<String, dynamic>> attList) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('Subject-wise Attendance', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 16),

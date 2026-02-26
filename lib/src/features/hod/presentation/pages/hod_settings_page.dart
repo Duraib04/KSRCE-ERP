@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 
 class HodSettingsPage extends StatelessWidget {
   const HodSettingsPage({super.key});
@@ -15,7 +16,7 @@ class HodSettingsPage extends StatelessWidget {
           const SizedBox(height: 24),
           Container(
             padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+            decoration: AppCardStyles.elevated,
             child: const Center(child: Text('HOD settings coming soon', style: TextStyle(color: AppColors.textLight, fontSize: 14))),
           ),
         ]),

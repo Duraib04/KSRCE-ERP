@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../core/data_service.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_card_styles.dart';
 
 class NavItem {
   final String title;
@@ -182,46 +183,96 @@ class _DashboardShellState extends State<DashboardShell> {
   }
 
   PreferredSizeWidget _buildAppBar() {
+    final portalName = widget.role == 'student' ? 'Student Portal'
+        : widget.role == 'admin' ? 'Admin Portal'
+        : widget.role == 'hod' ? 'HOD Portal'
+        : 'Faculty Portal';
     return AppBar(
       backgroundColor: AppColors.surface,
-      title: Text(
-        widget.role == 'student' ? 'Student Portal' : widget.role == 'admin' ? 'Admin Portal' : widget.role == 'hod' ? 'HOD Portal' : 'Faculty Portal',
-        style: Theme.of(context).textTheme.titleLarge,
+      surfaceTintColor: Colors.transparent,
+      elevation: 0,
+      title: Row(
+        children: [
+          Container(
+            width: 30, height: 30,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              gradient: const LinearGradient(colors: [Color(0xFF3B82F6), Color(0xFF2563EB)]),
+            ),
+            child: const Icon(Icons.school_rounded, size: 16, color: Colors.white),
+          ),
+          const SizedBox(width: 10),
+          Text(portalName, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+        ],
       ),
       iconTheme: const IconThemeData(color: AppColors.textDark),
       actions: [
-        IconButton(icon: const Icon(Icons.notifications_outlined), onPressed: () {
-          context.go('/${widget.role}/notifications');
-        }),
+        Container(
+          margin: const EdgeInsets.only(right: 4),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceVariant.withOpacity(0.5),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.notifications_outlined, size: 20),
+            onPressed: () => context.go('/${widget.role}/notifications'),
+          ),
+        ),
         _buildProfileMenu(),
+        const SizedBox(width: 4),
       ],
     );
   }
 
   Widget _buildProfileMenu() {
     return PopupMenuButton<String>(
-      icon: const CircleAvatar(
-        radius: 16,
-        backgroundColor: AppColors.primary,
-        child: Icon(Icons.person, size: 18, color: Colors.white),
+      icon: Container(
+        padding: const EdgeInsets.all(2),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: const LinearGradient(
+            colors: [Color(0xFF3B82F6), Color(0xFF2563EB)],
+          ),
+          boxShadow: [BoxShadow(color: AppColors.primary.withOpacity(0.2), blurRadius: 6, offset: const Offset(0, 2))],
+        ),
+        child: const CircleAvatar(
+          radius: 15,
+          backgroundColor: Colors.transparent,
+          child: Icon(Icons.person_rounded, size: 17, color: Colors.white),
+        ),
       ),
       color: AppColors.surface,
+      elevation: 6,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      offset: const Offset(0, 8),
       itemBuilder: (context) => [
         PopupMenuItem(value: 'profile', child: Row(children: [
-          const Icon(Icons.person_outline, color: AppColors.textMedium, size: 18),
-          const SizedBox(width: 8),
-          const Text('Profile', style: TextStyle(color: AppColors.textDark)),
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+            child: const Icon(Icons.person_outline_rounded, color: AppColors.primary, size: 16),
+          ),
+          const SizedBox(width: 10),
+          const Text('Profile', style: TextStyle(color: AppColors.textDark, fontSize: 13, fontWeight: FontWeight.w500)),
         ])),
         PopupMenuItem(value: 'settings', child: Row(children: [
-          const Icon(Icons.settings_outlined, color: AppColors.textMedium, size: 18),
-          const SizedBox(width: 8),
-          const Text('Settings', style: TextStyle(color: AppColors.textDark)),
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(color: AppColors.textLight.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+            child: const Icon(Icons.settings_outlined, color: AppColors.textMedium, size: 16),
+          ),
+          const SizedBox(width: 10),
+          const Text('Settings', style: TextStyle(color: AppColors.textDark, fontSize: 13, fontWeight: FontWeight.w500)),
         ])),
         const PopupMenuDivider(),
         PopupMenuItem(value: 'logout', child: Row(children: [
-          Icon(Icons.logout, color: AppColors.error, size: 18),
-          const SizedBox(width: 8),
-          Text('Logout', style: TextStyle(color: AppColors.error)),
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(color: AppColors.error.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+            child: Icon(Icons.logout_rounded, color: AppColors.error, size: 16),
+          ),
+          const SizedBox(width: 10),
+          Text('Logout', style: TextStyle(color: AppColors.error, fontSize: 13, fontWeight: FontWeight.w500)),
         ])),
       ],
       onSelected: (value) {
@@ -251,133 +302,301 @@ class _DashboardShellState extends State<DashboardShell> {
               displayName = ds.currentFaculty?['name']?.toString() ?? (widget.role == 'hod' ? 'Head of Department' : 'Faculty');
               displayId = ds.currentUserId ?? '';
             }
-            return DrawerHeader(
+            return Container(
+              padding: const EdgeInsets.fromLTRB(20, 48, 20, 20),
               decoration: const BoxDecoration(
-                gradient: LinearGradient(colors: [AppColors.primary, Color(0xFF1E3A5F)]),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFF1E293B), Color(0xFF0F172A)],
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  CircleAvatar(radius: 30, backgroundColor: Colors.white24,
-                    child: Text(displayName.isNotEmpty ? displayName[0].toUpperCase() : 'U',
-                      style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold))),
-                  const SizedBox(height: 10),
-                  Text(displayName, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-                  Text(displayId, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                  Container(
+                    padding: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.white24, width: 2),
+                    ),
+                    child: CircleAvatar(
+                      radius: 28,
+                      backgroundColor: const Color(0xFF3B82F6),
+                      child: Text(
+                        displayName.isNotEmpty ? displayName[0].toUpperCase() : 'U',
+                        style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Text(displayName, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600, letterSpacing: 0.2)),
+                  const SizedBox(height: 3),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(displayId, style: const TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.w500)),
+                  ),
                 ],
               ),
             );
           }),
           Expanded(
             child: ListView(
-              padding: EdgeInsets.zero,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               children: _navItems.map((item) => _buildDrawerItem(item)).toList(),
             ),
           ),
-          const Divider(color: AppColors.border),
-          ListTile(
-            leading: const Icon(Icons.logout, color: AppColors.error),
-            title: const Text('Logout', style: TextStyle(color: AppColors.error)),
-            onTap: () => context.go('/login'),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              border: Border(top: BorderSide(color: AppColors.border.withOpacity(0.5))),
+            ),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(10),
+              onTap: () => context.go('/login'),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                decoration: BoxDecoration(
+                  color: AppColors.error.withOpacity(0.04),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppColors.error.withOpacity(0.1)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.logout_rounded, color: AppColors.error.withOpacity(0.7), size: 18),
+                    const SizedBox(width: 10),
+                    Text('Logout', style: TextStyle(color: AppColors.error.withOpacity(0.8), fontSize: 13, fontWeight: FontWeight.w500)),
+                  ],
+                ),
+              ),
+            ),
           ),
-          const SizedBox(height: 8),
         ],
       ),
     );
   }
 
   Widget _buildDrawerItem(NavItem item) {
+    final isActive = widget.currentRoute == item.route;
     if (item.children != null && item.children!.isNotEmpty) {
-      return ExpansionTile(
-        leading: Icon(item.icon, color: AppColors.textLight, size: 20),
-        title: Text(item.title, style: const TextStyle(color: AppColors.textDark, fontSize: 14)),
-        iconColor: AppColors.textLight,
-        collapsedIconColor: AppColors.textLight,
-        children: item.children!.map((child) => ListTile(
-          contentPadding: const EdgeInsets.only(left: 56),
-          leading: Icon(child.icon, color: widget.currentRoute == child.route ? AppColors.primary : AppColors.textLight, size: 18),
-          title: Text(child.title, style: TextStyle(
-            color: widget.currentRoute == child.route ? AppColors.primary : AppColors.textMedium,
+      final isChildActive = item.children!.any((c) => widget.currentRoute == c.route);
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 1),
+        child: ExpansionTile(
+          leading: Icon(item.icon, color: isChildActive ? AppColors.primary : AppColors.textLight, size: 19),
+          title: Text(item.title, style: TextStyle(
+            color: isChildActive ? AppColors.primary : AppColors.textDark,
             fontSize: 13,
+            fontWeight: isChildActive ? FontWeight.w600 : FontWeight.w500,
           )),
-          selected: widget.currentRoute == child.route,
-          onTap: () { Navigator.pop(context); context.go(child.route); },
-        )).toList(),
+          iconColor: AppColors.textMuted,
+          collapsedIconColor: AppColors.textMuted,
+          initiallyExpanded: isChildActive,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          children: item.children!.map((child) {
+            final childActive = widget.currentRoute == child.route;
+            return Padding(
+              padding: const EdgeInsets.only(left: 24),
+              child: ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                dense: true,
+                visualDensity: const VisualDensity(vertical: -2),
+                leading: Container(
+                  width: 6, height: 6,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: childActive ? AppColors.primary : AppColors.textMuted.withOpacity(0.4),
+                  ),
+                ),
+                minLeadingWidth: 14,
+                title: Text(child.title, style: TextStyle(
+                  color: childActive ? AppColors.primary : AppColors.textMedium,
+                  fontSize: 13,
+                  fontWeight: childActive ? FontWeight.w600 : FontWeight.w400,
+                )),
+                selected: childActive,
+                selectedTileColor: AppColors.primary.withOpacity(0.06),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                onTap: () { Navigator.pop(context); context.go(child.route); },
+              ),
+            );
+          }).toList(),
+        ),
       );
     }
-    return ListTile(
-      leading: Icon(item.icon, color: widget.currentRoute == item.route ? AppColors.primary : AppColors.textLight, size: 20),
-      title: Text(item.title, style: TextStyle(
-        color: widget.currentRoute == item.route ? AppColors.primary : AppColors.textDark,
-        fontSize: 14,
-        fontWeight: widget.currentRoute == item.route ? FontWeight.w600 : FontWeight.normal,
-      )),
-      selected: widget.currentRoute == item.route,
-      selectedTileColor: AppColors.primaryOverlay(opacity: 0.08),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      onTap: () { Navigator.pop(context); context.go(item.route); },
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 1),
+      child: ListTile(
+        leading: Icon(item.icon, color: isActive ? AppColors.primary : AppColors.textLight, size: 19),
+        title: Text(item.title, style: TextStyle(
+          color: isActive ? AppColors.primary : AppColors.textDark,
+          fontSize: 13,
+          fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+        )),
+        selected: isActive,
+        selectedTileColor: AppColors.primary.withOpacity(0.06),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        onTap: () { Navigator.pop(context); context.go(item.route); },
+      ),
     );
   }
 
   Widget _buildSidebar() {
-    final sidebarWidth = _isSidebarCollapsed ? 70.0 : 260.0;
+    final sidebarWidth = _isSidebarCollapsed ? 72.0 : 264.0;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       width: sidebarWidth,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.surface,
-        border: Border(right: BorderSide(color: AppColors.border)),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF1E293B).withOpacity(0.06),
+            blurRadius: 12,
+            offset: const Offset(2, 0),
+          ),
+        ],
       ),
       child: Column(
         children: [
-          // Header
+          // ── Brand Header ──
           Container(
-            height: 64,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            height: 68,
+            padding: EdgeInsets.symmetric(horizontal: _isSidebarCollapsed ? 12 : 18),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFF1E293B), Color(0xFF0F172A)],
+              ),
+            ),
             child: Row(
               children: [
-                if (!_isSidebarCollapsed) ...[
-                  Container(
-                    width: 32, height: 32,
-                    decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: AppColors.primary, width: 1.5)),
-                    child: const Icon(Icons.school, size: 18, color: AppColors.primary),
+                Container(
+                  width: 36, height: 36,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xFF3B82F6), Color(0xFF2563EB)],
+                    ),
                   ),
-                  const SizedBox(width: 10),
-                  const Text('KSRCE ERP', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 16)),
-                ],
-                const Spacer(),
-                IconButton(
-                  icon: Icon(_isSidebarCollapsed ? Icons.menu : Icons.menu_open, color: AppColors.textLight, size: 20),
-                  onPressed: () => setState(() => _isSidebarCollapsed = !_isSidebarCollapsed),
+                  child: const Icon(Icons.school_rounded, size: 20, color: Colors.white),
                 ),
+                if (!_isSidebarCollapsed) ...[
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('KSRCE', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16, letterSpacing: 0.5)),
+                        Text('ERP System', style: TextStyle(color: Colors.white54, fontSize: 11, fontWeight: FontWeight.w400)),
+                      ],
+                    ),
+                  ),
+                ],
+                if (!_isSidebarCollapsed) ...[
+                  InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () => setState(() => _isSidebarCollapsed = !_isSidebarCollapsed),
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.08),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.menu_open_rounded, color: Colors.white70, size: 18),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
-          const Divider(color: AppColors.border, height: 1),
-          // Nav Items
+          if (_isSidebarCollapsed)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: () => setState(() => _isSidebarCollapsed = !_isSidebarCollapsed),
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceVariant.withOpacity(0.6),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.menu_rounded, color: AppColors.textLight, size: 18),
+                ),
+              ),
+            ),
+          // ── Nav Items ──
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-              children: _navItems.map((item) => _buildSidebarItem(item)).toList(),
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: _isSidebarCollapsed ? 8 : 10),
+              children: [
+                if (!_isSidebarCollapsed)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12, bottom: 6, top: 2),
+                    child: Text('NAVIGATION', style: TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.2,
+                    )),
+                  ),
+                ..._navItems.map((item) => _buildSidebarItem(item)),
+              ],
             ),
           ),
-          const Divider(color: AppColors.border, height: 1),
-          // Logout
-          Padding(
-            padding: const EdgeInsets.all(8),
+          // ── Bottom Section ──
+          Container(
+            padding: EdgeInsets.all(_isSidebarCollapsed ? 8 : 12),
+            decoration: BoxDecoration(
+              border: Border(top: BorderSide(color: AppColors.border.withOpacity(0.5))),
+            ),
             child: _isSidebarCollapsed
-              ? IconButton(
-                  icon: Icon(Icons.logout, color: Colors.red.shade300, size: 20),
-                  onPressed: () => context.go('/login'),
-                  tooltip: 'Logout',
+              ? Tooltip(
+                  message: 'Logout',
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    onTap: () => context.go('/login'),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                        color: AppColors.error.withOpacity(0.06),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(Icons.logout_rounded, color: AppColors.error.withOpacity(0.7), size: 20),
+                    ),
+                  ),
                 )
-              : ListTile(
-                  leading: Icon(Icons.logout, color: Colors.red.shade300, size: 20),
-                  title: Text('Logout', style: TextStyle(color: Colors.red.shade300, fontSize: 14)),
-                  dense: true,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              : InkWell(
+                  borderRadius: BorderRadius.circular(10),
                   onTap: () => context.go('/login'),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: AppColors.error.withOpacity(0.04),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppColors.error.withOpacity(0.1)),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.logout_rounded, color: AppColors.error.withOpacity(0.7), size: 18),
+                        const SizedBox(width: 10),
+                        Text('Logout', style: TextStyle(
+                          color: AppColors.error.withOpacity(0.8),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        )),
+                      ],
+                    ),
+                  ),
                 ),
           ),
         ],
@@ -393,124 +612,240 @@ class _DashboardShellState extends State<DashboardShell> {
 
     if (_isSidebarCollapsed) {
       if (hasChildren) {
-        return PopupMenuButton<String>(
-          tooltip: item.title,
-          position: PopupMenuPosition.over,
-          color: AppColors.surface,
-          offset: const Offset(60, 0),
-          itemBuilder: (context) => item.children!.map((child) => PopupMenuItem(
-            value: child.route,
-            child: Row(children: [
-              Icon(child.icon, size: 16, color: widget.currentRoute == child.route ? AppColors.primary : AppColors.textLight),
-              const SizedBox(width: 8),
-              Text(child.title, style: TextStyle(color: widget.currentRoute == child.route ? AppColors.primary : AppColors.textDark, fontSize: 13)),
-            ]),
-          )).toList(),
-          onSelected: (route) => context.go(route),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Icon(item.icon, color: isChildActive ? AppColors.primary : AppColors.textLight, size: 22),
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: PopupMenuButton<String>(
+            tooltip: item.title,
+            position: PopupMenuPosition.over,
+            color: AppColors.surface,
+            offset: const Offset(60, 0),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            elevation: 6,
+            itemBuilder: (context) => item.children!.map((child) => PopupMenuItem(
+              value: child.route,
+              child: Row(children: [
+                Icon(child.icon, size: 16, color: widget.currentRoute == child.route ? AppColors.primary : AppColors.textLight),
+                const SizedBox(width: 10),
+                Text(child.title, style: TextStyle(
+                  color: widget.currentRoute == child.route ? AppColors.primary : AppColors.textDark,
+                  fontSize: 13,
+                  fontWeight: widget.currentRoute == child.route ? FontWeight.w600 : FontWeight.w400,
+                )),
+              ]),
+            )).toList(),
+            onSelected: (route) => context.go(route),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(
+                color: isChildActive ? AppColors.primary.withOpacity(0.08) : Colors.transparent,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(item.icon, color: isChildActive ? AppColors.primary : AppColors.textLight, size: 20),
+            ),
           ),
         );
       }
-      return Tooltip(
-        message: item.title,
-        preferBelow: false,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(8),
-          onTap: () => context.go(item.route),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            decoration: BoxDecoration(
-              color: isActive ? AppColors.primaryOverlay(opacity: 0.12) : null,
-              borderRadius: BorderRadius.circular(8),
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Tooltip(
+          message: item.title,
+          preferBelow: false,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(10),
+            onTap: () => context.go(item.route),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(
+                color: isActive ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
+                borderRadius: BorderRadius.circular(10),
+                border: isActive ? Border.all(color: AppColors.primary.withOpacity(0.15)) : null,
+              ),
+              child: Icon(item.icon, color: isActive ? AppColors.primary : AppColors.textLight, size: 20),
             ),
-            child: Icon(item.icon, color: isActive ? AppColors.primary : AppColors.textLight, size: 22),
           ),
         ),
       );
     }
 
+    // ── Expanded sidebar ──
     if (hasChildren) {
-      return Column(
-        children: [
-          InkWell(
-            borderRadius: BorderRadius.circular(8),
-            onTap: () => setState(() => _expandedGroups[item.title] = !isExpanded),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              decoration: BoxDecoration(
-                color: isChildActive ? AppColors.primaryOverlay(opacity: 0.08) : null,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Icon(item.icon, color: isChildActive ? AppColors.primary : AppColors.textLight, size: 20),
-                  const SizedBox(width: 12),
-                  Expanded(child: Text(item.title, style: TextStyle(color: isChildActive ? AppColors.primary : AppColors.textDark, fontSize: 14))),
-                  Icon(isExpanded ? Icons.expand_less : Icons.expand_more, color: AppColors.textLight, size: 18),
-                ],
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 1),
+        child: Column(
+          children: [
+            InkWell(
+              borderRadius: BorderRadius.circular(10),
+              onTap: () => setState(() => _expandedGroups[item.title] = !isExpanded),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+                decoration: BoxDecoration(
+                  color: isChildActive ? AppColors.primary.withOpacity(0.06) : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: [
+                    Icon(item.icon, color: isChildActive ? AppColors.primary : AppColors.textLight, size: 19),
+                    const SizedBox(width: 12),
+                    Expanded(child: Text(item.title, style: TextStyle(
+                      color: isChildActive ? AppColors.primary : AppColors.textDark,
+                      fontSize: 13,
+                      fontWeight: isChildActive ? FontWeight.w600 : FontWeight.w500,
+                    ))),
+                    AnimatedRotation(
+                      duration: const Duration(milliseconds: 200),
+                      turns: isExpanded ? 0.5 : 0,
+                      child: Icon(Icons.expand_more_rounded, color: AppColors.textMuted, size: 18),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          if (isExpanded)
-            ...item.children!.map((child) {
-              final childActive = widget.currentRoute == child.route;
-              return Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: ListTile(
-                  dense: true,
-                  visualDensity: const VisualDensity(vertical: -2),
-                  leading: Icon(child.icon, size: 16, color: childActive ? AppColors.primary : AppColors.textLight),
-                  title: Text(child.title, style: TextStyle(color: childActive ? AppColors.primary : AppColors.textMedium, fontSize: 13)),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  selectedTileColor: AppColors.primaryOverlay(opacity: 0.08),
-                  selected: childActive,
-                  onTap: () => context.go(child.route),
+            AnimatedCrossFade(
+              duration: const Duration(milliseconds: 180),
+              crossFadeState: isExpanded ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+              sizeCurve: Curves.easeInOut,
+              firstChild: Padding(
+                padding: const EdgeInsets.only(left: 16, top: 2, bottom: 2),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border(left: BorderSide(color: AppColors.border.withOpacity(0.8), width: 1.5)),
+                  ),
+                  child: Column(
+                    children: item.children!.map((child) {
+                      final childActive = widget.currentRoute == child.route;
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 12),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(8),
+                          onTap: () => context.go(child.route),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: childActive ? AppColors.primary.withOpacity(0.08) : Colors.transparent,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 6, height: 6,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: childActive ? AppColors.primary : AppColors.textMuted.withOpacity(0.4),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Text(child.title, style: TextStyle(
+                                  color: childActive ? AppColors.primary : AppColors.textMedium,
+                                  fontSize: 13,
+                                  fontWeight: childActive ? FontWeight.w600 : FontWeight.w400,
+                                )),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
-              );
-            }),
-        ],
+              ),
+              secondChild: const SizedBox.shrink(),
+            ),
+          ],
+        ),
       );
     }
 
-    return ListTile(
-      dense: true,
-      leading: Icon(item.icon, color: isActive ? AppColors.primary : AppColors.textLight, size: 20),
-      title: Text(item.title, style: TextStyle(
-        color: isActive ? AppColors.primary : AppColors.textDark,
-        fontSize: 14,
-        fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
-      )),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      selectedTileColor: AppColors.primaryOverlay(opacity: 0.08),
-      selected: isActive,
-      onTap: () => context.go(item.route),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 1),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(10),
+        onTap: () => context.go(item.route),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+          decoration: BoxDecoration(
+            color: isActive ? AppColors.primary.withOpacity(0.08) : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+            border: isActive ? Border.all(color: AppColors.primary.withOpacity(0.15)) : null,
+          ),
+          child: Row(
+            children: [
+              Icon(item.icon, color: isActive ? AppColors.primary : AppColors.textLight, size: 19),
+              const SizedBox(width: 12),
+              Expanded(child: Text(item.title, style: TextStyle(
+                color: isActive ? AppColors.primary : AppColors.textDark,
+                fontSize: 13,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+              ))),
+              if (isActive)
+                Container(
+                  width: 5, height: 5,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.primary,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   Widget _buildTopBar() {
+    final portalName = widget.role == 'student' ? 'Student Portal'
+        : widget.role == 'admin' ? 'Admin Portal'
+        : widget.role == 'hod' ? 'HOD Portal'
+        : 'Faculty Portal';
     return Container(
-      height: 56,
-      decoration: const BoxDecoration(
+      height: 60,
+      decoration: BoxDecoration(
         color: AppColors.surface,
-        border: Border(bottom: BorderSide(color: AppColors.border)),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF1E293B).withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         children: [
-          Text(
-            widget.role == 'student' ? 'Student Portal' : widget.role == 'admin' ? 'Admin Portal' : widget.role == 'hod' ? 'HOD Portal' : 'Faculty Portal',
-            style: Theme.of(context).textTheme.bodySmall,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.06),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.circle, size: 7, color: AppColors.secondary),
+                const SizedBox(width: 6),
+                Text(portalName, style: const TextStyle(
+                  color: AppColors.primary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.3,
+                )),
+              ],
+            ),
           ),
           const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined, color: AppColors.textMedium),
-            onPressed: () => context.go('/${widget.role}/notifications'),
+          Container(
+            decoration: BoxDecoration(
+              color: AppColors.surfaceVariant.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.notifications_outlined, color: AppColors.textMedium, size: 20),
+              onPressed: () => context.go('/${widget.role}/notifications'),
+              splashRadius: 20,
+            ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 10),
           _buildProfileMenu(),
         ],
       ),

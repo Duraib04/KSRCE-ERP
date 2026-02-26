@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 
 class FacultyAttendancePage extends StatefulWidget {
   const FacultyAttendancePage({super.key});
@@ -49,14 +50,14 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> {
   Widget _buildCourseSelector(List<Map<String, dynamic>> courses) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Row(children: [
         const Text('Select Course: ', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w600)),
         const SizedBox(width: 12),
         Expanded(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.border)),
+            decoration: AppCardStyles.flat,
             child: DropdownButton<String>(
               value: _selectedCourse, isExpanded: true, dropdownColor: AppColors.surface,
               style: const TextStyle(color: AppColors.textDark), underline: const SizedBox(),
@@ -98,7 +99,7 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> {
   Widget _stat(String label, String value, Color color, IconData icon) {
     return Expanded(child: Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(children: [
         Icon(icon, color: color, size: 24),
         const SizedBox(height: 8),
@@ -111,7 +112,7 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> {
   Widget _buildStudentList(List<Map<String, dynamic>> students, List<Map<String, dynamic>> attendance) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('Student Attendance', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 16),

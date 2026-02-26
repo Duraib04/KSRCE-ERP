@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 
 class FacultyReportsPage extends StatelessWidget {
   const FacultyReportsPage({super.key});
@@ -65,7 +66,7 @@ class FacultyReportsPage extends StatelessWidget {
   Widget _buildAttendanceSummary(List<Map<String, dynamic>> summaries) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('Attendance Summary', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 16),
@@ -95,7 +96,7 @@ class FacultyReportsPage extends StatelessWidget {
   Widget _buildResultAnalysis(List<Map<String, dynamic>> results) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('Result Analysis', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 16),

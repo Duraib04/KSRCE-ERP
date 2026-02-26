@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 
 class FacultyGradesPage extends StatefulWidget {
   const FacultyGradesPage({super.key});
@@ -56,13 +57,13 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
   Widget _buildCourseSelector(List<Map<String, dynamic>> courses) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Row(children: [
         const Text('Select Course: ', style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w600)),
         const SizedBox(width: 12),
         Expanded(child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.border)),
+          decoration: AppCardStyles.flat,
           child: DropdownButton<String>(
             value: _selectedCourse, isExpanded: true, dropdownColor: AppColors.surface,
             style: const TextStyle(color: AppColors.textDark), underline: const SizedBox(),
@@ -79,7 +80,7 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
     final maxCount = gradeMap.values.fold(0, (max, v) => v > max ? v : max);
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('Grade Distribution', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 16),
@@ -102,7 +103,7 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
   Widget _buildStudentGrades(List<Map<String, dynamic>> students, List<Map<String, dynamic>> results) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('Student Grades', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 16),

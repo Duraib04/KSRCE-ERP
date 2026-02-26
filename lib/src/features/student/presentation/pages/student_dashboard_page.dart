@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 
 class StudentDashboardPage extends StatelessWidget {
   const StudentDashboardPage({super.key});
@@ -38,17 +39,17 @@ class StudentDashboardPage extends StatelessWidget {
         body: LayoutBuilder(builder: (context, constraints) {
           final isMobile = constraints.maxWidth < 700;
           return SingleChildScrollView(
-            padding: EdgeInsets.all(isMobile ? 16 : 24),
+            padding: EdgeInsets.all(isMobile ? 16 : 28),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildWelcomeHeader(isMobile, name, initials, dept, year, section, student['studentId'] as String? ?? ds.currentUserId ?? '', dayName, dateStr),
                 const SizedBox(height: 24),
-                _buildStatsRow(isMobile, attPct, cgpa, pendingCount, unreadCount),
-                const SizedBox(height: 24),
+                _buildStatsRow(isMobile, attPct, cgpa, pendingCount, unreadCount, context),
+                const SizedBox(height: 28),
                 if (isMobile) ...[
                   _buildTodayTimetable(isMobile, todayTimetable, dayName),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
                   _buildRecentNotifications(notifications),
                 ] else
                   Row(
@@ -59,7 +60,7 @@ class StudentDashboardPage extends StatelessWidget {
                       Expanded(flex: 2, child: _buildRecentNotifications(notifications)),
                     ],
                   ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 28),
                 _buildQuickActions(context),
               ],
             ),
@@ -71,142 +72,269 @@ class StudentDashboardPage extends StatelessWidget {
 
   Widget _buildWelcomeHeader(bool isMobile, String name, String initials, String dept, String year, String section, String rollNo, String dayName, String dateStr) {
     final firstName = name.split(' ').first;
+    final hour = DateTime.now().hour;
+    final greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
+    
     return Container(
-      padding: EdgeInsets.all(isMobile ? 16 : 24),
+      padding: EdgeInsets.all(isMobile ? 20 : 28),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: [AppColors.primary, Color(0xFF1A3A5C)]),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: AppColors.primary.withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 4))],
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF1E3A5F), Color(0xFF0F172A)],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: AppCardStyles.coloredShadow(const Color(0xFF1E3A5F)),
       ),
-      child: isMobile
-        ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(children: [
-              CircleAvatar(radius: 24, backgroundColor: AppColors.accent,
-                child: Text(initials, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white))),
-              const SizedBox(width: 12),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Welcome back, $firstName!', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-                const SizedBox(height: 2),
-                Text('$dept | Year $year | Sec $section', style: const TextStyle(fontSize: 12, color: Colors.white70)),
-              ])),
-            ]),
-            const SizedBox(height: 12),
-            Text('Roll: $rollNo', style: const TextStyle(fontSize: 12, color: Colors.white60)),
-            const SizedBox(height: 4),
-            Text('$dayName, $dateStr', style: const TextStyle(color: Colors.white70, fontSize: 12)),
-          ])
-        : Row(children: [
-            CircleAvatar(radius: 32, backgroundColor: AppColors.accent,
-              child: Text(initials, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white))),
-            const SizedBox(width: 20),
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('Welcome back, $name!', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
-              const SizedBox(height: 4),
-              Text('$dept | Year $year | Section $section', style: const TextStyle(fontSize: 14, color: Colors.white70)),
-              Text('Roll No: $rollNo', style: const TextStyle(fontSize: 13, color: Colors.white60)),
-            ])),
-            Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-              const Text('Academic Year 2025-26', style: TextStyle(color: Colors.white70, fontSize: 13)),
-              const SizedBox(height: 4),
-              Text('$dayName, $dateStr', style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500)),
-            ]),
-          ]),
+      child: Stack(
+        children: [
+          // Decorative circles
+          Positioned(right: -20, top: -20, child: Container(width: 100, height: 100, decoration: BoxDecoration(
+            shape: BoxShape.circle, color: Colors.white.withOpacity(0.03),
+          ))),
+          Positioned(right: 40, bottom: -30, child: Container(width: 60, height: 60, decoration: BoxDecoration(
+            shape: BoxShape.circle, color: Colors.white.withOpacity(0.02),
+          ))),
+          isMobile
+            ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(children: [
+                  Container(
+                    padding: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white.withOpacity(0.2), width: 2),
+                    ),
+                    child: CircleAvatar(radius: 22, backgroundColor: const Color(0xFF3B82F6),
+                      child: Text(initials, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white))),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text('$greeting,', style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.6), fontWeight: FontWeight.w400)),
+                    const SizedBox(height: 2),
+                    Text(firstName, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white, letterSpacing: -0.3)),
+                  ])),
+                ]),
+                const SizedBox(height: 16),
+                _infoPill('$dept  •  Year $year  •  Sec $section'),
+                const SizedBox(height: 8),
+                Row(children: [
+                  _infoPill(rollNo),
+                  const Spacer(),
+                  Text('$dayName, $dateStr', style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 11)),
+                ]),
+              ])
+            : Row(children: [
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white.withOpacity(0.15), width: 2),
+                  ),
+                  child: CircleAvatar(radius: 30, backgroundColor: const Color(0xFF3B82F6),
+                    child: Text(initials, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: Colors.white))),
+                ),
+                const SizedBox(width: 22),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text('$greeting,', style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.55), fontWeight: FontWeight.w400)),
+                  const SizedBox(height: 2),
+                  Text(name, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w700, color: Colors.white, letterSpacing: -0.5)),
+                  const SizedBox(height: 8),
+                  Row(children: [
+                    _infoPill('$dept  •  Year $year  •  Sec $section'),
+                    const SizedBox(width: 8),
+                    _infoPill(rollNo),
+                  ]),
+                ])),
+                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Text('2025-26', style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w500)),
+                  ),
+                  const SizedBox(height: 8),
+                  Text('$dayName, $dateStr', style: const TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.w500)),
+                ]),
+              ]),
+        ],
+      ),
     );
   }
 
-  Widget _buildStatsRow(bool isMobile, double attPct, double cgpa, int pendingCount, int unreadCount) {
+  Widget _infoPill(String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white.withOpacity(0.06)),
+      ),
+      child: Text(text, style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 11, fontWeight: FontWeight.w500)),
+    );
+  }
+
+  Widget _buildStatsRow(bool isMobile, double attPct, double cgpa, int pendingCount, int unreadCount, BuildContext context) {
     final stats = [
-      {'title': 'Attendance', 'value': '${attPct.toStringAsFixed(0)}%', 'icon': Icons.check_circle_outline, 'color': AppColors.secondary},
-      {'title': 'CGPA', 'value': cgpa.toStringAsFixed(1), 'icon': Icons.school, 'color': AppColors.primary},
-      {'title': 'Pending Tasks', 'value': '$pendingCount', 'icon': Icons.assignment_late, 'color': AppColors.accent},
-      {'title': 'Notifications', 'value': '$unreadCount', 'icon': Icons.notifications, 'color': AppColors.error},
+      _StatItem('Attendance', '${attPct.toStringAsFixed(0)}%', Icons.check_circle_outline_rounded, const Color(0xFF10B981), attPct >= 75 ? 'On Track' : 'Low', '/student/attendance'),
+      _StatItem('CGPA', cgpa.toStringAsFixed(1), Icons.school_rounded, const Color(0xFF3B82F6), 'Overall', '/student/results'),
+      _StatItem('Pending', '$pendingCount', Icons.assignment_late_rounded, const Color(0xFFF97316), pendingCount == 0 ? 'All Clear' : 'Due', '/student/assignments'),
+      _StatItem('Alerts', '$unreadCount', Icons.notifications_rounded, const Color(0xFFF43F5E), unreadCount > 0 ? 'New' : 'None', '/student/notifications'),
     ];
     if (isMobile) {
       return GridView.count(
         crossAxisCount: 2, shrinkWrap: true, physics: const NeverScrollableScrollPhysics(),
-        mainAxisSpacing: 12, crossAxisSpacing: 12, childAspectRatio: 1.5,
-        children: stats.map((s) => _statCard(s)).toList(),
+        mainAxisSpacing: 14, crossAxisSpacing: 14, childAspectRatio: 1.35,
+        children: stats.map((s) => _buildStatCard(s, context)).toList(),
       );
     }
     return Row(
-      children: stats.map((s) => Expanded(
-        child: Container(margin: const EdgeInsets.symmetric(horizontal: 8), child: _statCard(s)),
+      children: stats.asMap().entries.map((e) => Expanded(
+        child: Padding(
+          padding: EdgeInsets.only(left: e.key > 0 ? 14 : 0),
+          child: _buildStatCard(e.value, context),
+        ),
       )).toList(),
     );
   }
 
-  Widget _statCard(Map<String, Object> s) {
-    final color = s['color'] as Color;
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface, borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2))],
-      ),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
-          child: Icon(s['icon'] as IconData, color: color, size: 24),
+  Widget _buildStatCard(_StatItem s, BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.go(s.route),
+      child: Container(
+        padding: const EdgeInsets.all(18),
+        decoration: AppCardStyles.statCard(s.color),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(9),
+                  decoration: BoxDecoration(
+                    color: s.color.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(s.icon, color: s.color, size: 20),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: s.color.withOpacity(0.06),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(s.badge, style: TextStyle(color: s.color, fontSize: 10, fontWeight: FontWeight.w600)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(s.value, style: const TextStyle(
+              fontSize: 26, fontWeight: FontWeight.w700, color: AppColors.textDark, height: 1.1, letterSpacing: -0.5,
+            )),
+            const SizedBox(height: 2),
+            Text(s.label, style: const TextStyle(color: AppColors.textLight, fontSize: 12, fontWeight: FontWeight.w500)),
+          ],
         ),
-        const SizedBox(height: 10),
-        Text(s['value'] as String, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-        const SizedBox(height: 4),
-        Text(s['title'] as String, style: const TextStyle(color: AppColors.textMedium, fontSize: 12), textAlign: TextAlign.center),
-      ]),
+      ),
     );
   }
 
   Widget _buildTodayTimetable(bool isMobile, List<Map<String, dynamic>> todayPeriods, String dayName) {
     return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface, borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2))],
-      ),
+      padding: const EdgeInsets.all(20),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(children: [
-          const Icon(Icons.today, color: AppColors.primary, size: 20),
-          const SizedBox(width: 8),
-          Text("Today's Timetable ($dayName)", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-        ]),
-        const Divider(height: 20),
+        SectionHeader(
+          title: "Today's Schedule",
+          icon: Icons.calendar_today_rounded,
+          trailing: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.06),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Text(dayName, style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.w600)),
+          ),
+        ),
         if (todayPeriods.isEmpty)
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 24),
-            child: Center(child: Text('No classes scheduled for today', style: TextStyle(color: AppColors.textLight, fontSize: 14))),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 32),
+            child: Center(child: Column(children: [
+              Icon(Icons.event_available_rounded, size: 40, color: AppColors.textMuted.withOpacity(0.4)),
+              const SizedBox(height: 10),
+              const Text('No classes scheduled', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
+              const SizedBox(height: 4),
+              const Text('Enjoy your free day!', style: TextStyle(color: AppColors.textMuted, fontSize: 12)),
+            ])),
           )
         else
-          ...todayPeriods.map((p) {
-            final timeStr = '${p['startTime'] ?? ''} - ${p['endTime'] ?? ''}';
-            final subject = '${p['courseCode'] ?? ''} - ${p['courseName'] ?? ''}';
+          ...todayPeriods.asMap().entries.map((entry) {
+            final i = entry.key;
+            final p = entry.value;
+            final timeStr = '${p['startTime'] ?? ''} – ${p['endTime'] ?? ''}';
+            final subject = p['courseName'] as String? ?? '';
+            final code = p['courseCode'] as String? ?? '';
             final room = (p['room'] as String?) ?? '';
             final faculty = (p['facultyName'] as String?) ?? '';
-            return Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              padding: EdgeInsets.all(isMobile ? 10 : 12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: isMobile
-                ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Row(children: [
-                      Text(timeStr, style: const TextStyle(color: AppColors.textMedium, fontSize: 12, fontWeight: FontWeight.w600)),
-                      const Spacer(),
-                      Text(room, style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
+            final colors = [
+              const Color(0xFF3B82F6), const Color(0xFF10B981), const Color(0xFF8B5CF6),
+              const Color(0xFFF97316), const Color(0xFFF43F5E), const Color(0xFF06B6D4),
+            ];
+            final c = colors[i % colors.length];
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Container(
+                padding: EdgeInsets.all(isMobile ? 12 : 14),
+                decoration: AppCardStyles.accentLeft(c),
+                child: isMobile
+                  ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Row(children: [
+                        Icon(Icons.access_time_rounded, size: 13, color: c),
+                        const SizedBox(width: 5),
+                        Text(timeStr, style: TextStyle(color: c, fontSize: 12, fontWeight: FontWeight.w600)),
+                        const Spacer(),
+                        if (room.isNotEmpty) Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                          decoration: BoxDecoration(color: AppColors.surfaceVariant, borderRadius: BorderRadius.circular(8)),
+                          child: Text(room, style: const TextStyle(color: AppColors.textLight, fontSize: 10, fontWeight: FontWeight.w500)),
+                        ),
+                      ]),
+                      const SizedBox(height: 6),
+                      Text(subject, style: const TextStyle(color: AppColors.textDark, fontSize: 13, fontWeight: FontWeight.w600)),
+                      const SizedBox(height: 2),
+                      Text('$code  •  $faculty', style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
+                    ])
+                  : Row(children: [
+                      Container(
+                        width: 76,
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          Text(p['startTime'] as String? ?? '', style: TextStyle(color: c, fontSize: 13, fontWeight: FontWeight.w600)),
+                          Text(p['endTime'] as String? ?? '', style: TextStyle(color: c.withOpacity(0.5), fontSize: 11)),
+                        ]),
+                      ),
+                      const SizedBox(width: 6),
+                      Container(width: 1.5, height: 36, decoration: BoxDecoration(color: c.withOpacity(0.15), borderRadius: BorderRadius.circular(1))),
+                      const SizedBox(width: 14),
+                      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Text(subject, style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w600, fontSize: 14)),
+                        const SizedBox(height: 2),
+                        Text('$code  •  $faculty', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+                      ])),
+                      if (room.isNotEmpty) Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(color: AppColors.surfaceVariant.withOpacity(0.7), borderRadius: BorderRadius.circular(8)),
+                        child: Row(mainAxisSize: MainAxisSize.min, children: [
+                          const Icon(Icons.room_outlined, size: 12, color: AppColors.textMuted),
+                          const SizedBox(width: 3),
+                          Text(room, style: const TextStyle(color: AppColors.textMedium, fontSize: 12, fontWeight: FontWeight.w500)),
+                        ]),
+                      ),
                     ]),
-                    const SizedBox(height: 4),
-                    Text(subject, style: const TextStyle(color: AppColors.textDark, fontSize: 13)),
-                    Text(faculty, style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
-                  ])
-                : Row(children: [
-                    SizedBox(width: 120, child: Text(timeStr, style: const TextStyle(color: AppColors.textMedium, fontSize: 13, fontWeight: FontWeight.w500))),
-                    Expanded(child: Text(subject, style: const TextStyle(color: AppColors.textDark))),
-                    SizedBox(width: 80, child: Text(room, style: const TextStyle(color: AppColors.textLight, fontSize: 13))),
-                    SizedBox(width: 140, child: Text(faculty, style: const TextStyle(color: AppColors.textLight, fontSize: 13))),
-                  ]),
+              ),
             );
           }),
       ]),
@@ -214,55 +342,75 @@ class StudentDashboardPage extends StatelessWidget {
   }
 
   Widget _buildRecentNotifications(List<Map<String, dynamic>> allNotifs) {
-    final recent = allNotifs.take(4).toList();
+    final recent = allNotifs.take(5).toList();
     final Map<String, IconData> typeIcons = {
-      'assignment': Icons.assignment, 'exam': Icons.event_note, 'attendance': Icons.fact_check,
-      'event': Icons.celebration, 'alert': Icons.warning_amber,
+      'assignment': Icons.assignment_rounded, 'exam': Icons.event_note_rounded,
+      'attendance': Icons.fact_check_rounded, 'event': Icons.celebration_rounded,
+      'alert': Icons.warning_amber_rounded,
     };
     final Map<String, Color> typeColors = {
-      'assignment': AppColors.accent, 'exam': AppColors.error, 'attendance': AppColors.secondary,
-      'event': AppColors.primary, 'alert': Colors.orange,
+      'assignment': const Color(0xFFF97316), 'exam': const Color(0xFFF43F5E),
+      'attendance': const Color(0xFF10B981), 'event': const Color(0xFF3B82F6),
+      'alert': const Color(0xFFEAB308),
     };
     return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface, borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2))],
-      ),
+      padding: const EdgeInsets.all(20),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(children: [
-          const Icon(Icons.notifications_active, color: AppColors.accent, size: 20),
-          const SizedBox(width: 8),
-          const Text('Recent Notifications', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-        ]),
-        const Divider(height: 20),
+        SectionHeader(
+          title: 'Notifications',
+          icon: Icons.notifications_rounded,
+          trailing: recent.isNotEmpty ? Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            decoration: BoxDecoration(
+              color: AppColors.error.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text('${allNotifs.where((n) => n['isRead'] == false).length} new',
+              style: const TextStyle(color: AppColors.error, fontSize: 10, fontWeight: FontWeight.w600)),
+          ) : null,
+        ),
         if (recent.isEmpty)
-          const Padding(padding: EdgeInsets.symmetric(vertical: 16), child: Center(child: Text('No notifications', style: TextStyle(color: AppColors.textLight))))
+          Padding(padding: const EdgeInsets.symmetric(vertical: 24), child: Center(child: Column(children: [
+            Icon(Icons.notifications_off_rounded, size: 36, color: AppColors.textMuted.withOpacity(0.3)),
+            const SizedBox(height: 8),
+            const Text('All caught up!', style: TextStyle(color: AppColors.textLight, fontSize: 13)),
+          ])))
         else
           ...recent.map((n) {
             final type = (n['type'] as String?) ?? 'alert';
-            final icon = typeIcons[type] ?? Icons.notifications;
+            final icon = typeIcons[type] ?? Icons.notifications_rounded;
             final color = typeColors[type] ?? AppColors.primary;
             final timeStr = _formatTime(n['timestamp'] as String?);
+            final isUnread = n['isRead'] == false;
             return Container(
-              margin: const EdgeInsets.only(bottom: 10),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: isUnread ? color.withOpacity(0.03) : AppColors.surfaceVariant.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(10),
+                border: isUnread ? Border.all(color: color.withOpacity(0.1)) : null,
+              ),
               child: Row(children: [
                 Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(6)),
-                  child: Icon(icon, color: color, size: 18),
+                  padding: const EdgeInsets.all(7),
+                  decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+                  child: Icon(icon, color: color, size: 16),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 12),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(n['title'] as String? ?? '', style: const TextStyle(color: AppColors.textDark, fontSize: 13, fontWeight: FontWeight.w500)),
-                  const SizedBox(height: 2),
-                  Text(timeStr, style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
+                  Text(n['title'] as String? ?? '', style: TextStyle(
+                    color: AppColors.textDark, fontSize: 13,
+                    fontWeight: isUnread ? FontWeight.w600 : FontWeight.w500,
+                  )),
+                  const SizedBox(height: 3),
+                  Text(timeStr, style: const TextStyle(color: AppColors.textMuted, fontSize: 11)),
                 ])),
-                if (n['isRead'] == false)
-                  Container(width: 8, height: 8, decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle)),
+                if (isUnread)
+                  Container(width: 7, height: 7, decoration: BoxDecoration(
+                    color: color, shape: BoxShape.circle,
+                    boxShadow: [BoxShadow(color: color.withOpacity(0.3), blurRadius: 4)],
+                  )),
               ]),
             );
           }),
@@ -286,36 +434,82 @@ class StudentDashboardPage extends StatelessWidget {
 
   Widget _buildQuickActions(BuildContext context) {
     final actions = [
-      {'label': 'Attendance', 'icon': Icons.fact_check, 'color': AppColors.secondary, 'route': '/student/attendance'},
-      {'label': 'Results', 'icon': Icons.assessment, 'color': AppColors.primary, 'route': '/student/results'},
-      {'label': 'Courses', 'icon': Icons.menu_book, 'color': const Color(0xFF3B82F6), 'route': '/student/courses'},
-      {'label': 'Assignments', 'icon': Icons.assignment, 'color': AppColors.accent, 'route': '/student/assignments'},
-      {'label': 'Exams', 'icon': Icons.event, 'color': AppColors.error, 'route': '/student/exams'},
-      {'label': 'Notifications', 'icon': Icons.notifications, 'color': const Color(0xFF14B8A6), 'route': '/student/notifications'},
+      _ActionItem('Attendance', Icons.fact_check_rounded, const Color(0xFF10B981), '/student/attendance'),
+      _ActionItem('Results', Icons.assessment_rounded, const Color(0xFF3B82F6), '/student/results'),
+      _ActionItem('Courses', Icons.menu_book_rounded, const Color(0xFF8B5CF6), '/student/courses'),
+      _ActionItem('Assignments', Icons.assignment_rounded, const Color(0xFFF97316), '/student/assignments'),
+      _ActionItem('Exams', Icons.event_note_rounded, const Color(0xFFF43F5E), '/student/exams'),
+      _ActionItem('Library', Icons.local_library_rounded, const Color(0xFF06B6D4), '/student/library'),
     ];
     return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface, borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2))],
-      ),
+      padding: const EdgeInsets.all(20),
+      decoration: AppCardStyles.raised,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Text('Quick Actions', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-        const Divider(height: 20),
-        Wrap(spacing: 10, runSpacing: 10, children: actions.map((a) => ElevatedButton.icon(
-          onPressed: () => context.go(a['route'] as String),
-          icon: Icon(a['icon'] as IconData, size: 16),
-          label: Text(a['label'] as String, style: const TextStyle(fontSize: 12)),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: (a['color'] as Color).withOpacity(0.1),
-            foregroundColor: a['color'] as Color,
-            elevation: 0,
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          ),
-        )).toList()),
+        const SectionHeader(title: 'Quick Actions', icon: Icons.bolt_rounded),
+        GridView.count(
+          crossAxisCount: 3, shrinkWrap: true, physics: const NeverScrollableScrollPhysics(),
+          mainAxisSpacing: 10, crossAxisSpacing: 10, childAspectRatio: 2.2,
+          children: actions.map((a) => _QuickActionTile(action: a)).toList(),
+        ),
       ]),
+    );
+  }
+}
+
+class _StatItem {
+  final String label, value, badge, route;
+  final IconData icon;
+  final Color color;
+  const _StatItem(this.label, this.value, this.icon, this.color, this.badge, this.route);
+}
+
+class _ActionItem {
+  final String label, route;
+  final IconData icon;
+  final Color color;
+  const _ActionItem(this.label, this.icon, this.color, this.route);
+}
+
+class _QuickActionTile extends StatefulWidget {
+  final _ActionItem action;
+  const _QuickActionTile({required this.action});
+  @override
+  State<_QuickActionTile> createState() => _QuickActionTileState();
+}
+
+class _QuickActionTileState extends State<_QuickActionTile> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final a = widget.action;
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTap: () => context.go(a.route),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            color: _hovered ? a.color.withOpacity(0.1) : a.color.withOpacity(0.04),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: _hovered ? a.color.withOpacity(0.25) : a.color.withOpacity(0.08),
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(a.icon, size: 18, color: a.color),
+              const SizedBox(width: 8),
+              Flexible(child: Text(a.label, style: TextStyle(
+                color: _hovered ? a.color : AppColors.textDark,
+                fontSize: 12, fontWeight: FontWeight.w600,
+              ), overflow: TextOverflow.ellipsis)),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

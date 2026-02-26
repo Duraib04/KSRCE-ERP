@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 
 class HodMentorsPage extends StatefulWidget {
   const HodMentorsPage({super.key});
@@ -42,7 +43,7 @@ class _HodMentorsPageState extends State<HodMentorsPage> {
               Text('Manage mentor-mentee assignments for ${ds.getDepartmentCode(deptId)} department', style: const TextStyle(color: AppColors.textLight, fontSize: 14)),
               const SizedBox(height: 20),
               if (mentorAssigns.isEmpty)
-                Container(padding: const EdgeInsets.all(32), decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+                Container(padding: const EdgeInsets.all(32), decoration: AppCardStyles.elevated,
                   child: const Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
                     Icon(Icons.group_off, color: AppColors.textLight, size: 40),
                     SizedBox(height: 12),
@@ -57,7 +58,7 @@ class _HodMentorsPageState extends State<HodMentorsPage> {
                   return Container(
                     margin: const EdgeInsets.only(bottom: 12),
                     padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+                    decoration: AppCardStyles.elevated,
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Row(children: [
                         CircleAvatar(radius: 22, backgroundColor: Colors.teal.withOpacity(0.15), child: const Icon(Icons.person, color: Colors.teal, size: 22)),

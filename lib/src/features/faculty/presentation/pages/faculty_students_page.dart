@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 
 class FacultyStudentsPage extends StatelessWidget {
   const FacultyStudentsPage({super.key});
@@ -51,7 +52,7 @@ class FacultyStudentsPage extends StatelessWidget {
   Widget _stat(String label, String value, Color color, IconData icon) {
     return Expanded(child: Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(children: [
         Icon(icon, color: color, size: 24),
         const SizedBox(height: 8),
@@ -64,7 +65,7 @@ class FacultyStudentsPage extends StatelessWidget {
   Widget _buildSection(String title, List<Map<String, dynamic>> students) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 16),

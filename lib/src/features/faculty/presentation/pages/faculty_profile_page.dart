@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 
 class FacultyProfilePage extends StatefulWidget {
   const FacultyProfilePage({super.key});
@@ -174,7 +175,7 @@ class _FacultyProfilePageState extends State<FacultyProfilePage> {
   Widget _buildMyRequests(List<Map<String, dynamic>> requests) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
           const Icon(Icons.history, color: AppColors.accent, size: 22), const SizedBox(width: 10),
@@ -236,7 +237,7 @@ class _FacultyProfilePageState extends State<FacultyProfilePage> {
   Widget _approvalChainInfo(Map<String, String> chain) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Row(children: [Icon(Icons.verified_user, color: AppColors.primary, size: 20), SizedBox(width: 8),
           Text('Edit Approval Chain', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark))]),
@@ -276,7 +277,7 @@ class _FacultyProfilePageState extends State<FacultyProfilePage> {
   Widget _profileHeader(bool isMobile, String name, String initials, String facId, String dept, String designation, bool isHOD) {
     return Container(
       padding: EdgeInsets.all(isMobile ? 16 : 24),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: isMobile
         ? Column(children: [
             CircleAvatar(radius: 50, backgroundColor: AppColors.primary, child: Text(initials, style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.white))),
@@ -318,7 +319,7 @@ class _FacultyProfilePageState extends State<FacultyProfilePage> {
     ];
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Row(children: [Icon(Icons.work, color: AppColors.primary, size: 20), SizedBox(width: 8),
           Text('Professional Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark))]),
@@ -336,7 +337,7 @@ class _FacultyProfilePageState extends State<FacultyProfilePage> {
   Widget _contactInfo(String email, String phone) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Row(children: [Icon(Icons.contact_mail, color: AppColors.primary, size: 20), SizedBox(width: 8),
           Text('Contact Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark))]),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 
 class StudentFeesPage extends StatelessWidget {
   const StudentFeesPage({super.key});
@@ -57,11 +58,7 @@ class StudentFeesPage extends StatelessWidget {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.border),
-        ),
+        decoration: AppCardStyles.elevated,
         child: Column(
           children: [
             Icon(icon, color: color, size: 28),
@@ -79,17 +76,13 @@ class StudentFeesPage extends StatelessWidget {
     if (fees.isEmpty) {
       return Container(
         padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+        decoration: AppCardStyles.elevated,
         child: const Center(child: Text('No fee records found', style: TextStyle(color: AppColors.textLight))),
       );
     }
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
+      decoration: AppCardStyles.elevated,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

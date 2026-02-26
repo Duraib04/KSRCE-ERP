@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 
 class StudentLibraryPage extends StatelessWidget {
   const StudentLibraryPage({super.key});
@@ -62,7 +63,7 @@ class StudentLibraryPage extends StatelessWidget {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+        decoration: AppCardStyles.elevated,
         child: Column(children: [
           Icon(icon, color: color, size: 24),
           const SizedBox(height: 8),
@@ -77,13 +78,13 @@ class StudentLibraryPage extends StatelessWidget {
     if (books.isEmpty) {
       return Container(
         padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+        decoration: AppCardStyles.elevated,
         child: const Center(child: Text('No books issued', style: TextStyle(color: AppColors.textLight))),
       );
     }
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

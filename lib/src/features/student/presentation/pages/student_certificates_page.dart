@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 
 class StudentCertificatesPage extends StatelessWidget {
   const StudentCertificatesPage({super.key});
@@ -48,7 +49,7 @@ class StudentCertificatesPage extends StatelessWidget {
   Widget _buildAvailableCertificates(DataService ds, String uid) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -60,7 +61,7 @@ class StudentCertificatesPage extends StatelessWidget {
               width: 320,
               child: Container(
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.border)),
+                decoration: AppCardStyles.flat,
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Row(children: [
                     Icon(c['icon'] as IconData, color: AppColors.accent, size: 24),
@@ -101,13 +102,13 @@ class StudentCertificatesPage extends StatelessWidget {
     if (history.isEmpty) {
       return Container(
         padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+        decoration: AppCardStyles.elevated,
         child: const Center(child: Text('No certificate requests yet', style: TextStyle(color: AppColors.textLight))),
       );
     }
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

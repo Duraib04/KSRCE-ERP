@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 
 class HodDashboardPage extends StatelessWidget {
   const HodDashboardPage({super.key});
@@ -31,92 +32,17 @@ class HodDashboardPage extends StatelessWidget {
           return SingleChildScrollView(
             padding: EdgeInsets.all(isMobile ? 16 : 24),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              // Welcome
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(isMobile ? 16 : 24),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [Color(0xFF1A365D), Color(0xFF2D4A7A)]),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 12, offset: const Offset(0, 4))],
-                ),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Row(children: [
-                    CircleAvatar(radius: isMobile ? 24 : 32, backgroundColor: AppColors.accent,
-                      child: Text(name.split(' ').where((w) => w.isNotEmpty).map((w) => w[0]).take(2).join().toUpperCase(),
-                        style: TextStyle(color: Colors.white, fontSize: isMobile ? 16 : 20, fontWeight: FontWeight.bold))),
-                    const SizedBox(width: 16),
-                    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text('Welcome, $name', style: TextStyle(color: Colors.white, fontSize: isMobile ? 18 : 22, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 4),
-                      Text('Head of Department - $deptName ($deptCode)', style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 13)),
-                    ])),
-                  ]),
-                ]),
-              ),
+              // Welcome header
+              _buildWelcomeHeader(name, deptName, deptCode, isMobile),
               const SizedBox(height: 24),
               // Stats
-              GridView.count(
-                crossAxisCount: isMobile ? 2 : 4, shrinkWrap: true, physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: 12, crossAxisSpacing: 12, childAspectRatio: isMobile ? 1.3 : 1.5,
-                children: [
-                  _statCard(Icons.people, 'Faculty', '${deptFaculty.length}', AppColors.primary),
-                  _statCard(Icons.school, 'Students', '${deptStudents.length}', AppColors.secondary),
-                  _statCard(Icons.class_, 'Classes', '${deptClasses.length}', AppColors.accent),
-                  _statCard(Icons.menu_book, 'Courses', '${deptCourses.length}', Colors.purple),
-                ],
-              ),
+              _buildStatsRow(isMobile, deptFaculty.length, deptStudents.length, deptClasses.length, deptCourses.length),
               const SizedBox(height: 28),
               // Classes overview
-              const Text('Classes & Advisers', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-              const SizedBox(height: 12),
-              ...deptClasses.map((c) {
-                final adviserId = c['classAdviserId'] as String? ?? '';
-                final adviserName = adviserId.isNotEmpty ? ds.getFacultyName(adviserId) : 'Not Assigned';
-                final studentCount = (c['studentIds'] as List<dynamic>?)?.length ?? 0;
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 8),
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
-                  child: Row(children: [
-                    Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
-                      child: const Icon(Icons.class_, color: AppColors.primary, size: 22)),
-                    const SizedBox(width: 14),
-                    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text('Year ${c['year']} - Section ${c['section']}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: AppColors.textDark)),
-                      const SizedBox(height: 4),
-                      Text('Adviser: $adviserName | $studentCount students', style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
-                    ])),
-                    Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(color: adviserId.isNotEmpty ? AppColors.secondary.withOpacity(0.15) : Colors.orange.withOpacity(0.15), borderRadius: BorderRadius.circular(6)),
-                      child: Text(adviserId.isNotEmpty ? 'Assigned' : 'Pending', style: TextStyle(color: adviserId.isNotEmpty ? AppColors.secondary : Colors.orange, fontSize: 12, fontWeight: FontWeight.bold))),
-                  ]),
-                );
-              }),
+              _buildClassesSection(deptClasses, ds, isMobile),
               const SizedBox(height: 28),
               // Mentor assignments overview
-              const Text('Mentor Assignments', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-              const SizedBox(height: 12),
-              if (mentorAssigns.isEmpty)
-                Container(padding: const EdgeInsets.all(20), decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
-                  child: const Center(child: Text('No mentor assignments yet', style: TextStyle(color: AppColors.textLight))))
-              else
-                ...mentorAssigns.map((m) {
-                  final menteeCount = (m['menteeIds'] as List<dynamic>?)?.length ?? 0;
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
-                    child: Row(children: [
-                      CircleAvatar(radius: 18, backgroundColor: Colors.teal.withOpacity(0.15), child: const Icon(Icons.person, color: Colors.teal, size: 18)),
-                      const SizedBox(width: 12),
-                      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Text(m['mentorName'] as String? ?? '', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.textDark)),
-                        Text('Year ${m['year']} Sec ${m['section']} | $menteeCount mentees', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
-                      ])),
-                    ]),
-                  );
-                }),
+              _buildMentorSection(mentorAssigns, isMobile),
               const SizedBox(height: 16),
             ]),
           );
@@ -125,19 +51,248 @@ class HodDashboardPage extends StatelessWidget {
     });
   }
 
-  Widget _statCard(IconData icon, String label, String value, Color color) {
+  Widget _buildWelcomeHeader(String name, String deptName, String deptCode, bool isMobile) {
+    final hour = DateTime.now().hour;
+    final greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
+    final initials = name.split(' ').where((w) => w.isNotEmpty).map((w) => w[0]).take(2).join().toUpperCase();
+
     return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(14), border: Border.all(color: AppColors.border),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2))]),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
-        Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
-          child: Icon(icon, color: color, size: 22)),
-        const SizedBox(height: 10),
-        Text(value, style: const TextStyle(color: AppColors.textDark, fontSize: 24, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 4),
-        Text(label, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+      width: double.infinity,
+      padding: EdgeInsets.all(isMobile ? 20 : 28),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft, end: Alignment.bottomRight,
+          colors: [Color(0xFF1A365D), Color(0xFF0F172A)],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: AppCardStyles.coloredShadow(const Color(0xFF1A365D)),
+      ),
+      child: Stack(children: [
+        Positioned(right: -20, top: -20, child: Container(width: 100, height: 100, decoration: BoxDecoration(
+          shape: BoxShape.circle, color: Colors.white.withOpacity(0.03)))),
+        Positioned(right: 40, bottom: -30, child: Container(width: 60, height: 60, decoration: BoxDecoration(
+          shape: BoxShape.circle, color: Colors.white.withOpacity(0.02)))),
+        isMobile
+          ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                Container(
+                  padding: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.white.withOpacity(0.2), width: 2)),
+                  child: CircleAvatar(radius: 22, backgroundColor: const Color(0xFF10B981),
+                    child: Text(initials, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700))),
+                ),
+                const SizedBox(width: 14),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text('$greeting,', style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.6))),
+                  const SizedBox(height: 2),
+                  Text(name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white, letterSpacing: -0.3)),
+                ])),
+              ]),
+              const SizedBox(height: 14),
+              _infoPill('HOD  •  $deptName ($deptCode)'),
+            ])
+          : Row(children: [
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.white.withOpacity(0.15), width: 2)),
+                child: CircleAvatar(radius: 30, backgroundColor: const Color(0xFF10B981),
+                  child: Text(initials, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700))),
+              ),
+              const SizedBox(width: 22),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text('$greeting,', style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.55))),
+                const SizedBox(height: 2),
+                Text(name, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w700, color: Colors.white, letterSpacing: -0.5)),
+                const SizedBox(height: 8),
+                _infoPill('Head of Department  •  $deptName ($deptCode)'),
+              ])),
+              Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                  decoration: BoxDecoration(color: Colors.white.withOpacity(0.08), borderRadius: BorderRadius.circular(20)),
+                  child: const Text('2025-26', style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w500)),
+                ),
+                const SizedBox(height: 8),
+                Row(mainAxisSize: MainAxisSize.min, children: [
+                  const Icon(Icons.circle, size: 7, color: Color(0xFF10B981)),
+                  const SizedBox(width: 5),
+                  const Text('Active', style: TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.w500)),
+                ]),
+              ]),
+            ]),
       ]),
     );
   }
+
+  Widget _infoPill(String text) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+    decoration: BoxDecoration(
+      color: Colors.white.withOpacity(0.08), borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: Colors.white.withOpacity(0.06)),
+    ),
+    child: Text(text, style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 11, fontWeight: FontWeight.w500)),
+  );
+
+  Widget _buildStatsRow(bool isMobile, int facultyCount, int studentCount, int classCount, int courseCount) {
+    final stats = [
+      _HodStat('Faculty', '$facultyCount', Icons.people_rounded, const Color(0xFF3B82F6)),
+      _HodStat('Students', '$studentCount', Icons.school_rounded, const Color(0xFF10B981)),
+      _HodStat('Classes', '$classCount', Icons.class_rounded, const Color(0xFFF97316)),
+      _HodStat('Courses', '$courseCount', Icons.menu_book_rounded, const Color(0xFF8B5CF6)),
+    ];
+    if (isMobile) {
+      return GridView.count(
+        crossAxisCount: 2, shrinkWrap: true, physics: const NeverScrollableScrollPhysics(),
+        mainAxisSpacing: 14, crossAxisSpacing: 14, childAspectRatio: 1.35,
+        children: stats.map((s) => _buildStatCard(s)).toList(),
+      );
+    }
+    return Row(children: stats.asMap().entries.map((e) => Expanded(
+      child: Padding(padding: EdgeInsets.only(left: e.key > 0 ? 14 : 0), child: _buildStatCard(e.value)),
+    )).toList());
+  }
+
+  Widget _buildStatCard(_HodStat s) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: AppCardStyles.statCard(s.color),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Container(
+          padding: const EdgeInsets.all(9),
+          decoration: BoxDecoration(color: s.color.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+          child: Icon(s.icon, color: s.color, size: 20),
+        ),
+        const SizedBox(height: 12),
+        Text(s.value, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w700, color: AppColors.textDark, height: 1.1, letterSpacing: -0.5)),
+        const SizedBox(height: 2),
+        Text(s.label, style: const TextStyle(color: AppColors.textLight, fontSize: 12, fontWeight: FontWeight.w500)),
+      ]),
+    );
+  }
+
+  Widget _buildClassesSection(List<Map<String, dynamic>> deptClasses, DataService ds, bool isMobile) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: AppCardStyles.raised,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const SectionHeader(title: 'Classes & Advisers', icon: Icons.class_rounded),
+        if (deptClasses.isEmpty)
+          Padding(padding: const EdgeInsets.symmetric(vertical: 24), child: Center(child: Column(children: [
+            Icon(Icons.class_rounded, size: 40, color: AppColors.textMuted.withOpacity(0.3)),
+            const SizedBox(height: 10),
+            const Text('No classes found', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
+          ])))
+        else
+          ...deptClasses.map((c) {
+            final adviserId = c['classAdviserId'] as String? ?? '';
+            final adviserName = adviserId.isNotEmpty ? ds.getFacultyName(adviserId) : 'Not Assigned';
+            final studentCount = (c['studentIds'] as List<dynamic>?)?.length ?? 0;
+            final isAssigned = adviserId.isNotEmpty;
+            final accentColor = isAssigned ? const Color(0xFF10B981) : const Color(0xFFF97316);
+            return Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.all(14),
+              decoration: AppCardStyles.accentLeft(accentColor),
+              child: Row(children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+                  child: const Icon(Icons.class_rounded, color: AppColors.primary, size: 20),
+                ),
+                const SizedBox(width: 14),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text('Year ${c['year']} - Section ${c['section']}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textDark)),
+                  const SizedBox(height: 4),
+                  Row(children: [
+                    Icon(Icons.person_rounded, size: 13, color: AppColors.textMuted),
+                    const SizedBox(width: 4),
+                    Text('Adviser: $adviserName', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+                    const SizedBox(width: 10),
+                    Icon(Icons.people_rounded, size: 13, color: AppColors.textMuted),
+                    const SizedBox(width: 4),
+                    Text('$studentCount students', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+                  ]),
+                ])),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(color: accentColor.withOpacity(0.08), borderRadius: BorderRadius.circular(20)),
+                  child: Text(isAssigned ? 'Assigned' : 'Pending', style: TextStyle(color: accentColor, fontSize: 11, fontWeight: FontWeight.w600)),
+                ),
+              ]),
+            );
+          }),
+      ]),
+    );
+  }
+
+  Widget _buildMentorSection(List<Map<String, dynamic>> mentorAssigns, bool isMobile) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: AppCardStyles.elevated,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const SectionHeader(title: 'Mentor Assignments', icon: Icons.supervisor_account_rounded),
+        if (mentorAssigns.isEmpty)
+          Padding(padding: const EdgeInsets.symmetric(vertical: 24), child: Center(child: Column(children: [
+            Icon(Icons.supervisor_account_rounded, size: 40, color: AppColors.textMuted.withOpacity(0.3)),
+            const SizedBox(height: 10),
+            const Text('No mentor assignments yet', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
+          ])))
+        else
+          ...mentorAssigns.asMap().entries.map((entry) {
+            final m = entry.value;
+            final menteeCount = (m['menteeIds'] as List<dynamic>?)?.length ?? 0;
+            final colors = [const Color(0xFF3B82F6), const Color(0xFF10B981), const Color(0xFFF97316), const Color(0xFF8B5CF6), const Color(0xFFF43F5E)];
+            final c = colors[entry.key % colors.length];
+            final mentorName = m['mentorName'] as String? ?? '';
+            final initials = mentorName.split(' ').where((w) => w.isNotEmpty).map((w) => w[0]).take(2).join().toUpperCase();
+            return Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: c.withOpacity(0.03),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: c.withOpacity(0.08)),
+              ),
+              child: Row(children: [
+                Container(
+                  width: 38, height: 38,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [c.withOpacity(0.15), c.withOpacity(0.05)]),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(initials, style: TextStyle(color: c, fontSize: 13, fontWeight: FontWeight.w700)),
+                ),
+                const SizedBox(width: 12),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(mentorName, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textDark)),
+                  const SizedBox(height: 3),
+                  Row(children: [
+                    Icon(Icons.calendar_today_rounded, size: 12, color: AppColors.textMuted),
+                    const SizedBox(width: 4),
+                    Text('Year ${m['year']} Sec ${m['section']}', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+                    const SizedBox(width: 10),
+                    Icon(Icons.people_outline_rounded, size: 13, color: AppColors.textMuted),
+                    const SizedBox(width: 4),
+                    Text('$menteeCount mentees', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+                  ]),
+                ])),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(color: c.withOpacity(0.08), borderRadius: BorderRadius.circular(16)),
+                  child: Text('$menteeCount', style: TextStyle(color: c, fontSize: 12, fontWeight: FontWeight.w700)),
+                ),
+              ]),
+            );
+          }),
+      ]),
+    );
+  }
+}
+
+class _HodStat {
+  final String label, value;
+  final IconData icon;
+  final Color color;
+  const _HodStat(this.label, this.value, this.icon, this.color);
 }

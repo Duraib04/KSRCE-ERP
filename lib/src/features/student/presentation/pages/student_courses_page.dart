@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 
 class StudentCoursesPage extends StatelessWidget {
   const StudentCoursesPage({super.key});
@@ -43,7 +44,7 @@ class StudentCoursesPage extends StatelessWidget {
   Widget _buildCourseSummary(int count, int credits) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
         _summaryItem('Total Courses', '$count', Icons.book),
         _summaryItem('Total Credits', '$credits', Icons.stars),
@@ -75,7 +76,7 @@ class StudentCoursesPage extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
           Container(

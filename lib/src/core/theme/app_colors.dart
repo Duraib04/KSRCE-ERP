@@ -33,8 +33,8 @@ class AppColors {
   static const Color textMuted = Color(0xFF9CA3AF); // Muted gray
   
   // Border Colors
-  static const Color border = Color(0xFFE5E7EB);
-  static const Color borderLight = Color(0xFFF3F4F6);
+  static const Color border = Color(0xFFF0F1F3); // Very subtle, modern borderless feel
+  static const Color borderLight = Color(0xFFF7F8F9);
   
   // Overlay Colors
   static Color overlay(Color color, double opacity) =>

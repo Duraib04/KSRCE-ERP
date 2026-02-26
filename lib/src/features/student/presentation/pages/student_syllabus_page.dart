@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 
 class StudentSyllabusPage extends StatelessWidget {
   const StudentSyllabusPage({super.key});
@@ -35,7 +36,7 @@ class StudentSyllabusPage extends StatelessWidget {
                   return Container(
                     margin: const EdgeInsets.only(bottom: 16),
                     padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+                    decoration: AppCardStyles.elevated,
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Text('$courseId - ${course['courseName'] ?? ''}', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 16)),
                       const SizedBox(height: 8),
@@ -49,7 +50,7 @@ class StudentSyllabusPage extends StatelessWidget {
                 return Container(
                   margin: const EdgeInsets.only(bottom: 16),
                   padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+                  decoration: AppCardStyles.elevated,
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Row(children: [
                       Expanded(child: Text('$courseId - ${course['courseName'] ?? syl['courseName'] ?? ''}', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 16))),

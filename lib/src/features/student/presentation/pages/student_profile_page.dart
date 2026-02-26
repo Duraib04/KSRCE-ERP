@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 import '../../../../core/services/file_upload_service.dart';
 
 class StudentProfilePage extends StatefulWidget {
@@ -188,7 +189,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
   Widget _buildMyRequests(List<Map<String, dynamic>> requests) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
           const Icon(Icons.history, color: AppColors.accent, size: 22), const SizedBox(width: 10),
@@ -250,7 +251,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
   Widget _approvalChainInfo(Map<String, String> chain) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Row(children: [Icon(Icons.verified_user, color: AppColors.primary, size: 20), SizedBox(width: 8),
           Text('Edit Approval Chain', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark))]),
@@ -310,7 +311,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
     );
     return Container(
       padding: EdgeInsets.all(isMobile ? 16 : 24),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: isMobile
         ? Column(children: [
             avatarWidget,
@@ -370,7 +371,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
     final details = [{'label': 'Date of Birth', 'value': dob}, {'label': 'Blood Group', 'value': bloodGroup}];
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Row(children: [Icon(Icons.person, color: AppColors.primary, size: 20), SizedBox(width: 8),
           Text('Personal Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark))]),
@@ -390,7 +391,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
     final details = [{'label': 'Register Number', 'value': rollNo}, {'label': 'Department', 'value': dept}, {'label': 'Year', 'value': year}, {'label': 'Current CGPA', 'value': cgpaStr}];
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Row(children: [Icon(Icons.school, color: AppColors.primary, size: 20), SizedBox(width: 8),
           Text('Academic Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark))]),
@@ -415,7 +416,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
     ];
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Row(children: [Icon(Icons.contact_mail, color: AppColors.primary, size: 20), SizedBox(width: 8),
           Text('Contact Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark))]),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 
 /// Faculty page to log which topic was covered in each period,
 /// along with teaching method (Board, PPT, Animation, custom), COs covered,
@@ -196,11 +197,7 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
   Widget _buildControls(List<Map<String, dynamic>> courses) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
+      decoration: AppCardStyles.elevated,
       child: Row(
         children: [
           const Icon(Icons.class_, color: AppColors.primary, size: 20),
@@ -728,11 +725,7 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
         final day = entries.first['day'] ?? '';
         return Container(
           margin: const EdgeInsets.only(bottom: 16),
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.border),
-          ),
+          decoration: AppCardStyles.elevated,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -877,11 +870,7 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
+      decoration: AppCardStyles.elevated,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1000,11 +989,7 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(48),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
+      decoration: AppCardStyles.elevated,
       child: Column(
         children: [
           Icon(Icons.edit_calendar,

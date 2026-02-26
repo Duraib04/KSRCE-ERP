@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 
 class HodStudentsPage extends StatelessWidget {
   const HodStudentsPage({super.key});
@@ -55,7 +56,7 @@ class HodStudentsPage extends StatelessWidget {
                     return Container(
                       margin: const EdgeInsets.only(bottom: 8),
                       padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.border)),
+                      decoration: AppCardStyles.raised,
                       child: Row(children: [
                         CircleAvatar(radius: 18, backgroundColor: AppColors.primary.withOpacity(0.1),
                           child: Text((s?['name'] as String? ?? '?')[0].toUpperCase(), style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 14))),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 
 class StudentPlacementsPage extends StatelessWidget {
   const StudentPlacementsPage({super.key});
@@ -54,7 +55,7 @@ class StudentPlacementsPage extends StatelessWidget {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+        decoration: AppCardStyles.elevated,
         child: Column(children: [
           Icon(icon, color: color, size: 24),
           const SizedBox(height: 8),
@@ -68,7 +69,7 @@ class StudentPlacementsPage extends StatelessWidget {
   Widget _buildUpcomingDrives(List<Map<String, dynamic>> drives, DataService ds, String uid) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -80,7 +81,7 @@ class StudentPlacementsPage extends StatelessWidget {
             return Container(
               margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.border)),
+              decoration: AppCardStyles.flat,
               child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Container(
                   padding: const EdgeInsets.all(10),
@@ -127,7 +128,7 @@ class StudentPlacementsPage extends StatelessWidget {
   Widget _buildApplications(List<Map<String, dynamic>> applications, DataService ds) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

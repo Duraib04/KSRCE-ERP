@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_card_styles.dart';
 import '../../../../core/services/file_upload_service.dart';
 import '../../../shared/widgets/file_upload_widget.dart';
 
@@ -63,7 +64,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
   Widget _buildComplaintsList(List<Map<String, dynamic>> complaintsList) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('My Complaints', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 16),
@@ -148,7 +149,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
     final categories = ['infrastructure', 'academic', 'library', 'hostel', 'transport', 'other'];
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('File New Complaint', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 20),
@@ -156,7 +157,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
         const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.border)),
+          decoration: AppCardStyles.flat,
           child: DropdownButton<String>(
             value: _selectedCategory, isExpanded: true, dropdownColor: AppColors.surface,
             style: const TextStyle(color: AppColors.textDark), underline: const SizedBox(),
