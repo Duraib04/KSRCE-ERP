@@ -75,7 +75,7 @@ class AdminDashboardPage extends StatelessWidget {
             ),
             SizedBox(width: isMobile ? 14 : 22),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('$greeting,', style: TextStyle(fontSize: isMobile ? 13 : 14, color: Colors.white.withOpacity(0.5))),
+              Text('$greeting,', style: TextStyle(fontSize: isMobile ? 13 : 14, color: Colors.white.withOpacity(0.7))),
               const SizedBox(height: 2),
               Text('Administrator', style: TextStyle(fontSize: isMobile ? 20 : 26, fontWeight: FontWeight.w700, color: Colors.white, letterSpacing: -0.3)),
               const SizedBox(height: 6),
@@ -86,7 +86,7 @@ class AdminDashboardPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: Colors.white.withOpacity(0.06)),
                 ),
-                child: Text('System Admin  •  KSRCE', style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 11, fontWeight: FontWeight.w500)),
+                child: Text('System Admin  •  KSRCE', style: TextStyle(color: Colors.white.withOpacity(0.75), fontSize: 11, fontWeight: FontWeight.w500)),
               ),
             ])),
           ]),

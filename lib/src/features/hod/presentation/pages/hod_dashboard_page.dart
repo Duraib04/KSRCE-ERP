@@ -83,7 +83,7 @@ class HodDashboardPage extends StatelessWidget {
                 ),
                 const SizedBox(width: 14),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('$greeting,', style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.6))),
+                  Text('$greeting,', style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.7))),
                   const SizedBox(height: 2),
                   Text(name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white, letterSpacing: -0.3)),
                 ])),
@@ -100,7 +100,7 @@ class HodDashboardPage extends StatelessWidget {
               ),
               const SizedBox(width: 22),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('$greeting,', style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.55))),
+                Text('$greeting,', style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.7))),
                 const SizedBox(height: 2),
                 Text(name, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w700, color: Colors.white, letterSpacing: -0.5)),
                 const SizedBox(height: 8),

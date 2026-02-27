@@ -29,8 +29,8 @@ class AppColors {
   // Text Colors
   static const Color textDark = Color(0xFF1F2937); // Dark gray (primary text)
   static const Color textMedium = Color(0xFF374151); // Medium gray
-  static const Color textLight = Color(0xFF6B7280); // Light gray
-  static const Color textMuted = Color(0xFF9CA3AF); // Muted gray
+  static const Color textLight = Color(0xFF4B5563); // Readable secondary text
+  static const Color textMuted = Color(0xFF6B7280); // Subtle but visible
   
   // Border Colors
   static const Color border = Color(0xFFF0F1F3); // Very subtle, modern borderless feel

@@ -77,7 +77,7 @@ class StudentResultsPage extends StatelessWidget {
           final status = r['status'] as String? ?? '';
           Color statusColor = status == 'Pass' ? Colors.green : status == 'Absent' ? Colors.orange : Colors.redAccent;
           return TableRow(children: [
-            Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(r['courseCode'] as String? ?? '', style: const TextStyle(color: Color(0xFF64B5F6), fontSize: 12))),
+            Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(r['courseCode'] as String? ?? '', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600, fontSize: 12))),
             Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(r['courseName'] as String? ?? '', style: const TextStyle(color: AppColors.textDark, fontSize: 12))),
             Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(r['examType'] as String? ?? '', style: const TextStyle(color: AppColors.textMedium, fontSize: 12))),
             Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${r['obtainedMarks'] ?? 0}/${r['maxMarks'] ?? 0}', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 12))),

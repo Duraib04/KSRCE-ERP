@@ -89,7 +89,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
                 Row(children: [
                   Icon(statusIcon, color: statusColor, size: 18),
                   const SizedBox(width: 8),
-                  Text(c['complaintId'] as String? ?? '', style: const TextStyle(color: Color(0xFF64B5F6), fontSize: 12, fontWeight: FontWeight.bold)),
+                  Text(c['complaintId'] as String? ?? '', style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.bold)),
                   const Spacer(),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
@@ -106,7 +106,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
-                    child: Text(c['category'] as String? ?? '', style: const TextStyle(color: Color(0xFF64B5F6), fontSize: 11)),
+                    child: Text(c['category'] as String? ?? '', style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.w500)),
                   ),
                   const SizedBox(width: 12),
                   const Icon(Icons.calendar_today, color: AppColors.textLight, size: 14),

@@ -96,7 +96,7 @@ class FacultyDashboardPage extends StatelessWidget {
                   ),
                   const SizedBox(width: 14),
                   Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text('$greeting,', style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.5))),
+                    Text('$greeting,', style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.7))),
                     Text(name, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700, letterSpacing: -0.3)),
                   ])),
                 ]),
@@ -104,7 +104,7 @@ class FacultyDashboardPage extends StatelessWidget {
                 Row(children: [
                   _pill('Faculty'),
                   const Spacer(),
-                  Text('$dayName, $dateStr', style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 11)),
+                  Text('$dayName, $dateStr', style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 11)),
                 ]),
               ])
             : Row(children: [
@@ -119,7 +119,7 @@ class FacultyDashboardPage extends StatelessWidget {
                 ),
                 const SizedBox(width: 22),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('$greeting,', style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.5))),
+                  Text('$greeting,', style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.7))),
                   const SizedBox(height: 2),
                   Text(name, style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.w700, letterSpacing: -0.5)),
                   const SizedBox(height: 8),
@@ -233,7 +233,7 @@ class FacultyDashboardPage extends StatelessWidget {
                 child: Row(children: [
                   SizedBox(width: isMobile ? 70 : 80, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(s['startTime'] as String? ?? '', style: TextStyle(color: c, fontSize: 13, fontWeight: FontWeight.w600)),
-                    Text(s['endTime'] as String? ?? '', style: TextStyle(color: c.withOpacity(0.5), fontSize: 11)),
+                    Text(s['endTime'] as String? ?? '', style: TextStyle(color: c.withOpacity(0.7), fontSize: 11)),
                   ])),
                   const SizedBox(width: 8),
                   Container(width: 1.5, height: 36, decoration: BoxDecoration(color: c.withOpacity(0.15), borderRadius: BorderRadius.circular(1))),

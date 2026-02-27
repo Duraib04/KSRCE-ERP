@@ -505,10 +505,10 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
 
   Widget _buildBloomsLegend() {
     final colors = {
-      'L1': Colors.grey,
+      'L1': Colors.grey.shade700,
       'L2': Colors.blue,
       'L3': Colors.teal,
-      'L4': Colors.orange,
+      'L4': Colors.orange.shade800,
       'L5': Colors.deepPurple,
       'L6': Colors.red,
     };
@@ -546,7 +546,7 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
                     child: Text(e.value,
                         style: TextStyle(
                             color: color,
-                            fontSize: 10,
+                            fontSize: 11,
                             fontWeight: FontWeight.bold)),
                   ),
                   const SizedBox(width: 4),
@@ -565,10 +565,10 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
   Widget _buildCOCard(Map<String, dynamic> co) {
     final bloomsCode = co['bloomsCode'] ?? 'L3';
     final colors = {
-      'L1': Colors.grey,
+      'L1': Colors.grey.shade700,
       'L2': Colors.blue,
       'L3': Colors.teal,
-      'L4': Colors.orange,
+      'L4': Colors.orange.shade800,
       'L5': Colors.deepPurple,
       'L6': Colors.red,
     };

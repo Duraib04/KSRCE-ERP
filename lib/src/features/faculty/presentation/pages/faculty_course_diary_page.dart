@@ -914,7 +914,7 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
                                   fontSize: 13)),
                           Text(_hourSlots[hour]?.split('-').first ?? '',
                               style: const TextStyle(
-                                  color: AppColors.textLight, fontSize: 9)),
+                                  color: AppColors.textLight, fontSize: 11)),
                         ],
                       ),
                     ),
@@ -959,7 +959,7 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
                                                 .length),
                                 style: TextStyle(
                                     color: color,
-                                    fontSize: 10,
+                                    fontSize: 11,
                                     fontWeight: FontWeight.w600),
                                 textAlign: TextAlign.center,
                                 maxLines: 2,
@@ -967,8 +967,8 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
                               ),
                               Text(method,
                                   style: TextStyle(
-                                      color: color.withOpacity(0.7),
-                                      fontSize: 8)),
+                                      color: color.withOpacity(0.85),
+                                      fontSize: 10)),
                             ],
                           ),
                         ),

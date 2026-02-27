@@ -514,7 +514,7 @@ class _FileManagerPageState extends State<FileManagerPage> {
       child: Column(
         children: [
           Icon(Icons.cloud_off, size: 64,
-              color: AppColors.textLight.withOpacity(0.4)),
+              color: AppColors.textLight.withOpacity(0.5)),
           const SizedBox(height: 16),
           const Text('No files uploaded yet',
               style: TextStyle(
@@ -538,7 +538,7 @@ class _FileManagerPageState extends State<FileManagerPage> {
       ),
       child: Text(text,
           style: TextStyle(
-              color: color, fontSize: 10, fontWeight: FontWeight.bold)),
+              color: color, fontSize: 11, fontWeight: FontWeight.bold)),
     );
   }
 

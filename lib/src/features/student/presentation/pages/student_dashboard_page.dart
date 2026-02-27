@@ -109,7 +109,7 @@ class StudentDashboardPage extends StatelessWidget {
                   ),
                   const SizedBox(width: 14),
                   Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text('$greeting,', style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.6), fontWeight: FontWeight.w400)),
+                    Text('$greeting,', style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.7), fontWeight: FontWeight.w400)),
                     const SizedBox(height: 2),
                     Text(firstName, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white, letterSpacing: -0.3)),
                   ])),
@@ -120,7 +120,7 @@ class StudentDashboardPage extends StatelessWidget {
                 Row(children: [
                   _infoPill(rollNo),
                   const Spacer(),
-                  Text('$dayName, $dateStr', style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 11)),
+                  Text('$dayName, $dateStr', style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 11)),
                 ]),
               ])
             : Row(children: [
@@ -135,7 +135,7 @@ class StudentDashboardPage extends StatelessWidget {
                 ),
                 const SizedBox(width: 22),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('$greeting,', style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.55), fontWeight: FontWeight.w400)),
+                  Text('$greeting,', style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.7), fontWeight: FontWeight.w400)),
                   const SizedBox(height: 2),
                   Text(name, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w700, color: Colors.white, letterSpacing: -0.5)),
                   const SizedBox(height: 8),

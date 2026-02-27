@@ -149,7 +149,7 @@ class StudentAttendancePage extends StatelessWidget {
                   Color statusColor = pct >= 75 ? Colors.green : pct >= 70 ? Colors.orange : Colors.redAccent;
                   String status = pct >= 75 ? 'Safe' : pct >= 70 ? 'Warning' : 'Shortage';
                   return TableRow(children: [
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(s['courseCode'] as String? ?? '', style: const TextStyle(color: Color(0xFF64B5F6), fontSize: 13))),
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(s['courseCode'] as String? ?? '', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600, fontSize: 13))),
                     Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text(s['courseName'] as String? ?? '', style: const TextStyle(color: AppColors.textDark, fontSize: 13))),
                     Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['attendedClasses'] ?? 0}', style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
                     Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${s['totalClasses'] ?? 0}', style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
