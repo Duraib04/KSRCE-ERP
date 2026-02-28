@@ -31,6 +31,7 @@ class _DashboardShellState extends State<DashboardShell> {
     if (widget.role == 'student') {
       return [
         NavItem(title: 'Dashboard', icon: Icons.dashboard, route: '/student/dashboard'),
+        NavItem(title: 'Portal Home', icon: Icons.apps, route: '/student/portal'),
         NavItem(title: 'Profile', icon: Icons.person, route: '/student/profile'),
         NavItem(title: 'Academics', icon: Icons.school, route: '', children: [
           NavItem(title: 'My Courses', icon: Icons.book, route: '/student/courses'),

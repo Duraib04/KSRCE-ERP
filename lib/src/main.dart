@@ -26,6 +26,7 @@ import 'features/student/presentation/pages/student_certificates_page.dart';
 import 'features/student/presentation/pages/student_placements_page.dart';
 import 'features/student/presentation/pages/student_events_page.dart';
 import 'features/student/presentation/pages/student_settings_page.dart';
+import 'features/student/presentation/pages/student_portal_page.dart';
 
 import 'features/faculty/presentation/pages/faculty_dashboard_page.dart';
 import 'features/faculty/presentation/pages/faculty_profile_page.dart';
@@ -142,6 +143,7 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/login', builder: (c, s) => const LoginPage()),
     // Student routes
     GoRoute(path: '/student/dashboard', builder: (c, s) => _s('/student/dashboard', const StudentDashboardPage())),
+    GoRoute(path: '/student/portal', builder: (c, s) => _s('/student/portal', const StudentPortalPage())),
     GoRoute(path: '/student/profile', builder: (c, s) => _s('/student/profile', const StudentProfilePage())),
     GoRoute(path: '/student/courses', builder: (c, s) => _s('/student/courses', const StudentCoursesPage())),
     GoRoute(path: '/student/timetable', builder: (c, s) => _s('/student/timetable', const StudentTimetablePage())),
