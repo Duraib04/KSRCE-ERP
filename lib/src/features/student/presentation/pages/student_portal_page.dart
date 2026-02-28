@@ -217,7 +217,11 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
   // DAY ORDER BANNER
   // ─────────────────────────────────────────────────────────
   Widget _buildDayOrderBanner(String dayName, int dayOrder, String dateStr) {
-    return Container(
+    return GestureDetector(
+      onTap: () => context.go('/student/timetable'),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       decoration: BoxDecoration(
@@ -259,6 +263,8 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
           ),
         ],
       ),
+      ),
+      ),
     );
   }
 
@@ -270,7 +276,9 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
     final latest = notifications.isNotEmpty ? notifications.first : null;
     final message = (latest?['title'] as String?) ?? 'No new notices at this time.';
 
-    return GestureDetector(
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
       onTap: () => context.go('/student/notifications'),
       child: Container(
         width: double.infinity,
@@ -318,6 +326,7 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
           ],
         ),
       ),
+      ),
     );
   }
 
@@ -325,7 +334,11 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
   // PROFILE INFO STRIP
   // ─────────────────────────────────────────────────────────
   Widget _buildProfileStrip(bool isMobile, String name, String initials, String dept, String year, String section, String rollNo, Map<String, dynamic>? mentor) {
-    return Container(
+    return GestureDetector(
+      onTap: () => context.go('/student/profile'),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Container(
       padding: const EdgeInsets.all(18),
       decoration: AppCardStyles.elevated,
       child: isMobile
@@ -374,6 +387,8 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
               ]),
             ]),
           ]),
+      ),
+      ),
     );
   }
 
@@ -463,7 +478,11 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
                 final i = entry.key;
                 final p = entry.value;
                 final c = periodColors[i % periodColors.length];
-                return Container(
+                return GestureDetector(
+                  onTap: () => context.go('/student/timetable'),
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: Container(
                   width: isMobile ? 140 : 160,
                   margin: EdgeInsets.only(right: i < periods.length - 1 ? 10 : 0),
                   padding: const EdgeInsets.all(12),
@@ -488,6 +507,8 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
                     Text(p['courseName'] as String? ?? '', style: const TextStyle(color: AppColors.textDark, fontSize: 12, fontWeight: FontWeight.w600),
                       maxLines: 2, overflow: TextOverflow.ellipsis),
                   ]),
+                  ),
+                  ),
                 );
               }).toList(),
             ),
@@ -599,33 +620,40 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
         else
           ...events.map((e) {
             final eventDate = e['date'] as String? ?? '';
-            return Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: const Color(0xFFD946EF).withOpacity(0.03),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFFD946EF).withOpacity(0.08)),
-              ),
-              child: Row(children: [
-                Container(
-                  width: 42, height: 42,
+            return GestureDetector(
+              onTap: () => context.go('/student/events'),
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFD946EF).withOpacity(0.08),
+                    color: const Color(0xFFD946EF).withOpacity(0.03),
                     borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: const Color(0xFFD946EF).withOpacity(0.08)),
                   ),
-                  child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Text(_extractDay(eventDate), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Color(0xFFD946EF))),
-                    Text(_extractMonth(eventDate), style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: Color(0xFFD946EF))),
+                  child: Row(children: [
+                    Container(
+                      width: 42, height: 42,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFD946EF).withOpacity(0.08),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                        Text(_extractDay(eventDate), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Color(0xFFD946EF))),
+                        Text(_extractMonth(eventDate), style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: Color(0xFFD946EF))),
+                      ]),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Text(e['title'] as String? ?? '', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+                      const SizedBox(height: 2),
+                      Text(e['type'] as String? ?? '', style: const TextStyle(fontSize: 11, color: AppColors.textLight)),
+                    ])),
+                    const Icon(Icons.chevron_right_rounded, size: 16, color: Color(0xFFD946EF)),
                   ]),
                 ),
-                const SizedBox(width: 12),
-                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(e['title'] as String? ?? '', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textDark)),
-                  const SizedBox(height: 2),
-                  Text(e['type'] as String? ?? '', style: const TextStyle(fontSize: 11, color: AppColors.textLight)),
-                ])),
-              ]),
+              ),
             );
           }),
       ]),
@@ -654,7 +682,9 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
   }
 
   Widget _taskRow(String label, String count, IconData icon, Color color, VoidCallback onTap) {
-    return GestureDetector(
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -673,6 +703,7 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
             child: Text(count, style: TextStyle(color: color, fontSize: 13, fontWeight: FontWeight.w700)),
           ),
         ]),
+      ),
       ),
     );
   }
@@ -706,19 +737,25 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
           ])),
         ]),
         const SizedBox(height: 12),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          decoration: BoxDecoration(
-            color: const Color(0xFF7C3AED).withOpacity(0.04),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: const Color(0xFF7C3AED).withOpacity(0.1)),
+        GestureDetector(
+          onTap: () => context.go('/student/profile'),
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF7C3AED).withOpacity(0.04),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFF7C3AED).withOpacity(0.1)),
+              ),
+              child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Icon(Icons.email_rounded, size: 14, color: Color(0xFF7C3AED)),
+                SizedBox(width: 6),
+                Text('Contact Mentor', style: TextStyle(color: Color(0xFF7C3AED), fontSize: 12, fontWeight: FontWeight.w600)),
+              ]),
+            ),
           ),
-          child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Icon(Icons.email_rounded, size: 14, color: Color(0xFF7C3AED)),
-            SizedBox(width: 6),
-            Text('Contact Mentor', style: TextStyle(color: Color(0xFF7C3AED), fontSize: 12, fontWeight: FontWeight.w600)),
-          ]),
         ),
       ]),
     );
