@@ -13,7 +13,8 @@ class StudentCoursesPage extends StatelessWidget {
       if (!ds.isLoaded) {
         return const Scaffold(backgroundColor: AppColors.background, body: Center(child: CircularProgressIndicator()));
       }
-      final coursesList = ds.courses;
+      final studentId = ds.currentUserId ?? '';
+      final coursesList = ds.getStudentCourses(studentId);
       final totalCredits = coursesList.fold<int>(0, (sum, c) => sum + ((c['credits'] as int?) ?? 0));
 
       return Scaffold(

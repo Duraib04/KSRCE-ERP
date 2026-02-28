@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'persistence_service.dart';
 
 class DataService extends ChangeNotifier {
   static final DataService _instance = DataService._internal();
@@ -81,10 +82,54 @@ class DataService extends ChangeNotifier {
   Map<String, dynamic>? get currentStudent => _currentStudent;
   Map<String, dynamic>? get currentFaculty => _currentFaculty;
 
+  // Settings storage (persisted)
+  Map<String, dynamic> _settings = {};
+  Map<String, dynamic> get settings => _settings;
+
   Future<void> loadAllData() async {
     if (_isLoaded) return;
     try {
-      final futures = await Future.wait([
+      // Initialize persistence
+      await PersistenceService.init();
+
+      // Check if we have persisted data from a previous session
+      final persisted = PersistenceService.loadAll();
+      if (persisted != null) {
+        _students = persisted['students'] ?? [];
+        _users = persisted['users'] ?? [];
+        _courses = persisted['courses'] ?? [];
+        _attendance = persisted['attendance'] ?? [];
+        _assignments = persisted['assignments'] ?? [];
+        _results = persisted['results'] ?? [];
+        _timetable = persisted['timetable'] ?? [];
+        _notifications = persisted['notifications'] ?? [];
+        _complaints = persisted['complaints'] ?? [];
+        _departments = persisted['departments'] ?? [];
+        _faculty = persisted['faculty'] ?? [];
+        _classes = persisted['classes'] ?? [];
+        _mentorAssignments = persisted['mentorAssignments'] ?? [];
+        _exams = persisted['exams'] ?? [];
+        _fees = persisted['fees'] ?? [];
+        _certificates = persisted['certificates'] ?? [];
+        _events = persisted['events'] ?? [];
+        _eventRegistrations = persisted['eventRegistrations'] ?? [];
+        _leave = persisted['leave'] ?? [];
+        _leaveBalance = persisted['leaveBalance'] ?? [];
+        _library = persisted['library'] ?? [];
+        _placements = persisted['placements'] ?? [];
+        _placementApplications = persisted['placementApplications'] ?? [];
+        _syllabus = persisted['syllabus'] ?? [];
+        _research = persisted['research'] ?? [];
+        _facultyTimetable = persisted['facultyTimetable'] ?? [];
+        _courseOutcomes = persisted['courseOutcomes'] ?? [];
+        _courseDiary = persisted['courseDiary'] ?? [];
+        _profileEditRequests = persisted['profileEditRequests'] ?? [];
+        _settings = (persisted['settings']?.isNotEmpty ?? false)
+            ? persisted['settings']!.first
+            : {};
+      } else {
+        // First run: seed from bundled JSON assets
+        final futures = await Future.wait([
         _loadJson('assets/data/students.json'),      // 0
         _loadJson('assets/data/users.json'),          // 1
         _loadJson('assets/data/courses.json'),        // 2
@@ -144,12 +189,80 @@ class DataService extends ChangeNotifier {
       _courseOutcomes = futures[26];
       _courseDiary = futures[27];
       _profileEditRequests = futures[28];
+        // Persist the seed data for future sessions
+        await _persistAll();
+      }
       // Apply changes from any pre-approved profile edit requests
       _applyAllPreApprovedChanges();
       _isLoaded = true;
+      _skipPersist = true;
       notifyListeners();
+      _skipPersist = false;
     } catch (e) {
       debugPrint('Error loading data: $e');
+    }
+  }
+
+  /// Persist all data to localStorage after every mutation
+  Future<void> _persistAll() async {
+    try {
+      await PersistenceService.saveAll({
+        'students': _students,
+        'users': _users,
+        'courses': _courses,
+        'attendance': _attendance,
+        'assignments': _assignments,
+        'results': _results,
+        'timetable': _timetable,
+        'notifications': _notifications,
+        'complaints': _complaints,
+        'departments': _departments,
+        'faculty': _faculty,
+        'classes': _classes,
+        'mentorAssignments': _mentorAssignments,
+        'exams': _exams,
+        'fees': _fees,
+        'certificates': _certificates,
+        'events': _events,
+        'eventRegistrations': _eventRegistrations,
+        'leave': _leave,
+        'leaveBalance': _leaveBalance,
+        'library': _library,
+        'placements': _placements,
+        'placementApplications': _placementApplications,
+        'syllabus': _syllabus,
+        'research': _research,
+        'facultyTimetable': _facultyTimetable,
+        'courseOutcomes': _courseOutcomes,
+        'courseDiary': _courseDiary,
+        'profileEditRequests': _profileEditRequests,
+        'settings': _settings.isNotEmpty ? [_settings] : [],
+      });
+    } catch (e) {
+      debugPrint('Error persisting data: $e');
+    }
+  }
+
+  /// Reset all data to defaults (clear localStorage, reload from assets)
+  Future<void> resetAllData() async {
+    await PersistenceService.clearAll();
+    _isLoaded = false;
+    _currentUserId = null;
+    _currentRole = null;
+    _currentStudent = null;
+    _currentFaculty = null;
+    _settings = {};
+    await loadAllData();
+  }
+
+  /// Override notifyListeners to auto-persist data on every mutation.
+  /// This ensures all changes survive browser refresh.
+  bool _skipPersist = false;
+  @override
+  void notifyListeners() {
+    super.notifyListeners();
+    if (_isLoaded && !_skipPersist) {
+      _persistAll();
     }
   }
 
@@ -1336,6 +1449,474 @@ class DataService extends ChangeNotifier {
     }
     final allIds = menteeIds.union(courseStudentIds);
     return _complaints.where((c) => allIds.contains(c['studentId'])).toList();
+  }
+
+  // ─── STUDENT-FILTERED QUERIES ─────────────────────────
+  /// Get attendance records for a specific student (by enrolled courses)
+  List<Map<String, dynamic>> getStudentAttendanceFiltered(String studentId) {
+    final student = getStudentById(studentId);
+    if (student == null) return _attendance;
+    final enrolled = (student['enrolledCourses'] as List<dynamic>?)?.cast<String>() ?? [];
+    if (enrolled.isEmpty) {
+      final deptId = student['departmentId'] ?? '';
+      return _attendance.where((a) => a['departmentId'] == deptId || enrolled.contains(a['courseId'])).toList();
+    }
+    return _attendance.where((a) => enrolled.contains(a['courseId'])).toList();
+  }
+
+  /// Get assignments for a specific student (by enrolled courses)
+  List<Map<String, dynamic>> getStudentAssignmentsFiltered(String studentId) {
+    final student = getStudentById(studentId);
+    if (student == null) return _assignments;
+    final enrolled = (student['enrolledCourses'] as List<dynamic>?)?.cast<String>() ?? [];
+    if (enrolled.isEmpty) return _assignments;
+    return _assignments.where((a) => enrolled.contains(a['courseId'])).toList();
+  }
+
+  /// Get results for a specific student
+  List<Map<String, dynamic>> getStudentResultsFiltered(String studentId) {
+    final filtered = _results.where((r) => r['studentId'] == studentId).toList();
+    if (filtered.isEmpty) return _results; // Fallback: show all if no per-student data
+    return filtered;
+  }
+
+  /// Get timetable for a specific student's class/section
+  List<Map<String, dynamic>> getStudentTimetableForDay(String studentId, String day) {
+    final student = getStudentById(studentId);
+    if (student == null) return getTimetableForDay(day);
+    final deptId = student['departmentId'] ?? '';
+    final year = student['year'];
+    final section = student['section'];
+    final filtered = _timetable.where((t) =>
+      t['day'] == day &&
+      (t['departmentId'] == deptId || true) && // Fallback if no dept match
+      (year == null || t['year'] == year || t['year'] == null) &&
+      (section == null || t['section'] == section || t['section'] == null)
+    ).toList();
+    return filtered.isNotEmpty ? filtered : getTimetableForDay(day);
+  }
+
+  /// Get notifications for a specific student (by recipient or global)
+  List<Map<String, dynamic>> getStudentNotifications(String studentId) {
+    return _notifications.where((n) =>
+      n['recipientId'] == studentId ||
+      n['recipientId'] == null ||
+      n['recipientId'] == 'all' ||
+      n['recipientRole'] == 'student' ||
+      n['recipientRole'] == null
+    ).toList();
+  }
+
+  // ─── ASSIGNMENT CRUD ──────────────────────────────────
+  void addAssignment(Map<String, dynamic> assignment) {
+    assignment['assignmentId'] = 'ASG${(_assignments.length + 1).toString().padLeft(3, '0')}';
+    assignment['createdDate'] = DateTime.now().toIso8601String().substring(0, 10);
+    if (assignment['status'] == null) assignment['status'] = 'pending';
+    _assignments.add(Map<String, dynamic>.from(assignment));
+    notifyListeners();
+  }
+
+  void updateAssignment(String assignmentId, Map<String, dynamic> updates) {
+    final idx = _assignments.indexWhere((a) => a['assignmentId'] == assignmentId);
+    if (idx != -1) {
+      _assignments[idx].addAll(updates);
+      notifyListeners();
+    }
+  }
+
+  void deleteAssignment(String assignmentId) {
+    _assignments.removeWhere((a) => a['assignmentId'] == assignmentId);
+    notifyListeners();
+  }
+
+  void submitAssignment(String assignmentId, String studentId, String? fileUrl) {
+    final idx = _assignments.indexWhere((a) => a['assignmentId'] == assignmentId);
+    if (idx != -1) {
+      _assignments[idx]['status'] = 'submitted';
+      _assignments[idx]['submittedDate'] = DateTime.now().toIso8601String().substring(0, 10);
+      _assignments[idx]['submittedBy'] = studentId;
+      if (fileUrl != null) _assignments[idx]['fileUrl'] = fileUrl;
+      notifyListeners();
+    }
+  }
+
+  // ─── EXAM CRUD ────────────────────────────────────────
+  void addExam(Map<String, dynamic> exam) {
+    exam['examId'] = 'EXM${(_exams.length + 1).toString().padLeft(3, '0')}';
+    _exams.add(Map<String, dynamic>.from(exam));
+    notifyListeners();
+  }
+
+  void updateExam(String examId, Map<String, dynamic> updates) {
+    final idx = _exams.indexWhere((e) => e['examId'] == examId);
+    if (idx != -1) {
+      _exams[idx].addAll(updates);
+      notifyListeners();
+    }
+  }
+
+  void deleteExam(String examId) {
+    _exams.removeWhere((e) => e['examId'] == examId);
+    notifyListeners();
+  }
+
+  // ─── NOTIFICATION CRUD ────────────────────────────────
+  void addNotification(Map<String, dynamic> notification) {
+    notification['notificationId'] = 'NTF${(_notifications.length + 1).toString().padLeft(3, '0')}';
+    notification['timestamp'] = DateTime.now().toIso8601String();
+    notification['isRead'] = false;
+    _notifications.insert(0, Map<String, dynamic>.from(notification));
+    notifyListeners();
+  }
+
+  void deleteNotification(String notifId) {
+    _notifications.removeWhere((n) => n['notificationId'] == notifId);
+    notifyListeners();
+  }
+
+  // ─── EVENT CRUD ───────────────────────────────────────
+  void addEvent(Map<String, dynamic> event) {
+    event['eventId'] = 'EVT${(_events.length + 1).toString().padLeft(3, '0')}';
+    if (event['status'] == null) event['status'] = 'upcoming';
+    event['registeredCount'] = 0;
+    _events.add(Map<String, dynamic>.from(event));
+    notifyListeners();
+  }
+
+  void updateEvent(String eventId, Map<String, dynamic> updates) {
+    final idx = _events.indexWhere((e) => e['eventId'] == eventId);
+    if (idx != -1) {
+      _events[idx].addAll(updates);
+      notifyListeners();
+    }
+  }
+
+  void deleteEvent(String eventId) {
+    _events.removeWhere((e) => e['eventId'] == eventId);
+    _eventRegistrations.removeWhere((r) => r['eventId'] == eventId);
+    notifyListeners();
+  }
+
+  // ─── FEE CRUD ─────────────────────────────────────────
+  void addFee(Map<String, dynamic> fee) {
+    fee['feeId'] = 'FEE${(_fees.length + 1).toString().padLeft(3, '0')}';
+    _fees.add(Map<String, dynamic>.from(fee));
+    notifyListeners();
+  }
+
+  void updateFee(String feeId, Map<String, dynamic> updates) {
+    final idx = _fees.indexWhere((f) => f['feeId'] == feeId);
+    if (idx != -1) {
+      _fees[idx].addAll(updates);
+      notifyListeners();
+    }
+  }
+
+  void recordFeePayment(String feeId, double amount) {
+    final idx = _fees.indexWhere((f) => f['feeId'] == feeId);
+    if (idx != -1) {
+      final current = ((_fees[idx]['paid'] as num?)?.toDouble() ?? 0);
+      _fees[idx]['paid'] = current + amount;
+      final total = ((_fees[idx]['amount'] as num?)?.toDouble() ?? 0);
+      _fees[idx]['pending'] = total - (current + amount);
+      if (_fees[idx]['pending'] <= 0) {
+        _fees[idx]['status'] = 'paid';
+        _fees[idx]['pending'] = 0;
+      }
+      _fees[idx]['lastPaymentDate'] = DateTime.now().toIso8601String().substring(0, 10);
+      notifyListeners();
+    }
+  }
+
+  // ─── TIMETABLE CRUD ──────────────────────────────────
+  void addTimetableEntry(Map<String, dynamic> entry) {
+    _timetable.add(Map<String, dynamic>.from(entry));
+    notifyListeners();
+  }
+
+  void updateTimetableEntry(int index, Map<String, dynamic> updates) {
+    if (index >= 0 && index < _timetable.length) {
+      _timetable[index].addAll(updates);
+      notifyListeners();
+    }
+  }
+
+  void deleteTimetableEntry(int index) {
+    if (index >= 0 && index < _timetable.length) {
+      _timetable.removeAt(index);
+      notifyListeners();
+    }
+  }
+
+  // ─── RESULT CRUD ──────────────────────────────────────
+  void addResult(Map<String, dynamic> result) {
+    result['resultId'] = 'RES${(_results.length + 1).toString().padLeft(3, '0')}';
+    _results.add(Map<String, dynamic>.from(result));
+    notifyListeners();
+  }
+
+  void updateResult(String resultId, Map<String, dynamic> updates) {
+    final idx = _results.indexWhere((r) => r['resultId'] == resultId);
+    if (idx != -1) {
+      _results[idx].addAll(updates);
+      notifyListeners();
+    }
+  }
+
+  // ─── LIBRARY CRUD ─────────────────────────────────────
+  void addLibraryBook(Map<String, dynamic> book) {
+    book['bookId'] = 'LIB${(_library.length + 1).toString().padLeft(3, '0')}';
+    book['status'] = book['status'] ?? 'issued';
+    book['issueDate'] = book['issueDate'] ?? DateTime.now().toIso8601String().substring(0, 10);
+    _library.add(Map<String, dynamic>.from(book));
+    notifyListeners();
+  }
+
+  void returnBook(String bookId) {
+    final idx = _library.indexWhere((b) => b['bookId'] == bookId);
+    if (idx != -1) {
+      _library[idx]['status'] = 'returned';
+      _library[idx]['returnDate'] = DateTime.now().toIso8601String().substring(0, 10);
+      notifyListeners();
+    }
+  }
+
+  // ─── PLACEMENT CRUD ──────────────────────────────────
+  void addPlacement(Map<String, dynamic> placement) {
+    placement['placementId'] = 'PLC${(_placements.length + 1).toString().padLeft(3, '0')}';
+    if (placement['status'] == null) placement['status'] = 'upcoming';
+    placement['registeredCount'] = 0;
+    _placements.add(Map<String, dynamic>.from(placement));
+    notifyListeners();
+  }
+
+  void updatePlacement(String placementId, Map<String, dynamic> updates) {
+    final idx = _placements.indexWhere((p) => p['placementId'] == placementId);
+    if (idx != -1) {
+      _placements[idx].addAll(updates);
+      notifyListeners();
+    }
+  }
+
+  // ─── RESEARCH CRUD ────────────────────────────────────
+  void addResearch(Map<String, dynamic> research) {
+    research['researchId'] = 'RSH${(_research.length + 1).toString().padLeft(3, '0')}';
+    _research.add(Map<String, dynamic>.from(research));
+    notifyListeners();
+  }
+
+  void updateResearch(String researchId, Map<String, dynamic> updates) {
+    final idx = _research.indexWhere((r) => r['researchId'] == researchId);
+    if (idx != -1) {
+      _research[idx].addAll(updates);
+      notifyListeners();
+    }
+  }
+
+  void deleteResearch(String researchId) {
+    _research.removeWhere((r) => r['researchId'] == researchId);
+    notifyListeners();
+  }
+
+  // ─── SYLLABUS CRUD ────────────────────────────────────
+  void addSyllabus(Map<String, dynamic> syllabusEntry) {
+    _syllabus.add(Map<String, dynamic>.from(syllabusEntry));
+    notifyListeners();
+  }
+
+  void updateSyllabus(String courseId, Map<String, dynamic> updates) {
+    final idx = _syllabus.indexWhere((s) => s['courseId'] == courseId);
+    if (idx != -1) {
+      _syllabus[idx].addAll(updates);
+      notifyListeners();
+    }
+  }
+
+  void updateSyllabusUnitProgress(String courseId, int unitNo, int completedHours) {
+    final idx = _syllabus.indexWhere((s) => s['courseId'] == courseId);
+    if (idx == -1) return;
+    final units = (_syllabus[idx]['units'] as List<dynamic>?) ?? [];
+    final unitIdx = units.indexWhere((u) => u['unitNo'] == unitNo);
+    if (unitIdx >= 0) {
+      (units[unitIdx] as Map<String, dynamic>)['completedHours'] = completedHours;
+      notifyListeners();
+    }
+  }
+
+  // ─── COMPLAINT UPDATE ─────────────────────────────────
+  void updateComplaintStatus(String complaintId, String status, {String? resolvedBy, String? resolution}) {
+    final idx = _complaints.indexWhere((c) => c['complaintId'] == complaintId);
+    if (idx != -1) {
+      _complaints[idx]['status'] = status;
+      if (resolvedBy != null) _complaints[idx]['resolvedBy'] = resolvedBy;
+      if (resolution != null) _complaints[idx]['resolution'] = resolution;
+      if (status == 'resolved') {
+        _complaints[idx]['resolvedDate'] = DateTime.now().toIso8601String().substring(0, 10);
+      }
+      notifyListeners();
+    }
+  }
+
+  // ─── DEPARTMENT CRUD ──────────────────────────────────
+  void updateDepartment(String departmentId, Map<String, dynamic> updates) {
+    final idx = _departments.indexWhere((d) => d['departmentId'] == departmentId);
+    if (idx != -1) {
+      _departments[idx].addAll(updates);
+      notifyListeners();
+    }
+  }
+
+  void deleteDepartment(String departmentId) {
+    _departments.removeWhere((d) => d['departmentId'] == departmentId);
+    // Cascade: remove faculty, students, courses, classes in this dept
+    _faculty.removeWhere((f) => f['departmentId'] == departmentId);
+    _students.removeWhere((s) => s['departmentId'] == departmentId);
+    _courses.removeWhere((c) => c['departmentId'] == departmentId);
+    _classes.removeWhere((c) => c['departmentId'] == departmentId);
+    notifyListeners();
+  }
+
+  // ─── COURSE UPDATE/DELETE ─────────────────────────────
+  void updateCourse(String courseId, Map<String, dynamic> updates) {
+    final idx = _courses.indexWhere((c) => c['courseId'] == courseId);
+    if (idx != -1) {
+      _courses[idx].addAll(updates);
+      notifyListeners();
+    }
+  }
+
+  void deleteCourse(String courseId) {
+    _courses.removeWhere((c) => c['courseId'] == courseId);
+    // Remove from student enrollments
+    for (final s in _students) {
+      final enrolled = (s['enrolledCourses'] as List<dynamic>?) ?? [];
+      enrolled.remove(courseId);
+    }
+    // Remove from faculty courseIds
+    for (final f in _faculty) {
+      final courseIds = (f['courseIds'] as List<dynamic>?) ?? [];
+      courseIds.remove(courseId);
+    }
+    notifyListeners();
+  }
+
+  // ─── CLASS DELETE ─────────────────────────────────────
+  void deleteClass(String classId) {
+    _classes.removeWhere((c) => c['classId'] == classId);
+    notifyListeners();
+  }
+
+  // ─── LEAVE APPROVE/REJECT ─────────────────────────────
+  void approveLeave(String leaveId, String approvedBy) {
+    final idx = _leave.indexWhere((l) => l['leaveId'] == leaveId);
+    if (idx != -1) {
+      _leave[idx]['status'] = 'approved';
+      _leave[idx]['approvedBy'] = approvedBy;
+      _leave[idx]['approvedDate'] = DateTime.now().toIso8601String().substring(0, 10);
+      // Deduct from leave balance
+      final userId = _leave[idx]['userId'] as String? ?? '';
+      final leaveType = _leave[idx]['leaveType'] as String? ?? '';
+      final balIdx = _leaveBalance.indexWhere((b) => b['userId'] == userId && b['leaveType'] == leaveType);
+      if (balIdx != -1) {
+        final used = ((_leaveBalance[balIdx]['used'] as int?) ?? 0) + 1;
+        _leaveBalance[balIdx]['used'] = used;
+        _leaveBalance[balIdx]['remaining'] =
+            ((_leaveBalance[balIdx]['total'] as int?) ?? 0) - used;
+      }
+      notifyListeners();
+    }
+  }
+
+  void rejectLeave(String leaveId, String rejectedBy, String reason) {
+    final idx = _leave.indexWhere((l) => l['leaveId'] == leaveId);
+    if (idx != -1) {
+      _leave[idx]['status'] = 'rejected';
+      _leave[idx]['rejectedBy'] = rejectedBy;
+      _leave[idx]['rejectionReason'] = reason;
+      notifyListeners();
+    }
+  }
+
+  // ─── FACULTY TIMETABLE CRUD ───────────────────────────
+  void addFacultyTimetableEntry(String facultyId, String day, Map<String, dynamic> slot) {
+    final idx = _facultyTimetable.indexWhere((t) => t['facultyId'] == facultyId && t['day'] == day);
+    if (idx != -1) {
+      final slots = ((_facultyTimetable[idx]['slots'] as List<dynamic>?) ?? []).toList();
+      slots.add(slot);
+      _facultyTimetable[idx]['slots'] = slots;
+    } else {
+      _facultyTimetable.add({
+        'facultyId': facultyId,
+        'day': day,
+        'slots': [slot],
+      });
+    }
+    notifyListeners();
+  }
+
+  // ─── ATTENDANCE CRUD (Faculty adding attendance) ──────
+  void addAttendanceRecord(Map<String, dynamic> record) {
+    _attendance.add(Map<String, dynamic>.from(record));
+    notifyListeners();
+  }
+
+  void updateAttendanceRecord(String courseId, Map<String, dynamic> updates) {
+    final idx = _attendance.indexWhere((a) => a['courseId'] == courseId);
+    if (idx != -1) {
+      _attendance[idx].addAll(updates);
+      notifyListeners();
+    }
+  }
+
+  void markAttendance(String courseId, String studentId, bool present) {
+    // Find or create attendance record
+    final idx = _attendance.indexWhere((a) => a['courseId'] == courseId && a['studentId'] == studentId);
+    if (idx != -1) {
+      _attendance[idx]['totalClasses'] = ((_attendance[idx]['totalClasses'] as int?) ?? 0) + 1;
+      if (present) {
+        _attendance[idx]['attendedClasses'] = ((_attendance[idx]['attendedClasses'] as int?) ?? 0) + 1;
+      } else {
+        _attendance[idx]['absentClasses'] = ((_attendance[idx]['absentClasses'] as int?) ?? 0) + 1;
+      }
+      notifyListeners();
+    } else {
+      _attendance.add({
+        'courseId': courseId,
+        'studentId': studentId,
+        'totalClasses': 1,
+        'attendedClasses': present ? 1 : 0,
+        'absentClasses': present ? 0 : 1,
+      });
+      notifyListeners();
+    }
+  }
+
+  // ─── SETTINGS PERSISTENCE ─────────────────────────────
+  void updateSetting(String key, dynamic value) {
+    _settings[key] = value;
+    notifyListeners();
+  }
+
+  dynamic getSetting(String key, [dynamic defaultValue]) {
+    return _settings[key] ?? defaultValue;
+  }
+
+  Map<String, dynamic> getUserSettings(String userId) {
+    return (_settings[userId] as Map<String, dynamic>?) ?? {};
+  }
+
+  void updateUserSettings(String userId, Map<String, dynamic> userSettings) {
+    _settings[userId] = userSettings;
+    notifyListeners();
+  }
+
+  // ─── CHANGE PASSWORD ─────────────────────────────────
+  bool changePassword(String userId, String oldPassword, String newPassword) {
+    final idx = _users.indexWhere((u) => u['id'] == userId && u['password'] == oldPassword);
+    if (idx == -1) return false;
+    _users[idx]['password'] = newPassword;
+    notifyListeners();
+    return true;
   }
 
 }

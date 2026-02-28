@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class AdminSettingsPage extends StatefulWidget {
@@ -8,13 +10,35 @@ class AdminSettingsPage extends StatefulWidget {
 }
 
 class _AdminSettingsPageState extends State<AdminSettingsPage> {
-  bool _emailNotif = true;
-  bool _autoBackup = false;
-  bool _maintenanceMode = false;
-  String _sessionTimeout = '30 min';
+  late bool _emailNotif;
+  late bool _autoBackup;
+  late bool _maintenanceMode;
+  late String _sessionTimeout;
+  bool _loaded = false;
+
+  void _loadFromDs(DataService ds) {
+    if (_loaded) return;
+    final s = ds.getUserSettings('admin');
+    _emailNotif = s['emailNotif'] as bool? ?? true;
+    _autoBackup = s['autoBackup'] as bool? ?? false;
+    _maintenanceMode = s['maintenanceMode'] as bool? ?? false;
+    _sessionTimeout = s['sessionTimeout'] as String? ?? '30 min';
+    _loaded = true;
+  }
+
+  void _persist(DataService ds) {
+    ds.updateUserSettings('admin', {
+      'emailNotif': _emailNotif,
+      'autoBackup': _autoBackup,
+      'maintenanceMode': _maintenanceMode,
+      'sessionTimeout': _sessionTimeout,
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final ds = Provider.of<DataService>(context);
+    _loadFromDs(ds);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -23,13 +47,13 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
         const Text('Configure system settings', style: TextStyle(fontSize: 14, color: AppColors.textLight)),
         const SizedBox(height: 32),
         _settingsSection('General', [
-          _toggleTile('Maintenance Mode', 'Put the system in maintenance mode', Icons.engineering, _maintenanceMode, (v) => setState(() => _maintenanceMode = v)),
-          _toggleTile('Email Notifications', 'Send email alerts for critical events', Icons.email, _emailNotif, (v) => setState(() => _emailNotif = v)),
-          _toggleTile('Auto Backup', 'Automatically backup data daily', Icons.backup, _autoBackup, (v) => setState(() => _autoBackup = v)),
+          _toggleTile('Maintenance Mode', 'Put the system in maintenance mode', Icons.engineering, _maintenanceMode, (v) { setState(() => _maintenanceMode = v); _persist(ds); }),
+          _toggleTile('Email Notifications', 'Send email alerts for critical events', Icons.email, _emailNotif, (v) { setState(() => _emailNotif = v); _persist(ds); }),
+          _toggleTile('Auto Backup', 'Automatically backup data daily', Icons.backup, _autoBackup, (v) { setState(() => _autoBackup = v); _persist(ds); }),
         ]),
         const SizedBox(height: 24),
         _settingsSection('Security', [
-          _dropdownTile('Session Timeout', 'Auto-logout after inactivity', Icons.timer, _sessionTimeout, ['15 min', '30 min', '1 hour', '2 hours'], (v) => setState(() => _sessionTimeout = v!)),
+          _dropdownTile('Session Timeout', 'Auto-logout after inactivity', Icons.timer, _sessionTimeout, ['15 min', '30 min', '1 hour', '2 hours'], (v) { setState(() => _sessionTimeout = v!); _persist(ds); }),
         ]),
         const SizedBox(height: 24),
         _settingsSection('Data Management', [
@@ -46,7 +70,11 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
               content: const Text('This will erase ALL data. Are you sure?', style: TextStyle(color: AppColors.textMedium)),
               actions: [
                 TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel', style: TextStyle(color: AppColors.textLight))),
-                ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.red), onPressed: () => Navigator.pop(ctx), child: const Text('Reset')),
+                ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.red), onPressed: () {
+                  ds.resetAllData();
+                  Navigator.pop(ctx);
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Database reset to defaults'), backgroundColor: Color(0xFF4CAF50)));
+                }, child: const Text('Reset')),
               ],
             ));
           }),

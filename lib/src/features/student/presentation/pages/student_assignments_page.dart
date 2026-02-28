@@ -45,7 +45,8 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> with Si
       if (!ds.isLoaded) {
         return const Scaffold(backgroundColor: AppColors.background, body: Center(child: CircularProgressIndicator()));
       }
-      final allAssignments = ds.assignments;
+      final studentId = ds.currentUserId ?? '';
+      final allAssignments = ds.getStudentAssignmentsFiltered(studentId);
       int pending = allAssignments.where((a) => a['status'] == 'pending').length;
       int submitted = allAssignments.where((a) => a['status'] == 'submitted').length;
       int evaluated = allAssignments.where((a) => a['status'] == 'evaluated' || a['status'] == 'late').length;

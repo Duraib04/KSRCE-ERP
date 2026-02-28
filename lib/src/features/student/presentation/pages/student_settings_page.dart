@@ -12,15 +12,40 @@ class StudentSettingsPage extends StatefulWidget {
 }
 
 class _StudentSettingsPageState extends State<StudentSettingsPage> {
-  bool _emailNotif = true;
-  bool _smsNotif = false;
-  bool _pushNotif = true;
-  bool _assignmentReminder = true;
-  bool _feeReminder = true;
+  late bool _emailNotif;
+  late bool _smsNotif;
+  late bool _pushNotif;
+  late bool _assignmentReminder;
+  late bool _feeReminder;
+  bool _loaded = false;
+
+  void _loadFromDs(DataService ds) {
+    if (_loaded) return;
+    final uid = ds.currentUserId ?? '';
+    final s = ds.getUserSettings(uid);
+    _emailNotif = s['emailNotif'] as bool? ?? true;
+    _smsNotif = s['smsNotif'] as bool? ?? false;
+    _pushNotif = s['pushNotif'] as bool? ?? true;
+    _assignmentReminder = s['assignmentReminder'] as bool? ?? true;
+    _feeReminder = s['feeReminder'] as bool? ?? true;
+    _loaded = true;
+  }
+
+  void _persist(DataService ds) {
+    final uid = ds.currentUserId ?? '';
+    ds.updateUserSettings(uid, {
+      'emailNotif': _emailNotif,
+      'smsNotif': _smsNotif,
+      'pushNotif': _pushNotif,
+      'assignmentReminder': _assignmentReminder,
+      'feeReminder': _feeReminder,
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<DataService>(builder: (context, ds, _) {
+      _loadFromDs(ds);
       final student = ds.currentStudent ?? {};
       final uid = ds.currentUserId ?? '';
       return Scaffold(
@@ -53,12 +78,12 @@ class _StudentSettingsPageState extends State<StudentSettingsPage> {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('Notification Preferences', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 16),
-        _toggle('Email Notifications', _emailNotif, (v) => setState(() => _emailNotif = v)),
-        _toggle('SMS Notifications', _smsNotif, (v) => setState(() => _smsNotif = v)),
-        _toggle('Push Notifications', _pushNotif, (v) => setState(() => _pushNotif = v)),
+        _toggle('Email Notifications', _emailNotif, (v) { setState(() => _emailNotif = v); _persist(Provider.of<DataService>(context, listen: false)); }),
+        _toggle('SMS Notifications', _smsNotif, (v) { setState(() => _smsNotif = v); _persist(Provider.of<DataService>(context, listen: false)); }),
+        _toggle('Push Notifications', _pushNotif, (v) { setState(() => _pushNotif = v); _persist(Provider.of<DataService>(context, listen: false)); }),
         const Divider(color: AppColors.border, height: 24),
-        _toggle('Assignment Reminders', _assignmentReminder, (v) => setState(() => _assignmentReminder = v)),
-        _toggle('Fee Due Reminders', _feeReminder, (v) => setState(() => _feeReminder = v)),
+        _toggle('Assignment Reminders', _assignmentReminder, (v) { setState(() => _assignmentReminder = v); _persist(Provider.of<DataService>(context, listen: false)); }),
+        _toggle('Fee Due Reminders', _feeReminder, (v) { setState(() => _feeReminder = v); _persist(Provider.of<DataService>(context, listen: false)); }),
       ]),
     );
   }

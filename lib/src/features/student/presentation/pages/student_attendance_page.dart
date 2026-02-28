@@ -14,7 +14,8 @@ class StudentAttendancePage extends StatelessWidget {
       if (!ds.isLoaded) {
         return const Scaffold(backgroundColor: AppColors.background, body: Center(child: CircularProgressIndicator()));
       }
-      final attList = ds.attendance;
+      final studentId = ds.currentUserId ?? '';
+      final attList = ds.getStudentAttendanceFiltered(studentId);
       int totalClasses = 0, totalPresent = 0, totalAbsent = 0;
       for (final a in attList) {
         totalClasses += (a['totalClasses'] as int? ?? 0);

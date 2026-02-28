@@ -12,14 +12,37 @@ class FacultySettingsPage extends StatefulWidget {
 }
 
 class _FacultySettingsPageState extends State<FacultySettingsPage> {
-  bool _emailNotif = true;
-  bool _smsNotif = false;
-  bool _pushNotif = true;
-  bool _leaveNotif = true;
+  late bool _emailNotif;
+  late bool _smsNotif;
+  late bool _pushNotif;
+  late bool _leaveNotif;
+  bool _loaded = false;
+
+  void _loadFromDs(DataService ds) {
+    if (_loaded) return;
+    final uid = ds.currentUserId ?? '';
+    final s = ds.getUserSettings(uid);
+    _emailNotif = s['emailNotif'] as bool? ?? true;
+    _smsNotif = s['smsNotif'] as bool? ?? false;
+    _pushNotif = s['pushNotif'] as bool? ?? true;
+    _leaveNotif = s['leaveNotif'] as bool? ?? true;
+    _loaded = true;
+  }
+
+  void _persist(DataService ds) {
+    final uid = ds.currentUserId ?? '';
+    ds.updateUserSettings(uid, {
+      'emailNotif': _emailNotif,
+      'smsNotif': _smsNotif,
+      'pushNotif': _pushNotif,
+      'leaveNotif': _leaveNotif,
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<DataService>(builder: (context, ds, _) {
+      _loadFromDs(ds);
       final fac = ds.currentFaculty ?? {};
       final fid = ds.currentUserId ?? '';
       final dept = ds.getDepartmentName(fac['departmentId'] ?? '');
@@ -51,11 +74,11 @@ class _FacultySettingsPageState extends State<FacultySettingsPage> {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('Notification Preferences', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 16),
-        _toggle('Email Notifications', _emailNotif, (v) => setState(() => _emailNotif = v)),
-        _toggle('SMS Notifications', _smsNotif, (v) => setState(() => _smsNotif = v)),
-        _toggle('Push Notifications', _pushNotif, (v) => setState(() => _pushNotif = v)),
+        _toggle('Email Notifications', _emailNotif, (v) { setState(() => _emailNotif = v); _persist(Provider.of<DataService>(context, listen: false)); }),
+        _toggle('SMS Notifications', _smsNotif, (v) { setState(() => _smsNotif = v); _persist(Provider.of<DataService>(context, listen: false)); }),
+        _toggle('Push Notifications', _pushNotif, (v) { setState(() => _pushNotif = v); _persist(Provider.of<DataService>(context, listen: false)); }),
         const Divider(color: AppColors.border, height: 24),
-        _toggle('Leave Request Alerts', _leaveNotif, (v) => setState(() => _leaveNotif = v)),
+        _toggle('Leave Request Alerts', _leaveNotif, (v) { setState(() => _leaveNotif = v); _persist(Provider.of<DataService>(context, listen: false)); }),
       ]),
     );
   }

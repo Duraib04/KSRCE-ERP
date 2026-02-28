@@ -13,7 +13,8 @@ class StudentResultsPage extends StatelessWidget {
       if (!ds.isLoaded) {
         return const Scaffold(backgroundColor: AppColors.background, body: Center(child: CircularProgressIndicator()));
       }
-      final resultsList = ds.results;
+      final studentId = ds.currentUserId ?? '';
+      final resultsList = ds.getStudentResultsFiltered(studentId);
       final cgpa = ds.currentCGPA;
 
       return Scaffold(
