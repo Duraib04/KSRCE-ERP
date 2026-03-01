@@ -38,6 +38,7 @@ class _AdminFacultyManagementPageState extends State<AdminFacultyManagementPage>
               const SizedBox(height: 20),
               ...allFaculty.map((f) {
                 final deptCode = ds.getDepartmentCode(f['departmentId'] as String? ?? '');
+                final fid = f['facultyId'] as String? ?? '';
                 return Container(
                   margin: const EdgeInsets.only(bottom: 10),
                   padding: const EdgeInsets.all(14),
@@ -51,9 +52,19 @@ class _AdminFacultyManagementPageState extends State<AdminFacultyManagementPage>
                         Text(f['name'] as String? ?? '', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.textDark)),
                         if (f['isHOD'] == true) ...[const SizedBox(width: 6), Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: AppColors.accent.withOpacity(0.15), borderRadius: BorderRadius.circular(4)), child: const Text('HOD', style: TextStyle(color: AppColors.accent, fontSize: 10, fontWeight: FontWeight.bold)))],
                       ]),
-                      Text('${f['facultyId']} | $deptCode | ${f['designation'] ?? ''}', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+                      Text('$fid | $deptCode | ${f['designation'] ?? ''}', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
                     ])),
-                    Text(f['email'] as String? ?? '', style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
+                    if (!isMobile) Text(f['email'] as String? ?? '', style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
+                    IconButton(
+                      icon: const Icon(Icons.edit, size: 18, color: AppColors.primary),
+                      tooltip: 'Edit Faculty',
+                      onPressed: () => _showEditFacultyDialog(context, ds, f),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline, size: 18, color: Colors.red),
+                      tooltip: 'Delete Faculty',
+                      onPressed: () => _confirmDeleteFaculty(context, ds, fid, f['name'] as String? ?? ''),
+                    ),
                   ]),
                 );
               }),
@@ -106,5 +117,106 @@ class _AdminFacultyManagementPageState extends State<AdminFacultyManagementPage>
         ),
       ],
     )));
+  }
+
+  void _showEditFacultyDialog(BuildContext context, DataService ds, Map<String, dynamic> fac) {
+    final nameC = TextEditingController(text: fac['name'] as String? ?? '');
+    final emailC = TextEditingController(text: fac['email'] as String? ?? '');
+    final phoneC = TextEditingController(text: fac['phone'] as String? ?? '');
+    final desigC = TextEditingController(text: fac['designation'] as String? ?? '');
+    final qualC = TextEditingController(text: fac['qualification'] as String? ?? '');
+    final specC = TextEditingController(text: fac['specialization'] as String? ?? '');
+    final expC = TextEditingController(text: '${fac['experience'] ?? ''}');
+    final dojC = TextEditingController(text: fac['dateOfJoining'] as String? ?? '');
+    String? selectedDeptId = fac['departmentId'] as String?;
+    final fid = fac['facultyId'] as String? ?? '';
+
+    showDialog(context: context, builder: (ctx) => StatefulBuilder(builder: (ctx2, setS) => AlertDialog(
+      backgroundColor: AppColors.surface,
+      title: Row(children: [
+        const Icon(Icons.edit, color: AppColors.primary, size: 20),
+        const SizedBox(width: 8),
+        Text('Edit Faculty — $fid', style: const TextStyle(color: AppColors.textDark, fontSize: 18)),
+      ]),
+      content: SizedBox(width: 480, child: SingleChildScrollView(child: Column(mainAxisSize: MainAxisSize.min, children: [
+        TextField(controller: nameC, decoration: const InputDecoration(labelText: 'Full Name', prefixIcon: Icon(Icons.person_outline), border: OutlineInputBorder())),
+        const SizedBox(height: 10),
+        TextField(controller: emailC, decoration: const InputDecoration(labelText: 'Email', prefixIcon: Icon(Icons.email_outlined), border: OutlineInputBorder())),
+        const SizedBox(height: 10),
+        TextField(controller: phoneC, decoration: const InputDecoration(labelText: 'Phone', prefixIcon: Icon(Icons.phone_outlined), border: OutlineInputBorder())),
+        const SizedBox(height: 10),
+        DropdownButtonFormField<String>(value: selectedDeptId, isExpanded: true,
+          decoration: const InputDecoration(labelText: 'Department', prefixIcon: Icon(Icons.business_outlined), border: OutlineInputBorder()),
+          items: ds.departments.map((d) => DropdownMenuItem(value: d['departmentId'] as String, child: Text('${d['departmentCode']} - ${d['departmentName']}', style: const TextStyle(fontSize: 13)))).toList(),
+          onChanged: (v) => setS(() => selectedDeptId = v)),
+        const SizedBox(height: 10),
+        TextField(controller: desigC, decoration: const InputDecoration(labelText: 'Designation', prefixIcon: Icon(Icons.work_outline), border: OutlineInputBorder())),
+        const SizedBox(height: 10),
+        TextField(controller: qualC, decoration: const InputDecoration(labelText: 'Qualification', prefixIcon: Icon(Icons.school_outlined), border: OutlineInputBorder())),
+        const SizedBox(height: 10),
+        Row(children: [
+          Expanded(child: TextField(controller: specC, decoration: const InputDecoration(labelText: 'Specialization', prefixIcon: Icon(Icons.science_outlined), border: OutlineInputBorder()))),
+          const SizedBox(width: 10),
+          Expanded(child: TextField(controller: expC, decoration: const InputDecoration(labelText: 'Experience (yrs)', prefixIcon: Icon(Icons.timeline), border: OutlineInputBorder()), keyboardType: TextInputType.number)),
+        ]),
+        const SizedBox(height: 10),
+        TextField(controller: dojC, decoration: const InputDecoration(labelText: 'Date of Joining (YYYY-MM-DD)', prefixIcon: Icon(Icons.date_range), border: OutlineInputBorder())),
+      ]))),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+        ElevatedButton.icon(
+          icon: const Icon(Icons.save, size: 18),
+          style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
+          onPressed: () {
+            if (nameC.text.isNotEmpty) {
+              ds.updateFaculty(fid, {
+                'name': nameC.text,
+                'email': emailC.text,
+                'phone': phoneC.text,
+                'departmentId': selectedDeptId,
+                'designation': desigC.text,
+                'qualification': qualC.text,
+                'specialization': specC.text,
+                'experience': int.tryParse(expC.text) ?? expC.text,
+                'dateOfJoining': dojC.text,
+              });
+              Navigator.pop(ctx);
+              setState(() {});
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('${nameC.text} updated successfully'),
+                backgroundColor: AppColors.secondary,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ));
+            }
+          },
+          label: const Text('Save Changes'),
+        ),
+      ],
+    )));
+  }
+
+  void _confirmDeleteFaculty(BuildContext context, DataService ds, String fid, String name) {
+    showDialog(context: context, builder: (ctx) => AlertDialog(
+      backgroundColor: AppColors.surface,
+      title: const Text('Delete Faculty', style: TextStyle(color: Colors.red)),
+      content: Text('Are you sure you want to delete $name ($fid)?\n\nThis action cannot be undone.', style: const TextStyle(color: AppColors.textMedium)),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+          onPressed: () {
+            ds.deleteFaculty(fid);
+            Navigator.pop(ctx);
+            setState(() {});
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('$name deleted'), backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ));
+          },
+          child: const Text('Delete'),
+        ),
+      ],
+    ));
   }
 }
