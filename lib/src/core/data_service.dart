@@ -92,41 +92,46 @@ class DataService extends ChangeNotifier {
       // Initialize persistence
       await PersistenceService.init();
 
-      // Check if we have persisted data from a previous session
-      final persisted = PersistenceService.loadAll();
+      // Load from cloud (Firebase RTDB) first, fallback to localStorage
+      final persisted = await PersistenceService.loadAll();
       if (persisted != null) {
-        _students = persisted['students'] ?? [];
-        _users = persisted['users'] ?? [];
-        _courses = persisted['courses'] ?? [];
-        _attendance = persisted['attendance'] ?? [];
-        _assignments = persisted['assignments'] ?? [];
-        _results = persisted['results'] ?? [];
-        _timetable = persisted['timetable'] ?? [];
-        _notifications = persisted['notifications'] ?? [];
-        _complaints = persisted['complaints'] ?? [];
-        _departments = persisted['departments'] ?? [];
-        _faculty = persisted['faculty'] ?? [];
-        _classes = persisted['classes'] ?? [];
-        _mentorAssignments = persisted['mentorAssignments'] ?? [];
-        _exams = persisted['exams'] ?? [];
-        _fees = persisted['fees'] ?? [];
-        _certificates = persisted['certificates'] ?? [];
-        _events = persisted['events'] ?? [];
-        _eventRegistrations = persisted['eventRegistrations'] ?? [];
-        _leave = persisted['leave'] ?? [];
-        _leaveBalance = persisted['leaveBalance'] ?? [];
-        _library = persisted['library'] ?? [];
-        _placements = persisted['placements'] ?? [];
-        _placementApplications = persisted['placementApplications'] ?? [];
-        _syllabus = persisted['syllabus'] ?? [];
-        _research = persisted['research'] ?? [];
-        _facultyTimetable = persisted['facultyTimetable'] ?? [];
-        _courseOutcomes = persisted['courseOutcomes'] ?? [];
-        _courseDiary = persisted['courseDiary'] ?? [];
-        _profileEditRequests = persisted['profileEditRequests'] ?? [];
-        _settings = (persisted['settings']?.isNotEmpty ?? false)
-            ? persisted['settings']!.first
-            : {};
+        _students = _asList(persisted['students']);
+        _users = _asList(persisted['users']);
+        _courses = _asList(persisted['courses']);
+        _attendance = _asList(persisted['attendance']);
+        _assignments = _asList(persisted['assignments']);
+        _results = _asList(persisted['results']);
+        _timetable = _asList(persisted['timetable']);
+        _notifications = _asList(persisted['notifications']);
+        _complaints = _asList(persisted['complaints']);
+        _departments = _asList(persisted['departments']);
+        _faculty = _asList(persisted['faculty']);
+        _classes = _asList(persisted['classes']);
+        _mentorAssignments = _asList(persisted['mentorAssignments']);
+        _exams = _asList(persisted['exams']);
+        _fees = _asList(persisted['fees']);
+        _certificates = _asList(persisted['certificates']);
+        _events = _asList(persisted['events']);
+        _eventRegistrations = _asList(persisted['eventRegistrations']);
+        _leave = _asList(persisted['leave']);
+        _leaveBalance = _asList(persisted['leaveBalance']);
+        _library = _asList(persisted['library']);
+        _placements = _asList(persisted['placements']);
+        _placementApplications = _asList(persisted['placementApplications']);
+        _syllabus = _asList(persisted['syllabus']);
+        _research = _asList(persisted['research']);
+        _facultyTimetable = _asList(persisted['facultyTimetable']);
+        _courseOutcomes = _asList(persisted['courseOutcomes']);
+        _courseDiary = _asList(persisted['courseDiary']);
+        _profileEditRequests = _asList(persisted['profileEditRequests']);
+        final settingsRaw = persisted['settings'];
+        if (settingsRaw is List && settingsRaw.isNotEmpty) {
+          _settings = Map<String, dynamic>.from(settingsRaw.first as Map);
+        } else if (settingsRaw is Map) {
+          _settings = Map<String, dynamic>.from(settingsRaw);
+        } else {
+          _settings = {};
+        }
       } else {
         // First run: seed from bundled JSON assets
         final futures = await Future.wait([
@@ -273,6 +278,18 @@ class DataService extends ChangeNotifier {
         _applyProfileChanges(req);
       }
     }
+  }
+
+  /// Safely cast a dynamic value (from Firebase JSON) to List<Map<String, dynamic>>.
+  List<Map<String, dynamic>> _asList(dynamic value) {
+    if (value == null) return [];
+    if (value is List) {
+      return value
+          .map((e) => e is Map ? Map<String, dynamic>.from(e) : <String, dynamic>{})
+          .where((m) => m.isNotEmpty)
+          .toList();
+    }
+    return [];
   }
 
   Future<List<Map<String, dynamic>>> _loadJson(String path) async {
