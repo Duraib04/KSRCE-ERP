@@ -1,0 +1,143 @@
+[
+  {
+    "researchId": "RES001",
+    "facultyId": "FAC001",
+    "type": "journal",
+    "title": "Machine Learning Approaches for Network Intrusion Detection",
+    "journal": "IEEE Transactions on Information Forensics",
+    "year": 2025,
+    "impactFactor": 6.8,
+    "citations": 12,
+    "doi": "10.1109/TIFS.2025.001",
+    "status": "published"
+  },
+  {
+    "researchId": "RES002",
+    "facultyId": "FAC001",
+    "type": "conference",
+    "title": "Efficient Data Structure Optimization using AI",
+    "conference": "ACM SIGMOD 2024",
+    "year": 2024,
+    "citations": 8,
+    "doi": "10.1145/SIGMOD.2024.002",
+    "status": "published"
+  },
+  {
+    "researchId": "RES003",
+    "facultyId": "FAC001",
+    "type": "journal",
+    "title": "Blockchain-based Secure Academic Records Management",
+    "journal": "Journal of Computer Science",
+    "year": 2024,
+    "impactFactor": 4.2,
+    "citations": 5,
+    "doi": "10.1016/JCS.2024.003",
+    "status": "published"
+  },
+  {
+    "researchId": "RES004",
+    "facultyId": "FAC001",
+    "type": "project",
+    "title": "AI-Powered Campus Security System",
+    "fundingAgency": "AICTE",
+    "fundingAmount": 500000,
+    "startDate": "2025-01-01",
+    "endDate": "2026-12-31",
+    "status": "ongoing",
+    "coInvestigators": [
+      "FAC005"
+    ]
+  },
+  {
+    "researchId": "RES005",
+    "facultyId": "FAC001",
+    "type": "patent",
+    "title": "Smart Attendance System using Face Recognition",
+    "applicationNo": "IN202500012345",
+    "filingDate": "2025-06-15",
+    "status": "filed"
+  },
+  {
+    "researchId": "RES006",
+    "facultyId": "FAC002",
+    "type": "journal",
+    "title": "VLSI Design for Low Power IoT Devices",
+    "journal": "Microelectronics Journal",
+    "year": 2025,
+    "impactFactor": 3.1,
+    "citations": 4,
+    "doi": "10.1016/MEJ.2025.006",
+    "status": "published"
+  },
+  {
+    "researchId": "RES007",
+    "facultyId": "FAC003",
+    "type": "journal",
+    "title": "Deep Learning for Natural Language Processing",
+    "journal": "Neural Computing and Applications",
+    "year": 2025,
+    "impactFactor": 5.6,
+    "citations": 15,
+    "doi": "10.1007/NCA.2025.007",
+    "status": "published"
+  },
+  {
+    "researchId": "RES008",
+    "facultyId": "FAC001",
+    "type": "phdScholar",
+    "scholarName": "Mr. Karthik R",
+    "topic": "Adversarial Machine Learning for Cyber Security",
+    "registrationYear": 2023,
+    "status": "ongoing",
+    "expectedCompletion": "2027"
+  },
+  {
+    "researchId": "RES009",
+    "facultyId": "FAC003",
+    "type": "project",
+    "title": "Explainable AI for Medical Diagnosis",
+    "fundingAgency": "DST",
+    "fundingAmount": 800000,
+    "startDate": "2025-06-01",
+    "endDate": "2027-05-31",
+    "status": "ongoing",
+    "coInvestigators": [
+      "FAC001"
+    ]
+  },
+  {
+    "researchId": "RES010",
+    "facultyId": "FAC008",
+    "type": "journal",
+    "title": "Thermal Analysis of Heat Exchangers using CFD",
+    "journal": "International Journal of Heat and Mass Transfer",
+    "year": 2025,
+    "impactFactor": 5.2,
+    "citations": 7,
+    "doi": "10.1016/IJHMT.2025.010",
+    "status": "published"
+  },
+  {
+    "researchId": "RES011",
+    "facultyId": "FAC008",
+    "type": "conference",
+    "title": "Optimization of Rankine Cycle Efficiency",
+    "conference": "ASME International Mechanical Engineering Congress 2024",
+    "year": 2024,
+    "citations": 3,
+    "doi": "10.1115/IMECE.2024.011",
+    "status": "published"
+  },
+  {
+    "researchId": "RES012",
+    "facultyId": "FAC008",
+    "type": "project",
+    "title": "Solar Thermal Energy Storage System Design",
+    "fundingAgency": "MNRE",
+    "fundingAmount": 600000,
+    "startDate": "2025-03-01",
+    "endDate": "2027-02-28",
+    "status": "ongoing",
+    "coInvestigators": []
+  }
+]

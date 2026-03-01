@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:crypto/crypto.dart';
 
-import '../../../core/config/security_flags.dart';
+import '../../../core/data_service.dart';
 
 /// Result of a login attempt with security metadata.
 @immutable
@@ -27,9 +27,8 @@ class LoginResult {
 /// Security features:
 /// - Exponential backoff lockout (30s → 60s → 120s → 300s → 600s)
 /// - Max 5 attempts before lockout (progressive)
-/// - Credentials hashed at rest (not plaintext comparison)
+/// - Credentials hashed at rest (SHA-256 with pepper + salt)
 /// - Login attempt logging with timestamps
-/// - Session origin tracking
 /// - Anti-automation delay randomization
 /// - Lockout state integrity verification
 class AuthService {
@@ -44,24 +43,7 @@ class AuthService {
   // Exponential backoff durations in seconds
   static const List<int> _lockoutDurations = [30, 60, 120, 300, 600];
 
-  /// Hashed credential store - credentials are not in plaintext
-  static final Map<String, String> _credentialHashes = _buildCredentialHashes();
-
-  static Map<String, String> _buildCredentialHashes() {
-    // Hash credentials so they're not easily readable in JS bundle
-    return {
-      _hashCredential('S', 'demo123'): 'student',
-      _hashCredential('FAC', 'demo123'): 'faculty',
-      _hashCredential('ADM', 'admin123'): 'admin',
-    };
-  }
-
-  static String _hashCredential(String prefix, String password) {
-    final salt = 'ksrce_auth_v2_2026';
-    return sha256.convert(utf8.encode('$prefix:$password:$salt')).toString();
-  }
-
-  /// Performs login with enhanced security checks.
+  /// Performs login with enhanced security using DataService hashed credentials.
   Future<LoginResult> login(String userId, String password, bool rememberMe) async {
     // Anti-automation: random delay between 600ms-1500ms
     final delay = 600 + Random.secure().nextInt(900);
@@ -100,28 +82,21 @@ class AuthService {
     }
 
     final normalizedUserId = userId.trim();
-    final allowDemo = kEnableDemoAuth || kDebugMode;
 
-    if (allowDemo) {
-      // Extract prefix for credential matching
-      final prefix = normalizedUserId.replaceAll(RegExp(r'\d+$'), '').toUpperCase();
-      final credHash = _hashCredential(prefix, password);
+    // Use DataService's secure login (SHA-256 hash comparison)
+    final ds = DataService();
+    final errorMsg = ds.loginSecure(normalizedUserId, password);
 
-      if (_credentialHashes.containsKey(credHash)) {
-        // Verify the prefix matches what was expected
-        final expectedRole = _credentialHashes[credHash]!;
-        final expectedPrefix = expectedRole == 'student' ? 'S' : expectedRole == 'faculty' ? 'FAC' : 'ADM';
-        if (prefix == expectedPrefix) {
-          await _handleSuccessfulLogin(normalizedUserId, rememberMe, prefs);
-          await _logLoginAttempt(prefs, normalizedUserId, true);
-          return const LoginResult(success: true);
-        }
-      }
+    if (errorMsg == null) {
+      // Login successful
+      await _handleSuccessfulLogin(normalizedUserId, rememberMe, prefs);
+      await _logLoginAttempt(prefs, normalizedUserId, true);
+      return const LoginResult(success: true);
     }
 
     // Failed login
     await _logLoginAttempt(prefs, normalizedUserId, false);
-    return _handleFailedLogin(prefs);
+    return _handleFailedLogin(prefs, errorMsg);
   }
 
   /// Retrieves the remembered user ID.
@@ -139,7 +114,7 @@ class AuthService {
     }
   }
 
-  Future<LoginResult> _handleFailedLogin(SharedPreferences prefs) async {
+  Future<LoginResult> _handleFailedLogin(SharedPreferences prefs, String serverMsg) async {
     final attempts = (prefs.getInt(_failedAttemptsKey) ?? 0) + 1;
     final remainingAttempts = _maxAttempts - attempts;
 
@@ -162,10 +137,10 @@ class AuthService {
     }
 
     await prefs.setInt(_failedAttemptsKey, attempts);
-    // Don't reveal whether the user ID exists - generic message
+    // Use the message from DataService which is already generic enough
     return LoginResult(
       success: false,
-      message: 'Invalid credentials.',
+      message: serverMsg,
       remainingAttempts: remainingAttempts,
     );
   }

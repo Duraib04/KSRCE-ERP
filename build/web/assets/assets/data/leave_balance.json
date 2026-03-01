@@ -1,0 +1,135 @@
+[
+  {
+    "userId": "STU001",
+    "role": "student",
+    "type": "Medical",
+    "used": 3,
+    "total": 10
+  },
+  {
+    "userId": "STU001",
+    "role": "student",
+    "type": "Personal",
+    "used": 1,
+    "total": 5
+  },
+  {
+    "userId": "STU001",
+    "role": "student",
+    "type": "On Duty",
+    "used": 2,
+    "total": 999
+  },
+  {
+    "userId": "STU002",
+    "role": "student",
+    "type": "Medical",
+    "used": 3,
+    "total": 10
+  },
+  {
+    "userId": "STU002",
+    "role": "student",
+    "type": "Personal",
+    "used": 0,
+    "total": 5
+  },
+  {
+    "userId": "FAC001",
+    "role": "faculty",
+    "type": "Casual Leave",
+    "used": 4,
+    "total": 12
+  },
+  {
+    "userId": "FAC001",
+    "role": "faculty",
+    "type": "Medical Leave",
+    "used": 3,
+    "total": 10
+  },
+  {
+    "userId": "FAC001",
+    "role": "faculty",
+    "type": "Earned Leave",
+    "used": 0,
+    "total": 15
+  },
+  {
+    "userId": "FAC001",
+    "role": "faculty",
+    "type": "On Duty",
+    "used": 5,
+    "total": 10
+  },
+  {
+    "userId": "FAC001",
+    "role": "faculty",
+    "type": "Comp Off",
+    "used": 1,
+    "total": 4
+  },
+  {
+    "userId": "FAC002",
+    "role": "faculty",
+    "type": "Casual Leave",
+    "used": 2,
+    "total": 12
+  },
+  {
+    "userId": "FAC002",
+    "role": "faculty",
+    "type": "Medical Leave",
+    "used": 0,
+    "total": 10
+  },
+  {
+    "userId": "FAC003",
+    "role": "faculty",
+    "type": "Casual Leave",
+    "used": 2,
+    "total": 12
+  },
+  {
+    "userId": "FAC003",
+    "role": "faculty",
+    "type": "Medical Leave",
+    "used": 1,
+    "total": 10
+  },
+  {
+    "userId": "FAC003",
+    "role": "faculty",
+    "type": "Earned Leave",
+    "used": 3,
+    "total": 15
+  },
+  {
+    "userId": "FAC003",
+    "role": "faculty",
+    "type": "On Duty",
+    "used": 4,
+    "total": 10
+  },
+  {
+    "userId": "FAC008",
+    "role": "faculty",
+    "type": "Casual Leave",
+    "used": 3,
+    "total": 12
+  },
+  {
+    "userId": "FAC008",
+    "role": "faculty",
+    "type": "Medical Leave",
+    "used": 0,
+    "total": 10
+  },
+  {
+    "userId": "FAC008",
+    "role": "faculty",
+    "type": "Earned Leave",
+    "used": 2,
+    "total": 15
+  }
+]

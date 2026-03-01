@@ -1,0 +1,40 @@
+[
+  {
+    "certId": "CERT001",
+    "studentId": "STU001",
+    "type": "Bonafide Certificate",
+    "status": "issued",
+    "requestDate": "2026-01-15",
+    "issueDate": "2026-01-18",
+    "fee": 100,
+    "processingDays": 3
+  },
+  {
+    "certId": "CERT002",
+    "studentId": "STU001",
+    "type": "Transfer Certificate",
+    "status": "pending",
+    "requestDate": "2026-02-20",
+    "fee": 200,
+    "processingDays": 7
+  },
+  {
+    "certId": "CERT003",
+    "studentId": "STU002",
+    "type": "Course Completion",
+    "status": "issued",
+    "requestDate": "2025-12-10",
+    "issueDate": "2025-12-15",
+    "fee": 150,
+    "processingDays": 5
+  },
+  {
+    "certId": "CERT004",
+    "studentId": "STU004",
+    "type": "Character Certificate",
+    "status": "processing",
+    "requestDate": "2026-02-18",
+    "fee": 100,
+    "processingDays": 3
+  }
+]

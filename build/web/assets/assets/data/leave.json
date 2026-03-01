@@ -1,0 +1,103 @@
+[
+  {
+    "leaveId": "LV001",
+    "userId": "STU001",
+    "role": "student",
+    "type": "Medical",
+    "fromDate": "2026-01-20",
+    "toDate": "2026-01-22",
+    "days": 3,
+    "reason": "Fever and cold",
+    "status": "approved",
+    "approvedBy": "FAC001",
+    "appliedDate": "2026-01-19"
+  },
+  {
+    "leaveId": "LV002",
+    "userId": "STU001",
+    "role": "student",
+    "type": "Personal",
+    "fromDate": "2026-02-14",
+    "toDate": "2026-02-14",
+    "days": 1,
+    "reason": "Family function",
+    "status": "approved",
+    "approvedBy": "FAC001",
+    "appliedDate": "2026-02-10"
+  },
+  {
+    "leaveId": "LV003",
+    "userId": "STU001",
+    "role": "student",
+    "type": "On Duty",
+    "fromDate": "2026-02-25",
+    "toDate": "2026-02-26",
+    "days": 2,
+    "reason": "Inter-college symposium",
+    "status": "pending",
+    "appliedDate": "2026-02-22"
+  },
+  {
+    "leaveId": "LV004",
+    "userId": "STU002",
+    "role": "student",
+    "type": "Medical",
+    "fromDate": "2026-02-10",
+    "toDate": "2026-02-12",
+    "days": 3,
+    "reason": "Dengue fever",
+    "status": "approved",
+    "approvedBy": "FAC002",
+    "appliedDate": "2026-02-09"
+  },
+  {
+    "leaveId": "LV005",
+    "userId": "FAC001",
+    "role": "faculty",
+    "type": "Casual Leave",
+    "fromDate": "2026-01-25",
+    "toDate": "2026-01-25",
+    "days": 1,
+    "reason": "Personal work",
+    "status": "approved",
+    "approvedBy": "FAC003",
+    "appliedDate": "2026-01-22"
+  },
+  {
+    "leaveId": "LV006",
+    "userId": "FAC001",
+    "role": "faculty",
+    "type": "Medical Leave",
+    "fromDate": "2026-02-05",
+    "toDate": "2026-02-07",
+    "days": 3,
+    "reason": "Medical procedure",
+    "status": "approved",
+    "approvedBy": "FAC003",
+    "appliedDate": "2026-02-03"
+  },
+  {
+    "leaveId": "LV007",
+    "userId": "FAC002",
+    "role": "faculty",
+    "type": "On Duty",
+    "fromDate": "2026-03-10",
+    "toDate": "2026-03-12",
+    "days": 3,
+    "reason": "Conference presentation",
+    "status": "pending",
+    "appliedDate": "2026-02-20"
+  },
+  {
+    "leaveId": "LV008",
+    "userId": "FAC001",
+    "role": "faculty",
+    "type": "Earned Leave",
+    "fromDate": "2026-03-20",
+    "toDate": "2026-03-22",
+    "days": 3,
+    "reason": "Family vacation",
+    "status": "pending",
+    "appliedDate": "2026-02-24"
+  }
+]

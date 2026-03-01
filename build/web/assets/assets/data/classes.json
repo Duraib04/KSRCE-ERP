@@ -1,0 +1,65 @@
+[
+  {
+    "classId": "CSE_3_A",
+    "departmentId": "DEPT_CSE",
+    "year": 3,
+    "section": "A",
+    "classAdviserId": "FAC001",
+    "studentIds": [
+      "STU001",
+      "STU004"
+    ],
+    "courseIds": [
+      "CS201",
+      "CS202"
+    ]
+  },
+  {
+    "classId": "ECE_2_B",
+    "departmentId": "DEPT_ECE",
+    "year": 2,
+    "section": "B",
+    "classAdviserId": "FAC002",
+    "studentIds": [
+      "STU002"
+    ],
+    "courseIds": [
+      "EC202"
+    ]
+  },
+  {
+    "classId": "MECH_1_C",
+    "departmentId": "DEPT_MECH",
+    "year": 1,
+    "section": "C",
+    "classAdviserId": "FAC009",
+    "studentIds": [
+      "STU003"
+    ],
+    "courseIds": [
+      "ME301"
+    ]
+  },
+  {
+    "classId": "CIVIL_2_D",
+    "departmentId": "DEPT_CIVIL",
+    "year": 2,
+    "section": "D",
+    "classAdviserId": "FAC004",
+    "studentIds": [
+      "STU005"
+    ],
+    "courseIds": [
+      "CV101"
+    ]
+  },
+  {
+    "classId": "CSE_2_A",
+    "departmentId": "DEPT_CSE",
+    "year": 2,
+    "section": "A",
+    "classAdviserId": "FAC007",
+    "studentIds": [],
+    "courseIds": []
+  }
+]

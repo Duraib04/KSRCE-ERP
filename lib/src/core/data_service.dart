@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'persistence_service.dart';
+import 'security_service.dart';
 
 class DataService extends ChangeNotifier {
   static final DataService _instance = DataService._internal();
@@ -303,38 +304,64 @@ class DataService extends ChangeNotifier {
     }
   }
 
-  // ─── AUTH ───────────────────────────────────────────────
-  bool login(String userId, String password) {
+  // ─── AUTH (Z++ Security — SHA-256 hashed passwords + brute-force protection) ───
+  /// Returns null on success, or an error message on failure.
+  String? loginSecure(String userId, String password) {
+    // Brute-force check
+    final lockSeconds = SecurityService.getLockedOutSeconds(userId);
+    if (lockSeconds > 0) {
+      return 'Account locked. Try again in $lockSeconds seconds.';
+    }
+
     for (final user in _users) {
-      if (user['id'] == userId && user['password'] == password) {
-        _currentUserId = userId;
-        final role = user['role'] as String? ?? '';
-        if (userId.startsWith('STU')) {
-          _currentRole = 'student';
-          _currentStudent = _students.firstWhere(
-            (s) => s['studentId'] == userId,
-            orElse: () => <String, dynamic>{},
-          );
-        } else if (role == 'hod') {
-          _currentRole = 'hod';
-          _currentFaculty = _faculty.firstWhere(
-            (f) => f['facultyId'] == userId,
-            orElse: () => <String, dynamic>{},
-          );
-        } else if (userId.startsWith('FAC')) {
-          _currentRole = 'faculty';
-          _currentFaculty = _faculty.firstWhere(
-            (f) => f['facultyId'] == userId,
-            orElse: () => <String, dynamic>{},
-          );
-        } else if (userId.startsWith('ADM')) {
-          _currentRole = 'admin';
+      if (user['id'] == userId) {
+        final storedHash = user['password'] as String? ?? '';
+        if (SecurityService.verifyPassword(password, userId, storedHash)) {
+          SecurityService.resetAttempts(userId);
+          _currentUserId = userId;
+          final role = user['role'] as String? ?? '';
+          if (userId.startsWith('STU')) {
+            _currentRole = 'student';
+            _currentStudent = _students.firstWhere(
+              (s) => s['studentId'] == userId,
+              orElse: () => <String, dynamic>{},
+            );
+          } else if (role == 'hod') {
+            _currentRole = 'hod';
+            _currentFaculty = _faculty.firstWhere(
+              (f) => f['facultyId'] == userId,
+              orElse: () => <String, dynamic>{},
+            );
+          } else if (userId.startsWith('FAC')) {
+            _currentRole = 'faculty';
+            _currentFaculty = _faculty.firstWhere(
+              (f) => f['facultyId'] == userId,
+              orElse: () => <String, dynamic>{},
+            );
+          } else if (userId.startsWith('ADM')) {
+            _currentRole = 'admin';
+          }
+          notifyListeners();
+          return null; // success
+        } else {
+          SecurityService.recordFailedAttempt(userId);
+          final locked = SecurityService.getLockedOutSeconds(userId);
+          if (locked > 0) return 'Account locked for ${SecurityService.lockoutDuration.inMinutes} minutes.';
+          return 'Invalid password.';
         }
-        notifyListeners();
-        return true;
       }
     }
-    return false;
+    return 'User ID not found.';
+  }
+
+  int _getFailedCount(String userId) {
+    // Expose attempt tracking for UI
+    return SecurityService.getLockedOutSeconds(userId) > 0 ? SecurityService.maxAttempts : 0;
+  }
+
+  /// Legacy login fallback (kept for compatibility)
+  bool login(String userId, String password) {
+    return loginSecure(userId, password) == null;
   }
 
   void logout() {

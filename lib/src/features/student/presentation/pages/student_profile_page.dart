@@ -52,6 +52,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
       final student = ds.currentStudent ?? {};
       final name = (student['name'] as String?) ?? 'Student';
       final rollNo = (student['studentId'] as String?) ?? ds.currentUserId ?? '';
+      final regNo = (student['registerNumber'] as String?) ?? '';
       final dept = (student['department'] as String?) ?? '';
       final year = (student['year'] as String?) ?? '';
       final section = (student['section'] as String?) ?? '';
@@ -63,6 +64,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
       final parentName = (student['parentName'] as String?) ?? '';
       final parentPhone = (student['parentPhone'] as String?) ?? '';
       final cgpa = ds.currentCGPA;
+      final batch = (student['batch'] as String?) ?? '';
       final initials = name.split(' ').map((w) => w.isNotEmpty ? w[0] : '').take(2).join().toUpperCase();
       final myRequests = ds.getMyEditRequests(rollNo);
       final chain = ds.getStudentApprovalChain(rollNo);
@@ -95,7 +97,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                 ]),
               ]),
               const SizedBox(height: 20),
-              _profileHeader(isMobile, name, initials, rollNo, dept, year, section),
+              _profileHeader(isMobile, name, initials, rollNo, regNo, dept, year, section, batch),
               const SizedBox(height: 20),
               if (_showEditForm) ...[_buildEditForm(ds, student, chain), const SizedBox(height: 20)],
               if (_showMyRequests) ...[_buildMyRequests(myRequests), const SizedBox(height: 20)],
@@ -288,7 +290,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
     }
   }
 
-  Widget _profileHeader(bool isMobile, String name, String initials, String rollNo, String dept, String year, String section) {
+  Widget _profileHeader(bool isMobile, String name, String initials, String rollNo, String regNo, String dept, String year, String section, String batch) {
     Widget avatarWidget = Stack(
       children: [
         _profilePhotoUrl != null
@@ -318,9 +320,11 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
             const SizedBox(height: 16),
             Text(name, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textDark)),
             const SizedBox(height: 4),
-            Text('Roll No: $rollNo', style: const TextStyle(fontSize: 16, color: AppColors.accent)),
+            if (regNo.isNotEmpty) Text('Reg No: $regNo', style: const TextStyle(fontSize: 16, color: AppColors.accent)),
+            if (regNo.isNotEmpty) const SizedBox(height: 2),
+            Text('Roll No: $rollNo', style: TextStyle(fontSize: regNo.isNotEmpty ? 13 : 16, color: regNo.isNotEmpty ? AppColors.textMedium : AppColors.accent)),
             const SizedBox(height: 4),
-            Text('$dept | Year $year | Sec $section', style: const TextStyle(fontSize: 14, color: AppColors.textMedium)),
+            Text('$dept | Year $year | Sec $section${batch.isNotEmpty ? ' | $batch' : ''}', style: const TextStyle(fontSize: 14, color: AppColors.textMedium)),
           ])
         : Row(children: [
             avatarWidget,
@@ -328,9 +332,11 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(name, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textDark)),
               const SizedBox(height: 4),
-              Text('Roll No: $rollNo', style: const TextStyle(fontSize: 16, color: AppColors.accent)),
+              if (regNo.isNotEmpty) Text('Register No: $regNo', style: const TextStyle(fontSize: 16, color: AppColors.accent)),
+              if (regNo.isNotEmpty) const SizedBox(height: 2),
+              Text('ID: $rollNo', style: TextStyle(fontSize: regNo.isNotEmpty ? 13 : 16, color: regNo.isNotEmpty ? AppColors.textMedium : AppColors.accent)),
               const SizedBox(height: 4),
-              Text('$dept | Year $year | Section $section', style: const TextStyle(fontSize: 14, color: AppColors.textMedium)),
+              Text('$dept | Year $year | Section $section${batch.isNotEmpty ? ' | Batch $batch' : ''}', style: const TextStyle(fontSize: 14, color: AppColors.textMedium)),
             ]),
           ]),
     );
@@ -368,71 +374,167 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
   }
 
   Widget _personalInfo(bool isMobile, String dob, String bloodGroup) {
-    final details = [{'label': 'Date of Birth', 'value': dob}, {'label': 'Blood Group', 'value': bloodGroup}];
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: AppCardStyles.elevated,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Row(children: [Icon(Icons.person, color: AppColors.primary, size: 20), SizedBox(width: 8),
-          Text('Personal Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark))]),
-        const SizedBox(height: 16),
-        ...details.where((d) => d['value']!.isNotEmpty).map((d) => Padding(padding: const EdgeInsets.only(bottom: 12),
-          child: Row(children: [
-            SizedBox(width: isMobile ? 110 : 150, child: Text(d['label']!, style: const TextStyle(color: AppColors.textLight, fontSize: 14))),
-            Flexible(child: Text(d['value']!, style: const TextStyle(color: AppColors.textDark, fontSize: 14))),
-          ]),
-        )),
-      ]),
-    );
+    return Consumer<DataService>(builder: (context, ds, _) {
+      final student = ds.currentStudent ?? {};
+      final details = [
+        {'label': 'Date of Birth', 'value': dob},
+        {'label': 'Blood Group', 'value': bloodGroup},
+        {'label': 'Gender', 'value': (student['gender'] as String?) ?? ''},
+        {'label': 'Nationality', 'value': (student['nationality'] as String?) ?? ''},
+        {'label': 'Religion', 'value': (student['religion'] as String?) ?? ''},
+        {'label': 'Community', 'value': (student['community'] as String?) ?? ''},
+        {'label': 'Mother Tongue', 'value': (student['motherTongue'] as String?) ?? ''},
+        {'label': 'First Graduate', 'value': student['firstGraduate'] == true ? 'Yes' : ''},
+        {'label': 'ID Mark 1', 'value': (student['identificationMark1'] as String?) ?? ''},
+        {'label': 'ID Mark 2', 'value': (student['identificationMark2'] as String?) ?? ''},
+      ];
+      return Container(
+        padding: const EdgeInsets.all(20),
+        decoration: AppCardStyles.elevated,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const Row(children: [Icon(Icons.person, color: AppColors.primary, size: 20), SizedBox(width: 8),
+            Text('Personal Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark))]),
+          const SizedBox(height: 16),
+          ...details.where((d) => d['value']!.isNotEmpty).map((d) => Padding(padding: const EdgeInsets.only(bottom: 12),
+            child: Row(children: [
+              SizedBox(width: isMobile ? 110 : 150, child: Text(d['label']!, style: const TextStyle(color: AppColors.textLight, fontSize: 14))),
+              Flexible(child: Text(d['value']!, style: const TextStyle(color: AppColors.textDark, fontSize: 14))),
+            ]),
+          )),
+        ]),
+      );
+    });
   }
 
   Widget _academicInfo(bool isMobile, String rollNo, String dept, String year, double cgpa) {
-    final cgpaStr = cgpa.toStringAsFixed(1);
-    final details = [{'label': 'Register Number', 'value': rollNo}, {'label': 'Department', 'value': dept}, {'label': 'Year', 'value': year}, {'label': 'Current CGPA', 'value': cgpaStr}];
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: AppCardStyles.elevated,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Row(children: [Icon(Icons.school, color: AppColors.primary, size: 20), SizedBox(width: 8),
-          Text('Academic Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark))]),
-        const SizedBox(height: 16),
-        ...details.map((d) => Padding(padding: const EdgeInsets.only(bottom: 12),
-          child: Row(children: [
-            SizedBox(width: isMobile ? 110 : 150, child: Text(d['label']!, style: const TextStyle(color: AppColors.textLight, fontSize: 14))),
-            Flexible(child: Text(d['value']!, style: const TextStyle(color: AppColors.textDark, fontSize: 14))),
-          ]),
-        )),
-      ]),
-    );
+    return Consumer<DataService>(builder: (context, ds, _) {
+      final student = ds.currentStudent ?? {};
+      final cgpaStr = cgpa.toStringAsFixed(1);
+      final details = [
+        {'label': 'Register Number', 'value': (student['registerNumber'] as String?) ?? ''},
+        {'label': 'Student ID', 'value': rollNo},
+        {'label': 'Roll Number', 'value': (student['rollNumber'] as String?) ?? ''},
+        {'label': 'Department', 'value': dept},
+        {'label': 'Program', 'value': (student['programName'] as String?) ?? ''},
+        {'label': 'Batch', 'value': (student['batch'] as String?) ?? ''},
+        {'label': 'Regulation', 'value': (student['regulation'] as String?) ?? ''},
+        {'label': 'Year', 'value': year},
+        {'label': 'Semester', 'value': '${student['currentSemester'] ?? ''}'},
+        {'label': 'Admission Type', 'value': (student['admissionType'] as String?) ?? ''},
+        {'label': 'Admission Date', 'value': (student['admissionDate'] as String?) ?? ''},
+        {'label': 'Lateral Entry', 'value': student['lateralEntry'] == true ? 'Yes' : ''},
+        {'label': 'Current CGPA', 'value': cgpaStr},
+        {'label': 'Arrears', 'value': '${student['arrearCount'] ?? ''}'.replaceAll('0', '')},
+        {'label': 'Academic Status', 'value': (student['academicStatus'] as String?) ?? ''},
+      ];
+      return Container(
+        padding: const EdgeInsets.all(20),
+        decoration: AppCardStyles.elevated,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const Row(children: [Icon(Icons.school, color: AppColors.primary, size: 20), SizedBox(width: 8),
+            Text('Academic Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark))]),
+          const SizedBox(height: 16),
+          ...details.where((d) => d['value']!.isNotEmpty && d['value'] != '0.0').map((d) => Padding(padding: const EdgeInsets.only(bottom: 12),
+            child: Row(children: [
+              SizedBox(width: isMobile ? 110 : 150, child: Text(d['label']!, style: const TextStyle(color: AppColors.textLight, fontSize: 14))),
+              Flexible(child: Text(d['value']!, style: const TextStyle(color: AppColors.textDark, fontSize: 14))),
+            ]),
+          )),
+        ]),
+      );
+    });
   }
 
   Widget _contactInfo(String email, String phone, String parentName, String parentPhone, String address) {
-    final details = <Map<String, dynamic>>[
-      if (email.isNotEmpty) {'label': 'Email', 'value': email, 'icon': Icons.email},
-      if (phone.isNotEmpty) {'label': 'Phone', 'value': phone, 'icon': Icons.phone},
-      if (parentName.isNotEmpty) {'label': 'Parent', 'value': parentName, 'icon': Icons.person_outline},
-      if (parentPhone.isNotEmpty) {'label': 'Parent Phone', 'value': parentPhone, 'icon': Icons.phone_in_talk},
-      if (address.isNotEmpty) {'label': 'Address', 'value': address, 'icon': Icons.location_on},
-    ];
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: AppCardStyles.elevated,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Row(children: [Icon(Icons.contact_mail, color: AppColors.primary, size: 20), SizedBox(width: 8),
-          Text('Contact Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark))]),
-        const SizedBox(height: 16),
-        ...details.map((d) {
-          final label = d['label'] as String;
-          final value = d['value'] as String;
-          final ic = d['icon'] as IconData;
-          return Padding(padding: const EdgeInsets.only(bottom: 12), child: Row(children: [
-            Icon(ic, color: AppColors.primary, size: 18), const SizedBox(width: 8),
-            Text('$label: ', style: const TextStyle(color: AppColors.textLight, fontSize: 14)),
-            Flexible(child: Text(value, style: const TextStyle(color: AppColors.textDark, fontSize: 14))),
-          ]));
-        }),
-      ]),
-    );
+    return Consumer<DataService>(builder: (context, ds, _) {
+      final student = ds.currentStudent ?? {};
+      final personalEmail = (student['personalEmail'] as String?) ?? '';
+      final fatherName = (student['fatherName'] as String?) ?? '';
+      final fatherPhone = (student['fatherPhone'] as String?) ?? '';
+      final fatherOcc = (student['fatherOccupation'] as String?) ?? '';
+      final motherName = (student['motherName'] as String?) ?? '';
+      final motherPhone = (student['motherPhone'] as String?) ?? '';
+      final motherOcc = (student['motherOccupation'] as String?) ?? '';
+      final district = (student['permanentDistrict'] as String?) ?? '';
+      final state = (student['permanentState'] as String?) ?? '';
+      final pincode = (student['permanentPincode'] as String?) ?? '';
+      final residence = (student['residenceType'] as String?) ?? '';
+      final busNo = (student['busNo'] as String?) ?? '';
+      final busStop = (student['busStop'] as String?) ?? '';
+      final hostelRoom = (student['hostelRoomNo'] as String?) ?? '';
+
+      return Column(children: [
+        // Contact & Address
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: AppCardStyles.elevated,
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Row(children: [Icon(Icons.contact_mail, color: AppColors.primary, size: 20), SizedBox(width: 8),
+              Text('Contact Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark))]),
+            const SizedBox(height: 16),
+            ...[
+              if (email.isNotEmpty) {'label': 'Domain Email', 'value': email, 'icon': Icons.email},
+              if (personalEmail.isNotEmpty) {'label': 'Personal Email', 'value': personalEmail, 'icon': Icons.alternate_email},
+              if (phone.isNotEmpty) {'label': 'Phone', 'value': phone, 'icon': Icons.phone},
+              if (address.isNotEmpty) {'label': 'Address', 'value': address, 'icon': Icons.location_on},
+              if (district.isNotEmpty) {'label': 'District', 'value': district, 'icon': Icons.map},
+              if (state.isNotEmpty) {'label': 'State', 'value': state, 'icon': Icons.flag},
+              if (pincode.isNotEmpty) {'label': 'Pincode', 'value': pincode, 'icon': Icons.pin_drop},
+            ].map((d) => Padding(padding: const EdgeInsets.only(bottom: 12), child: Row(children: [
+              Icon(d['icon'] as IconData, color: AppColors.primary, size: 18), const SizedBox(width: 8),
+              Text('${d['label']}: ', style: const TextStyle(color: AppColors.textLight, fontSize: 14)),
+              Flexible(child: Text(d['value'] as String, style: const TextStyle(color: AppColors.textDark, fontSize: 14))),
+            ]))),
+          ]),
+        ),
+        const SizedBox(height: 20),
+
+        // Family Info
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: AppCardStyles.elevated,
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Row(children: [Icon(Icons.family_restroom, color: AppColors.primary, size: 20), SizedBox(width: 8),
+              Text('Family Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark))]),
+            const SizedBox(height: 16),
+            ...[
+              if (fatherName.isNotEmpty) {'label': 'Father', 'value': fatherName, 'icon': Icons.person_outline},
+              if (fatherPhone.isNotEmpty) {'label': 'Father Phone', 'value': fatherPhone, 'icon': Icons.phone},
+              if (fatherOcc.isNotEmpty) {'label': 'Father Occupation', 'value': fatherOcc, 'icon': Icons.work_outline},
+              if (motherName.isNotEmpty) {'label': 'Mother', 'value': motherName, 'icon': Icons.person_outline},
+              if (motherPhone.isNotEmpty) {'label': 'Mother Phone', 'value': motherPhone, 'icon': Icons.phone},
+              if (motherOcc.isNotEmpty) {'label': 'Mother Occupation', 'value': motherOcc, 'icon': Icons.work_outline},
+            ].map((d) => Padding(padding: const EdgeInsets.only(bottom: 12), child: Row(children: [
+              Icon(d['icon'] as IconData, color: AppColors.primary, size: 18), const SizedBox(width: 8),
+              Text('${d['label']}: ', style: const TextStyle(color: AppColors.textLight, fontSize: 14)),
+              Flexible(child: Text(d['value'] as String, style: const TextStyle(color: AppColors.textDark, fontSize: 14))),
+            ]))),
+          ]),
+        ),
+        const SizedBox(height: 20),
+
+        // Accommodation
+        if (residence.isNotEmpty) Container(
+          padding: const EdgeInsets.all(20),
+          decoration: AppCardStyles.elevated,
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Row(children: [Icon(Icons.hotel, color: AppColors.primary, size: 20), SizedBox(width: 8),
+              Text('Accommodation', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark))]),
+            const SizedBox(height: 16),
+            ...[
+              {'label': 'Residence Type', 'value': residence, 'icon': Icons.home_work},
+              if (busNo.isNotEmpty) {'label': 'Bus Number', 'value': busNo, 'icon': Icons.directions_bus},
+              if (busStop.isNotEmpty) {'label': 'Bus Stop', 'value': busStop, 'icon': Icons.location_on},
+              if (hostelRoom.isNotEmpty) {'label': 'Hostel Room', 'value': hostelRoom, 'icon': Icons.meeting_room},
+            ].map((d) => Padding(padding: const EdgeInsets.only(bottom: 12), child: Row(children: [
+              Icon(d['icon'] as IconData, color: AppColors.primary, size: 18), const SizedBox(width: 8),
+              Text('${d['label']}: ', style: const TextStyle(color: AppColors.textLight, fontSize: 14)),
+              Flexible(child: Text(d['value'] as String, style: const TextStyle(color: AppColors.textDark, fontSize: 14))),
+            ]))),
+          ]),
+        ),
+      ]);
+    });
   }
 
   Widget _editField(TextEditingController ctrl, String label, IconData icon) {

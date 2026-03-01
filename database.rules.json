@@ -1,6 +1,13 @@
 {
   "rules": {
-    ".read": true,
-    ".write": true
+    "_config": {
+      ".read": false,
+      ".write": false
+    },
+    "erp_data": {
+      ".read": true,
+      ".write": true,
+      ".validate": "newData.hasChildren()"
+    }
   }
 }

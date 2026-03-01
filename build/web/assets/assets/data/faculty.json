@@ -1,0 +1,206 @@
+[
+  {
+    "facultyId": "FAC001",
+    "name": "Dr. Amit Verma",
+    "email": "amit.verma@ksrce.edu.in",
+    "phone": "9876541234",
+    "departmentId": "DEPT_CSE",
+    "designation": "Associate Professor",
+    "qualification": "Ph.D Computer Science",
+    "specialization": "Data Structures & Algorithms",
+    "dateOfJoining": "2015-06-01",
+    "isHOD": false,
+    "isClassAdviser": true,
+    "adviserFor": {
+      "departmentId": "DEPT_CSE",
+      "year": 3,
+      "section": "A"
+    },
+    "menteeIds": [
+      "STU001",
+      "STU004"
+    ],
+    "courseIds": [
+      "CS201",
+      "CS202"
+    ]
+  },
+  {
+    "facultyId": "FAC002",
+    "name": "Prof. Sneha Desai",
+    "email": "sneha.desai@ksrce.edu.in",
+    "phone": "9876541235",
+    "departmentId": "DEPT_ECE",
+    "designation": "Assistant Professor",
+    "qualification": "M.Tech Electronics",
+    "specialization": "Digital Electronics",
+    "dateOfJoining": "2018-08-15",
+    "isHOD": false,
+    "isClassAdviser": true,
+    "adviserFor": {
+      "departmentId": "DEPT_ECE",
+      "year": 2,
+      "section": "B"
+    },
+    "menteeIds": [
+      "STU002"
+    ],
+    "courseIds": [
+      "EC202"
+    ]
+  },
+  {
+    "facultyId": "FAC003",
+    "name": "Dr. Rajesh Kumar",
+    "email": "rajesh.kumar@ksrce.edu.in",
+    "phone": "9876541236",
+    "departmentId": "DEPT_CSE",
+    "designation": "Professor & HOD",
+    "qualification": "Ph.D Computer Science",
+    "specialization": "Machine Learning & AI",
+    "dateOfJoining": "2010-03-01",
+    "isHOD": true,
+    "isClassAdviser": false,
+    "adviserFor": null,
+    "menteeIds": [],
+    "courseIds": [
+      "CS301"
+    ]
+  },
+  {
+    "facultyId": "FAC004",
+    "name": "Ms. Priya Nair",
+    "email": "priya.nair@ksrce.edu.in",
+    "phone": "9876541237",
+    "departmentId": "DEPT_CIVIL",
+    "designation": "Assistant Professor",
+    "qualification": "M.Tech Civil Engineering",
+    "specialization": "Structural Analysis",
+    "dateOfJoining": "2019-07-10",
+    "isHOD": false,
+    "isClassAdviser": true,
+    "adviserFor": {
+      "departmentId": "DEPT_CIVIL",
+      "year": 2,
+      "section": "D"
+    },
+    "menteeIds": [
+      "STU005"
+    ],
+    "courseIds": [
+      "CV101"
+    ]
+  },
+  {
+    "facultyId": "FAC005",
+    "name": "Dr. S. Lakshmi",
+    "email": "s.lakshmi@ksrce.edu.in",
+    "phone": "9876541238",
+    "departmentId": "DEPT_CSE",
+    "designation": "Associate Professor",
+    "qualification": "Ph.D Information Technology",
+    "specialization": "Computer Networks",
+    "dateOfJoining": "2014-01-15",
+    "isHOD": false,
+    "isClassAdviser": false,
+    "adviserFor": null,
+    "menteeIds": [],
+    "courseIds": [
+      "CS301"
+    ]
+  },
+  {
+    "facultyId": "FAC006",
+    "name": "Dr. K. Mohan",
+    "email": "k.mohan@ksrce.edu.in",
+    "phone": "9876541239",
+    "departmentId": "DEPT_ECE",
+    "designation": "Professor & HOD",
+    "qualification": "Ph.D Electronics",
+    "specialization": "VLSI Design",
+    "dateOfJoining": "2008-06-01",
+    "isHOD": true,
+    "isClassAdviser": false,
+    "adviserFor": null,
+    "menteeIds": [],
+    "courseIds": []
+  },
+  {
+    "facultyId": "FAC007",
+    "name": "Dr. R. Venkat",
+    "email": "r.venkat@ksrce.edu.in",
+    "phone": "9876541240",
+    "departmentId": "DEPT_CSE",
+    "designation": "Assistant Professor",
+    "qualification": "Ph.D Computer Science",
+    "specialization": "Cloud Computing",
+    "dateOfJoining": "2020-02-10",
+    "isHOD": false,
+    "isClassAdviser": true,
+    "adviserFor": {
+      "departmentId": "DEPT_CSE",
+      "year": 2,
+      "section": "A"
+    },
+    "menteeIds": [],
+    "courseIds": []
+  },
+  {
+    "facultyId": "FAC008",
+    "name": "Dr. M. Selvam",
+    "email": "m.selvam@ksrce.edu.in",
+    "phone": "9876541241",
+    "departmentId": "DEPT_MECH",
+    "designation": "Professor & HOD",
+    "qualification": "Ph.D Mechanical Engineering",
+    "specialization": "Thermodynamics",
+    "dateOfJoining": "2007-04-01",
+    "isHOD": true,
+    "isClassAdviser": false,
+    "adviserFor": null,
+    "menteeIds": [
+      "STU003"
+    ],
+    "courseIds": [
+      "ME301"
+    ]
+  },
+  {
+    "facultyId": "FAC009",
+    "name": "Prof. A. Devi",
+    "email": "a.devi@ksrce.edu.in",
+    "phone": "9876541242",
+    "departmentId": "DEPT_MECH",
+    "designation": "Assistant Professor",
+    "qualification": "M.Tech Mechanical",
+    "specialization": "Manufacturing",
+    "dateOfJoining": "2019-11-01",
+    "isHOD": false,
+    "isClassAdviser": true,
+    "adviserFor": {
+      "departmentId": "DEPT_MECH",
+      "year": 1,
+      "section": "C"
+    },
+    "menteeIds": [
+      "STU003"
+    ],
+    "courseIds": []
+  },
+  {
+    "facultyId": "FAC010",
+    "name": "Dr. P. Ganesh",
+    "email": "p.ganesh@ksrce.edu.in",
+    "phone": "9876541243",
+    "departmentId": "DEPT_CIVIL",
+    "designation": "Professor & HOD",
+    "qualification": "Ph.D Civil Engineering",
+    "specialization": "Environmental Engineering",
+    "dateOfJoining": "2009-08-01",
+    "isHOD": true,
+    "isClassAdviser": false,
+    "adviserFor": null,
+    "menteeIds": [],
+    "courseIds": []
+  }
+]

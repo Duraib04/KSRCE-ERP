@@ -1,0 +1,43 @@
+[
+  {
+    "mentorId": "FAC001",
+    "mentorName": "Dr. Amit Verma",
+    "departmentId": "DEPT_CSE",
+    "year": 3,
+    "section": "A",
+    "menteeIds": [
+      "STU001",
+      "STU004"
+    ]
+  },
+  {
+    "mentorId": "FAC002",
+    "mentorName": "Prof. Sneha Desai",
+    "departmentId": "DEPT_ECE",
+    "year": 2,
+    "section": "B",
+    "menteeIds": [
+      "STU002"
+    ]
+  },
+  {
+    "mentorId": "FAC008",
+    "mentorName": "Dr. M. Selvam",
+    "departmentId": "DEPT_MECH",
+    "year": 1,
+    "section": "C",
+    "menteeIds": [
+      "STU003"
+    ]
+  },
+  {
+    "mentorId": "FAC004",
+    "mentorName": "Ms. Priya Nair",
+    "departmentId": "DEPT_CIVIL",
+    "year": 2,
+    "section": "D",
+    "menteeIds": [
+      "STU005"
+    ]
+  }
+]
