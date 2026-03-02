@@ -47,6 +47,8 @@ import 'features/faculty/presentation/pages/faculty_events_page.dart';
 import 'features/faculty/presentation/pages/faculty_settings_page.dart';
 import 'features/faculty/presentation/pages/faculty_course_details_page.dart';
 import 'features/faculty/presentation/pages/faculty_course_diary_page.dart';
+import 'features/faculty/presentation/pages/faculty_mentees_page.dart';
+import 'features/faculty/presentation/pages/faculty_adviser_page.dart';
 
 import 'features/admin/presentation/pages/admin_dashboard_page.dart';
 import 'features/admin/presentation/pages/admin_user_management_page.dart';
@@ -182,6 +184,8 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/faculty/course-details', builder: (c, s) => _f('/faculty/course-details', const FacultyCourseDetailsPage())),
     GoRoute(path: '/faculty/course-diary', builder: (c, s) => _f('/faculty/course-diary', const FacultyCourseDiaryPage())),
     GoRoute(path: '/faculty/profile-approvals', builder: (c, s) => _f('/faculty/profile-approvals', const ProfileEditApprovalsPage())),
+    GoRoute(path: '/faculty/mentees', builder: (c, s) => _f('/faculty/mentees', const FacultyMenteesPage())),
+    GoRoute(path: '/faculty/adviser', builder: (c, s) => _f('/faculty/adviser', const FacultyAdviserPage())),
     GoRoute(path: '/faculty/settings', builder: (c, s) => _f('/faculty/settings', const FacultySettingsPage())),
     GoRoute(path: '/faculty/files', builder: (c, s) => _f('/faculty/files', const FileManagerPage())),
     // Admin routes

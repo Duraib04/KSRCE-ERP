@@ -24,8 +24,16 @@ class FacultyDashboardPage extends StatelessWidget {
       final notifications = ds.notifications;
       final students = ds.students;
 
+      // Mentor & Adviser data
+      final mentees = ds.getMentees(facultyId);
+      final isAdviser = ds.isFacultyClassAdviser(facultyId);
+      final adviserClass = isAdviser ? ds.getAdviserClass(facultyId) : null;
+
       String facultyName = 'Faculty';
-      if (facultyCourses.isNotEmpty) {
+      final fac = ds.getFacultyById(facultyId);
+      if (fac != null) {
+        facultyName = fac['name'] as String? ?? 'Faculty';
+      } else if (facultyCourses.isNotEmpty) {
         facultyName = facultyCourses.first['facultyName'] as String? ?? 'Faculty';
       }
       final initials = facultyName.split(' ').where((w) => w.isNotEmpty).map((w) => w[0]).take(2).join().toUpperCase();
@@ -39,8 +47,13 @@ class FacultyDashboardPage extends StatelessWidget {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               _buildWelcomeHeader(isMobile, facultyName, initials, dayName, dateStr),
               const SizedBox(height: 24),
-              _buildStats(isMobile, facultyCourses, todayTimetable, students, notifications, context),
+              _buildStats(isMobile, facultyCourses, todayTimetable, mentees, notifications, context),
               const SizedBox(height: 28),
+              // Mentor & Adviser Summary
+              if (mentees.isNotEmpty || isAdviser) ...[
+                _buildRoleSummary(isMobile, mentees, isAdviser, adviserClass, ds, context),
+                const SizedBox(height: 28),
+              ],
               if (isMobile) ...[
                 _buildTodaySchedule(isMobile, todayTimetable, dayName),
                 const SizedBox(height: 20),
@@ -150,9 +163,9 @@ class FacultyDashboardPage extends StatelessWidget {
     child: Text(text, style: TextStyle(color: Colors.white.withOpacity(0.65), fontSize: 11, fontWeight: FontWeight.w500)),
   );
 
-  Widget _buildStats(bool isMobile, List<Map<String, dynamic>> courses, List<Map<String, dynamic>> todaySchedule, List<Map<String, dynamic>> students, List<Map<String, dynamic>> notifs, BuildContext context) {
+  Widget _buildStats(bool isMobile, List<Map<String, dynamic>> courses, List<Map<String, dynamic>> todaySchedule, List<Map<String, dynamic>> mentees, List<Map<String, dynamic>> notifs, BuildContext context) {
     final stats = [
-      _S('Students', '${students.length}', Icons.people_rounded, const Color(0xFF3B82F6), '/faculty/students'),
+      _S('Mentees', '${mentees.length}', Icons.people_rounded, const Color(0xFF3B82F6), '/faculty/mentees'),
       _S('Courses', '${courses.length}', Icons.menu_book_rounded, const Color(0xFF10B981), '/faculty/courses'),
       _S('Today', '${todaySchedule.length}', Icons.today_rounded, const Color(0xFFF97316), '/faculty/timetable'),
       _S('Alerts', '${notifs.length}', Icons.notifications_rounded, const Color(0xFF8B5CF6), '/faculty/notifications'),
@@ -185,6 +198,141 @@ class FacultyDashboardPage extends StatelessWidget {
           Text(s.value, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w700, color: AppColors.textDark, height: 1.1, letterSpacing: -0.5)),
           const SizedBox(height: 2),
           Text(s.label, style: const TextStyle(color: AppColors.textLight, fontSize: 12, fontWeight: FontWeight.w500)),
+        ]),
+      ),
+    );
+  }
+
+  Widget _buildRoleSummary(bool isMobile, List<Map<String, dynamic>> mentees, bool isAdviser, Map<String, dynamic>? adviserClass, DataService ds, BuildContext context) {
+    if (isMobile) {
+      return Column(children: [
+        if (mentees.isNotEmpty) _mentorCard(mentees, context),
+        if (mentees.isNotEmpty && isAdviser) const SizedBox(height: 14),
+        if (isAdviser) _adviserCard(adviserClass, ds, context),
+      ]);
+    }
+    return Row(children: [
+      if (mentees.isNotEmpty) Expanded(child: _mentorCard(mentees, context)),
+      if (mentees.isNotEmpty && isAdviser) const SizedBox(width: 14),
+      if (isAdviser) Expanded(child: _adviserCard(adviserClass, ds, context)),
+    ]);
+  }
+
+  Widget _mentorCard(List<Map<String, dynamic>> mentees, BuildContext context) {
+    final topMentees = mentees.take(3).toList();
+    return GestureDetector(
+      onTap: () => context.go('/faculty/mentees'),
+      child: Container(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFF10B981).withOpacity(0.15)),
+          boxShadow: [BoxShadow(color: const Color(0xFF10B981).withOpacity(0.06), blurRadius: 12, offset: const Offset(0, 4))],
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(color: const Color(0xFF10B981).withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+              child: const Icon(Icons.group_rounded, color: Color(0xFF10B981), size: 18),
+            ),
+            const SizedBox(width: 10),
+            const Text('My Mentees', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+            const Spacer(),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(color: const Color(0xFF10B981).withOpacity(0.08), borderRadius: BorderRadius.circular(12)),
+              child: Text('${mentees.length}', style: const TextStyle(color: Color(0xFF10B981), fontSize: 12, fontWeight: FontWeight.w700)),
+            ),
+          ]),
+          const SizedBox(height: 14),
+          ...topMentees.map((m) {
+            final name = m['name'] as String? ?? 'Student';
+            final init = name.split(' ').where((w) => w.isNotEmpty).map((w) => w[0]).take(2).join().toUpperCase();
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Row(children: [
+                CircleAvatar(radius: 13, backgroundColor: const Color(0xFF10B981).withOpacity(0.1),
+                  child: Text(init, style: const TextStyle(color: Color(0xFF10B981), fontSize: 9, fontWeight: FontWeight.w700))),
+                const SizedBox(width: 8),
+                Expanded(child: Text(name, style: const TextStyle(fontSize: 12, color: AppColors.textDark, fontWeight: FontWeight.w500), overflow: TextOverflow.ellipsis)),
+                Text('CGPA: ${m['cgpa'] ?? '-'}', style: const TextStyle(fontSize: 11, color: AppColors.textLight)),
+              ]),
+            );
+          }),
+          if (mentees.length > 3) ...[
+            const SizedBox(height: 4),
+            Text('+ ${mentees.length - 3} more...', style: TextStyle(color: const Color(0xFF10B981).withOpacity(0.7), fontSize: 11, fontWeight: FontWeight.w500)),
+          ],
+          const SizedBox(height: 8),
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Text('View All', style: TextStyle(color: const Color(0xFF10B981), fontSize: 12, fontWeight: FontWeight.w600)),
+            const SizedBox(width: 4),
+            const Icon(Icons.arrow_forward_rounded, size: 14, color: Color(0xFF10B981)),
+          ]),
+        ]),
+      ),
+    );
+  }
+
+  Widget _adviserCard(Map<String, dynamic>? adviserClass, DataService ds, BuildContext context) {
+    final deptId = adviserClass?['departmentId'] as String? ?? '';
+    final year = adviserClass?['year']?.toString() ?? '-';
+    final section = adviserClass?['section'] as String? ?? '-';
+    final deptName = ds.getDepartmentName(deptId);
+    final studentIds = (adviserClass?['studentIds'] as List<dynamic>?)?.cast<String>() ?? [];
+
+    return GestureDetector(
+      onTap: () => context.go('/faculty/adviser'),
+      child: Container(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFF7C3AED).withOpacity(0.15)),
+          boxShadow: [BoxShadow(color: const Color(0xFF7C3AED).withOpacity(0.06), blurRadius: 12, offset: const Offset(0, 4))],
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(color: const Color(0xFF7C3AED).withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+              child: const Icon(Icons.shield_rounded, color: Color(0xFF7C3AED), size: 18),
+            ),
+            const SizedBox(width: 10),
+            const Text('Class Adviser', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+            const Spacer(),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(color: const Color(0xFF7C3AED).withOpacity(0.08), borderRadius: BorderRadius.circular(12)),
+              child: const Text('Active', style: TextStyle(color: Color(0xFF7C3AED), fontSize: 11, fontWeight: FontWeight.w600)),
+            ),
+          ]),
+          const SizedBox(height: 14),
+          Row(children: [
+            Icon(Icons.business_rounded, size: 14, color: AppColors.textMuted),
+            const SizedBox(width: 6),
+            Text(deptName.isNotEmpty ? deptName : deptId, style: const TextStyle(fontSize: 12, color: AppColors.textDark, fontWeight: FontWeight.w500)),
+          ]),
+          const SizedBox(height: 6),
+          Row(children: [
+            Icon(Icons.class_rounded, size: 14, color: AppColors.textMuted),
+            const SizedBox(width: 6),
+            Text('Year $year  •  Section $section', style: const TextStyle(fontSize: 12, color: AppColors.textDark, fontWeight: FontWeight.w500)),
+          ]),
+          const SizedBox(height: 6),
+          Row(children: [
+            Icon(Icons.people_rounded, size: 14, color: AppColors.textMuted),
+            const SizedBox(width: 6),
+            Text('${studentIds.length} Students', style: const TextStyle(fontSize: 12, color: AppColors.textDark, fontWeight: FontWeight.w500)),
+          ]),
+          const SizedBox(height: 12),
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Text('View Class', style: TextStyle(color: const Color(0xFF7C3AED), fontSize: 12, fontWeight: FontWeight.w600)),
+            const SizedBox(width: 4),
+            const Icon(Icons.arrow_forward_rounded, size: 14, color: Color(0xFF7C3AED)),
+          ]),
         ]),
       ),
     );

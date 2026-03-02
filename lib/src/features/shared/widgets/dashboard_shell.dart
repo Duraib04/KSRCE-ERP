@@ -125,6 +125,10 @@ class _DashboardShellState extends State<DashboardShell> {
           NavItem(title: 'Grade Entry', icon: Icons.grading, route: '/faculty/grades'),
           NavItem(title: 'Student List', icon: Icons.people, route: '/faculty/students'),
         ]),
+        NavItem(title: 'Mentoring', icon: Icons.supervisor_account, route: '', children: [
+          NavItem(title: 'My Mentees', icon: Icons.group, route: '/faculty/mentees'),
+          NavItem(title: 'Class Adviser', icon: Icons.shield, route: '/faculty/adviser'),
+        ]),
         NavItem(title: 'Exams', icon: Icons.event_note, route: '/faculty/exams'),
         NavItem(title: 'Leave Mgmt', icon: Icons.event_busy, route: '/faculty/leave'),
         NavItem(title: 'Course Details', icon: Icons.list_alt, route: '/faculty/course-details'),

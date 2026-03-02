@@ -114,6 +114,8 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
               const SizedBox(height: 20),
               _contactInfo(email, phone, parentName, parentPhone, address),
               const SizedBox(height: 20),
+              _mentorAdviserInfo(ds, rollNo),
+              const SizedBox(height: 20),
               _approvalChainInfo(chain),
             ]),
           );
@@ -248,6 +250,72 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
         }).toList()),
       ]),
     );
+  }
+
+  Widget _mentorAdviserInfo(DataService ds, String studentId) {
+    final mentor = ds.getStudentMentor(studentId);
+    final adviser = ds.getStudentClassAdviser(studentId);
+
+    if (mentor == null && adviser == null) return const SizedBox.shrink();
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: AppCardStyles.elevated,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const Row(children: [
+          Icon(Icons.supervisor_account, color: AppColors.primary, size: 20),
+          SizedBox(width: 8),
+          Text('Mentor & Class Adviser', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+        ]),
+        const SizedBox(height: 16),
+        if (mentor != null) _facultyInfoRow(
+          mentor, 'Mentor', const Color(0xFF10B981), Icons.person_pin_rounded,
+        ),
+        if (mentor != null && adviser != null) const Divider(height: 24),
+        if (adviser != null) _facultyInfoRow(
+          adviser, 'Class Adviser', const Color(0xFF7C3AED), Icons.shield_rounded,
+        ),
+      ]),
+    );
+  }
+
+  Widget _facultyInfoRow(Map<String, dynamic> fac, String role, Color color, IconData icon) {
+    final name = fac['name'] as String? ?? role;
+    final dept = fac['department'] as String? ?? fac['departmentId'] as String? ?? '';
+    final phone = fac['phone'] as String? ?? '';
+    final email = fac['email'] as String? ?? '';
+    final designation = fac['designation'] as String? ?? '';
+    final initials = name.split(' ').where((w) => w.isNotEmpty).map((w) => w[0]).take(2).join().toUpperCase();
+
+    return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      CircleAvatar(radius: 22, backgroundColor: color.withOpacity(0.1),
+        child: Text(initials, style: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.w700))),
+      const SizedBox(width: 14),
+      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+          decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(6)),
+          child: Text(role.toUpperCase(), style: TextStyle(color: color, fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.5)),
+        ),
+        const SizedBox(height: 6),
+        Text(name, style: const TextStyle(color: AppColors.textDark, fontSize: 14, fontWeight: FontWeight.w600)),
+        if (designation.isNotEmpty) Text(designation, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+        if (dept.isNotEmpty) Text(dept, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+        const SizedBox(height: 4),
+        Wrap(spacing: 14, runSpacing: 4, children: [
+          if (phone.isNotEmpty) Row(mainAxisSize: MainAxisSize.min, children: [
+            const Icon(Icons.phone, size: 12, color: AppColors.textMuted),
+            const SizedBox(width: 3),
+            Text(phone, style: const TextStyle(color: AppColors.textMedium, fontSize: 12)),
+          ]),
+          if (email.isNotEmpty) Row(mainAxisSize: MainAxisSize.min, children: [
+            const Icon(Icons.email, size: 12, color: AppColors.textMuted),
+            const SizedBox(width: 3),
+            Text(email, style: const TextStyle(color: AppColors.textMedium, fontSize: 12)),
+          ]),
+        ]),
+      ])),
+    ]);
   }
 
   Widget _approvalChainInfo(Map<String, String> chain) {

@@ -38,15 +38,23 @@ class StudentDashboardPage extends StatelessWidget {
         backgroundColor: AppColors.background,
         body: LayoutBuilder(builder: (context, constraints) {
           final isMobile = constraints.maxWidth < 700;
+          final studentId = student['studentId'] as String? ?? ds.currentUserId ?? '';
+          final mentor = ds.getStudentMentor(studentId);
+          final classAdviser = ds.getStudentClassAdviser(studentId);
           return SingleChildScrollView(
             padding: EdgeInsets.all(isMobile ? 16 : 28),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildWelcomeHeader(isMobile, name, initials, dept, year, section, student['studentId'] as String? ?? ds.currentUserId ?? '', dayName, dateStr),
+                _buildWelcomeHeader(isMobile, name, initials, dept, year, section, studentId, dayName, dateStr),
                 const SizedBox(height: 24),
                 _buildStatsRow(isMobile, attPct, cgpa, pendingCount, unreadCount, context),
                 const SizedBox(height: 28),
+                // Mentor & Class Adviser info
+                if (mentor != null || classAdviser != null) ...[
+                  _buildMentorAdviserRow(isMobile, mentor, classAdviser),
+                  const SizedBox(height: 28),
+                ],
                 if (isMobile) ...[
                   _buildTodayTimetable(isMobile, todayTimetable, dayName),
                   const SizedBox(height: 20),
@@ -239,6 +247,145 @@ class StudentDashboardPage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildMentorAdviserRow(bool isMobile, Map<String, dynamic>? mentor, Map<String, dynamic>? classAdviser) {
+    if (isMobile) {
+      return Column(children: [
+        if (mentor != null) _mentorCard(mentor),
+        if (mentor != null && classAdviser != null) const SizedBox(height: 12),
+        if (classAdviser != null) _adviserCard(classAdviser),
+      ]);
+    }
+    return Row(children: [
+      if (mentor != null) Expanded(child: _mentorCard(mentor)),
+      if (mentor != null && classAdviser != null) const SizedBox(width: 14),
+      if (classAdviser != null) Expanded(child: _adviserCard(classAdviser)),
+    ]);
+  }
+
+  Widget _mentorCard(Map<String, dynamic> mentor) {
+    final name = mentor['name'] as String? ?? 'Mentor';
+    final deptName = mentor['department'] as String? ?? mentor['departmentId'] as String? ?? '';
+    final phone = mentor['phone'] as String? ?? '';
+    final email = mentor['email'] as String? ?? '';
+    final initials = name.split(' ').where((w) => w.isNotEmpty).map((w) => w[0]).take(2).join().toUpperCase();
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFF10B981).withOpacity(0.15)),
+        boxShadow: [BoxShadow(color: const Color(0xFF10B981).withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 3))],
+      ),
+      child: Row(children: [
+        Container(
+          padding: const EdgeInsets.all(3),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: const Color(0xFF10B981).withOpacity(0.2), width: 2),
+          ),
+          child: CircleAvatar(radius: 20, backgroundColor: const Color(0xFF10B981).withOpacity(0.1),
+            child: Text(initials, style: const TextStyle(color: Color(0xFF10B981), fontSize: 14, fontWeight: FontWeight.w700))),
+        ),
+        const SizedBox(width: 14),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+              decoration: BoxDecoration(color: const Color(0xFF10B981).withOpacity(0.08), borderRadius: BorderRadius.circular(6)),
+              child: const Text('MENTOR', style: TextStyle(color: Color(0xFF10B981), fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.5)),
+            ),
+          ]),
+          const SizedBox(height: 6),
+          Text(name, style: const TextStyle(color: AppColors.textDark, fontSize: 14, fontWeight: FontWeight.w600)),
+          if (deptName.isNotEmpty) ...[
+            const SizedBox(height: 2),
+            Text(deptName, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+          ],
+          if (phone.isNotEmpty || email.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Row(children: [
+              if (phone.isNotEmpty) ...[
+                const Icon(Icons.phone_rounded, size: 12, color: AppColors.textMuted),
+                const SizedBox(width: 3),
+                Text(phone, style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
+              ],
+              if (phone.isNotEmpty && email.isNotEmpty) const SizedBox(width: 10),
+              if (email.isNotEmpty)
+                Expanded(child: Row(children: [
+                  const Icon(Icons.email_rounded, size: 12, color: AppColors.textMuted),
+                  const SizedBox(width: 3),
+                  Flexible(child: Text(email, style: const TextStyle(color: AppColors.textLight, fontSize: 11), overflow: TextOverflow.ellipsis)),
+                ])),
+            ]),
+          ],
+        ])),
+      ]),
+    );
+  }
+
+  Widget _adviserCard(Map<String, dynamic> adviser) {
+    final name = adviser['name'] as String? ?? 'Class Adviser';
+    final deptName = adviser['department'] as String? ?? adviser['departmentId'] as String? ?? '';
+    final phone = adviser['phone'] as String? ?? '';
+    final email = adviser['email'] as String? ?? '';
+    final initials = name.split(' ').where((w) => w.isNotEmpty).map((w) => w[0]).take(2).join().toUpperCase();
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFF7C3AED).withOpacity(0.15)),
+        boxShadow: [BoxShadow(color: const Color(0xFF7C3AED).withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 3))],
+      ),
+      child: Row(children: [
+        Container(
+          padding: const EdgeInsets.all(3),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: const Color(0xFF7C3AED).withOpacity(0.2), width: 2),
+          ),
+          child: CircleAvatar(radius: 20, backgroundColor: const Color(0xFF7C3AED).withOpacity(0.1),
+            child: Text(initials, style: const TextStyle(color: Color(0xFF7C3AED), fontSize: 14, fontWeight: FontWeight.w700))),
+        ),
+        const SizedBox(width: 14),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+              decoration: BoxDecoration(color: const Color(0xFF7C3AED).withOpacity(0.08), borderRadius: BorderRadius.circular(6)),
+              child: const Text('CLASS ADVISER', style: TextStyle(color: Color(0xFF7C3AED), fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.5)),
+            ),
+          ]),
+          const SizedBox(height: 6),
+          Text(name, style: const TextStyle(color: AppColors.textDark, fontSize: 14, fontWeight: FontWeight.w600)),
+          if (deptName.isNotEmpty) ...[
+            const SizedBox(height: 2),
+            Text(deptName, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+          ],
+          if (phone.isNotEmpty || email.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Row(children: [
+              if (phone.isNotEmpty) ...[
+                const Icon(Icons.phone_rounded, size: 12, color: AppColors.textMuted),
+                const SizedBox(width: 3),
+                Text(phone, style: const TextStyle(color: AppColors.textLight, fontSize: 11)),
+              ],
+              if (phone.isNotEmpty && email.isNotEmpty) const SizedBox(width: 10),
+              if (email.isNotEmpty)
+                Expanded(child: Row(children: [
+                  const Icon(Icons.email_rounded, size: 12, color: AppColors.textMuted),
+                  const SizedBox(width: 3),
+                  Flexible(child: Text(email, style: const TextStyle(color: AppColors.textLight, fontSize: 11), overflow: TextOverflow.ellipsis)),
+                ])),
+            ]),
+          ],
+        ])),
+      ]),
     );
   }
 
