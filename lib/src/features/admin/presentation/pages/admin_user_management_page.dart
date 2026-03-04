@@ -7,6 +7,7 @@ import '../../../../core/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:excel/excel.dart' as excel_lib;
 import '../../../../core/data_service.dart';
+import '../../../../core/security_service.dart';
 
 class AdminUserManagementPage extends StatefulWidget {
   const AdminUserManagementPage({super.key});
@@ -58,15 +59,18 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
         _allUsers[idx]['email'] = s['email'] ?? '';
         _allUsers[idx]['phone'] = s['phone'] ?? '';
         _allUsers[idx]['year'] = '${s['year'] ?? ''}';
+        _allUsers[idx]['section'] = s['section'] ?? '';
       }
     }
     for (var f in ds.faculty) {
       final idx = _allUsers.indexWhere((u) => u['userId'] == f['facultyId']);
       if (idx >= 0) {
         _allUsers[idx]['name'] = f['name'] ?? _allUsers[idx]['name'];
-        _allUsers[idx]['department'] = ds.getDepartmentName(f['departmentId'] as String? ?? '');
+        _allUsers[idx]['department'] = f['department'] ?? ds.getDepartmentName(f['departmentId'] as String? ?? '');
         _allUsers[idx]['email'] = f['email'] ?? '';
         _allUsers[idx]['phone'] = f['phone'] ?? '';
+        _allUsers[idx]['designation'] = f['designation'] ?? '';
+        _allUsers[idx]['qualification'] = f['qualification'] ?? '';
       }
     }
     setState(() {});
@@ -235,6 +239,15 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
     });
   }
 
+  /// Flexible column lookup — tries multiple aliases for a field.
+  String _getField(Map<String, String> row, List<String> aliases, [String fallback = '']) {
+    for (final alias in aliases) {
+      final v = row[alias];
+      if (v != null && v.trim().isNotEmpty) return v.trim();
+    }
+    return fallback;
+  }
+
   void _verifyAndSave() {
     if (_selectedForVerification.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -243,33 +256,85 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
     }
     final ds = Provider.of<DataService>(context, listen: false);
     int addedCount = 0;
+    int skipped = 0;
     for (final idx in _selectedForVerification) {
       final row = _uploadedRows[idx];
-      final userId = row['userId'] ?? row['studentId'] ?? row['Student ID'] ?? row['user_id'] ?? row['User ID'] ?? row['ID'] ?? 'NEW$idx';
+      final userId = _getField(row, ['userId', 'studentId', 'facultyId', 'Student ID', 'Faculty ID', 'user_id', 'User ID', 'ID', 'Roll No', 'Roll Number', 'rollNo'], 'NEW$idx');
+      final name = _getField(row, ['name', 'Name', 'Full Name', 'Student Name', 'Faculty Name']);
+      final role = _getField(row, ['role', 'Role'], 'student').toLowerCase();
+      final rawPassword = _getField(row, ['password', 'Password']);
+      final department = _getField(row, ['department', 'Department', 'Dept', 'Branch']);
+      final departmentId = _getField(row, ['departmentId', 'Department ID', 'department_id']);
+      final email = _getField(row, ['email', 'Email', 'E-mail', 'email_id']);
+      final phone = _getField(row, ['phone', 'Phone', 'Mobile', 'Contact', 'mobile_no']);
+
+      // Skip if user already exists
       final existing = ds.users.indexWhere((u) => u['id'] == userId);
-      if (existing < 0) {
+      if (existing >= 0) { skipped++; continue; }
+
+      // Hash password (use default pattern if none provided)
+      final password = rawPassword.isNotEmpty ? rawPassword : 'ksrce@${userId.toLowerCase()}';
+      final hashedPassword = SecurityService.hashPassword(password, userId);
+
+      if (role == 'student') {
+        // Create student + user via DataService (which auto-hashes)
+        // But we have a custom userId, so we do it manually with proper hashing
+        ds.students.add({
+          'studentId': userId,
+          'name': name,
+          'department': department,
+          'departmentId': departmentId.isNotEmpty ? departmentId : 'DEPT_$department',
+          'year': int.tryParse(_getField(row, ['year', 'Year', 'Semester'])) ?? 1,
+          'section': _getField(row, ['section', 'Section', 'Sec'], 'A'),
+          'email': email,
+          'phone': phone,
+          'dateOfBirth': _getField(row, ['dateOfBirth', 'DOB', 'Date of Birth', 'dob']),
+          'bloodGroup': _getField(row, ['bloodGroup', 'Blood Group', 'blood_group']),
+          'address': _getField(row, ['address', 'Address']),
+          'parentName': _getField(row, ['parentName', 'Parent Name', 'Father Name', 'Guardian', 'parent_name']),
+          'parentPhone': _getField(row, ['parentPhone', 'Parent Phone', 'Parent Mobile', 'parent_phone']),
+          'admissionDate': _getField(row, ['admissionDate', 'Admission Date', 'admission_date']),
+          'cgpa': double.tryParse(_getField(row, ['cgpa', 'CGPA', 'GPA'])) ?? 0.0,
+          'enrolledCourses': <String>[],
+          'mentorId': null,
+          'classAdviserId': null,
+        });
         ds.users.add({
-          'id': userId,
-          'password': row['password'] ?? row['Password'] ?? 'default123',
-          'role': row['role'] ?? row['Role'] ?? 'student',
-          'label': row['name'] ?? row['Name'] ?? '',
-          'status': 'active',
+          'id': userId, 'password': hashedPassword,
+          'role': 'student', 'label': 'Student - $name', 'status': 'active',
         });
         addedCount++;
-      }
-      final role = (row['role'] ?? row['Role'] ?? 'student').toLowerCase();
-      if (role == 'student') {
-        final existingStu = ds.students.indexWhere((s) => s['studentId'] == userId);
-        if (existingStu < 0) {
-          ds.students.add({
-            'studentId': userId,
-            'name': row['name'] ?? row['Name'] ?? '',
-            'department': row['department'] ?? row['Department'] ?? row['Dept'] ?? '',
-            'year': int.tryParse(row['year'] ?? row['Year'] ?? '1') ?? 1,
-            'email': row['email'] ?? row['Email'] ?? '',
-            'phone': row['phone'] ?? row['Phone'] ?? row['Mobile'] ?? '',
-          });
-        }
+      } else if (role == 'faculty') {
+        ds.faculty.add({
+          'facultyId': userId,
+          'name': name,
+          'email': email,
+          'phone': phone,
+          'department': department,
+          'departmentId': departmentId.isNotEmpty ? departmentId : 'DEPT_$department',
+          'designation': _getField(row, ['designation', 'Designation', 'Position']),
+          'qualification': _getField(row, ['qualification', 'Qualification', 'Degree']),
+          'specialization': _getField(row, ['specialization', 'Specialization']),
+          'experience': _getField(row, ['experience', 'Experience', 'Years']),
+          'dateOfJoining': _getField(row, ['dateOfJoining', 'Date of Joining', 'Joining Date', 'date_of_joining']),
+          'isHOD': false,
+          'isClassAdviser': false,
+          'adviserFor': null,
+          'menteeIds': <String>[],
+          'courseIds': <String>[],
+        });
+        ds.users.add({
+          'id': userId, 'password': hashedPassword,
+          'role': 'faculty', 'label': 'Faculty - $name', 'status': 'active',
+        });
+        addedCount++;
+      } else {
+        // admin or other role — just create user record
+        ds.users.add({
+          'id': userId, 'password': hashedPassword,
+          'role': role, 'label': name, 'status': 'active',
+        });
+        addedCount++;
       }
     }
     ds.notifyListeners();
@@ -281,8 +346,9 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
       _columnFilters.clear();
       _tabController.animateTo(2);
     });
+    final msg = '$addedCount users added${skipped > 0 ? ', $skipped duplicates skipped' : ''}!';
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$addedCount users verified and added!'), backgroundColor: const Color(0xFF4CAF50)));
+      SnackBar(content: Text(msg), backgroundColor: const Color(0xFF4CAF50)));
   }
 
   // ===== User CRUD =====
@@ -294,53 +360,113 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
     final user = isEdit ? _allUsers[editIndex] : <String, dynamic>{};
     final idCtrl = TextEditingController(text: user['userId'] ?? '');
     final nameCtrl = TextEditingController(text: user['name'] ?? '');
-    final passCtrl = TextEditingController(text: user['password'] ?? '');
+    final passCtrl = TextEditingController();
     final deptCtrl = TextEditingController(text: user['department'] ?? '');
     final emailCtrl = TextEditingController(text: user['email'] ?? '');
     final phoneCtrl = TextEditingController(text: user['phone'] ?? '');
+    final sectionCtrl = TextEditingController(text: user['section'] ?? '');
+    final yearCtrl = TextEditingController(text: user['year'] ?? '');
+    final designationCtrl = TextEditingController(text: user['designation'] ?? '');
+    final qualificationCtrl = TextEditingController(text: user['qualification'] ?? '');
     String role = user['role'] ?? 'student';
 
     showDialog(context: context, builder: (ctx) => StatefulBuilder(builder: (ctx, setDState) {
       return AlertDialog(
         backgroundColor: AppColors.surface,
-        title: Text(isEdit ? 'Edit User' : 'Add New User', style: const TextStyle(color: AppColors.textDark)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(children: [
+          Icon(isEdit ? Icons.edit : Icons.person_add, color: AppColors.primary, size: 22),
+          const SizedBox(width: 10),
+          Text(isEdit ? 'Edit User' : 'Add New User', style: const TextStyle(color: AppColors.textDark, fontSize: 17, fontWeight: FontWeight.w600)),
+        ]),
         content: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 400, minWidth: MediaQuery.of(ctx).size.width < 500 ? MediaQuery.of(ctx).size.width * 0.85 : 400),
+          constraints: BoxConstraints(maxWidth: 440, minWidth: MediaQuery.of(ctx).size.width < 500 ? MediaQuery.of(ctx).size.width * 0.85 : 440),
           child: SingleChildScrollView(child: Column(mainAxisSize: MainAxisSize.min, children: [
-            _dialogField('User ID', idCtrl, enabled: !isEdit),
+            _dialogField('User ID (e.g. STU006)', idCtrl, enabled: !isEdit),
             _dialogField('Full Name', nameCtrl),
-            _dialogField('Password', passCtrl, obscure: true),
+            _dialogField(isEdit ? 'New Password (leave blank to keep)' : 'Password', passCtrl, obscure: true),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               value: role, dropdownColor: AppColors.background,
               decoration: _inputDeco('Role'),
               style: const TextStyle(color: Colors.white),
               items: ['student', 'faculty', 'admin'].map((r) => DropdownMenuItem(value: r, child: Text(r.toUpperCase()))).toList(),
-              onChanged: (v) => setDState(() => role = v!),
+              onChanged: isEdit ? null : (v) => setDState(() => role = v!),
             ),
             const SizedBox(height: 8),
             _dialogField('Department', deptCtrl),
             _dialogField('Email', emailCtrl),
             _dialogField('Phone', phoneCtrl),
+            if (role == 'student') ...[_dialogField('Year', yearCtrl), _dialogField('Section', sectionCtrl)],
+            if (role == 'faculty') ...[_dialogField('Designation', designationCtrl), _dialogField('Qualification', qualificationCtrl)],
           ]))),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel', style: TextStyle(color: AppColors.textLight))),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
             onPressed: () {
-              if (idCtrl.text.isEmpty || nameCtrl.text.isEmpty) return;
+              if (idCtrl.text.isEmpty || nameCtrl.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('User ID and Name are required'), backgroundColor: Colors.red));
+                return;
+              }
               final ds = Provider.of<DataService>(context, listen: false);
+              final uid = idCtrl.text.trim();
               if (isEdit) {
+                // Update user record
                 final uIdx = ds.users.indexWhere((u) => u['id'] == _allUsers[editIndex]['userId']);
                 if (uIdx >= 0) {
-                  ds.users[uIdx] = {'id': idCtrl.text, 'password': passCtrl.text, 'role': role, 'label': nameCtrl.text, 'status': _allUsers[editIndex]['status'] ?? 'active'};
+                  ds.users[uIdx]['label'] = nameCtrl.text;
+                  ds.users[uIdx]['role'] = role;
+                  // Only re-hash if password field is non-empty
+                  if (passCtrl.text.isNotEmpty) {
+                    ds.users[uIdx]['password'] = SecurityService.hashPassword(passCtrl.text, uid);
+                  }
+                }
+                // Sync to student record
+                final sIdx = ds.students.indexWhere((s) => s['studentId'] == uid);
+                if (sIdx >= 0) {
+                  ds.students[sIdx].addAll({
+                    'name': nameCtrl.text, 'department': deptCtrl.text, 'email': emailCtrl.text,
+                    'phone': phoneCtrl.text, 'year': int.tryParse(yearCtrl.text) ?? ds.students[sIdx]['year'],
+                    'section': sectionCtrl.text.isNotEmpty ? sectionCtrl.text : ds.students[sIdx]['section'],
+                  });
+                }
+                // Sync to faculty record
+                final fIdx = ds.faculty.indexWhere((f) => f['facultyId'] == uid);
+                if (fIdx >= 0) {
+                  ds.faculty[fIdx].addAll({
+                    'name': nameCtrl.text, 'email': emailCtrl.text, 'phone': phoneCtrl.text,
+                    'designation': designationCtrl.text, 'qualification': qualificationCtrl.text,
+                  });
+                  if (deptCtrl.text.isNotEmpty) ds.faculty[fIdx]['department'] = deptCtrl.text;
                 }
               } else {
-                ds.users.add({'id': idCtrl.text, 'password': passCtrl.text.isEmpty ? 'default123' : passCtrl.text, 'role': role, 'label': nameCtrl.text, 'status': 'active'});
+                // Check for duplicate ID
+                if (ds.users.any((u) => u['id'] == uid)) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User ID "$uid" already exists'), backgroundColor: Colors.red));
+                  return;
+                }
+                // Hash password
+                final rawPwd = passCtrl.text.isNotEmpty ? passCtrl.text : 'ksrce@${uid.toLowerCase()}';
+                final hashedPwd = SecurityService.hashPassword(rawPwd, uid);
+                // Create user account
+                ds.users.add({'id': uid, 'password': hashedPwd, 'role': role, 'label': nameCtrl.text, 'status': 'active'});
+                // Create role-specific record
                 if (role == 'student') {
-                  ds.addStudent({'name': nameCtrl.text, 'department': deptCtrl.text, 'departmentId': '', 'email': emailCtrl.text, 'phone': phoneCtrl.text, 'year': '1', 'section': 'A'});
+                  ds.students.add({
+                    'studentId': uid, 'name': nameCtrl.text, 'department': deptCtrl.text,
+                    'departmentId': 'DEPT_${deptCtrl.text}', 'email': emailCtrl.text, 'phone': phoneCtrl.text,
+                    'year': int.tryParse(yearCtrl.text) ?? 1, 'section': sectionCtrl.text.isNotEmpty ? sectionCtrl.text : 'A',
+                    'enrolledCourses': <String>[], 'mentorId': null, 'classAdviserId': null,
+                  });
                 } else if (role == 'faculty') {
-                  ds.addFaculty({'name': nameCtrl.text, 'email': emailCtrl.text, 'phone': phoneCtrl.text, 'departmentId': '', 'designation': '', 'qualification': ''});
+                  ds.faculty.add({
+                    'facultyId': uid, 'name': nameCtrl.text, 'email': emailCtrl.text, 'phone': phoneCtrl.text,
+                    'department': deptCtrl.text, 'departmentId': 'DEPT_${deptCtrl.text}',
+                    'designation': designationCtrl.text, 'qualification': qualificationCtrl.text,
+                    'isHOD': false, 'isClassAdviser': false, 'adviserFor': null,
+                    'menteeIds': <String>[], 'courseIds': <String>[],
+                  });
                 }
               }
               ds.notifyListeners();
@@ -537,17 +663,22 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
               width: double.infinity, padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
               child: const SelectableText(
-                'userId,name,password,role,department,year,email,phone\nSTU006,John Doe,pass123,student,CSE,2,john@email.com,9876543210\nFAC002,Dr. Smith,fac456,faculty,ECE,,,',
+                'userId,name,role,department,year,section,email,phone\nSTU006,John Doe,student,CSE,2,A,john@email.com,9876543210\nFAC002,Dr. Smith,faculty,ECE,,,,smith@ksrce.edu',
                 style: TextStyle(fontFamily: 'monospace', fontSize: 12, color: Color(0xFF4CAF50)),
               ),
             ),
             const SizedBox(height: 12),
             Text('The first row becomes column headers and filter options in the preview.', style: TextStyle(color: AppColors.textLight, fontSize: 12)),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
+            const Text('Supported columns:', style: TextStyle(color: AppColors.textMedium, fontSize: 12, fontWeight: FontWeight.w600)),
+            const SizedBox(height: 8),
             Wrap(spacing: 8, runSpacing: 8, children: [
-              _formatChip('userId', true), _formatChip('name', true), _formatChip('password', false),
-              _formatChip('role', false), _formatChip('department', false), _formatChip('year', false),
-              _formatChip('email', false), _formatChip('phone', false),
+              _formatChip('userId', true), _formatChip('name', true), _formatChip('role', true),
+              _formatChip('password', false), _formatChip('department', false), _formatChip('year', false),
+              _formatChip('section', false), _formatChip('email', false), _formatChip('phone', false),
+              _formatChip('dateOfBirth', false), _formatChip('bloodGroup', false), _formatChip('address', false),
+              _formatChip('parentName', false), _formatChip('parentPhone', false),
+              _formatChip('designation', false), _formatChip('qualification', false),
             ]),
           ]),
         ),
@@ -579,12 +710,68 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
   }
 
   void _downloadTemplate() {
-    const csv = 'userId,name,password,role,department,year,email,phone\nSTU006,John Doe,pass123,student,CSE,2,john@email.com,9876543210\n';
+    const csv = 'userId,name,password,role,department,year,section,email,phone,dateOfBirth,bloodGroup,address,parentName,parentPhone,designation,qualification\n'
+        'STU006,John Doe,,student,CSE,2,A,john@email.com,9876543210,2004-05-15,O+,123 Main St,Mr. Doe,9876543211,,\n'
+        'FAC002,Dr. Smith,,faculty,ECE,,,,smith@ksrce.edu,,,,,,,Professor,PhD\n';
     final bytes = utf8.encode(csv);
     final blob = html.Blob([bytes]);
     final url = html.Url.createObjectUrlFromBlob(blob);
-    html.AnchorElement(href: url)..setAttribute('download', 'student_template.csv')..click();
+    html.AnchorElement(href: url)..setAttribute('download', 'user_template.csv')..click();
     html.Url.revokeObjectUrl(url);
+  }
+
+  // ===== EXPORT =====
+  void _exportUsersCSV() {
+    final users = _filteredUsers;
+    if (users.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No users to export'), backgroundColor: Colors.red));
+      return;
+    }
+    final headers = ['userId', 'name', 'role', 'department', 'email', 'phone', 'year', 'status'];
+    final buffer = StringBuffer();
+    buffer.writeln(headers.join(','));
+    for (final u in users) {
+      buffer.writeln(headers.map((h) => '"${(u[h] ?? '').toString().replaceAll('"', '""')}"').join(','));
+    }
+    final bytes = utf8.encode(buffer.toString());
+    final blob = html.Blob([bytes], 'text/csv');
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    html.AnchorElement(href: url)..setAttribute('download', 'users_export.csv')..click();
+    html.Url.revokeObjectUrl(url);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Exported ${users.length} users to CSV'), backgroundColor: const Color(0xFF4CAF50)));
+  }
+
+  void _exportUsersExcel() {
+    final users = _filteredUsers;
+    if (users.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No users to export'), backgroundColor: Colors.red));
+      return;
+    }
+    final excel = excel_lib.Excel.createExcel();
+    final sheet = excel['Users'];
+    final headers = ['userId', 'name', 'role', 'department', 'email', 'phone', 'year', 'status'];
+    // Header row
+    for (var i = 0; i < headers.length; i++) {
+      sheet.cell(excel_lib.CellIndex.indexByColumnRow(columnIndex: i, rowIndex: 0)).value = excel_lib.TextCellValue(headers[i]);
+    }
+    // Data rows
+    for (var r = 0; r < users.length; r++) {
+      for (var c = 0; c < headers.length; c++) {
+        sheet.cell(excel_lib.CellIndex.indexByColumnRow(columnIndex: c, rowIndex: r + 1)).value =
+            excel_lib.TextCellValue((users[r][headers[c]] ?? '').toString());
+      }
+    }
+    // Remove default 'Sheet1' if exists
+    if (excel.tables.containsKey('Sheet1')) excel.delete('Sheet1');
+    final bytes = excel.encode();
+    if (bytes == null) return;
+    final blob = html.Blob([Uint8List.fromList(bytes)], 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    html.AnchorElement(href: url)..setAttribute('download', 'users_export.xlsx')..click();
+    html.Url.revokeObjectUrl(url);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Exported ${users.length} users to Excel'), backgroundColor: const Color(0xFF4CAF50)));
   }
 
   // ===== TAB 2: Preview & Verify (with filters) =====
@@ -800,6 +987,24 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
             _filterDropdown('Status', _statusFilter, ['All', 'Active', 'Suspended', 'Terminated'], (v) => setState(() => _statusFilter = v!)),
             _filterDropdown('Role', _roleFilter, ['All', 'Student', 'Faculty', 'Admin'], (v) => setState(() => _roleFilter = v!)),
             Text('${filtered.length} users', style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
+            const SizedBox(width: 4),
+            PopupMenuButton<String>(
+              onSelected: (v) { if (v == 'csv') _exportUsersCSV(); else _exportUsersExcel(); },
+              icon: const Icon(Icons.download_rounded, color: AppColors.primary, size: 20),
+              tooltip: 'Export Users',
+              itemBuilder: (ctx) => [
+                const PopupMenuItem(value: 'csv', child: Row(children: [
+                  Icon(Icons.table_chart, size: 16, color: Color(0xFF4CAF50)),
+                  SizedBox(width: 8),
+                  Text('Export as CSV', style: TextStyle(fontSize: 13)),
+                ])),
+                const PopupMenuItem(value: 'xlsx', child: Row(children: [
+                  Icon(Icons.grid_on, size: 16, color: Color(0xFF2196F3)),
+                  SizedBox(width: 8),
+                  Text('Export as Excel', style: TextStyle(fontSize: 13)),
+                ])),
+              ],
+            ),
           ]),
         ),
         const SizedBox(height: 12),

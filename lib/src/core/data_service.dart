@@ -640,10 +640,11 @@ class DataService extends ChangeNotifier {
     fac['courseIds'] = <String>[];
     _faculty.add(fac);
 
-    // Create user account
+    // Create user account with hashed password
+    final defaultPwd = 'ksrce@${id.toLowerCase()}';
     _users.add({
       'id': id,
-      'password': 'ksrce@${id.toLowerCase()}',
+      'password': SecurityService.hashPassword(defaultPwd, id),
       'role': 'faculty',
       'label': 'Faculty - ${fac['name']}',
     });
@@ -659,10 +660,11 @@ class DataService extends ChangeNotifier {
     student['classAdviserId'] = null;
     _students.add(student);
 
-    // Create user account
+    // Create user account with hashed password
+    final defaultPwd = 'ksrce@${id.toLowerCase()}';
     _users.add({
       'id': id,
-      'password': 'ksrce@${id.toLowerCase()}',
+      'password': SecurityService.hashPassword(defaultPwd, id),
       'role': 'student',
       'label': 'Student - ${student['name']}',
     });
