@@ -141,6 +141,45 @@ class _FacultyLeavePageState extends State<FacultyLeavePage> {
           ),
         ),
         const SizedBox(height: 12),
+        // Date pickers
+        Row(children: [
+          Expanded(child: InkWell(
+            onTap: () async {
+              final picked = await showDatePicker(context: context, initialDate: _fromDate ?? DateTime.now(),
+                firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 365)));
+              if (picked != null) setState(() { _fromDate = picked; _toDate ??= picked; });
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+              decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.border)),
+              child: Row(children: [
+                const Icon(Icons.calendar_today, size: 16, color: AppColors.textMedium),
+                const SizedBox(width: 8),
+                Text(_fromDate != null ? _fromDate!.toIso8601String().substring(0, 10) : 'From Date',
+                  style: TextStyle(color: _fromDate != null ? AppColors.textDark : AppColors.textLight, fontSize: 13)),
+              ]),
+            ),
+          )),
+          const SizedBox(width: 8),
+          Expanded(child: InkWell(
+            onTap: () async {
+              final picked = await showDatePicker(context: context, initialDate: _toDate ?? _fromDate ?? DateTime.now(),
+                firstDate: _fromDate ?? DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 365)));
+              if (picked != null) setState(() => _toDate = picked);
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+              decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.border)),
+              child: Row(children: [
+                const Icon(Icons.calendar_today, size: 16, color: AppColors.textMedium),
+                const SizedBox(width: 8),
+                Text(_toDate != null ? _toDate!.toIso8601String().substring(0, 10) : 'To Date',
+                  style: TextStyle(color: _toDate != null ? AppColors.textDark : AppColors.textLight, fontSize: 13)),
+              ]),
+            ),
+          )),
+        ]),
+        const SizedBox(height: 12),
         TextField(
           controller: _reasonController, maxLines: 3,
           style: const TextStyle(color: AppColors.textDark),
@@ -155,11 +194,31 @@ class _FacultyLeavePageState extends State<FacultyLeavePage> {
           width: double.infinity,
           child: ElevatedButton.icon(
             onPressed: () {
-              if (_reasonController.text.isNotEmpty) {
-                ds.applyLeave({'userId': uid, 'leaveType': _leaveType, 'fromDate': DateTime.now().toIso8601String().substring(0, 10), 'toDate': DateTime.now().toIso8601String().substring(0, 10), 'days': 1, 'reason': _reasonController.text});
-                _reasonController.clear();
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Leave application submitted')));
+              if (_reasonController.text.isEmpty || _fromDate == null || _toDate == null) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('Please fill all fields (dates + reason)'),
+                  backgroundColor: Color(0xFFF43F5E),
+                ));
+                return;
               }
+              final days = _toDate!.difference(_fromDate!).inDays + 1;
+              ds.applyLeave({
+                'userId': uid,
+                'leaveType': _leaveType,
+                'fromDate': _fromDate!.toIso8601String().substring(0, 10),
+                'toDate': _toDate!.toIso8601String().substring(0, 10),
+                'days': days,
+                'reason': _reasonController.text,
+              });
+              _reasonController.clear();
+              setState(() { _fromDate = null; _toDate = null; });
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Leave application submitted ($days day${days > 1 ? 's' : ''})'),
+                backgroundColor: const Color(0xFF10B981),
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                margin: const EdgeInsets.all(16),
+              ));
             },
             icon: const Icon(Icons.send, size: 18),
             label: const Text('Submit'),
@@ -171,33 +230,139 @@ class _FacultyLeavePageState extends State<FacultyLeavePage> {
   }
 
   Widget _buildStudentLeaveRequests(List<Map<String, dynamic>> requests, DataService ds) {
+    final fid = ds.currentUserId ?? '';
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: AppCardStyles.elevated,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Text('Student Leave Requests (Pending Approval)', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+        Row(children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(color: const Color(0xFFF97316).withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+            child: const Icon(Icons.pending_actions_rounded, color: Color(0xFFF97316), size: 18),
+          ),
+          const SizedBox(width: 10),
+          Text('Student Leave Requests (${requests.length} pending)', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+        ]),
         const SizedBox(height: 16),
         ...requests.map((r) {
+          final leaveId = r['leaveId'] as String? ?? '';
           final studentName = ds.getStudentById(r['userId'] ?? '')?.containsKey('name') == true
               ? ds.getStudentById(r['userId'] ?? '')!['name'] : r['userId'] ?? '';
+          final days = r['days']?.toString() ?? '1';
           return Container(
             margin: const EdgeInsets.only(bottom: 10),
             padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
-            child: Row(children: [
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('$studentName - ${r['leaveType'] ?? ''}', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w500)),
-                Text('${r['fromDate'] ?? ''} to ${r['toDate'] ?? ''} | ${r['reason'] ?? ''}', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
-              ])),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(color: Colors.orange.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
-                child: const Text('PENDING', style: TextStyle(color: Colors.orange, fontSize: 11, fontWeight: FontWeight.bold)),
-              ),
+            decoration: BoxDecoration(
+              color: AppColors.background, borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: const Color(0xFFF97316).withOpacity(0.12)),
+            ),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text('$studentName', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w600, fontSize: 14)),
+                  const SizedBox(height: 2),
+                  Text('${r['leaveType'] ?? ''} • ${r['fromDate'] ?? ''} to ${r['toDate'] ?? ''} ($days day${days != '1' ? 's' : ''})', style: const TextStyle(color: AppColors.textMedium, fontSize: 12)),
+                  if (r['reason'] != null && (r['reason'] as String).isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    Text('Reason: ${r['reason']}', style: const TextStyle(color: AppColors.textLight, fontSize: 12, fontStyle: FontStyle.italic)),
+                  ],
+                ])),
+              ]),
+              const SizedBox(height: 10),
+              Row(children: [
+                Expanded(child: ElevatedButton.icon(
+                  onPressed: () {
+                    ds.approveLeave(leaveId, fid);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Approved leave for $studentName'),
+                      backgroundColor: const Color(0xFF10B981),
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      margin: const EdgeInsets.all(16),
+                    ));
+                  },
+                  icon: const Icon(Icons.check_rounded, size: 16),
+                  label: const Text('Approve'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF10B981), foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                )),
+                const SizedBox(width: 10),
+                Expanded(child: OutlinedButton.icon(
+                  onPressed: () => _showRejectDialog(context, ds, leaveId, studentName.toString(), fid),
+                  icon: const Icon(Icons.close_rounded, size: 16),
+                  label: const Text('Reject'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: const Color(0xFFF43F5E),
+                    side: const BorderSide(color: Color(0xFFF43F5E)),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                )),
+              ]),
             ]),
           );
         }),
       ]),
+    );
+  }
+
+  void _showRejectDialog(BuildContext context, DataService ds, String leaveId, String studentName, String fid) {
+    final reasonCtrl = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(color: const Color(0xFFF43F5E).withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+            child: const Icon(Icons.close_rounded, color: Color(0xFFF43F5E), size: 20),
+          ),
+          const SizedBox(width: 12),
+          const Text('Reject Leave', style: TextStyle(color: AppColors.textDark, fontSize: 16, fontWeight: FontWeight.w600)),
+        ]),
+        content: SizedBox(
+          width: 350,
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Text('Reject leave for $studentName?', style: const TextStyle(color: AppColors.textMedium, fontSize: 14)),
+            const SizedBox(height: 16),
+            TextField(
+              controller: reasonCtrl,
+              maxLines: 3,
+              style: const TextStyle(color: AppColors.textDark, fontSize: 14),
+              decoration: InputDecoration(
+                labelText: 'Rejection reason',
+                labelStyle: const TextStyle(color: AppColors.textLight, fontSize: 13),
+                filled: true, fillColor: AppColors.background,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppColors.border)),
+              ),
+            ),
+          ]),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () {
+              ds.rejectLeave(leaveId, fid, reasonCtrl.text.isNotEmpty ? reasonCtrl.text : 'Rejected');
+              Navigator.of(ctx).pop();
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Leave rejected for $studentName'),
+                backgroundColor: const Color(0xFFF43F5E),
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                margin: const EdgeInsets.all(16),
+              ));
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFF43F5E), foregroundColor: Colors.white),
+            child: const Text('Reject'),
+          ),
+        ],
+      ),
     );
   }
 }
