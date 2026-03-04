@@ -55,38 +55,39 @@ class AdminDashboardPage extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF1E293B), Color(0xFF0F172A)],
+          colors: [Color(0xFFEFF6FF), Color(0xFFDBEAFE)],
         ),
-        boxShadow: AppCardStyles.coloredShadow(const Color(0xFF1E293B)),
+        boxShadow: AppCardStyles.coloredShadow(const Color(0xFF3B82F6)),
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFF3B82F6).withOpacity(0.15)),
       ),
       child: Stack(
         children: [
-          Positioned(right: -20, top: -20, child: Container(width: 90, height: 90, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withOpacity(0.03)))),
+          Positioned(right: -20, top: -20, child: Container(width: 90, height: 90, decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0xFF3B82F6).withOpacity(0.05)))),
           Row(children: [
             Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.white.withOpacity(0.12), width: 2),
+                border: Border.all(color: const Color(0xFF1E40AF).withOpacity(0.2), width: 2),
               ),
-              child: CircleAvatar(radius: isMobile ? 22 : 30, backgroundColor: const Color(0xFFF43F5E),
+              child: CircleAvatar(radius: isMobile ? 22 : 30, backgroundColor: const Color(0xFF1E40AF),
                 child: Icon(Icons.admin_panel_settings_rounded, size: isMobile ? 22 : 28, color: Colors.white)),
             ),
             SizedBox(width: isMobile ? 14 : 22),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('$greeting,', style: TextStyle(fontSize: isMobile ? 13 : 14, color: Colors.white.withOpacity(0.7))),
+              Text('$greeting,', style: TextStyle(fontSize: isMobile ? 13 : 14, color: const Color(0xFF1E40AF).withOpacity(0.7))),
               const SizedBox(height: 2),
-              Text('Administrator', style: TextStyle(fontSize: isMobile ? 20 : 26, fontWeight: FontWeight.w700, color: Colors.white, letterSpacing: -0.3)),
+              Text('Administrator', style: TextStyle(fontSize: isMobile ? 20 : 26, fontWeight: FontWeight.w700, color: const Color(0xFF1E3A5F), letterSpacing: -0.3)),
               const SizedBox(height: 6),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.08),
+                  color: const Color(0xFF1E40AF).withOpacity(0.08),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.white.withOpacity(0.06)),
+                  border: Border.all(color: const Color(0xFF1E40AF).withOpacity(0.12)),
                 ),
-                child: Text('System Admin  •  KSRCE', style: TextStyle(color: Colors.white.withOpacity(0.75), fontSize: 11, fontWeight: FontWeight.w500)),
+                child: Text('System Admin  •  KSRCE', style: TextStyle(color: const Color(0xFF1E40AF).withOpacity(0.8), fontSize: 11, fontWeight: FontWeight.w500)),
               ),
             ])),
           ]),
