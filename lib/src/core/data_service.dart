@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -87,163 +88,324 @@ class DataService extends ChangeNotifier {
   Map<String, dynamic> _settings = {};
   Map<String, dynamic> get settings => _settings;
 
+  // ─── ROLE-BASED COLLECTION PRIORITY ─────────────────────────────────
+  // Core collections needed by ALL roles (loaded first)
+  static const _coreCollections = [
+    'users', 'students', 'faculty', 'departments', 'notifications', 'settings',
+  ];
+  // Collections per role (loaded eagerly after core)
+  static const _roleCollections = <String, List<String>>{
+    'student': ['courses', 'attendance', 'assignments', 'results', 'timetable',
+      'complaints', 'fees', 'certificates', 'events', 'eventRegistrations',
+      'library', 'placements', 'placementApplications', 'exams'],
+    'faculty': ['courses', 'attendance', 'assignments', 'results', 'timetable',
+      'classes', 'mentorAssignments', 'exams', 'events', 'leave', 'leaveBalance',
+      'syllabus', 'research', 'facultyTimetable', 'courseOutcomes', 'courseDiary',
+      'profileEditRequests', 'complaints'],
+    'hod': ['courses', 'attendance', 'assignments', 'results', 'timetable',
+      'classes', 'mentorAssignments', 'exams', 'events', 'leave', 'leaveBalance',
+      'syllabus', 'research', 'facultyTimetable', 'courseOutcomes', 'courseDiary',
+      'profileEditRequests', 'complaints'],
+    'admin': ['courses', 'attendance', 'assignments', 'results', 'timetable',
+      'complaints', 'classes', 'mentorAssignments', 'exams', 'fees',
+      'certificates', 'events', 'eventRegistrations', 'leave', 'leaveBalance',
+      'library', 'placements', 'placementApplications', 'syllabus', 'research',
+      'facultyTimetable', 'courseOutcomes', 'courseDiary', 'profileEditRequests'],
+  };
+
+  /// All collection keys (for full seed / persist)
+  static const _allKeys = [
+    'students', 'users', 'courses', 'attendance', 'assignments', 'results',
+    'timetable', 'notifications', 'complaints', 'departments', 'faculty',
+    'classes', 'mentorAssignments', 'exams', 'fees', 'certificates', 'events',
+    'eventRegistrations', 'leave', 'leaveBalance', 'library', 'placements',
+    'placementApplications', 'syllabus', 'research', 'facultyTimetable',
+    'courseOutcomes', 'courseDiary', 'profileEditRequests',
+  ];
+
+  /// Track which collections have been loaded so lazy loading can fill gaps.
+  final Set<String> _loadedCollections = {};
+
+  /// Optimized data loading:
+  /// 1. Load from localStorage instantly (no network wait)
+  /// 2. If no local data, seed from bundled JSON assets
+  /// 3. Sync from Firebase cloud in background (non-blocking)
   Future<void> loadAllData() async {
     if (_isLoaded) return;
     try {
       // Initialize persistence
       await PersistenceService.init();
 
-      // Load from cloud (Firebase RTDB) first, fallback to localStorage
-      final persisted = await PersistenceService.loadAll();
-      if (persisted != null) {
-        _students = _asList(persisted['students']);
-        _users = _asList(persisted['users']);
-        _courses = _asList(persisted['courses']);
-        _attendance = _asList(persisted['attendance']);
-        _assignments = _asList(persisted['assignments']);
-        _results = _asList(persisted['results']);
-        _timetable = _asList(persisted['timetable']);
-        _notifications = _asList(persisted['notifications']);
-        _complaints = _asList(persisted['complaints']);
-        _departments = _asList(persisted['departments']);
-        _faculty = _asList(persisted['faculty']);
-        _classes = _asList(persisted['classes']);
-        _mentorAssignments = _asList(persisted['mentorAssignments']);
-        _exams = _asList(persisted['exams']);
-        _fees = _asList(persisted['fees']);
-        _certificates = _asList(persisted['certificates']);
-        _events = _asList(persisted['events']);
-        _eventRegistrations = _asList(persisted['eventRegistrations']);
-        _leave = _asList(persisted['leave']);
-        _leaveBalance = _asList(persisted['leaveBalance']);
-        _library = _asList(persisted['library']);
-        _placements = _asList(persisted['placements']);
-        _placementApplications = _asList(persisted['placementApplications']);
-        _syllabus = _asList(persisted['syllabus']);
-        _research = _asList(persisted['research']);
-        _facultyTimetable = _asList(persisted['facultyTimetable']);
-        _courseOutcomes = _asList(persisted['courseOutcomes']);
-        _courseDiary = _asList(persisted['courseDiary']);
-        _profileEditRequests = _asList(persisted['profileEditRequests']);
-        final settingsRaw = persisted['settings'];
-        if (settingsRaw is List && settingsRaw.isNotEmpty) {
-          _settings = Map<String, dynamic>.from(settingsRaw.first as Map);
-        } else if (settingsRaw is Map) {
-          _settings = Map<String, dynamic>.from(settingsRaw);
-        } else {
-          _settings = {};
-        }
-      } else {
-        // First run: seed from bundled JSON assets
-        final futures = await Future.wait([
-        _loadJson('assets/data/students.json'),      // 0
-        _loadJson('assets/data/users.json'),          // 1
-        _loadJson('assets/data/courses.json'),        // 2
-        _loadJson('assets/data/attendance.json'),     // 3
-        _loadJson('assets/data/assignments.json'),    // 4
-        _loadJson('assets/data/results.json'),        // 5
-        _loadJson('assets/data/timetable.json'),      // 6
-        _loadJson('assets/data/notifications.json'),  // 7
-        _loadJson('assets/data/complaints.json'),     // 8
-        _loadJson('assets/data/departments.json'),    // 9
-        _loadJson('assets/data/faculty.json'),        // 10
-        _loadJson('assets/data/classes.json'),        // 11
-        _loadJson('assets/data/mentor_assignments.json'), // 12
-        _loadJson('assets/data/exams.json'),               // 13
-        _loadJson('assets/data/fees.json'),                 // 14
-        _loadJson('assets/data/certificates.json'),         // 15
-        _loadJson('assets/data/events.json'),               // 16
-        _loadJson('assets/data/event_registrations.json'),  // 17
-        _loadJson('assets/data/leave.json'),                // 18
-        _loadJson('assets/data/leave_balance.json'),        // 19
-        _loadJson('assets/data/library.json'),              // 20
-        _loadJson('assets/data/placements.json'),           // 21
-        _loadJson('assets/data/placement_applications.json'), // 22
-        _loadJson('assets/data/syllabus.json'),             // 23
-        _loadJson('assets/data/research.json'),             // 24
-        _loadJson('assets/data/faculty_timetable.json'),    // 25
-        _loadJson('assets/data/course_outcomes.json'),         // 26
-        _loadJson('assets/data/course_diary.json'),             // 27
-        _loadJson('assets/data/profile_edit_requests.json'),  // 28
-      ]);
-      _students = futures[0];
-      _users = futures[1];
-      _courses = futures[2];
-      _attendance = futures[3];
-      _assignments = futures[4];
-      _results = futures[5];
-      _timetable = futures[6];
-      _notifications = futures[7];
-      _complaints = futures[8];
-      _departments = futures[9];
-      _faculty = futures[10];
-      _classes = futures[11];
-      _mentorAssignments = futures[12];
-      _exams = futures[13];
-      _fees = futures[14];
-      _certificates = futures[15];
-      _events = futures[16];
-      _eventRegistrations = futures[17];
-      _leave = futures[18];
-      _leaveBalance = futures[19];
-      _library = futures[20];
-      _placements = futures[21];
-      _placementApplications = futures[22];
-      _syllabus = futures[23];
-      _research = futures[24];
-      _facultyTimetable = futures[25];
-      _courseOutcomes = futures[26];
-      _courseDiary = futures[27];
-      _profileEditRequests = futures[28];
-        // Persist the seed data for future sessions
-        await _persistAll();
+      // ── STEP 1: Try local cache first (instant, ~5ms) ──
+      final local = PersistenceService.loadLocal();
+      if (local != null) {
+        _hydrateFromMap(local);
+        _loadedCollections.addAll(_allKeys);
+        _applyAllPreApprovedChanges();
+        _isLoaded = true;
+        _skipPersist = true;
+        notifyListeners();
+        _skipPersist = false;
+
+        // ── STEP 2: Background cloud sync (non-blocking) ──
+        _backgroundCloudSync();
+        return;
       }
-      // Apply changes from any pre-approved profile edit requests
+
+      // ── STEP 3: No local data — try cloud ──
+      final cloud = await PersistenceService.loadFromCloud();
+      if (cloud != null) {
+        _hydrateFromMap(cloud);
+        _loadedCollections.addAll(_allKeys);
+        await PersistenceService.saveLocal(cloud); // cache locally
+        _applyAllPreApprovedChanges();
+        _isLoaded = true;
+        _skipPersist = true;
+        notifyListeners();
+        _skipPersist = false;
+        return;
+      }
+
+      // ── STEP 4: First run — seed from bundled JSON assets ──
+      await _seedFromAssets();
+      _loadedCollections.addAll(_allKeys);
       _applyAllPreApprovedChanges();
       _isLoaded = true;
       _skipPersist = true;
       notifyListeners();
       _skipPersist = false;
+
+      // Persist seed data (local + cloud)
+      await PersistenceService.seedSave(_buildFullMap());
     } catch (e) {
       debugPrint('Error loading data: $e');
     }
   }
 
-  /// Persist all data to localStorage after every mutation
+  /// Hydrate all fields from a persisted map.
+  void _hydrateFromMap(Map<String, dynamic> data) {
+    _students = _asList(data['students']);
+    _users = _asList(data['users']);
+    _courses = _asList(data['courses']);
+    _attendance = _asList(data['attendance']);
+    _assignments = _asList(data['assignments']);
+    _results = _asList(data['results']);
+    _timetable = _asList(data['timetable']);
+    _notifications = _asList(data['notifications']);
+    _complaints = _asList(data['complaints']);
+    _departments = _asList(data['departments']);
+    _faculty = _asList(data['faculty']);
+    _classes = _asList(data['classes']);
+    _mentorAssignments = _asList(data['mentorAssignments']);
+    _exams = _asList(data['exams']);
+    _fees = _asList(data['fees']);
+    _certificates = _asList(data['certificates']);
+    _events = _asList(data['events']);
+    _eventRegistrations = _asList(data['eventRegistrations']);
+    _leave = _asList(data['leave']);
+    _leaveBalance = _asList(data['leaveBalance']);
+    _library = _asList(data['library']);
+    _placements = _asList(data['placements']);
+    _placementApplications = _asList(data['placementApplications']);
+    _syllabus = _asList(data['syllabus']);
+    _research = _asList(data['research']);
+    _facultyTimetable = _asList(data['facultyTimetable']);
+    _courseOutcomes = _asList(data['courseOutcomes']);
+    _courseDiary = _asList(data['courseDiary']);
+    _profileEditRequests = _asList(data['profileEditRequests']);
+    final settingsRaw = data['settings'];
+    if (settingsRaw is List && settingsRaw.isNotEmpty) {
+      _settings = Map<String, dynamic>.from(settingsRaw.first as Map);
+    } else if (settingsRaw is Map) {
+      _settings = Map<String, dynamic>.from(settingsRaw);
+    } else {
+      _settings = {};
+    }
+  }
+
+  /// Build the full data map for persistence.
+  Map<String, dynamic> _buildFullMap() {
+    return {
+      'students': _students,
+      'users': _users,
+      'courses': _courses,
+      'attendance': _attendance,
+      'assignments': _assignments,
+      'results': _results,
+      'timetable': _timetable,
+      'notifications': _notifications,
+      'complaints': _complaints,
+      'departments': _departments,
+      'faculty': _faculty,
+      'classes': _classes,
+      'mentorAssignments': _mentorAssignments,
+      'exams': _exams,
+      'fees': _fees,
+      'certificates': _certificates,
+      'events': _events,
+      'eventRegistrations': _eventRegistrations,
+      'leave': _leave,
+      'leaveBalance': _leaveBalance,
+      'library': _library,
+      'placements': _placements,
+      'placementApplications': _placementApplications,
+      'syllabus': _syllabus,
+      'research': _research,
+      'facultyTimetable': _facultyTimetable,
+      'courseOutcomes': _courseOutcomes,
+      'courseDiary': _courseDiary,
+      'profileEditRequests': _profileEditRequests,
+      'settings': _settings.isNotEmpty ? [_settings] : [],
+    };
+  }
+
+  /// Background cloud sync — merges cloud data silently without blocking UI.
+  Future<void> _backgroundCloudSync() async {
+    try {
+      final cloud = await PersistenceService.loadFromCloud();
+      if (cloud != null) {
+        // Merge cloud data — cloud is the source of truth for shared data
+        _hydrateFromMap(cloud);
+        await PersistenceService.saveLocal(cloud);
+        _skipPersist = true;
+        notifyListeners();
+        _skipPersist = false;
+      }
+    } catch (e) {
+      debugPrint('Background cloud sync failed: $e');
+    }
+  }
+
+  /// Lazy-load collections for a specific role (call after login).
+  /// Ensures role-relevant data is fresh from cloud.
+  Future<void> loadForRole(String role) async {
+    final needed = _roleCollections[role] ?? [];
+    if (needed.isEmpty) return;
+
+    // Only fetch collections we haven't loaded from cloud yet
+    final toFetch = needed.where((k) => !_loadedCollections.contains(k)).toList();
+    if (toFetch.isEmpty) return;
+
+    try {
+      final cloudParts = await PersistenceService.loadCollectionsFromCloud(toFetch);
+      if (cloudParts.isNotEmpty) {
+        for (final key in cloudParts.keys) {
+          _setCollection(key, _asList(cloudParts[key]));
+          _loadedCollections.add(key);
+        }
+        _skipPersist = true;
+        notifyListeners();
+        _skipPersist = false;
+      }
+    } catch (e) {
+      debugPrint('Role-based lazy load failed: $e');
+    }
+  }
+
+  /// Set a specific collection list by key name.
+  void _setCollection(String key, List<Map<String, dynamic>> data) {
+    switch (key) {
+      case 'students': _students = data; break;
+      case 'users': _users = data; break;
+      case 'courses': _courses = data; break;
+      case 'attendance': _attendance = data; break;
+      case 'assignments': _assignments = data; break;
+      case 'results': _results = data; break;
+      case 'timetable': _timetable = data; break;
+      case 'notifications': _notifications = data; break;
+      case 'complaints': _complaints = data; break;
+      case 'departments': _departments = data; break;
+      case 'faculty': _faculty = data; break;
+      case 'classes': _classes = data; break;
+      case 'mentorAssignments': _mentorAssignments = data; break;
+      case 'exams': _exams = data; break;
+      case 'fees': _fees = data; break;
+      case 'certificates': _certificates = data; break;
+      case 'events': _events = data; break;
+      case 'eventRegistrations': _eventRegistrations = data; break;
+      case 'leave': _leave = data; break;
+      case 'leaveBalance': _leaveBalance = data; break;
+      case 'library': _library = data; break;
+      case 'placements': _placements = data; break;
+      case 'placementApplications': _placementApplications = data; break;
+      case 'syllabus': _syllabus = data; break;
+      case 'research': _research = data; break;
+      case 'facultyTimetable': _facultyTimetable = data; break;
+      case 'courseOutcomes': _courseOutcomes = data; break;
+      case 'courseDiary': _courseDiary = data; break;
+      case 'profileEditRequests': _profileEditRequests = data; break;
+    }
+  }
+
+  /// Seed all data from bundled JSON asset files (first run only).
+  Future<void> _seedFromAssets() async {
+    final futures = await Future.wait([
+      _loadJson('assets/data/students.json'),      // 0
+      _loadJson('assets/data/users.json'),          // 1
+      _loadJson('assets/data/courses.json'),        // 2
+      _loadJson('assets/data/attendance.json'),     // 3
+      _loadJson('assets/data/assignments.json'),    // 4
+      _loadJson('assets/data/results.json'),        // 5
+      _loadJson('assets/data/timetable.json'),      // 6
+      _loadJson('assets/data/notifications.json'),  // 7
+      _loadJson('assets/data/complaints.json'),     // 8
+      _loadJson('assets/data/departments.json'),    // 9
+      _loadJson('assets/data/faculty.json'),        // 10
+      _loadJson('assets/data/classes.json'),        // 11
+      _loadJson('assets/data/mentor_assignments.json'), // 12
+      _loadJson('assets/data/exams.json'),               // 13
+      _loadJson('assets/data/fees.json'),                 // 14
+      _loadJson('assets/data/certificates.json'),         // 15
+      _loadJson('assets/data/events.json'),               // 16
+      _loadJson('assets/data/event_registrations.json'),  // 17
+      _loadJson('assets/data/leave.json'),                // 18
+      _loadJson('assets/data/leave_balance.json'),        // 19
+      _loadJson('assets/data/library.json'),              // 20
+      _loadJson('assets/data/placements.json'),           // 21
+      _loadJson('assets/data/placement_applications.json'), // 22
+      _loadJson('assets/data/syllabus.json'),             // 23
+      _loadJson('assets/data/research.json'),             // 24
+      _loadJson('assets/data/faculty_timetable.json'),    // 25
+      _loadJson('assets/data/course_outcomes.json'),         // 26
+      _loadJson('assets/data/course_diary.json'),             // 27
+      _loadJson('assets/data/profile_edit_requests.json'),  // 28
+    ]);
+    _students = futures[0];
+    _users = futures[1];
+    _courses = futures[2];
+    _attendance = futures[3];
+    _assignments = futures[4];
+    _results = futures[5];
+    _timetable = futures[6];
+    _notifications = futures[7];
+    _complaints = futures[8];
+    _departments = futures[9];
+    _faculty = futures[10];
+    _classes = futures[11];
+    _mentorAssignments = futures[12];
+    _exams = futures[13];
+    _fees = futures[14];
+    _certificates = futures[15];
+    _events = futures[16];
+    _eventRegistrations = futures[17];
+    _leave = futures[18];
+    _leaveBalance = futures[19];
+    _library = futures[20];
+    _placements = futures[21];
+    _placementApplications = futures[22];
+    _syllabus = futures[23];
+    _research = futures[24];
+    _facultyTimetable = futures[25];
+    _courseOutcomes = futures[26];
+    _courseDiary = futures[27];
+    _profileEditRequests = futures[28];
+  }
+
+  /// Persist data: saves locally instantly, debounces cloud writes.
+  /// Cloud uses PATCH (not PUT) so Firebase only updates changed collections.
   Future<void> _persistAll() async {
     try {
-      await PersistenceService.saveAll({
-        'students': _students,
-        'users': _users,
-        'courses': _courses,
-        'attendance': _attendance,
-        'assignments': _assignments,
-        'results': _results,
-        'timetable': _timetable,
-        'notifications': _notifications,
-        'complaints': _complaints,
-        'departments': _departments,
-        'faculty': _faculty,
-        'classes': _classes,
-        'mentorAssignments': _mentorAssignments,
-        'exams': _exams,
-        'fees': _fees,
-        'certificates': _certificates,
-        'events': _events,
-        'eventRegistrations': _eventRegistrations,
-        'leave': _leave,
-        'leaveBalance': _leaveBalance,
-        'library': _library,
-        'placements': _placements,
-        'placementApplications': _placementApplications,
-        'syllabus': _syllabus,
-        'research': _research,
-        'facultyTimetable': _facultyTimetable,
-        'courseOutcomes': _courseOutcomes,
-        'courseDiary': _courseDiary,
-        'profileEditRequests': _profileEditRequests,
-        'settings': _settings.isNotEmpty ? [_settings] : [],
-      });
+      await PersistenceService.saveAll(_buildFullMap());
     } catch (e) {
       debugPrint('Error persisting data: $e');
     }
@@ -251,8 +413,10 @@ class DataService extends ChangeNotifier {
 
   /// Reset all data to defaults (clear localStorage, reload from assets)
   Future<void> resetAllData() async {
+    await PersistenceService.flush(); // flush pending writes first
     await PersistenceService.clearAll();
     _isLoaded = false;
+    _loadedCollections.clear();
     _currentUserId = null;
     _currentRole = null;
     _currentStudent = null;
@@ -262,7 +426,7 @@ class DataService extends ChangeNotifier {
   }
 
   /// Override notifyListeners to auto-persist data on every mutation.
-  /// This ensures all changes survive browser refresh.
+  /// Local save is instant (~5ms); cloud saves are debounced (2s batching).
   bool _skipPersist = false;
   @override
   void notifyListeners() {
@@ -340,6 +504,10 @@ class DataService extends ChangeNotifier {
             );
           } else if (userId.startsWith('ADM')) {
             _currentRole = 'admin';
+          }
+          // Lazy-load role-specific collections from cloud (background)
+          if (_currentRole != null) {
+            loadForRole(_currentRole!);
           }
           notifyListeners();
           return null; // success
