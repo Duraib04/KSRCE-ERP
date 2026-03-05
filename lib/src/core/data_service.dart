@@ -2126,9 +2126,21 @@ class DataService extends ChangeNotifier {
 
   // ─── CHANGE PASSWORD ─────────────────────────────────
   bool changePassword(String userId, String oldPassword, String newPassword) {
-    final idx = _users.indexWhere((u) => u['id'] == userId && u['password'] == oldPassword);
+    final idx = _users.indexWhere((u) => u['id'] == userId);
     if (idx == -1) return false;
-    _users[idx]['password'] = newPassword;
+    final storedHash = _users[idx]['password'] as String? ?? '';
+    if (!SecurityService.verifyPassword(oldPassword, userId, storedHash)) return false;
+    _users[idx]['password'] = SecurityService.hashPassword(newPassword, userId);
+    notifyListeners();
+    return true;
+  }
+
+  // ─── RESET PASSWORD TO DEFAULT ────────────────────────
+  bool resetPasswordToDefault(String userId) {
+    final idx = _users.indexWhere((u) => u['id'] == userId);
+    if (idx == -1) return false;
+    final defaultPassword = 'ksrce@${userId.toLowerCase()}';
+    _users[idx]['password'] = SecurityService.hashPassword(defaultPassword, userId);
     notifyListeners();
     return true;
   }

@@ -241,6 +241,84 @@ class _BrandPanel extends StatelessWidget {
               _InfoBadge(icon: Icons.school, text: 'Academic Core'),
             ],
           ),
+          const SizedBox(height: 24),
+          const _DemoCredentialsPanel(),
+        ],
+      ),
+    );
+  }
+}
+
+class _DemoCredentialsPanel extends StatelessWidget {
+  const _DemoCredentialsPanel();
+
+  @override
+  Widget build(BuildContext context) {
+    const credentials = [
+      {'role': 'Student', 'id': 'STU001', 'password': 'ksrce@stu001', 'icon': Icons.school},
+      {'role': 'Faculty', 'id': 'FAC001', 'password': 'ksrce@fac001', 'icon': Icons.person},
+      {'role': 'HOD', 'id': 'FAC003', 'password': 'ksrce@fac003', 'icon': Icons.admin_panel_settings},
+      {'role': 'Admin', 'id': 'ADM001', 'password': 'ksrce@adm001', 'icon': Icons.shield},
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.primary.withOpacity(0.15)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.key, size: 18, color: AppColors.primary),
+              const SizedBox(width: 8),
+              Text(
+                'Demo Credentials',
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ...credentials.map((c) => Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Row(
+              children: [
+                Icon(c['icon'] as IconData, size: 16, color: AppColors.textLight),
+                const SizedBox(width: 8),
+                SizedBox(
+                  width: 60,
+                  child: Text(
+                    c['role'] as String,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    '${c['id']}  /  ${c['password']}',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontFamily: 'monospace',
+                      color: AppColors.textDark,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )),
+          const SizedBox(height: 4),
+          Text(
+            'Default password format: ksrce@{userid}',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              fontSize: 11,
+              color: AppColors.textLight,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
         ],
       ),
     );
@@ -398,7 +476,7 @@ class _LoginFormCard extends StatelessWidget {
                 Text('Remember me', style: Theme.of(context).textTheme.bodySmall),
                 const Spacer(),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => _showForgotPasswordDialog(context),
                   child: Text('Forgot Password?', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.primary)),
                 ),
               ],
@@ -422,6 +500,107 @@ class _LoginFormCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _showForgotPasswordDialog(BuildContext context) {
+    final resetController = TextEditingController();
+    String? message;
+    bool isSuccess = false;
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setDialogState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              title: Row(
+                children: [
+                  Icon(Icons.lock_reset, color: AppColors.primary),
+                  const SizedBox(width: 10),
+                  const Text('Reset Password'),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Enter your User ID to reset your password to the default.',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Default password: ksrce@{your_userid}',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontStyle: FontStyle.italic,
+                      color: AppColors.textLight,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: resetController,
+                    decoration: InputDecoration(
+                      labelText: 'User ID',
+                      hintText: 'Eg. STU001 or FAC001',
+                      prefixIcon: const Icon(Icons.person_outline),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                  ),
+                  if (message != null) ...[
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: isSuccess ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: isSuccess ? Colors.green : Colors.red, width: 0.5),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(isSuccess ? Icons.check_circle : Icons.error, color: isSuccess ? Colors.green : Colors.red, size: 18),
+                          const SizedBox(width: 8),
+                          Expanded(child: Text(message!, style: TextStyle(fontSize: 13, color: isSuccess ? Colors.green.shade800 : Colors.red.shade800))),
+                        ],
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final uid = resetController.text.trim();
+                    if (uid.isEmpty) {
+                      setDialogState(() {
+                        message = 'Please enter your User ID.';
+                        isSuccess = false;
+                      });
+                      return;
+                    }
+                    final ds = Provider.of<DataService>(ctx, listen: false);
+                    final ok = ds.resetPasswordToDefault(uid);
+                    setDialogState(() {
+                      if (ok) {
+                        message = 'Password reset to ksrce@${uid.toLowerCase()}. You can now log in.';
+                        isSuccess = true;
+                      } else {
+                        message = 'User ID "$uid" not found. Please check and try again.';
+                        isSuccess = false;
+                      }
+                    });
+                  },
+                  child: const Text('Reset Password'),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }
