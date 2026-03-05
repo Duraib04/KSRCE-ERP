@@ -24,6 +24,19 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   final List<IconData> _roleIcons = [Icons.school, Icons.person];
   final List<String> _placeholders = ['Eg. STU001', 'Eg. FAC001'];
 
+  void _quickLogin(String userId, String password) {
+    _userIdController.text = userId;
+    _passwordController.text = password;
+    // Switch tab based on prefix
+    if (userId.startsWith('STU')) {
+      _tabController.animateTo(0);
+    } else {
+      _tabController.animateTo(1);
+    }
+    setState(() {});
+    Future.delayed(const Duration(milliseconds: 200), _login);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -118,6 +131,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                               onToggleRemember: (v) => setState(() => _rememberMe = v ?? false),
                               onToggleObscure: () => setState(() => _obscurePassword = !_obscurePassword),
                               onLogin: _login,
+                              onQuickLogin: _quickLogin,
                             )),
                           ],
                         )
@@ -140,6 +154,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                               onToggleRemember: (v) => setState(() => _rememberMe = v ?? false),
                               onToggleObscure: () => setState(() => _obscurePassword = !_obscurePassword),
                               onLogin: _login,
+                              onQuickLogin: _quickLogin,
                             ),
                           ],
                         ),
@@ -241,84 +256,6 @@ class _BrandPanel extends StatelessWidget {
               _InfoBadge(icon: Icons.school, text: 'Academic Core'),
             ],
           ),
-          const SizedBox(height: 24),
-          const _DemoCredentialsPanel(),
-        ],
-      ),
-    );
-  }
-}
-
-class _DemoCredentialsPanel extends StatelessWidget {
-  const _DemoCredentialsPanel();
-
-  @override
-  Widget build(BuildContext context) {
-    const credentials = [
-      {'role': 'Student', 'id': 'STU001', 'password': 'ksrce@stu001', 'icon': Icons.school},
-      {'role': 'Faculty', 'id': 'FAC001', 'password': 'ksrce@fac001', 'icon': Icons.person},
-      {'role': 'HOD', 'id': 'FAC003', 'password': 'ksrce@fac003', 'icon': Icons.admin_panel_settings},
-      {'role': 'Admin', 'id': 'ADM001', 'password': 'ksrce@adm001', 'icon': Icons.shield},
-    ];
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primary.withOpacity(0.15)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.key, size: 18, color: AppColors.primary),
-              const SizedBox(width: 8),
-              Text(
-                'Demo Credentials',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primary,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          ...credentials.map((c) => Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Row(
-              children: [
-                Icon(c['icon'] as IconData, size: 16, color: AppColors.textLight),
-                const SizedBox(width: 8),
-                SizedBox(
-                  width: 60,
-                  child: Text(
-                    c['role'] as String,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
-                  ),
-                ),
-                Expanded(
-                  child: Text(
-                    '${c['id']}  /  ${c['password']}',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontFamily: 'monospace',
-                      color: AppColors.textDark,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )),
-          const SizedBox(height: 4),
-          Text(
-            'Default password format: ksrce@{userid}',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              fontSize: 11,
-              color: AppColors.textLight,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
         ],
       ),
     );
@@ -366,6 +303,7 @@ class _LoginFormCard extends StatelessWidget {
   final ValueChanged<bool?> onToggleRemember;
   final VoidCallback onToggleObscure;
   final VoidCallback onLogin;
+  final void Function(String userId, String password) onQuickLogin;
 
   const _LoginFormCard({
     required this.formKey,
@@ -382,6 +320,7 @@ class _LoginFormCard extends StatelessWidget {
     required this.onToggleRemember,
     required this.onToggleObscure,
     required this.onLogin,
+    required this.onQuickLogin,
   });
 
   @override
@@ -496,6 +435,40 @@ class _LoginFormCard extends StatelessWidget {
                     : const Text('Sign In'),
               ),
             ),
+            const SizedBox(height: 20),
+            Text('Quick Demo Login', style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.textLight)),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                _DemoLoginButton(
+                  icon: Icons.school,
+                  label: 'Student',
+                  subLabel: 'STU001',
+                  onTap: () => onQuickLogin('STU001', 'ksrce@stu001'),
+                ),
+                const SizedBox(width: 8),
+                _DemoLoginButton(
+                  icon: Icons.person,
+                  label: 'Faculty',
+                  subLabel: 'FAC001',
+                  onTap: () => onQuickLogin('FAC001', 'ksrce@fac001'),
+                ),
+                const SizedBox(width: 8),
+                _DemoLoginButton(
+                  icon: Icons.groups,
+                  label: 'HOD',
+                  subLabel: 'FAC003',
+                  onTap: () => onQuickLogin('FAC003', 'ksrce@fac003'),
+                ),
+                const SizedBox(width: 8),
+                _DemoLoginButton(
+                  icon: Icons.admin_panel_settings,
+                  label: 'Admin',
+                  subLabel: 'ADM001',
+                  onTap: () => onQuickLogin('ADM001', 'ksrce@adm001'),
+                ),
+              ],
+            ),
             const SizedBox(height: 12),
           ],
         ),
@@ -601,6 +574,46 @@ class _LoginFormCard extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+class _DemoLoginButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String subLabel;
+  final VoidCallback onTap;
+
+  const _DemoLoginButton({
+    required this.icon,
+    required this.label,
+    required this.subLabel,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceVariant,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.borderLight),
+          ),
+          child: Column(
+            children: [
+              Icon(icon, size: 24, color: AppColors.primary),
+              const SizedBox(height: 6),
+              Text(label, style: Theme.of(context).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w600)),
+              Text(subLabel, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 11, color: AppColors.textLight)),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
