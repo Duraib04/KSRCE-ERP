@@ -60,12 +60,12 @@ class _AdminStudentManagementPageState extends State<AdminStudentManagementPage>
                     contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                   onChanged: (v) => setState(() => _searchQuery = v),
                 )),
-                SizedBox(width: 200, child: DropdownButtonFormField<String>(value: _filterDept, isExpanded: true, isDense: true,
+                SizedBox(width: 200, child: DropdownButtonFormField<String>(initialValue: _filterDept, isExpanded: true, isDense: true,
                   decoration: InputDecoration(labelText: 'Department', isDense: true, contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                   items: [const DropdownMenuItem(value: null, child: Text('All Depts')), ...ds.departments.map((d) => DropdownMenuItem(value: d['departmentId'] as String, child: Text(d['departmentCode'] as String? ?? '', style: const TextStyle(fontSize: 13))))],
                   onChanged: (v) => setState(() => _filterDept = v),
                 )),
-                SizedBox(width: 120, child: DropdownButtonFormField<String>(value: _filterYear, isExpanded: true, isDense: true,
+                SizedBox(width: 120, child: DropdownButtonFormField<String>(initialValue: _filterYear, isExpanded: true, isDense: true,
                   decoration: InputDecoration(labelText: 'Year', isDense: true, contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                   items: const [DropdownMenuItem(value: null, child: Text('All')), DropdownMenuItem(value: '1', child: Text('1')), DropdownMenuItem(value: '2', child: Text('2')), DropdownMenuItem(value: '3', child: Text('3')), DropdownMenuItem(value: '4', child: Text('4'))],
                   onChanged: (v) => setState(() => _filterYear = v),
@@ -82,7 +82,7 @@ class _AdminStudentManagementPageState extends State<AdminStudentManagementPage>
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.border)),
                   child: Row(children: [
-                    CircleAvatar(radius: 18, backgroundColor: AppColors.secondary.withOpacity(0.15),
+                    CircleAvatar(radius: 18, backgroundColor: AppColors.secondary.withValues(alpha: 0.15),
                       child: Text((s['name'] as String? ?? '?')[0], style: const TextStyle(color: AppColors.secondary, fontWeight: FontWeight.bold, fontSize: 14))),
                     const SizedBox(width: 12),
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -202,7 +202,7 @@ class _AdminStudentManagementPageState extends State<AdminStudentManagementPage>
         _sectionLabel('Basic Information', Icons.person),
         _field(nameC, 'Full Name', icon: Icons.person_outline, required: true),
         _row([
-          Padding(padding: const EdgeInsets.only(bottom: 10), child: DropdownButtonFormField<String>(value: gender, isDense: true,
+          Padding(padding: const EdgeInsets.only(bottom: 10), child: DropdownButtonFormField<String>(initialValue: gender, isDense: true,
             decoration: InputDecoration(labelText: 'Gender *', prefixIcon: const Icon(Icons.wc, size: 18), isDense: true, contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
             items: ['Male', 'Female', 'Other'].map((g) => DropdownMenuItem(value: g, child: Text(g))).toList(),
             onChanged: (v) => setS(() => gender = v!))),
@@ -235,14 +235,14 @@ class _AdminStudentManagementPageState extends State<AdminStudentManagementPage>
         _sectionLabel('Current Academic Details', Icons.school),
         _row([_field(registerNoC, 'Register Number', icon: Icons.badge_outlined), _field(rollNoC, 'Roll Number')]),
         _row([
-          Padding(padding: const EdgeInsets.only(bottom: 10), child: DropdownButtonFormField<String>(value: selectedDeptId, isExpanded: true, isDense: true,
+          Padding(padding: const EdgeInsets.only(bottom: 10), child: DropdownButtonFormField<String>(initialValue: selectedDeptId, isExpanded: true, isDense: true,
             decoration: InputDecoration(labelText: 'Department *', isDense: true, contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
             items: ds.departments.map((d) => DropdownMenuItem(value: d['departmentId'] as String, child: Text('${d['departmentCode']}', style: const TextStyle(fontSize: 13)))).toList(),
             onChanged: (v) => setS(() => selectedDeptId = v))),
           _field(batchC, 'Batch (e.g. 2021-2025)'),
         ]),
         _row([_field(yearC, 'Year', keyType: TextInputType.number, required: true), _field(sectionC, 'Section', required: true), _field(semesterC, 'Semester', keyType: TextInputType.number)]),
-        _row([_field(regulationC, 'Regulation'), Padding(padding: const EdgeInsets.only(bottom: 10), child: DropdownButtonFormField<String>(value: admissionType, isDense: true,
+        _row([_field(regulationC, 'Regulation'), Padding(padding: const EdgeInsets.only(bottom: 10), child: DropdownButtonFormField<String>(initialValue: admissionType, isDense: true,
           decoration: InputDecoration(labelText: 'Admission Type', isDense: true, contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
           items: ['Counselling', 'Management', 'Sports Quota', 'NRI'].map((a) => DropdownMenuItem(value: a, child: Text(a))).toList(),
           onChanged: (v) => setS(() => admissionType = v!)))]),
@@ -263,7 +263,7 @@ class _AdminStudentManagementPageState extends State<AdminStudentManagementPage>
 
       final accommodationTab = SingleChildScrollView(padding: const EdgeInsets.all(16), child: Column(mainAxisSize: MainAxisSize.min, children: [
         _sectionLabel('Accommodation', Icons.hotel),
-        Padding(padding: const EdgeInsets.only(bottom: 10), child: DropdownButtonFormField<String>(value: residenceType, isDense: true,
+        Padding(padding: const EdgeInsets.only(bottom: 10), child: DropdownButtonFormField<String>(initialValue: residenceType, isDense: true,
           decoration: InputDecoration(labelText: 'Residence Type *', prefixIcon: const Icon(Icons.home_work, size: 18), isDense: true, contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
           items: ['Day Scholar', 'Hosteller'].map((r) => DropdownMenuItem(value: r, child: Text(r))).toList(),
           onChanged: (v) => setS(() => residenceType = v!))),
@@ -433,26 +433,60 @@ class _AdminStudentManagementPageState extends State<AdminStudentManagementPage>
   }
 
   void _confirmDeleteStudent(BuildContext context, DataService ds, String sid, String name) {
-    showDialog(context: context, builder: (ctx) => AlertDialog(
-      backgroundColor: AppColors.surface,
-      title: const Text('Delete Student', style: TextStyle(color: Colors.red)),
-      content: Text('Are you sure you want to delete $name ($sid)?\n\nThis action cannot be undone.', style: const TextStyle(color: AppColors.textMedium)),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-          onPressed: () {
-            ds.deleteStudent(sid);
-            Navigator.pop(ctx);
-            setState(() {});
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('$name deleted'), backgroundColor: Colors.red,
-              behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ));
-          },
-          child: const Text('Delete'),
-        ),
-      ],
-    ));
+    final confirmC = TextEditingController();
+    final expectedText = '${name.toLowerCase()} i assure to remove';
+    bool isValid = false;
+
+    showDialog(context: context, builder: (ctx) => StatefulBuilder(builder: (ctx2, setS) {
+      return AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Row(children: [
+          Icon(Icons.warning_amber_rounded, color: Colors.red, size: 28),
+          SizedBox(width: 10),
+          Text('Delete Student', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+        ]),
+        content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+          RichText(text: TextSpan(style: const TextStyle(color: AppColors.textMedium, fontSize: 14), children: [
+            const TextSpan(text: 'You are about to permanently delete '),
+            TextSpan(text: '$name ($sid)', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
+            const TextSpan(text: '. This action cannot be undone.\n\n'),
+            const TextSpan(text: 'To confirm, type: ', style: TextStyle(fontWeight: FontWeight.w500)),
+          ])),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: BoxDecoration(color: Colors.red.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.red.withValues(alpha: 0.3))),
+            child: Text('${name.toLowerCase()} i assure to remove', style: const TextStyle(fontFamily: 'monospace', fontSize: 13, fontWeight: FontWeight.bold, color: Colors.red)),
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: confirmC,
+            decoration: InputDecoration(
+              labelText: 'Type confirmation text',
+              prefixIcon: const Icon(Icons.keyboard, size: 18),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: isValid ? Colors.green : AppColors.border)),
+              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: isValid ? Colors.green : AppColors.primary, width: 2)),
+            ),
+            onChanged: (v) => setS(() => isValid = v.trim().toLowerCase() == expectedText),
+          ),
+        ]),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: isValid ? Colors.red : Colors.grey, foregroundColor: Colors.white),
+            onPressed: isValid ? () {
+              ds.deleteStudent(sid);
+              Navigator.pop(ctx);
+              setState(() {});
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('$name deleted permanently'), backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))));
+            } : null,
+            child: const Text('Delete Permanently'),
+          ),
+        ],
+      );
+    }));
   }
 }

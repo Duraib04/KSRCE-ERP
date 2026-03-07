@@ -12,3 +12,5 @@
  delete mode 100644 OneDrive/Documents/projects/college/gitlog_result.txt
  delete mode 100644 OneDrive/Documents/projects/college/run_git.bat
 === PUSHING === 
+error: failed to push some refs to 'https://github.com/Duraib04/KSRCE-ERP.git'
+^C

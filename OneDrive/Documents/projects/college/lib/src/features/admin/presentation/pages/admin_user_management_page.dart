@@ -387,7 +387,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
             _dialogField(isEdit ? 'New Password (leave blank to keep)' : 'Password', passCtrl, obscure: true),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              value: role, dropdownColor: AppColors.background,
+              initialValue: role, dropdownColor: AppColors.background,
               decoration: _inputDeco('Role'),
               style: const TextStyle(color: Colors.white),
               items: ['student', 'faculty', 'admin'].map((r) => DropdownMenuItem(value: r, child: Text(r.toUpperCase()))).toList(),
@@ -482,29 +482,67 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
   }
 
   void _deleteUser(int index) {
-    showDialog(context: context, builder: (ctx) => AlertDialog(
-      backgroundColor: AppColors.surface,
-      title: const Text('Remove User', style: TextStyle(color: AppColors.textDark)),
-      content: Text('Are you sure you want to permanently remove ${_allUsers[index]['name']}?', style: const TextStyle(color: AppColors.textMedium)),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel', style: TextStyle(color: AppColors.textLight))),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-          onPressed: () {
-            final ds = Provider.of<DataService>(context, listen: false);
-            final uid = _allUsers[index]['userId'] as String? ?? '';
-            ds.users.removeWhere((u) => u['id'] == uid);
-            ds.students.removeWhere((s) => s['studentId'] == uid);
-            ds.faculty.removeWhere((f) => f['facultyId'] == uid);
-            ds.notifyListeners();
-            _loadUsers();
-            Navigator.pop(ctx);
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('User removed!'), backgroundColor: Colors.red));
-          },
-          child: const Text('Remove'),
-        ),
-      ],
-    ));
+    final userName = _allUsers[index]['name'] as String? ?? '';
+    final userId = _allUsers[index]['userId'] as String? ?? '';
+    final confirmC = TextEditingController();
+    final expectedText = '${userName.toLowerCase()} i assure to remove';
+    bool isValid = false;
+
+    showDialog(context: context, builder: (ctx) => StatefulBuilder(builder: (ctx2, setS) {
+      return AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Row(children: [
+          Icon(Icons.warning_amber_rounded, color: Colors.red, size: 28),
+          SizedBox(width: 10),
+          Text('Remove User', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+        ]),
+        content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+          RichText(text: TextSpan(style: const TextStyle(color: AppColors.textMedium, fontSize: 14), children: [
+            const TextSpan(text: 'You are about to permanently remove '),
+            TextSpan(text: '$userName ($userId)', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
+            const TextSpan(text: '. This action cannot be undone.\n\n'),
+            const TextSpan(text: 'To confirm, type: ', style: TextStyle(fontWeight: FontWeight.w500)),
+          ])),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: BoxDecoration(color: Colors.red.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.red.withValues(alpha: 0.3))),
+            child: Text(expectedText, style: const TextStyle(fontFamily: 'monospace', fontSize: 13, fontWeight: FontWeight.bold, color: Colors.red)),
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: confirmC,
+            decoration: InputDecoration(
+              labelText: 'Type confirmation text',
+              prefixIcon: const Icon(Icons.keyboard, size: 18),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: isValid ? Colors.green : AppColors.border)),
+              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: isValid ? Colors.green : AppColors.primary, width: 2)),
+            ),
+            onChanged: (v) => setS(() => isValid = v.trim().toLowerCase() == expectedText),
+          ),
+        ]),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: isValid ? Colors.red : Colors.grey, foregroundColor: Colors.white),
+            onPressed: isValid ? () {
+              final ds = Provider.of<DataService>(context, listen: false);
+              ds.users.removeWhere((u) => u['id'] == userId);
+              ds.students.removeWhere((s) => s['studentId'] == userId);
+              ds.faculty.removeWhere((f) => f['facultyId'] == userId);
+              ds.notifyListeners();
+              _loadUsers();
+              Navigator.pop(ctx);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('$userName removed permanently'), backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))));
+            } : null,
+            child: const Text('Remove Permanently'),
+          ),
+        ],
+      );
+    }));
   }
 
   void _changeStatus(int index, String newStatus) {
@@ -628,18 +666,18 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
               : Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Container(
                     padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.15), shape: BoxShape.circle),
+                    decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.15), shape: BoxShape.circle),
                     child: const Icon(Icons.cloud_upload_outlined, size: 48, color: AppColors.primary),
                   ),
                   const SizedBox(height: 20),
                   const Text('Click to upload CSV or Excel file', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white)),
                   const SizedBox(height: 8),
-                  Text('Supported: .csv, .xlsx, .xls', style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.5))),
+                  Text('Supported: .csv, .xlsx, .xls', style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.5))),
                   if (_uploadFileName.isNotEmpty) ...[
                     const SizedBox(height: 12),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(color: const Color(0xFF4CAF50).withOpacity(0.15), borderRadius: BorderRadius.circular(20)),
+                      decoration: BoxDecoration(color: const Color(0xFF4CAF50).withValues(alpha: 0.15), borderRadius: BorderRadius.circular(20)),
                       child: Text('Last uploaded: $_uploadFileName', style: const TextStyle(color: Color(0xFF4CAF50), fontSize: 13)),
                     ),
                   ],
@@ -700,9 +738,9 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: required ? AppColors.primary.withOpacity(0.15) : AppColors.border,
+        color: required ? AppColors.primary.withValues(alpha: 0.15) : AppColors.border,
         borderRadius: BorderRadius.circular(12),
-        border: required ? Border.all(color: AppColors.primary.withOpacity(0.3)) : null,
+        border: required ? Border.all(color: AppColors.primary.withValues(alpha: 0.3)) : null,
       ),
       child: Text('$label${required ? " *" : ""}',
         style: TextStyle(fontSize: 12, color: required ? const Color(0xFF42A5F5) : AppColors.textLight)),
@@ -778,11 +816,11 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
   Widget _buildPreviewTab() {
     if (_uploadedRows.isEmpty) {
       return Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Icon(Icons.table_chart_outlined, size: 64, color: AppColors.textLight.withOpacity(0.3)),
+        Icon(Icons.table_chart_outlined, size: 64, color: AppColors.textLight.withValues(alpha: 0.3)),
         const SizedBox(height: 16),
         Text('No data to preview', style: TextStyle(fontSize: 18, color: AppColors.textLight)),
         const SizedBox(height: 8),
-        Text('Upload a CSV or Excel file first', style: TextStyle(fontSize: 13, color: AppColors.textLight.withOpacity(0.6))),
+        Text('Upload a CSV or Excel file first', style: TextStyle(fontSize: 13, color: AppColors.textLight.withValues(alpha: 0.6))),
       ]));
     }
 
@@ -807,7 +845,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
                 ]),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(color: const Color(0xFF4CAF50).withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
+                  decoration: BoxDecoration(color: const Color(0xFF4CAF50).withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
                   child: Text('${_selectedForVerification.length} selected', style: const TextStyle(color: Color(0xFF4CAF50), fontSize: 12)),
                 ),
                 if (hasActiveFilters)
@@ -840,7 +878,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
                 const SizedBox(width: 12),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(color: const Color(0xFF4CAF50).withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
+                  decoration: BoxDecoration(color: const Color(0xFF4CAF50).withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
                   child: Text('${_selectedForVerification.length} selected', style: const TextStyle(color: Color(0xFF4CAF50), fontSize: 12)),
                 ),
                 if (hasActiveFilters) ...[
@@ -876,7 +914,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
           decoration: BoxDecoration(
             color: AppColors.background,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: AppColors.border.withOpacity(0.5)),
+            border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
           ),
           child: Row(children: [
             const Icon(Icons.filter_list, size: 16, color: AppColors.accent),
@@ -894,7 +932,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
-                      color: current != 'All' ? AppColors.primary.withOpacity(0.15) : AppColors.surface,
+                      color: current != 'All' ? AppColors.primary.withValues(alpha: 0.15) : AppColors.surface,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: current != 'All' ? AppColors.primary : AppColors.border),
                     ),
@@ -942,7 +980,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
                 final origIdx = _uploadedRows.indexOf(row);
                 final selected = _selectedForVerification.contains(origIdx);
                 return DataRow(
-                  color: WidgetStateProperty.all(selected ? AppColors.primary.withOpacity(0.08) : (fi.isEven ? Colors.transparent : AppColors.background.withOpacity(0.3))),
+                  color: WidgetStateProperty.all(selected ? AppColors.primary.withValues(alpha: 0.08) : (fi.isEven ? Colors.transparent : AppColors.background.withValues(alpha: 0.3))),
                   cells: [
                     DataCell(Checkbox(value: selected, activeColor: AppColors.primary, side: const BorderSide(color: AppColors.textLight),
                       onChanged: (v) => setState(() { if (v == true) _selectedForVerification.add(origIdx); else _selectedForVerification.remove(origIdx); }))),
@@ -1065,7 +1103,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
     final color = role == 'admin' ? AppColors.accent : role == 'faculty' ? const Color(0xFF7E57C2) : AppColors.primary;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
       child: Text(role.toUpperCase(), style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold)),
     );
   }
@@ -1075,7 +1113,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
     final icon = status == 'active' ? Icons.check_circle : status == 'suspended' ? Icons.pause_circle : Icons.cancel;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         Icon(icon, size: 14, color: color),
         const SizedBox(width: 4),

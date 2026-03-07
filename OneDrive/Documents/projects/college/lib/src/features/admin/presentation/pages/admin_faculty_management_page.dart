@@ -44,13 +44,13 @@ class _AdminFacultyManagementPageState extends State<AdminFacultyManagementPage>
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
                   child: Row(children: [
-                    CircleAvatar(radius: 20, backgroundColor: AppColors.primary.withOpacity(0.15),
+                    CircleAvatar(radius: 20, backgroundColor: AppColors.primary.withValues(alpha: 0.15),
                       child: Text((f['name'] as String? ?? '?')[0], style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold))),
                     const SizedBox(width: 12),
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Row(children: [
                         Text(f['name'] as String? ?? '', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.textDark)),
-                        if (f['isHOD'] == true) ...[const SizedBox(width: 6), Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: AppColors.accent.withOpacity(0.15), borderRadius: BorderRadius.circular(4)), child: const Text('HOD', style: TextStyle(color: AppColors.accent, fontSize: 10, fontWeight: FontWeight.bold)))],
+                        if (f['isHOD'] == true) ...[const SizedBox(width: 6), Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: AppColors.accent.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(4)), child: const Text('HOD', style: TextStyle(color: AppColors.accent, fontSize: 10, fontWeight: FontWeight.bold)))],
                       ]),
                       Text('$fid | $deptCode | ${f['designation'] ?? ''}', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
                     ])),
@@ -93,7 +93,7 @@ class _AdminFacultyManagementPageState extends State<AdminFacultyManagementPage>
         const SizedBox(height: 10),
         TextField(controller: phoneC, decoration: const InputDecoration(labelText: 'Phone', border: OutlineInputBorder())),
         const SizedBox(height: 10),
-        DropdownButtonFormField<String>(value: selectedDeptId, isExpanded: true,
+        DropdownButtonFormField<String>(initialValue: selectedDeptId, isExpanded: true,
           decoration: const InputDecoration(labelText: 'Department', border: OutlineInputBorder()),
           items: ds.departments.map((d) => DropdownMenuItem(value: d['departmentId'] as String, child: Text('${d['departmentCode']} - ${d['departmentName']}', style: const TextStyle(fontSize: 13)))).toList(),
           onChanged: (v) => setS(() => selectedDeptId = v)),
@@ -145,7 +145,7 @@ class _AdminFacultyManagementPageState extends State<AdminFacultyManagementPage>
         const SizedBox(height: 10),
         TextField(controller: phoneC, decoration: const InputDecoration(labelText: 'Phone', prefixIcon: Icon(Icons.phone_outlined), border: OutlineInputBorder())),
         const SizedBox(height: 10),
-        DropdownButtonFormField<String>(value: selectedDeptId, isExpanded: true,
+        DropdownButtonFormField<String>(initialValue: selectedDeptId, isExpanded: true,
           decoration: const InputDecoration(labelText: 'Department', prefixIcon: Icon(Icons.business_outlined), border: OutlineInputBorder()),
           items: ds.departments.map((d) => DropdownMenuItem(value: d['departmentId'] as String, child: Text('${d['departmentCode']} - ${d['departmentName']}', style: const TextStyle(fontSize: 13)))).toList(),
           onChanged: (v) => setS(() => selectedDeptId = v)),
@@ -197,26 +197,60 @@ class _AdminFacultyManagementPageState extends State<AdminFacultyManagementPage>
   }
 
   void _confirmDeleteFaculty(BuildContext context, DataService ds, String fid, String name) {
-    showDialog(context: context, builder: (ctx) => AlertDialog(
-      backgroundColor: AppColors.surface,
-      title: const Text('Delete Faculty', style: TextStyle(color: Colors.red)),
-      content: Text('Are you sure you want to delete $name ($fid)?\n\nThis action cannot be undone.', style: const TextStyle(color: AppColors.textMedium)),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-          onPressed: () {
-            ds.deleteFaculty(fid);
-            Navigator.pop(ctx);
-            setState(() {});
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('$name deleted'), backgroundColor: Colors.red,
-              behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ));
-          },
-          child: const Text('Delete'),
-        ),
-      ],
-    ));
+    final confirmC = TextEditingController();
+    final expectedText = '${name.toLowerCase()} i assure to remove';
+    bool isValid = false;
+
+    showDialog(context: context, builder: (ctx) => StatefulBuilder(builder: (ctx2, setS) {
+      return AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Row(children: [
+          Icon(Icons.warning_amber_rounded, color: Colors.red, size: 28),
+          SizedBox(width: 10),
+          Text('Delete Faculty', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+        ]),
+        content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+          RichText(text: TextSpan(style: const TextStyle(color: AppColors.textMedium, fontSize: 14), children: [
+            const TextSpan(text: 'You are about to permanently delete '),
+            TextSpan(text: '$name ($fid)', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
+            const TextSpan(text: '. This action cannot be undone.\n\n'),
+            const TextSpan(text: 'To confirm, type: ', style: TextStyle(fontWeight: FontWeight.w500)),
+          ])),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: BoxDecoration(color: Colors.red.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.red.withValues(alpha: 0.3))),
+            child: Text('${name.toLowerCase()} i assure to remove', style: const TextStyle(fontFamily: 'monospace', fontSize: 13, fontWeight: FontWeight.bold, color: Colors.red)),
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: confirmC,
+            decoration: InputDecoration(
+              labelText: 'Type confirmation text',
+              prefixIcon: const Icon(Icons.keyboard, size: 18),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: isValid ? Colors.green : AppColors.border)),
+              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: isValid ? Colors.green : AppColors.primary, width: 2)),
+            ),
+            onChanged: (v) => setS(() => isValid = v.trim().toLowerCase() == expectedText),
+          ),
+        ]),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: isValid ? Colors.red : Colors.grey, foregroundColor: Colors.white),
+            onPressed: isValid ? () {
+              ds.deleteFaculty(fid);
+              Navigator.pop(ctx);
+              setState(() {});
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('$name deleted permanently'), backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))));
+            } : null,
+            child: const Text('Delete Permanently'),
+          ),
+        ],
+      );
+    }));
   }
 }
