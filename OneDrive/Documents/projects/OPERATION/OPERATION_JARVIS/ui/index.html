@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dexaura - AI Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="background-animation">
+        <div class="neural-network"></div>
+        <div class="particles"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Left Panel - Stats & Info -->
+            <aside class="left-panel">
+                <!-- Music Player Panel -->
+                <div class="panel-section music-player-panel" id="musicPlayerPanel" style="display: none;">
+                    <h3 class="panel-title">🎵 Songs</h3>
+                    <div class="music-player-compact">
+                        <div class="now-playing">
+                            <div class="album-art">🎵</div>
+                            <div class="song-info">
+                                <div class="song-name" id="currentSongName">No song</div>
+                                <div class="song-time" id="songTime">0:00 / 0:00</div>
+                            </div>
+                        </div>
+                        <div class="progress-bar-container" onclick="seekSong(event)">
+                            <div class="progress-bar" id="progressBar"></div>
+                        </div>
+                        <div class="player-controls">
+                            <button class="control-btn" onclick="previousSong()" title="Previous">⏮️</button>
+                            <button class="control-btn play-btn" id="playBtn" onclick="togglePlayPause()" title="Play">▶️</button>
+                            <button class="control-btn" onclick="nextSong()" title="Next">⏭️</button>
+                            <button class="control-btn upload-btn" onclick="document.getElementById('songUpload').click()" title="Upload songs">📤</button>
+                        </div>
+                        <input type="file" id="songUpload" accept="audio/*" multiple style="display: none;" onchange="uploadSongs(this.files)">
+                        <div class="volume-control">
+                            <span>🔊</span>
+                            <input type="range" id="volumeSlider" min="0" max="100" value="30" oninput="changeVolume(this.value)">
+                        </div>
+                    </div>
+                    <div class="playlist-view">
+                        <h4 class="playlist-header">📋 Songs (<span id="playlistCount">5</span>)</h4>
+                        <div class="playlist-items" id="playlistItems">
+                            <!-- Playlist items will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <h3 class="panel-title">System Stats</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value" id="interactions">0</div>
+                            <div class="stat-label">Interactions</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="success-rate">--</div>
+                            <div class="stat-label">Success Rate</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="learned-items">0</div>
+                            <div class="stat-label">Learned Items</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="documents">0</div>
+                            <div class="stat-label">Documents</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3 class="panel-title">Quick Actions</h3>
+                    <div class="quick-actions">
+                        <button class="action-btn" onclick="sendCommand('help')">
+                            <span class="btn-icon">📚</span>
+                            <span>Help</span>
+                        </button>
+                        <button class="action-btn" onclick="sendCommand('understanding-stats')">
+                            <span class="btn-icon">📊</span>
+                            <span>Stats</span>
+                        </button>
+                        <button class="action-btn" onclick="toggleMusicPlayer()">
+                            <span class="btn-icon">🎵</span>
+                            <span>Songs</span>
+                        </button>
+                        <button class="action-btn" onclick="document.getElementById('songUpload').click()">
+                            <span class="btn-icon">📤</span>
+                            <span>Upload Songs</span>
+                        </button>
+                        <button class="action-btn" onclick="sendCommand('docs')">
+                            <span class="btn-icon">📄</span>
+                            <span>Documents</span>
+                        </button>
+                        <button class="action-btn" onclick="toggleMode()">
+                            <span class="btn-icon">🔄</span>
+                            <span>Toggle Mode</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3 class="panel-title">Recent Intents</h3>
+                    <div class="intent-list" id="intent-list">
+                        <div class="intent-item">Waiting for input...</div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Panel - Chat Interface -->
+            <main class="center-panel">
+                <!-- Voice Visualizer -->
+                <div class="voice-visualizer" id="visualizer">
+                    <video id="visualizerVideo" class="visualizer-video" autoplay loop muted playsinline preload="auto">
+                        <source src="../generated_video.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="wave-container">
+                        <canvas id="waveCanvas" width="600" height="200"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chat Messages -->
+                <div class="chat-container" id="chatContainer">
+                    <div class="message-wrapper system-message">
+                        <div class="message">
+                            <div class="message-header">
+                                <span class="message-sender">DEXAURA</span>
+                                <span class="message-time">Just now</span>
+                            </div>
+                            <div class="message-content">
+                                <p>🤖 <strong>DEXAURA System Online</strong></p>
+                                <p>Dynamic EXpert Autonomous Unified Responsive Assistant, at your service.</p>
+                                <p>Type a command or ask me anything. I understand natural language!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="input-area">
+                    <div class="input-container">
+                        <button class="voice-btn" id="voiceBtn" onclick="toggleVoice()">
+                            <svg viewBox="0 0 24 24" width="24" height="24">
+                                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                            </svg>
+                        </button>
+                        <input 
+                            type="text" 
+                            id="userInput" 
+                            placeholder="Type your command or question..."
+                            autocomplete="off"
+                            onkeypress="handleKeyPress(event)"
+                            oninput="analyzeInputInRealTime(this.value)"
+                        />
+                        <button class="send-btn" onclick="sendMessage()">
+                            <svg viewBox="0 0 24 24" width="24" height="24">
+                                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="input-hints" id="hints">
+                        <span class="hint">Try: "understand what is java"</span>
+                        <span class="hint">Try: "search for tutorials"</span>
+                        <span class="hint">Try: "teach me = answer"</span>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Right Panel - Understanding Details -->
+            <aside class="right-panel">
+                <div class="panel-section camera-panel" id="cameraPanel">
+                    <h3 class="panel-title">Camera</h3>
+                    <div class="camera-container">
+                        <video id="cameraVideo" class="camera-video" autoplay playsinline muted></video>
+                        <img id="cameraAnalysisPreview" class="camera-analysis-preview" alt="Live analysis" />
+                        <div class="camera-overlay" id="cameraOverlay">Camera is off</div>
+                    </div>
+                    <div class="camera-input-row">
+                        <input
+                            type="text"
+                            id="personNameInput"
+                            class="camera-input"
+                            placeholder="Enter person name to save"
+                            autocomplete="off"
+                        />
+                        <button class="action-btn" onclick="registerPersonFromCamera()">
+                            <span class="btn-icon">🧑‍💾</span>
+                            <span>Save Person</span>
+                        </button>
+                    </div>
+                    <div class="camera-upload-row">
+                        <input
+                            type="file"
+                            id="personImageUpload"
+                            class="camera-file-input"
+                            accept="image/*"
+                            multiple
+                        />
+                        <button class="action-btn" onclick="registerPersonFromUpload()">
+                            <span class="btn-icon">🖼️</span>
+                            <span>Upload Photo(s)</span>
+                        </button>
+                    </div>
+                    <div class="camera-controls">
+                        <button class="action-btn" onclick="toggleCamera()">
+                            <span class="btn-icon">📷</span>
+                            <span>Start/Stop</span>
+                        </button>
+                        <button class="action-btn" onclick="captureSnapshot()">
+                            <span class="btn-icon">📸</span>
+                            <span>Snapshot</span>
+                        </button>
+                        <button class="action-btn" onclick="analyzeMoodFromCamera()">
+                            <span class="btn-icon">😊</span>
+                            <span>Analyze Mood</span>
+                        </button>
+                        <button class="action-btn" onclick="analyzeSnapshotDetails()">
+                            <span class="btn-icon">🧠</span>
+                            <span>Recognize People</span>
+                        </button>
+                        <button class="action-btn" onclick="detectObjects()">
+                            <span class="btn-icon">🔍</span>
+                            <span>Detect Objects</span>
+                        </button>
+                        <button class="action-btn" id="realtimeObjectsToggle" onclick="toggleRealtimeObjects()">
+                            <span class="btn-icon">⚡</span>
+                            <span>Live Analysis</span>
+                        </button>
+                    </div>
+                    <div class="camera-auto-row">
+                        <label class="camera-auto-label" for="autoAnalyzeInterval">Auto every</label>
+                        <input
+                            type="number"
+                            id="autoAnalyzeInterval"
+                            class="camera-auto-input"
+                            min="2"
+                            max="60"
+                            value="5"
+                        />
+                        <span class="camera-auto-suffix">sec</span>
+                        <button class="action-btn" id="autoAnalyzeToggle" onclick="toggleAutoAnalyze()">
+                            <span class="btn-icon">🔁</span>
+                            <span>Auto Analyze</span>
+                        </button>
+                    </div>
+                    <canvas id="cameraCanvas" class="camera-canvas" style="display: none;"></canvas>
+                </div>
+
+                <div class="panel-section">
+                    <h3 class="panel-title">Suggestions</h3>
+                    <div class="suggestions-list" id="suggestions">
+                        <div class="suggestion-item">Type something to get suggestions</div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3 class="panel-title">Entities Detected</h3>
+                    <div class="entities-list" id="entities">
+                        <div class="entity-item">No entities yet</div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3 class="panel-title">Understanding Analysis</h3>
+                    <div class="understanding-display" id="understandingDisplay">
+                        <div class="no-data">
+                            <svg viewBox="0 0 100 100" width="60" height="60">
+                                <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="3"/>
+                                <path d="M 35 40 Q 35 35 40 35 Q 45 35 45 40" fill="none" stroke="currentColor" stroke-width="3"/>
+                                <path d="M 55 40 Q 55 35 60 35 Q 65 35 65 40" fill="none" stroke="currentColor" stroke-width="3"/>
+                                <path d="M 35 60 Q 50 70 65 60" fill="none" stroke="currentColor" stroke-width="3"/>
+                            </svg>
+                            <p>Analyzing input...</p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+        </div>
+        <p class="loading-text">Processing...</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
