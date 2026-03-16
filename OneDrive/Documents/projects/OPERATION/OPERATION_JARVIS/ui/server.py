@@ -15,8 +15,125 @@ from werkzeug.utils import secure_filename
 # Add parent directory to path
 sys.path.append(str(Path(__file__).parent.parent))
 
-from src.agent.device_controller import AgentController
-from src.agent.response_generator import ResponseGenerator
+try:
+    from src.agent.device_controller import AgentController
+    from src.agent.response_generator import ResponseGenerator
+    AGENT_IMPORT_ERROR = None
+except Exception as e:
+    AGENT_IMPORT_ERROR = e
+    print(f"Warning: full agent stack unavailable, using fallback mode: {e}")
+
+    class _FallbackUnderstanding:
+        def understand(self, text):
+            return {
+                'intent': 'general',
+                'confidence': 0.5,
+                'sentiment': 'neutral',
+                'entities': {},
+                'understanding_quality': 'fallback',
+                'alternatives': [],
+                'suggestions': [
+                    'Core command engine is running in fallback mode on cloud runtime.'
+                ],
+                'temporal_context': {}
+            }
+
+        def get_understanding_stats(self):
+            return {'mode': 'fallback', 'status': 'limited'}
+
+        def learn_from_user(self, question, answer):
+            return 'Learning is unavailable in fallback mode.'
+
+        def get_knowledge_answer(self, query):
+            return ''
+
+        def debug_understanding(self, text):
+            return {
+                'mode': 'fallback',
+                'input': text,
+                'note': 'Detailed NLP debug is unavailable in cloud fallback mode.'
+            }
+
+    class _FallbackImageGenerator:
+        def get_supported_styles(self):
+            return ['default']
+
+        def get_supported_sizes(self):
+            return ['1024x1024']
+
+        def get_history(self, limit=20):
+            return []
+
+    class _FallbackDocumentIngestion:
+        def list_documents(self):
+            return []
+
+    class _FallbackFileHandler:
+        def _unsupported(self, action):
+            return False, f"{action} is unavailable in cloud fallback mode."
+
+        def open_file(self, *_args, **_kwargs):
+            return self._unsupported('Open file')
+
+        def open_folder(self, *_args, **_kwargs):
+            return self._unsupported('Open folder')
+
+        def launch_application(self, *_args, **_kwargs):
+            return self._unsupported('Launch application')
+
+        def create_file(self, *_args, **_kwargs):
+            return self._unsupported('Create file')
+
+        def read_file(self, *_args, **_kwargs):
+            return self._unsupported('Read file')
+
+        def edit_file(self, *_args, **_kwargs):
+            return self._unsupported('Edit file')
+
+        def delete_file(self, *_args, **_kwargs):
+            return self._unsupported('Delete file')
+
+        def delete_folder(self, *_args, **_kwargs):
+            return self._unsupported('Delete folder')
+
+        def list_files(self, *_args, **_kwargs):
+            return self._unsupported('List files')
+
+        def list_applications(self, *_args, **_kwargs):
+            return self._unsupported('List applications')
+
+        def launch_random_application(self, *_args, **_kwargs):
+            return self._unsupported('Random app launch')
+
+    class AgentController:
+        def __init__(self, *_args, **_kwargs):
+            self.understanding = _FallbackUnderstanding()
+            self.image_generator = _FallbackImageGenerator()
+            self.document_ingestion = _FallbackDocumentIngestion()
+            self.file_handler = _FallbackFileHandler()
+            self.is_online = True
+
+        def toggle_mode(self):
+            self.is_online = not self.is_online
+
+        def get_stats(self):
+            return {
+                'mode': 'fallback',
+                'agent_import_error': str(AGENT_IMPORT_ERROR)
+            }
+
+        def generate_image(self, prompt, style='default', size='1024x1024'):
+            return {
+                'success': False,
+                'prompt': prompt,
+                'message': 'Image generation is unavailable in cloud fallback mode.',
+                'image_url': None,
+                'style': style,
+                'size': size
+            }
+
+    class ResponseGenerator:
+        pass
 
 # Import web search module
 try:
