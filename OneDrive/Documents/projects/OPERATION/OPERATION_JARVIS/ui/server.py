@@ -177,14 +177,23 @@ def _get_mediapipe():
 
 # Get the directory where this file is located
 UI_DIR = os.path.dirname(os.path.abspath(__file__))
-SONGS_DIR = os.path.join(UI_DIR, 'songs')
 BASE_DIR = str(Path(__file__).parent.parent)
-FACE_DB_DIR = os.path.join(BASE_DIR, 'data', 'faces')
+
+if os.getenv('VERCEL'):
+    # Vercel serverless filesystem is read-only except /tmp.
+    _RUNTIME_DATA_ROOT = '/tmp/operation_jarvis'
+    SONGS_DIR = os.path.join(_RUNTIME_DATA_ROOT, 'songs')
+    FACE_DB_DIR = os.path.join(_RUNTIME_DATA_ROOT, 'faces')
+    OBJECT_MODEL_DIR = os.path.join(_RUNTIME_DATA_ROOT, 'models')
+else:
+    SONGS_DIR = os.path.join(UI_DIR, 'songs')
+    FACE_DB_DIR = os.path.join(BASE_DIR, 'data', 'faces')
+    OBJECT_MODEL_DIR = os.path.join(BASE_DIR, 'data', 'models')
+
 FACE_DB_FILE = os.path.join(FACE_DB_DIR, 'face_labels.json')
 FACE_MODEL_FILE = os.path.join(FACE_DB_DIR, 'face_model.yml')
 
 # Object detection paths
-OBJECT_MODEL_DIR = os.path.join(BASE_DIR, 'data', 'models')
 OBJECT_MODEL_CONFIG = os.path.join(OBJECT_MODEL_DIR, 'ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt')
 OBJECT_MODEL_WEIGHTS = os.path.join(OBJECT_MODEL_DIR, 'frozen_inference_graph.pb')
 OBJECT_CLASSES_FILE = os.path.join(OBJECT_MODEL_DIR, 'coco_classes.txt')
