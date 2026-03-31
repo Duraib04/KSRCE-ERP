@@ -38,12 +38,12 @@ class AppColors {
   
   // Overlay Colors
   static Color overlay(Color color, double opacity) =>
-      color.withOpacity(opacity);
+      color.withValues(alpha: opacity);
   
   static Color primaryOverlay({double opacity = 0.1}) =>
-      primary.withOpacity(opacity);
+      primary.withValues(alpha: opacity);
   static Color secondaryOverlay({double opacity = 0.1}) =>
-      secondary.withOpacity(opacity);
+      secondary.withValues(alpha: opacity);
   static Color errorOverlay({double opacity = 0.1}) =>
-      error.withOpacity(opacity);
+      error.withValues(alpha: opacity);
 }

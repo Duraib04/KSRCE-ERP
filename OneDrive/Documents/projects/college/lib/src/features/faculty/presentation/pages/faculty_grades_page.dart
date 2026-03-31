@@ -47,7 +47,7 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
               Row(children: [
                 Container(
                   padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(12)),
+                  decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(12)),
                   child: const Icon(Icons.grading_rounded, color: AppColors.primary, size: 24),
                 ),
                 const SizedBox(width: 14),
@@ -88,7 +88,7 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
                   SizedBox(
                     width: isMobile ? double.infinity : 300,
                     child: DropdownButtonFormField<String>(
-                      value: _selectedCourse,
+                      initialValue: _selectedCourse,
                       decoration: _inputDeco('Course'),
                       dropdownColor: AppColors.surface,
                       style: const TextStyle(color: AppColors.textDark, fontSize: 14),
@@ -100,7 +100,7 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
                   SizedBox(
                     width: isMobile ? double.infinity : 200,
                     child: DropdownButtonFormField<String>(
-                      value: _examType,
+                      initialValue: _examType,
                       decoration: _inputDeco('Exam Type'),
                       dropdownColor: AppColors.surface,
                       style: const TextStyle(color: AppColors.textDark, fontSize: 14),
@@ -129,7 +129,7 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Container(
           padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
           child: Icon(icon, color: color, size: 18),
         ),
         const SizedBox(height: 10),
@@ -187,7 +187,7 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
         // Header
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.04), borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.04), borderRadius: BorderRadius.circular(8)),
           child: Row(children: const [
             SizedBox(width: 100, child: Text('Roll No', style: TextStyle(color: AppColors.textMedium, fontSize: 12, fontWeight: FontWeight.w600))),
             Expanded(child: Text('Name', style: TextStyle(color: AppColors.textMedium, fontSize: 12, fontWeight: FontWeight.w600))),
@@ -223,7 +223,7 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
               decoration: BoxDecoration(
                 color: AppColors.surface,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: hasResult ? gradeColor.withOpacity(0.12) : AppColors.border.withOpacity(0.3)),
+                border: Border.all(color: hasResult ? gradeColor.withValues(alpha: 0.12) : AppColors.border.withValues(alpha: 0.3)),
               ),
               child: Row(children: [
                 SizedBox(width: 100, child: Text(sid, style: const TextStyle(color: AppColors.textMedium, fontSize: 13))),
@@ -231,11 +231,11 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
                 SizedBox(width: 90, child: Text('$marks/$total', style: TextStyle(color: hasResult ? AppColors.textDark : AppColors.textLight, fontSize: 13))),
                 SizedBox(width: 60, child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(color: gradeColor.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: gradeColor.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
                   child: Text(grade, textAlign: TextAlign.center, style: TextStyle(color: gradeColor, fontWeight: FontWeight.w700, fontSize: 13)),
                 )),
                 const SizedBox(width: 8),
-                Icon(Icons.edit_rounded, size: 16, color: AppColors.textMuted.withOpacity(0.4)),
+                Icon(Icons.edit_rounded, size: 16, color: AppColors.textMuted.withValues(alpha: 0.4)),
               ]),
             ),
           );
@@ -261,7 +261,7 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
           title: Row(children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: const Color(0xFF10B981).withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(color: const Color(0xFF10B981).withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
               child: const Icon(Icons.grading_rounded, color: Color(0xFF10B981), size: 20),
             ),
             const SizedBox(width: 12),
@@ -315,7 +315,7 @@ class _FacultyGradesPageState extends State<FacultyGradesPage> {
                     duration: const Duration(milliseconds: 200),
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
-                      color: isSelected ? color.withOpacity(0.12) : AppColors.background,
+                      color: isSelected ? color.withValues(alpha: 0.12) : AppColors.background,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: isSelected ? color : AppColors.border, width: isSelected ? 2 : 1),
                     ),

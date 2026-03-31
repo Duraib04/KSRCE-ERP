@@ -41,7 +41,7 @@ class _FacultyExamsPageState extends State<FacultyExamsPage> {
               Row(children: [
                 Container(
                   padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(12)),
+                  decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(12)),
                   child: const Icon(Icons.quiz_rounded, color: AppColors.primary, size: 24),
                 ),
                 const SizedBox(width: 14),
@@ -88,7 +88,7 @@ class _FacultyExamsPageState extends State<FacultyExamsPage> {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Container(
           padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
           child: Icon(icon, color: color, size: 18),
         ),
         const SizedBox(height: 10),
@@ -104,7 +104,7 @@ class _FacultyExamsPageState extends State<FacultyExamsPage> {
         padding: const EdgeInsets.symmetric(vertical: 60),
         decoration: AppCardStyles.elevated,
         child: Center(child: Column(children: [
-          Icon(Icons.quiz_outlined, size: 48, color: AppColors.textMuted.withOpacity(0.3)),
+          Icon(Icons.quiz_outlined, size: 48, color: AppColors.textMuted.withValues(alpha: 0.3)),
           const SizedBox(height: 12),
           const Text('No exams scheduled', style: TextStyle(color: AppColors.textMedium, fontSize: 15, fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
@@ -131,14 +131,14 @@ class _FacultyExamsPageState extends State<FacultyExamsPage> {
             margin: const EdgeInsets.only(bottom: 10),
             decoration: BoxDecoration(
               color: AppColors.surface, borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: color.withOpacity(0.12)),
+              border: Border.all(color: color.withValues(alpha: 0.12)),
             ),
             child: Padding(
               padding: const EdgeInsets.all(14),
               child: Row(children: [
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
                   child: Text(type, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.w700)),
                 ),
                 const SizedBox(width: 14),
@@ -192,7 +192,7 @@ class _FacultyExamsPageState extends State<FacultyExamsPage> {
           title: Row(children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
               child: const Icon(Icons.event_note_rounded, color: AppColors.primary, size: 20),
             ),
             const SizedBox(width: 12),
@@ -202,7 +202,7 @@ class _FacultyExamsPageState extends State<FacultyExamsPage> {
             width: 420,
             child: SingleChildScrollView(child: Column(mainAxisSize: MainAxisSize.min, children: [
               DropdownButtonFormField<String>(
-                value: selectedCourseId,
+                initialValue: selectedCourseId,
                 decoration: _inputDeco('Course'),
                 dropdownColor: AppColors.surface,
                 style: const TextStyle(color: AppColors.textDark, fontSize: 14),
@@ -214,7 +214,7 @@ class _FacultyExamsPageState extends State<FacultyExamsPage> {
               TextField(controller: nameCtrl, style: const TextStyle(color: AppColors.textDark), decoration: _inputDeco('Exam Name')),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
-                value: examType,
+                initialValue: examType,
                 decoration: _inputDeco('Type'),
                 dropdownColor: AppColors.surface,
                 style: const TextStyle(color: AppColors.textDark, fontSize: 14),

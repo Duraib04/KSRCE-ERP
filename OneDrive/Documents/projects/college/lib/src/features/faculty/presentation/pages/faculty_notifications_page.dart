@@ -23,7 +23,7 @@ class FacultyNotificationsPage extends StatelessWidget {
               const Spacer(),
               if (unread.isNotEmpty) Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(color: Colors.redAccent.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
+                decoration: BoxDecoration(color: Colors.redAccent.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
                 child: Text('${unread.length} unread', style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 12)),
               ),
             ]),
@@ -35,9 +35,9 @@ class FacultyNotificationsPage extends StatelessWidget {
                 margin: const EdgeInsets.only(bottom: 10),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: isRead ? AppColors.surface : AppColors.primary.withOpacity(0.05),
+                  color: isRead ? AppColors.surface : AppColors.primary.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: isRead ? AppColors.border : AppColors.primary.withOpacity(0.3)),
+                  border: Border.all(color: isRead ? AppColors.border : AppColors.primary.withValues(alpha: 0.3)),
                 ),
                 child: Row(children: [
                   Icon(isRead ? Icons.notifications_none : Icons.notifications_active, color: isRead ? AppColors.textLight : AppColors.primary, size: 24),

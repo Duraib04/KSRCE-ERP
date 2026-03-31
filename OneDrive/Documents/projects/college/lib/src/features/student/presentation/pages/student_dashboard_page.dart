@@ -98,10 +98,10 @@ class StudentDashboardPage extends StatelessWidget {
         children: [
           // Decorative circles
           Positioned(right: -20, top: -20, child: Container(width: 100, height: 100, decoration: BoxDecoration(
-            shape: BoxShape.circle, color: Colors.white.withOpacity(0.03),
+            shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.03),
           ))),
           Positioned(right: 40, bottom: -30, child: Container(width: 60, height: 60, decoration: BoxDecoration(
-            shape: BoxShape.circle, color: Colors.white.withOpacity(0.02),
+            shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.02),
           ))),
           isMobile
             ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -110,14 +110,14 @@ class StudentDashboardPage extends StatelessWidget {
                     padding: const EdgeInsets.all(3),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white.withOpacity(0.2), width: 2),
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 2),
                     ),
                     child: CircleAvatar(radius: 22, backgroundColor: const Color(0xFF3B82F6),
                       child: Text(initials, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white))),
                   ),
                   const SizedBox(width: 14),
                   Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text('$greeting,', style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.7), fontWeight: FontWeight.w400)),
+                    Text('$greeting,', style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.7), fontWeight: FontWeight.w400)),
                     const SizedBox(height: 2),
                     Text(firstName, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white, letterSpacing: -0.3)),
                   ])),
@@ -128,7 +128,7 @@ class StudentDashboardPage extends StatelessWidget {
                 Row(children: [
                   _infoPill(rollNo),
                   const Spacer(),
-                  Text('$dayName, $dateStr', style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 11)),
+                  Text('$dayName, $dateStr', style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 11)),
                 ]),
               ])
             : Row(children: [
@@ -136,14 +136,14 @@ class StudentDashboardPage extends StatelessWidget {
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white.withOpacity(0.15), width: 2),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.15), width: 2),
                   ),
                   child: CircleAvatar(radius: 30, backgroundColor: const Color(0xFF3B82F6),
                     child: Text(initials, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: Colors.white))),
                 ),
                 const SizedBox(width: 22),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('$greeting,', style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.7), fontWeight: FontWeight.w400)),
+                  Text('$greeting,', style: TextStyle(fontSize: 14, color: Colors.white.withValues(alpha: 0.7), fontWeight: FontWeight.w400)),
                   const SizedBox(height: 2),
                   Text(name, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w700, color: Colors.white, letterSpacing: -0.5)),
                   const SizedBox(height: 8),
@@ -157,7 +157,7 @@ class StudentDashboardPage extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.08),
+                      color: Colors.white.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const Text('2025-26', style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w500)),
@@ -175,11 +175,11 @@ class StudentDashboardPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.08),
+        color: Colors.white.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.06)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
       ),
-      child: Text(text, style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 11, fontWeight: FontWeight.w500)),
+      child: Text(text, style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 11, fontWeight: FontWeight.w500)),
     );
   }
 
@@ -223,7 +223,7 @@ class StudentDashboardPage extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(9),
                   decoration: BoxDecoration(
-                    color: s.color.withOpacity(0.08),
+                    color: s.color.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(s.icon, color: s.color, size: 20),
@@ -231,7 +231,7 @@ class StudentDashboardPage extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                   decoration: BoxDecoration(
-                    color: s.color.withOpacity(0.06),
+                    color: s.color.withValues(alpha: 0.06),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(s.badge, style: TextStyle(color: s.color, fontSize: 10, fontWeight: FontWeight.w600)),
@@ -277,17 +277,17 @@ class StudentDashboardPage extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF10B981).withOpacity(0.15)),
-        boxShadow: [BoxShadow(color: const Color(0xFF10B981).withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 3))],
+        border: Border.all(color: const Color(0xFF10B981).withValues(alpha: 0.15)),
+        boxShadow: [BoxShadow(color: const Color(0xFF10B981).withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 3))],
       ),
       child: Row(children: [
         Container(
           padding: const EdgeInsets.all(3),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: const Color(0xFF10B981).withOpacity(0.2), width: 2),
+            border: Border.all(color: const Color(0xFF10B981).withValues(alpha: 0.2), width: 2),
           ),
-          child: CircleAvatar(radius: 20, backgroundColor: const Color(0xFF10B981).withOpacity(0.1),
+          child: CircleAvatar(radius: 20, backgroundColor: const Color(0xFF10B981).withValues(alpha: 0.1),
             child: Text(initials, style: const TextStyle(color: Color(0xFF10B981), fontSize: 14, fontWeight: FontWeight.w700))),
         ),
         const SizedBox(width: 14),
@@ -295,7 +295,7 @@ class StudentDashboardPage extends StatelessWidget {
           Row(children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-              decoration: BoxDecoration(color: const Color(0xFF10B981).withOpacity(0.08), borderRadius: BorderRadius.circular(6)),
+              decoration: BoxDecoration(color: const Color(0xFF10B981).withValues(alpha: 0.08), borderRadius: BorderRadius.circular(6)),
               child: const Text('MENTOR', style: TextStyle(color: Color(0xFF10B981), fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.5)),
             ),
           ]),
@@ -339,17 +339,17 @@ class StudentDashboardPage extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF7C3AED).withOpacity(0.15)),
-        boxShadow: [BoxShadow(color: const Color(0xFF7C3AED).withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 3))],
+        border: Border.all(color: const Color(0xFF7C3AED).withValues(alpha: 0.15)),
+        boxShadow: [BoxShadow(color: const Color(0xFF7C3AED).withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 3))],
       ),
       child: Row(children: [
         Container(
           padding: const EdgeInsets.all(3),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: const Color(0xFF7C3AED).withOpacity(0.2), width: 2),
+            border: Border.all(color: const Color(0xFF7C3AED).withValues(alpha: 0.2), width: 2),
           ),
-          child: CircleAvatar(radius: 20, backgroundColor: const Color(0xFF7C3AED).withOpacity(0.1),
+          child: CircleAvatar(radius: 20, backgroundColor: const Color(0xFF7C3AED).withValues(alpha: 0.1),
             child: Text(initials, style: const TextStyle(color: Color(0xFF7C3AED), fontSize: 14, fontWeight: FontWeight.w700))),
         ),
         const SizedBox(width: 14),
@@ -357,7 +357,7 @@ class StudentDashboardPage extends StatelessWidget {
           Row(children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-              decoration: BoxDecoration(color: const Color(0xFF7C3AED).withOpacity(0.08), borderRadius: BorderRadius.circular(6)),
+              decoration: BoxDecoration(color: const Color(0xFF7C3AED).withValues(alpha: 0.08), borderRadius: BorderRadius.circular(6)),
               child: const Text('CLASS ADVISER', style: TextStyle(color: Color(0xFF7C3AED), fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.5)),
             ),
           ]),
@@ -400,7 +400,7 @@ class StudentDashboardPage extends StatelessWidget {
           trailing: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.06),
+              color: AppColors.primary.withValues(alpha: 0.06),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Text(dayName, style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.w600)),
@@ -410,7 +410,7 @@ class StudentDashboardPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 32),
             child: Center(child: Column(children: [
-              Icon(Icons.event_available_rounded, size: 40, color: AppColors.textMuted.withOpacity(0.4)),
+              Icon(Icons.event_available_rounded, size: 40, color: AppColors.textMuted.withValues(alpha: 0.4)),
               const SizedBox(height: 10),
               const Text('No classes scheduled', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
               const SizedBox(height: 4),
@@ -460,11 +460,11 @@ class StudentDashboardPage extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 4),
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Text(p['startTime'] as String? ?? '', style: TextStyle(color: c, fontSize: 13, fontWeight: FontWeight.w600)),
-                          Text(p['endTime'] as String? ?? '', style: TextStyle(color: c.withOpacity(0.5), fontSize: 11)),
+                          Text(p['endTime'] as String? ?? '', style: TextStyle(color: c.withValues(alpha: 0.5), fontSize: 11)),
                         ]),
                       ),
                       const SizedBox(width: 6),
-                      Container(width: 1.5, height: 36, decoration: BoxDecoration(color: c.withOpacity(0.15), borderRadius: BorderRadius.circular(1))),
+                      Container(width: 1.5, height: 36, decoration: BoxDecoration(color: c.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(1))),
                       const SizedBox(width: 14),
                       Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         Text(subject, style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w600, fontSize: 14)),
@@ -473,7 +473,7 @@ class StudentDashboardPage extends StatelessWidget {
                       ])),
                       if (room.isNotEmpty) Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(color: AppColors.surfaceVariant.withOpacity(0.7), borderRadius: BorderRadius.circular(8)),
+                        decoration: BoxDecoration(color: AppColors.surfaceVariant.withValues(alpha: 0.7), borderRadius: BorderRadius.circular(8)),
                         child: Row(mainAxisSize: MainAxisSize.min, children: [
                           const Icon(Icons.room_outlined, size: 12, color: AppColors.textMuted),
                           const SizedBox(width: 3),
@@ -510,7 +510,7 @@ class StudentDashboardPage extends StatelessWidget {
           trailing: recent.isNotEmpty ? Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
             decoration: BoxDecoration(
-              color: AppColors.error.withOpacity(0.08),
+              color: AppColors.error.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text('${allNotifs.where((n) => n['isRead'] == false).length} new',
@@ -519,7 +519,7 @@ class StudentDashboardPage extends StatelessWidget {
         ),
         if (recent.isEmpty)
           Padding(padding: const EdgeInsets.symmetric(vertical: 24), child: Center(child: Column(children: [
-            Icon(Icons.notifications_off_rounded, size: 36, color: AppColors.textMuted.withOpacity(0.3)),
+            Icon(Icons.notifications_off_rounded, size: 36, color: AppColors.textMuted.withValues(alpha: 0.3)),
             const SizedBox(height: 8),
             const Text('All caught up!', style: TextStyle(color: AppColors.textLight, fontSize: 13)),
           ])))
@@ -534,14 +534,14 @@ class StudentDashboardPage extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 8),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isUnread ? color.withOpacity(0.03) : AppColors.surfaceVariant.withOpacity(0.3),
+                color: isUnread ? color.withValues(alpha: 0.03) : AppColors.surfaceVariant.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(10),
-                border: isUnread ? Border.all(color: color.withOpacity(0.1)) : null,
+                border: isUnread ? Border.all(color: color.withValues(alpha: 0.1)) : null,
               ),
               child: Row(children: [
                 Container(
                   padding: const EdgeInsets.all(7),
-                  decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
                   child: Icon(icon, color: color, size: 16),
                 ),
                 const SizedBox(width: 12),
@@ -556,7 +556,7 @@ class StudentDashboardPage extends StatelessWidget {
                 if (isUnread)
                   Container(width: 7, height: 7, decoration: BoxDecoration(
                     color: color, shape: BoxShape.circle,
-                    boxShadow: [BoxShadow(color: color.withOpacity(0.3), blurRadius: 4)],
+                    boxShadow: [BoxShadow(color: color.withValues(alpha: 0.3), blurRadius: 4)],
                   )),
               ]),
             );
@@ -639,10 +639,10 @@ class _QuickActionTileState extends State<_QuickActionTile> {
           duration: const Duration(milliseconds: 180),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
-            color: _hovered ? a.color.withOpacity(0.1) : a.color.withOpacity(0.04),
+            color: _hovered ? a.color.withValues(alpha: 0.1) : a.color.withValues(alpha: 0.04),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: _hovered ? a.color.withOpacity(0.25) : a.color.withOpacity(0.08),
+              color: _hovered ? a.color.withValues(alpha: 0.25) : a.color.withValues(alpha: 0.08),
             ),
           ),
           child: Row(

@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
@@ -129,7 +127,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
     final adviserName = chain['classAdviserName'] ?? 'Class Adviser';
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.05), borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.primary.withOpacity(0.3))),
+      decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.primary.withValues(alpha: 0.3))),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
           const Icon(Icons.edit_note, color: AppColors.primary, size: 22),
@@ -216,7 +214,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
     final chainList = (req['approvalChain'] as List<dynamic>?) ?? [];
     return Container(
       margin: const EdgeInsets.only(bottom: 12), padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: color.withOpacity(0.05), borderRadius: BorderRadius.circular(10), border: Border.all(color: color.withOpacity(0.3))),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(10), border: Border.all(color: color.withValues(alpha: 0.3))),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
           Icon(icon, color: color, size: 18), const SizedBox(width: 8),
@@ -246,7 +244,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
           final stepRole = step['role']?.toString() ?? '';
           final stepStatus = step['status'] == 'pending' ? ' (pending)' : '';
           return Chip(avatar: Icon(si, size: 14, color: sc), label: Text('$stepRole$stepStatus', style: TextStyle(color: sc, fontSize: 11)),
-            backgroundColor: sc.withOpacity(0.08), side: BorderSide.none, padding: EdgeInsets.zero, visualDensity: VisualDensity.compact);
+            backgroundColor: sc.withValues(alpha: 0.08), side: BorderSide.none, padding: EdgeInsets.zero, visualDensity: VisualDensity.compact);
         }).toList()),
       ]),
     );
@@ -288,13 +286,13 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
     final initials = name.split(' ').where((w) => w.isNotEmpty).map((w) => w[0]).take(2).join().toUpperCase();
 
     return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      CircleAvatar(radius: 22, backgroundColor: color.withOpacity(0.1),
+      CircleAvatar(radius: 22, backgroundColor: color.withValues(alpha: 0.1),
         child: Text(initials, style: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.w700))),
       const SizedBox(width: 14),
       Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-          decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(6)),
+          decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(6)),
           child: Text(role.toUpperCase(), style: TextStyle(color: color, fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.5)),
         ),
         const SizedBox(height: 6),
@@ -337,7 +335,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
 
   Widget _chainStep(String name, String role, Color color) {
     return Expanded(child: Container(padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
       child: Column(children: [
         Text(role, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold)),
         const SizedBox(height: 2),
@@ -616,7 +614,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
   }
 
   Widget _tag(String text, Color color) => Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-    decoration: BoxDecoration(color: color.withOpacity(0.12), borderRadius: BorderRadius.circular(4)),
+    decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(4)),
     child: Text(text, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold)));
 
   Widget _actionBtn(IconData icon, String label, Color color, VoidCallback onPressed) {

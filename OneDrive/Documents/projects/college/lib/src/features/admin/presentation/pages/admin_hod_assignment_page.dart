@@ -42,7 +42,7 @@ class _AdminHodAssignmentPageState extends State<AdminHodAssignmentPage> {
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
                   child: Row(children: [
-                    Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6), decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.15), borderRadius: BorderRadius.circular(6)),
+                    Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6), decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(6)),
                       child: Text(d['departmentCode'] as String? ?? '', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 14))),
                     const SizedBox(width: 14),
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -72,7 +72,7 @@ class _AdminHodAssignmentPageState extends State<AdminHodAssignmentPage> {
       content: SizedBox(width: 350, child: ListView(shrinkWrap: true, children: facList.map((f) {
         final isCurrent = f['facultyId'] == currentHodId;
         return ListTile(
-          leading: CircleAvatar(radius: 18, backgroundColor: isCurrent ? AppColors.accent.withOpacity(0.2) : AppColors.primary.withOpacity(0.1),
+          leading: CircleAvatar(radius: 18, backgroundColor: isCurrent ? AppColors.accent.withValues(alpha: 0.2) : AppColors.primary.withValues(alpha: 0.1),
             child: Text((f['name'] as String? ?? '?')[0], style: TextStyle(color: isCurrent ? AppColors.accent : AppColors.primary, fontWeight: FontWeight.bold, fontSize: 14))),
           title: Text(f['name'] as String? ?? '', style: TextStyle(color: AppColors.textDark, fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal, fontSize: 14)),
           subtitle: Text(f['designation'] as String? ?? '', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),

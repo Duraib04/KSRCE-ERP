@@ -154,7 +154,7 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: AppColors.accent.withOpacity(0.15),
+            color: AppColors.accent.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(10),
           ),
           child: const Icon(Icons.edit_calendar,
@@ -180,7 +180,7 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text('$entryCount entries',
@@ -303,14 +303,14 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.2)),
+          border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
         child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(icon, color: color, size: 20),
@@ -351,9 +351,9 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.04),
+        color: AppColors.primary.withValues(alpha: 0.04),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.primary.withOpacity(0.3)),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -501,7 +501,7 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
                           onPressed: () => setState(
                               () => _useCustomMethod = !_useCustomMethod),
                           backgroundColor: _useCustomMethod
-                              ? AppColors.accent.withOpacity(0.2)
+                              ? AppColors.accent.withValues(alpha: 0.2)
                               : null,
                         ),
                       ],
@@ -535,7 +535,7 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
                 return FilterChip(
                   label: Text(coId),
                   selected: selected,
-                  selectedColor: AppColors.primary.withOpacity(0.2),
+                  selectedColor: AppColors.primary.withValues(alpha: 0.2),
                   checkmarkColor: AppColors.primary,
                   onSelected: (sel) {
                     setState(() {
@@ -640,7 +640,7 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
     return ChoiceChip(
       label: Text(method),
       selected: selected,
-      selectedColor: AppColors.primary.withOpacity(0.2),
+      selectedColor: AppColors.primary.withValues(alpha: 0.2),
       labelStyle: TextStyle(
         color: selected ? AppColors.primary : AppColors.textMedium,
         fontWeight: selected ? FontWeight.bold : FontWeight.normal,
@@ -734,7 +734,7 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.06),
+                  color: AppColors.primary.withValues(alpha: 0.06),
                   borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(12)),
                 ),
@@ -787,7 +787,7 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
             width: 52,
             padding: const EdgeInsets.symmetric(vertical: 6),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
+              color: AppColors.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -891,7 +891,7 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
               // Header
               TableRow(
                 decoration:
-                    BoxDecoration(color: AppColors.primary.withOpacity(0.08)),
+                    BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08)),
                 children: [
                   const _TableHeader('Hour'),
                   ...weekDays.map((d) => _TableHeader(
@@ -941,7 +941,7 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: color.withOpacity(0.1),
+                            color: color.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Column(
@@ -967,7 +967,7 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
                               ),
                               Text(method,
                                   style: TextStyle(
-                                      color: color.withOpacity(0.85),
+                                      color: color.withValues(alpha: 0.85),
                                       fontSize: 10)),
                             ],
                           ),
@@ -993,7 +993,7 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
       child: Column(
         children: [
           Icon(Icons.edit_calendar,
-              size: 56, color: AppColors.textLight.withOpacity(0.4)),
+              size: 56, color: AppColors.textLight.withValues(alpha: 0.4)),
           const SizedBox(height: 16),
           const Text('No diary entries yet',
               style: TextStyle(
@@ -1052,7 +1052,7 @@ class _FacultyCourseDiaryPageState extends State<FacultyCourseDiaryPage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
+        color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(text,

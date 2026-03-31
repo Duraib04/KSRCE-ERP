@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_web_libraries_in_flutter
+// ignore_for_file: avoid_web_libraries_in_flutter, deprecated_member_use
 import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -6,7 +6,6 @@ import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_card_styles.dart';
 import '../../../../core/services/file_upload_service.dart';
-import '../../../shared/widgets/file_upload_widget.dart';
 
 class StudentComplaintsPage extends StatefulWidget {
   const StudentComplaintsPage({super.key});
@@ -84,7 +83,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
             return Container(
               margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(10), border: Border.all(color: statusColor.withOpacity(0.2))),
+              decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(10), border: Border.all(color: statusColor.withValues(alpha: 0.2))),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(children: [
                   Icon(statusIcon, color: statusColor, size: 18),
@@ -93,7 +92,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
                   const Spacer(),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                    decoration: BoxDecoration(color: statusColor.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
+                    decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
                     child: Text(statusLabel, style: TextStyle(color: statusColor, fontSize: 11, fontWeight: FontWeight.bold)),
                   ),
                 ]),
@@ -105,7 +104,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
                 Row(children: [
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
+                    decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(4)),
                     child: Text(c['category'] as String? ?? '', style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.w500)),
                   ),
                   const SizedBox(width: 12),
@@ -126,7 +125,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
                       onTap: () => html.window.open(a['url'] as String, '_blank'),
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(6)),
+                        decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(6)),
                         child: Row(mainAxisSize: MainAxisSize.min, children: [
                           Icon(FileUploadService.getFileIcon(a['format'] as String? ?? ''), size: 14, color: AppColors.primary),
                           const SizedBox(width: 4),
@@ -230,7 +229,7 @@ class _StudentComplaintsPageState extends State<StudentComplaintsPage> {
           label: Text(_attachedFiles.isEmpty ? 'Attach Evidence' : 'Add More Files', style: const TextStyle(fontSize: 13)),
           style: OutlinedButton.styleFrom(
             foregroundColor: AppColors.primary,
-            side: BorderSide(color: AppColors.primary.withOpacity(0.4)),
+            side: BorderSide(color: AppColors.primary.withValues(alpha: 0.4)),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           ),
         ),

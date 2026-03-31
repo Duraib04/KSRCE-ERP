@@ -49,7 +49,7 @@ class _AdminClassManagementPageState extends State<AdminClassManagementPage> {
                   decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Row(children: [
-                      Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6), decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.15), borderRadius: BorderRadius.circular(6)),
+                      Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6), decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(6)),
                         child: Text('$deptCode Y${c['year']} ${c['section']}', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 14))),
                       const Spacer(),
                       Text('$studentCount students | $courseCount courses', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
@@ -75,7 +75,7 @@ class _AdminClassManagementPageState extends State<AdminClassManagementPage> {
       backgroundColor: AppColors.surface,
       title: const Text('Add Class', style: TextStyle(color: AppColors.textDark)),
       content: Column(mainAxisSize: MainAxisSize.min, children: [
-        DropdownButtonFormField<String>(value: selectedDeptId, isExpanded: true,
+        DropdownButtonFormField<String>(initialValue: selectedDeptId, isExpanded: true,
           decoration: const InputDecoration(labelText: 'Department', border: OutlineInputBorder()),
           items: ds.departments.map((d) => DropdownMenuItem(value: d['departmentId'] as String, child: Text('${d['departmentCode']}', style: const TextStyle(fontSize: 13)))).toList(),
           onChanged: (v) => setS(() => selectedDeptId = v)),

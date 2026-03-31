@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../core/data_service.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_card_styles.dart';
 
 class NavItem {
   final String title;
@@ -215,7 +214,7 @@ class _DashboardShellState extends State<DashboardShell> {
         Container(
           margin: const EdgeInsets.only(right: 4),
           decoration: BoxDecoration(
-            color: AppColors.surfaceVariant.withOpacity(0.5),
+            color: AppColors.surfaceVariant.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(10),
           ),
           child: IconButton(
@@ -238,7 +237,7 @@ class _DashboardShellState extends State<DashboardShell> {
           gradient: const LinearGradient(
             colors: [Color(0xFF3B82F6), Color(0xFF2563EB)],
           ),
-          boxShadow: [BoxShadow(color: AppColors.primary.withOpacity(0.2), blurRadius: 6, offset: const Offset(0, 2))],
+          boxShadow: [BoxShadow(color: AppColors.primary.withValues(alpha: 0.2), blurRadius: 6, offset: const Offset(0, 2))],
         ),
         child: const CircleAvatar(
           radius: 15,
@@ -254,7 +253,7 @@ class _DashboardShellState extends State<DashboardShell> {
         PopupMenuItem(value: 'profile', child: Row(children: [
           Container(
             padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
             child: const Icon(Icons.person_outline_rounded, color: AppColors.primary, size: 16),
           ),
           const SizedBox(width: 10),
@@ -263,7 +262,7 @@ class _DashboardShellState extends State<DashboardShell> {
         PopupMenuItem(value: 'settings', child: Row(children: [
           Container(
             padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(color: AppColors.textLight.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(color: AppColors.textLight.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
             child: const Icon(Icons.settings_outlined, color: AppColors.textMedium, size: 16),
           ),
           const SizedBox(width: 10),
@@ -273,7 +272,7 @@ class _DashboardShellState extends State<DashboardShell> {
         PopupMenuItem(value: 'logout', child: Row(children: [
           Container(
             padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(color: AppColors.error.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
             child: Icon(Icons.logout_rounded, color: AppColors.error, size: 16),
           ),
           const SizedBox(width: 10),
@@ -340,7 +339,7 @@ class _DashboardShellState extends State<DashboardShell> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.12),
+                      color: Colors.white.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(displayId, style: const TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.w500)),
@@ -358,7 +357,7 @@ class _DashboardShellState extends State<DashboardShell> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              border: Border(top: BorderSide(color: AppColors.border.withOpacity(0.5))),
+              border: Border(top: BorderSide(color: AppColors.border.withValues(alpha: 0.5))),
             ),
             child: InkWell(
               borderRadius: BorderRadius.circular(10),
@@ -366,15 +365,15 @@ class _DashboardShellState extends State<DashboardShell> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                 decoration: BoxDecoration(
-                  color: AppColors.error.withOpacity(0.04),
+                  color: AppColors.error.withValues(alpha: 0.04),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppColors.error.withOpacity(0.1)),
+                  border: Border.all(color: AppColors.error.withValues(alpha: 0.1)),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.logout_rounded, color: AppColors.error.withOpacity(0.7), size: 18),
+                    Icon(Icons.logout_rounded, color: AppColors.error.withValues(alpha: 0.7), size: 18),
                     const SizedBox(width: 10),
-                    Text('Logout', style: TextStyle(color: AppColors.error.withOpacity(0.8), fontSize: 13, fontWeight: FontWeight.w500)),
+                    Text('Logout', style: TextStyle(color: AppColors.error.withValues(alpha: 0.8), fontSize: 13, fontWeight: FontWeight.w500)),
                   ],
                 ),
               ),
@@ -415,7 +414,7 @@ class _DashboardShellState extends State<DashboardShell> {
                   width: 6, height: 6,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: childActive ? AppColors.primary : AppColors.textMuted.withOpacity(0.4),
+                    color: childActive ? AppColors.primary : AppColors.textMuted.withValues(alpha: 0.4),
                   ),
                 ),
                 minLeadingWidth: 14,
@@ -425,7 +424,7 @@ class _DashboardShellState extends State<DashboardShell> {
                   fontWeight: childActive ? FontWeight.w600 : FontWeight.w400,
                 )),
                 selected: childActive,
-                selectedTileColor: AppColors.primary.withOpacity(0.06),
+                selectedTileColor: AppColors.primary.withValues(alpha: 0.06),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 onTap: () { Navigator.pop(context); context.go(child.route); },
               ),
@@ -444,7 +443,7 @@ class _DashboardShellState extends State<DashboardShell> {
           fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
         )),
         selected: isActive,
-        selectedTileColor: AppColors.primary.withOpacity(0.06),
+        selectedTileColor: AppColors.primary.withValues(alpha: 0.06),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         onTap: () { Navigator.pop(context); context.go(item.route); },
       ),
@@ -460,7 +459,7 @@ class _DashboardShellState extends State<DashboardShell> {
         color: AppColors.surface,
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF1E293B).withOpacity(0.06),
+            color: const Color(0xFF1E293B).withValues(alpha: 0.06),
             blurRadius: 12,
             offset: const Offset(2, 0),
           ),
@@ -513,7 +512,7 @@ class _DashboardShellState extends State<DashboardShell> {
                     child: Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.08),
+                        color: Colors.white.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Icon(Icons.menu_open_rounded, color: Colors.white70, size: 18),
@@ -532,7 +531,7 @@ class _DashboardShellState extends State<DashboardShell> {
                 child: Container(
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: AppColors.surfaceVariant.withOpacity(0.6),
+                    color: AppColors.surfaceVariant.withValues(alpha: 0.6),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.menu_rounded, color: AppColors.textLight, size: 18),
@@ -562,7 +561,7 @@ class _DashboardShellState extends State<DashboardShell> {
           Container(
             padding: EdgeInsets.all(_isSidebarCollapsed ? 8 : 12),
             decoration: BoxDecoration(
-              border: Border(top: BorderSide(color: AppColors.border.withOpacity(0.5))),
+              border: Border(top: BorderSide(color: AppColors.border.withValues(alpha: 0.5))),
             ),
             child: _isSidebarCollapsed
               ? Tooltip(
@@ -573,10 +572,10 @@ class _DashboardShellState extends State<DashboardShell> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
-                        color: AppColors.error.withOpacity(0.06),
+                        color: AppColors.error.withValues(alpha: 0.06),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Icon(Icons.logout_rounded, color: AppColors.error.withOpacity(0.7), size: 20),
+                      child: Icon(Icons.logout_rounded, color: AppColors.error.withValues(alpha: 0.7), size: 20),
                     ),
                   ),
                 )
@@ -586,16 +585,16 @@ class _DashboardShellState extends State<DashboardShell> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     decoration: BoxDecoration(
-                      color: AppColors.error.withOpacity(0.04),
+                      color: AppColors.error.withValues(alpha: 0.04),
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: AppColors.error.withOpacity(0.1)),
+                      border: Border.all(color: AppColors.error.withValues(alpha: 0.1)),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.logout_rounded, color: AppColors.error.withOpacity(0.7), size: 18),
+                        Icon(Icons.logout_rounded, color: AppColors.error.withValues(alpha: 0.7), size: 18),
                         const SizedBox(width: 10),
                         Text('Logout', style: TextStyle(
-                          color: AppColors.error.withOpacity(0.8),
+                          color: AppColors.error.withValues(alpha: 0.8),
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
                         )),
@@ -643,7 +642,7 @@ class _DashboardShellState extends State<DashboardShell> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
-                color: isChildActive ? AppColors.primary.withOpacity(0.08) : Colors.transparent,
+                color: isChildActive ? AppColors.primary.withValues(alpha: 0.08) : Colors.transparent,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(item.icon, color: isChildActive ? AppColors.primary : AppColors.textLight, size: 20),
@@ -663,9 +662,9 @@ class _DashboardShellState extends State<DashboardShell> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
-                color: isActive ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
+                color: isActive ? AppColors.primary.withValues(alpha: 0.1) : Colors.transparent,
                 borderRadius: BorderRadius.circular(10),
-                border: isActive ? Border.all(color: AppColors.primary.withOpacity(0.15)) : null,
+                border: isActive ? Border.all(color: AppColors.primary.withValues(alpha: 0.15)) : null,
               ),
               child: Icon(item.icon, color: isActive ? AppColors.primary : AppColors.textLight, size: 20),
             ),
@@ -686,7 +685,7 @@ class _DashboardShellState extends State<DashboardShell> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
                 decoration: BoxDecoration(
-                  color: isChildActive ? AppColors.primary.withOpacity(0.06) : Colors.transparent,
+                  color: isChildActive ? AppColors.primary.withValues(alpha: 0.06) : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(
@@ -715,7 +714,7 @@ class _DashboardShellState extends State<DashboardShell> {
                 padding: const EdgeInsets.only(left: 16, top: 2, bottom: 2),
                 child: Container(
                   decoration: BoxDecoration(
-                    border: Border(left: BorderSide(color: AppColors.border.withOpacity(0.8), width: 1.5)),
+                    border: Border(left: BorderSide(color: AppColors.border.withValues(alpha: 0.8), width: 1.5)),
                   ),
                   child: Column(
                     children: item.children!.map((child) {
@@ -728,7 +727,7 @@ class _DashboardShellState extends State<DashboardShell> {
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                             decoration: BoxDecoration(
-                              color: childActive ? AppColors.primary.withOpacity(0.08) : Colors.transparent,
+                              color: childActive ? AppColors.primary.withValues(alpha: 0.08) : Colors.transparent,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Row(
@@ -737,7 +736,7 @@ class _DashboardShellState extends State<DashboardShell> {
                                   width: 6, height: 6,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: childActive ? AppColors.primary : AppColors.textMuted.withOpacity(0.4),
+                                    color: childActive ? AppColors.primary : AppColors.textMuted.withValues(alpha: 0.4),
                                   ),
                                 ),
                                 const SizedBox(width: 10),
@@ -770,9 +769,9 @@ class _DashboardShellState extends State<DashboardShell> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
           decoration: BoxDecoration(
-            color: isActive ? AppColors.primary.withOpacity(0.08) : Colors.transparent,
+            color: isActive ? AppColors.primary.withValues(alpha: 0.08) : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
-            border: isActive ? Border.all(color: AppColors.primary.withOpacity(0.15)) : null,
+            border: isActive ? Border.all(color: AppColors.primary.withValues(alpha: 0.15)) : null,
           ),
           child: Row(
             children: [
@@ -809,7 +808,7 @@ class _DashboardShellState extends State<DashboardShell> {
         color: AppColors.surface,
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF1E293B).withOpacity(0.04),
+            color: const Color(0xFF1E293B).withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -821,7 +820,7 @@ class _DashboardShellState extends State<DashboardShell> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.06),
+              color: AppColors.primary.withValues(alpha: 0.06),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
@@ -841,7 +840,7 @@ class _DashboardShellState extends State<DashboardShell> {
           const Spacer(),
           Container(
             decoration: BoxDecoration(
-              color: AppColors.surfaceVariant.withOpacity(0.5),
+              color: AppColors.surfaceVariant.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(10),
             ),
             child: IconButton(

@@ -112,7 +112,7 @@ class StudentFeesPage extends StatelessWidget {
                   const SizedBox(width: 10),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(color: (isPaid ? Colors.green : Colors.orange).withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
+                    decoration: BoxDecoration(color: (isPaid ? Colors.green : Colors.orange).withValues(alpha: 0.15), borderRadius: BorderRadius.circular(4)),
                     child: Text(status, style: TextStyle(color: isPaid ? Colors.green : Colors.orange, fontSize: 11, fontWeight: FontWeight.bold)),
                   ),
                 ],

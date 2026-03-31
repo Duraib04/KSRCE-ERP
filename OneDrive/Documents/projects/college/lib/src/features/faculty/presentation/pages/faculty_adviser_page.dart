@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_card_styles.dart';
@@ -25,7 +24,6 @@ class FacultyAdviserPage extends StatelessWidget {
         );
       }
 
-      final classId = adviserClass['classId'] as String? ?? '';
       final deptId = adviserClass['departmentId'] as String? ?? '';
       final year = adviserClass['year']?.toString() ?? '-';
       final section = adviserClass['section'] as String? ?? '-';
@@ -40,7 +38,6 @@ class FacultyAdviserPage extends StatelessWidget {
 
       // Calculate class statistics
       double totalCgpa = 0; int cgpaCount = 0;
-      int lowAttStudents = 0;
       int arrearStudents = 0;
       for (final s in classStudents) {
         final c = s['cgpa'];
@@ -95,7 +92,7 @@ class FacultyAdviserPage extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFFF97316).withOpacity(0.08),
+            color: const Color(0xFFF97316).withValues(alpha: 0.08),
             shape: BoxShape.circle,
           ),
           child: const Icon(Icons.person_off_rounded, size: 48, color: Color(0xFFF97316)),
@@ -127,7 +124,7 @@ class FacultyAdviserPage extends StatelessWidget {
             Row(children: [
               Container(
                 padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
+                decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
                 child: const Icon(Icons.shield_rounded, color: Colors.white, size: 24),
               ),
               const SizedBox(width: 14),
@@ -135,7 +132,7 @@ class FacultyAdviserPage extends StatelessWidget {
                 const Text('Class Adviser', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700)),
                 const SizedBox(height: 2),
                 Text('$deptName  •  Year $year  •  Section $section',
-                  style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 12)),
+                  style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 12)),
               ])),
             ]),
             const SizedBox(height: 14),
@@ -150,7 +147,7 @@ class FacultyAdviserPage extends StatelessWidget {
         : Row(children: [
             Container(
               padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), borderRadius: BorderRadius.circular(14)),
+              decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(14)),
               child: const Icon(Icons.shield_rounded, color: Colors.white, size: 28),
             ),
             const SizedBox(width: 20),
@@ -158,7 +155,7 @@ class FacultyAdviserPage extends StatelessWidget {
               const Text('Class Adviser Dashboard', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w700, letterSpacing: -0.3)),
               const SizedBox(height: 6),
               Text('$deptName  •  Year $year  •  Section $section',
-                style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 14)),
+                style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 14)),
             ])),
             Row(children: [
               _headerPill('$count Students'),
@@ -173,7 +170,7 @@ class FacultyAdviserPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.12),
+        color: Colors.white.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(text, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500)),
@@ -209,7 +206,7 @@ class FacultyAdviserPage extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Container(
           padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: s.color.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(color: s.color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
           child: Icon(s.icon, color: s.color, size: 18),
         ),
         const SizedBox(height: 10),
@@ -250,11 +247,11 @@ class FacultyAdviserPage extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.background,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColors.border.withOpacity(0.4)),
+                border: Border.all(color: AppColors.border.withValues(alpha: 0.4)),
               ),
               child: Row(children: [
                 CircleAvatar(
-                  radius: 18, backgroundColor: accent.withOpacity(0.1),
+                  radius: 18, backgroundColor: accent.withValues(alpha: 0.1),
                   child: Text(initials, style: TextStyle(color: accent, fontSize: 12, fontWeight: FontWeight.w700)),
                 ),
                 const SizedBox(width: 12),
@@ -271,7 +268,7 @@ class FacultyAdviserPage extends StatelessWidget {
                 ],
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(color: const Color(0xFF3B82F6).withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: const Color(0xFF3B82F6).withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
                   child: Text('CGPA: $cgpa', style: const TextStyle(color: Color(0xFF3B82F6), fontSize: 11, fontWeight: FontWeight.w600)),
                 ),
               ]),
@@ -297,7 +294,7 @@ class FacultyAdviserPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 24),
             child: Center(child: Column(children: [
-              Icon(Icons.check_circle_rounded, size: 36, color: const Color(0xFF10B981).withOpacity(0.4)),
+              Icon(Icons.check_circle_rounded, size: 36, color: const Color(0xFF10B981).withValues(alpha: 0.4)),
               const SizedBox(height: 8),
               const Text('No complaints', style: TextStyle(color: AppColors.textLight, fontSize: 13)),
             ])),
@@ -310,9 +307,9 @@ class FacultyAdviserPage extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 8),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.03),
+                color: color.withValues(alpha: 0.03),
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: color.withOpacity(0.1)),
+                border: Border.all(color: color.withValues(alpha: 0.1)),
               ),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(children: [
@@ -321,7 +318,7 @@ class FacultyAdviserPage extends StatelessWidget {
                     maxLines: 1, overflow: TextOverflow.ellipsis)),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                    decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(6)),
+                    decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(6)),
                     child: Text(status.replaceAll('_', ' ').toUpperCase(),
                       style: TextStyle(color: color, fontSize: 9, fontWeight: FontWeight.w600)),
                   ),

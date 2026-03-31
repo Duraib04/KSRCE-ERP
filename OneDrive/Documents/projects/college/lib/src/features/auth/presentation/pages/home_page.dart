@@ -197,7 +197,7 @@ class _LoginCard extends StatelessWidget {
           border: Border.all(color: AppColors.border),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: Colors.black.withValues(alpha: 0.06),
               blurRadius: 20,
               offset: const Offset(0, 12),
             ),
@@ -362,7 +362,7 @@ class _BrandMark extends StatelessWidget {
         borderRadius: BorderRadius.circular(size / 2),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.2),
+            color: AppColors.primary.withValues(alpha: 0.2),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -423,7 +423,7 @@ class _WavePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFF2C5282).withOpacity(0.06)
+      ..color = const Color(0xFF2C5282).withValues(alpha: 0.06)
       ..style = PaintingStyle.fill;
 
     final path = Path()

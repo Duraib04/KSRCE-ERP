@@ -61,7 +61,7 @@ class _HodMentorsPageState extends State<HodMentorsPage> {
                     decoration: AppCardStyles.elevated,
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Row(children: [
-                        CircleAvatar(radius: 22, backgroundColor: Colors.teal.withOpacity(0.15), child: const Icon(Icons.person, color: Colors.teal, size: 22)),
+                        CircleAvatar(radius: 22, backgroundColor: Colors.teal.withValues(alpha: 0.15), child: const Icon(Icons.person, color: Colors.teal, size: 22)),
                         const SizedBox(width: 12),
                         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Text(m['mentorName'] as String? ?? '', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: AppColors.textDark)),
@@ -73,7 +73,7 @@ class _HodMentorsPageState extends State<HodMentorsPage> {
                         const Text('Mentees:', style: TextStyle(color: AppColors.textMedium, fontSize: 13, fontWeight: FontWeight.w600)),
                         const SizedBox(height: 8),
                         Wrap(spacing: 8, runSpacing: 8, children: mentees.map((s) => Chip(
-                          avatar: CircleAvatar(radius: 12, backgroundColor: AppColors.primary.withOpacity(0.15), child: Text((s?['name'] as String? ?? '?')[0], style: const TextStyle(fontSize: 10, color: AppColors.primary))),
+                          avatar: CircleAvatar(radius: 12, backgroundColor: AppColors.primary.withValues(alpha: 0.15), child: Text((s?['name'] as String? ?? '?')[0], style: const TextStyle(fontSize: 10, color: AppColors.primary))),
                           label: Text(s?['name'] as String? ?? '', style: const TextStyle(fontSize: 12, color: AppColors.textDark)),
                           backgroundColor: AppColors.background,
                           side: const BorderSide(color: AppColors.border),
@@ -110,7 +110,7 @@ class _HodMentorsPageState extends State<HodMentorsPage> {
               const Text('Select Faculty:', style: TextStyle(color: AppColors.textMedium, fontSize: 13)),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
-                value: selectedFacultyId, isExpanded: true,
+                initialValue: selectedFacultyId, isExpanded: true,
                 decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)), contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
                 items: facList.map((f) => DropdownMenuItem(value: f['facultyId'] as String, child: Text(f['name'] as String? ?? '', style: const TextStyle(fontSize: 13)))).toList(),
                 onChanged: (v) => setDialogState(() => selectedFacultyId = v),
@@ -119,7 +119,7 @@ class _HodMentorsPageState extends State<HodMentorsPage> {
               const Text('Select Class:', style: TextStyle(color: AppColors.textMedium, fontSize: 13)),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
-                value: selectedClassId, isExpanded: true,
+                initialValue: selectedClassId, isExpanded: true,
                 decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)), contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
                 items: classList.map((c) => DropdownMenuItem(value: c['classId'] as String, child: Text('Year ${c['year']} - Section ${c['section']}', style: const TextStyle(fontSize: 13)))).toList(),
                 onChanged: (v) => setDialogState(() { selectedClassId = v; selectedStudentIds.clear(); }),

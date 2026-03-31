@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_web_libraries_in_flutter
+// ignore_for_file: avoid_web_libraries_in_flutter, deprecated_member_use
 import 'dart:convert';
 import 'dart:html' as html;
 import 'dart:typed_data';
@@ -7,6 +7,7 @@ import '../../../../core/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:excel/excel.dart' as excel_lib;
 import '../../../../core/data_service.dart';
+import '../../../../core/delete_confirmation.dart';
 import '../../../../core/security_service.dart';
 
 class AdminUserManagementPage extends StatefulWidget {
@@ -485,7 +486,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
     final userName = _allUsers[index]['name'] as String? ?? '';
     final userId = _allUsers[index]['userId'] as String? ?? '';
     final confirmC = TextEditingController();
-    final expectedText = '${userName.toLowerCase()} i assure to remove';
+    final expectedText = buildDeleteConfirmationText(userName);
     bool isValid = false;
 
     showDialog(context: context, builder: (ctx) => StatefulBuilder(builder: (ctx2, setS) {
@@ -519,7 +520,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
               enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: isValid ? Colors.green : AppColors.border)),
               focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: isValid ? Colors.green : AppColors.primary, width: 2)),
             ),
-            onChanged: (v) => setS(() => isValid = v.trim().toLowerCase() == expectedText),
+            onChanged: (v) => setS(() => isValid = isDeleteConfirmationValid(entityName: userName, userInput: v)),
           ),
         ]),
         actions: [
@@ -528,14 +529,12 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
             style: ElevatedButton.styleFrom(backgroundColor: isValid ? Colors.red : Colors.grey, foregroundColor: Colors.white),
             onPressed: isValid ? () {
               final ds = Provider.of<DataService>(context, listen: false);
-              ds.users.removeWhere((u) => u['id'] == userId);
-              ds.students.removeWhere((s) => s['studentId'] == userId);
-              ds.faculty.removeWhere((f) => f['facultyId'] == userId);
-              ds.notifyListeners();
+              final deleted = ds.deleteUserById(userId);
               _loadUsers();
               Navigator.pop(ctx);
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text('$userName removed permanently'), backgroundColor: Colors.red,
+                content: Text(deleted ? '$userName removed permanently' : 'Unable to remove user'),
+                backgroundColor: deleted ? Colors.red : Colors.orange,
                 behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))));
             } : null,
             child: const Text('Remove Permanently'),

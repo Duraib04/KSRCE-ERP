@@ -38,18 +38,18 @@ class HodFacultyPage extends StatelessWidget {
                 return Container(
                   margin: const EdgeInsets.only(bottom: 12),
                   padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: isHOD ? AppColors.accent.withOpacity(0.5) : AppColors.border)),
+                  decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: isHOD ? AppColors.accent.withValues(alpha: 0.5) : AppColors.border)),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Row(children: [
-                      CircleAvatar(radius: 22, backgroundColor: isHOD ? AppColors.accent.withOpacity(0.2) : AppColors.primary.withOpacity(0.15),
+                      CircleAvatar(radius: 22, backgroundColor: isHOD ? AppColors.accent.withValues(alpha: 0.2) : AppColors.primary.withValues(alpha: 0.15),
                         child: Text((f['name'] as String? ?? '?').split(' ').where((w) => w.isNotEmpty).map((w) => w[0]).take(2).join().toUpperCase(),
                           style: TextStyle(color: isHOD ? AppColors.accent : AppColors.primary, fontSize: 13, fontWeight: FontWeight.bold))),
                       const SizedBox(width: 12),
                       Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         Row(children: [
                           Text(f['name'] as String? ?? '', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: AppColors.textDark)),
-                          if (isHOD) ...[const SizedBox(width: 8), Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: AppColors.accent.withOpacity(0.15), borderRadius: BorderRadius.circular(4)), child: const Text('HOD', style: TextStyle(color: AppColors.accent, fontSize: 10, fontWeight: FontWeight.bold)))],
-                          if (isAdviser) ...[const SizedBox(width: 8), Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: Colors.teal.withOpacity(0.15), borderRadius: BorderRadius.circular(4)), child: const Text('Adviser', style: TextStyle(color: Colors.teal, fontSize: 10, fontWeight: FontWeight.bold)))],
+                          if (isHOD) ...[const SizedBox(width: 8), Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: AppColors.accent.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(4)), child: const Text('HOD', style: TextStyle(color: AppColors.accent, fontSize: 10, fontWeight: FontWeight.bold)))],
+                          if (isAdviser) ...[const SizedBox(width: 8), Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: Colors.teal.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(4)), child: const Text('Adviser', style: TextStyle(color: Colors.teal, fontSize: 10, fontWeight: FontWeight.bold)))],
                         ]),
                         const SizedBox(height: 4),
                         Text('${f['designation'] ?? ''} | ${f['qualification'] ?? ''}', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
@@ -76,7 +76,7 @@ class HodFacultyPage extends StatelessWidget {
   Widget _infoBadge(IconData icon, String text, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(6)),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(6)),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         Icon(icon, size: 14, color: color),
         const SizedBox(width: 4),

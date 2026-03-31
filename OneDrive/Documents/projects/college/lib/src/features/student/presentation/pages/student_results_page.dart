@@ -46,8 +46,8 @@ class StudentResultsPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.accent.withOpacity(0.15), borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.accent.withOpacity(0.4)),
+        color: AppColors.accent.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.accent.withValues(alpha: 0.4)),
       ),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         const Icon(Icons.emoji_events, color: AppColors.accent, size: 32),
@@ -86,7 +86,7 @@ class StudentResultsPage extends StatelessWidget {
             Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${r['gradePoint'] ?? 0}', style: const TextStyle(color: AppColors.textMedium, fontSize: 12))),
             Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(color: statusColor.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
+              decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(4)),
               child: Text(status, style: TextStyle(color: statusColor, fontSize: 11, fontWeight: FontWeight.bold)),
             )),
           ]);

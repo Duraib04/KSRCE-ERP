@@ -22,7 +22,6 @@ class FacultyDashboardPage extends StatelessWidget {
       final dateStr = DateFormat('d MMM yyyy').format(now);
       final todayTimetable = ds.getTimetableForDay(dayName);
       final notifications = ds.notifications;
-      final students = ds.students;
 
       // Mentor & Adviser data
       final mentees = ds.getMentees(facultyId);
@@ -93,7 +92,7 @@ class FacultyDashboardPage extends StatelessWidget {
       child: Stack(
         children: [
           Positioned(right: -15, top: -15, child: Container(width: 80, height: 80, decoration: BoxDecoration(
-            shape: BoxShape.circle, color: Colors.white.withOpacity(0.03),
+            shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.03),
           ))),
           isMobile
             ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -102,14 +101,14 @@ class FacultyDashboardPage extends StatelessWidget {
                     padding: const EdgeInsets.all(3),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white.withOpacity(0.15), width: 2),
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.15), width: 2),
                     ),
                     child: CircleAvatar(radius: 22, backgroundColor: const Color(0xFF10B981),
                       child: Text(initials, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700))),
                   ),
                   const SizedBox(width: 14),
                   Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text('$greeting,', style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.7))),
+                    Text('$greeting,', style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.7))),
                     Text(name, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700, letterSpacing: -0.3)),
                   ])),
                 ]),
@@ -117,7 +116,7 @@ class FacultyDashboardPage extends StatelessWidget {
                 Row(children: [
                   _pill('Faculty'),
                   const Spacer(),
-                  Text('$dayName, $dateStr', style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 11)),
+                  Text('$dayName, $dateStr', style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 11)),
                 ]),
               ])
             : Row(children: [
@@ -125,14 +124,14 @@ class FacultyDashboardPage extends StatelessWidget {
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white.withOpacity(0.12), width: 2),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.12), width: 2),
                   ),
                   child: CircleAvatar(radius: 30, backgroundColor: const Color(0xFF10B981),
                     child: Text(initials, style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w700))),
                 ),
                 const SizedBox(width: 22),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('$greeting,', style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.7))),
+                  Text('$greeting,', style: TextStyle(fontSize: 14, color: Colors.white.withValues(alpha: 0.7))),
                   const SizedBox(height: 2),
                   Text(name, style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.w700, letterSpacing: -0.5)),
                   const SizedBox(height: 8),
@@ -141,7 +140,7 @@ class FacultyDashboardPage extends StatelessWidget {
                 Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.08), borderRadius: BorderRadius.circular(20)),
+                    decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(20)),
                     child: const Text('2025-26', style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w500)),
                   ),
                   const SizedBox(height: 8),
@@ -156,11 +155,11 @@ class FacultyDashboardPage extends StatelessWidget {
   Widget _pill(String text) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
     decoration: BoxDecoration(
-      color: Colors.white.withOpacity(0.08),
+      color: Colors.white.withValues(alpha: 0.08),
       borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: Colors.white.withOpacity(0.06)),
+      border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
     ),
-    child: Text(text, style: TextStyle(color: Colors.white.withOpacity(0.65), fontSize: 11, fontWeight: FontWeight.w500)),
+    child: Text(text, style: TextStyle(color: Colors.white.withValues(alpha: 0.65), fontSize: 11, fontWeight: FontWeight.w500)),
   );
 
   Widget _buildStats(bool isMobile, List<Map<String, dynamic>> courses, List<Map<String, dynamic>> todaySchedule, List<Map<String, dynamic>> mentees, List<Map<String, dynamic>> notifs, BuildContext context) {
@@ -191,7 +190,7 @@ class FacultyDashboardPage extends StatelessWidget {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Container(
             padding: const EdgeInsets.all(9),
-            decoration: BoxDecoration(color: s.color.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(color: s.color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
             child: Icon(s.icon, color: s.color, size: 20),
           ),
           const SizedBox(height: 12),
@@ -227,14 +226,14 @@ class FacultyDashboardPage extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFF10B981).withOpacity(0.15)),
-          boxShadow: [BoxShadow(color: const Color(0xFF10B981).withOpacity(0.06), blurRadius: 12, offset: const Offset(0, 4))],
+          border: Border.all(color: const Color(0xFF10B981).withValues(alpha: 0.15)),
+          boxShadow: [BoxShadow(color: const Color(0xFF10B981).withValues(alpha: 0.06), blurRadius: 12, offset: const Offset(0, 4))],
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: const Color(0xFF10B981).withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(color: const Color(0xFF10B981).withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
               child: const Icon(Icons.group_rounded, color: Color(0xFF10B981), size: 18),
             ),
             const SizedBox(width: 10),
@@ -242,7 +241,7 @@ class FacultyDashboardPage extends StatelessWidget {
             const Spacer(),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(color: const Color(0xFF10B981).withOpacity(0.08), borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(color: const Color(0xFF10B981).withValues(alpha: 0.08), borderRadius: BorderRadius.circular(12)),
               child: Text('${mentees.length}', style: const TextStyle(color: Color(0xFF10B981), fontSize: 12, fontWeight: FontWeight.w700)),
             ),
           ]),
@@ -253,7 +252,7 @@ class FacultyDashboardPage extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.only(bottom: 6),
               child: Row(children: [
-                CircleAvatar(radius: 13, backgroundColor: const Color(0xFF10B981).withOpacity(0.1),
+                CircleAvatar(radius: 13, backgroundColor: const Color(0xFF10B981).withValues(alpha: 0.1),
                   child: Text(init, style: const TextStyle(color: Color(0xFF10B981), fontSize: 9, fontWeight: FontWeight.w700))),
                 const SizedBox(width: 8),
                 Expanded(child: Text(name, style: const TextStyle(fontSize: 12, color: AppColors.textDark, fontWeight: FontWeight.w500), overflow: TextOverflow.ellipsis)),
@@ -263,7 +262,7 @@ class FacultyDashboardPage extends StatelessWidget {
           }),
           if (mentees.length > 3) ...[
             const SizedBox(height: 4),
-            Text('+ ${mentees.length - 3} more...', style: TextStyle(color: const Color(0xFF10B981).withOpacity(0.7), fontSize: 11, fontWeight: FontWeight.w500)),
+            Text('+ ${mentees.length - 3} more...', style: TextStyle(color: const Color(0xFF10B981).withValues(alpha: 0.7), fontSize: 11, fontWeight: FontWeight.w500)),
           ],
           const SizedBox(height: 8),
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
@@ -290,14 +289,14 @@ class FacultyDashboardPage extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFF7C3AED).withOpacity(0.15)),
-          boxShadow: [BoxShadow(color: const Color(0xFF7C3AED).withOpacity(0.06), blurRadius: 12, offset: const Offset(0, 4))],
+          border: Border.all(color: const Color(0xFF7C3AED).withValues(alpha: 0.15)),
+          boxShadow: [BoxShadow(color: const Color(0xFF7C3AED).withValues(alpha: 0.06), blurRadius: 12, offset: const Offset(0, 4))],
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: const Color(0xFF7C3AED).withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(color: const Color(0xFF7C3AED).withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
               child: const Icon(Icons.shield_rounded, color: Color(0xFF7C3AED), size: 18),
             ),
             const SizedBox(width: 10),
@@ -305,7 +304,7 @@ class FacultyDashboardPage extends StatelessWidget {
             const Spacer(),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(color: const Color(0xFF7C3AED).withOpacity(0.08), borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(color: const Color(0xFF7C3AED).withValues(alpha: 0.08), borderRadius: BorderRadius.circular(12)),
               child: const Text('Active', style: TextStyle(color: Color(0xFF7C3AED), fontSize: 11, fontWeight: FontWeight.w600)),
             ),
           ]),
@@ -348,7 +347,7 @@ class FacultyDashboardPage extends StatelessWidget {
           icon: Icons.calendar_today_rounded,
           trailing: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.06), borderRadius: BorderRadius.circular(16)),
+            decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.06), borderRadius: BorderRadius.circular(16)),
             child: Text(dayName, style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.w600)),
           ),
         ),
@@ -356,7 +355,7 @@ class FacultyDashboardPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 32),
             child: Center(child: Column(children: [
-              Icon(Icons.event_available_rounded, size: 40, color: AppColors.textMuted.withOpacity(0.4)),
+              Icon(Icons.event_available_rounded, size: 40, color: AppColors.textMuted.withValues(alpha: 0.4)),
               const SizedBox(height: 10),
               const Text('No classes today', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
             ])),
@@ -365,10 +364,8 @@ class FacultyDashboardPage extends StatelessWidget {
           ...schedule.asMap().entries.map((entry) {
             final i = entry.key;
             final s = entry.value;
-            final isLab = (s['type'] as String? ?? '') == 'Lab';
             final colors = [const Color(0xFF3B82F6), const Color(0xFF10B981), const Color(0xFF8B5CF6), const Color(0xFFF97316), const Color(0xFFF43F5E)];
             final c = colors[i % colors.length];
-            final timeStr = '${s['startTime'] ?? ''} – ${s['endTime'] ?? ''}';
             final course = s['courseName'] as String? ?? '';
             final code = s['courseCode'] as String? ?? '';
             final room = s['room'] as String? ?? '';
@@ -381,10 +378,10 @@ class FacultyDashboardPage extends StatelessWidget {
                 child: Row(children: [
                   SizedBox(width: isMobile ? 70 : 80, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(s['startTime'] as String? ?? '', style: TextStyle(color: c, fontSize: 13, fontWeight: FontWeight.w600)),
-                    Text(s['endTime'] as String? ?? '', style: TextStyle(color: c.withOpacity(0.7), fontSize: 11)),
+                    Text(s['endTime'] as String? ?? '', style: TextStyle(color: c.withValues(alpha: 0.7), fontSize: 11)),
                   ])),
                   const SizedBox(width: 8),
-                  Container(width: 1.5, height: 36, decoration: BoxDecoration(color: c.withOpacity(0.15), borderRadius: BorderRadius.circular(1))),
+                  Container(width: 1.5, height: 36, decoration: BoxDecoration(color: c.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(1))),
                   const SizedBox(width: 14),
                   Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(course, style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w600, fontSize: 14)),
@@ -393,7 +390,7 @@ class FacultyDashboardPage extends StatelessWidget {
                   ])),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(color: c.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+                    decoration: BoxDecoration(color: c.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
                     child: Text(type, style: TextStyle(color: c, fontSize: 11, fontWeight: FontWeight.w600)),
                   ),
                 ]),
@@ -412,7 +409,7 @@ class FacultyDashboardPage extends StatelessWidget {
         const SectionHeader(title: 'My Courses', icon: Icons.menu_book_rounded),
         if (courses.isEmpty)
           Padding(padding: const EdgeInsets.symmetric(vertical: 24), child: Center(child: Column(children: [
-            Icon(Icons.book_outlined, size: 36, color: AppColors.textMuted.withOpacity(0.3)),
+            Icon(Icons.book_outlined, size: 36, color: AppColors.textMuted.withValues(alpha: 0.3)),
             const SizedBox(height: 8),
             const Text('No courses assigned', style: TextStyle(color: AppColors.textLight, fontSize: 13)),
           ])))
@@ -433,14 +430,14 @@ class FacultyDashboardPage extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.03),
+                    color: color.withValues(alpha: 0.03),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: color.withOpacity(0.1)),
+                    border: Border.all(color: color.withValues(alpha: 0.1)),
                   ),
                   child: Row(children: [
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                      decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+                      decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
                       child: Text(code, style: TextStyle(color: color, fontWeight: FontWeight.w700, fontSize: 11)),
                     ),
                     const SizedBox(width: 12),
@@ -478,7 +475,7 @@ class FacultyDashboardPage extends StatelessWidget {
         const SectionHeader(title: 'Recent Notifications', icon: Icons.notifications_rounded),
         if (recent.isEmpty)
           Padding(padding: const EdgeInsets.symmetric(vertical: 20), child: Center(child: Column(children: [
-            Icon(Icons.notifications_off_rounded, size: 36, color: AppColors.textMuted.withOpacity(0.3)),
+            Icon(Icons.notifications_off_rounded, size: 36, color: AppColors.textMuted.withValues(alpha: 0.3)),
             const SizedBox(height: 8),
             const Text('No notifications', style: TextStyle(color: AppColors.textLight, fontSize: 13)),
           ])))
@@ -491,13 +488,13 @@ class FacultyDashboardPage extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 8),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.surfaceVariant.withOpacity(0.3),
+                color: AppColors.surfaceVariant.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Container(
                   padding: const EdgeInsets.all(7),
-                  decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
                   child: Icon(icon, color: color, size: 16),
                 ),
                 const SizedBox(width: 12),

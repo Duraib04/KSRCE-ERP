@@ -1,11 +1,10 @@
-// ignore_for_file: avoid_web_libraries_in_flutter
+// ignore_for_file: avoid_web_libraries_in_flutter, deprecated_member_use
 import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/services/file_upload_service.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../widgets/file_upload_widget.dart';
 
 /// File Manager page — upload, view, and manage files stored as Cloudinary links.
 class FileManagerPage extends StatefulWidget {
@@ -130,9 +129,9 @@ class _FileManagerPageState extends State<FileManagerPage> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.05),
+        color: AppColors.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primary.withOpacity(0.3)),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,7 +323,7 @@ class _FileManagerPageState extends State<FileManagerPage> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.12),
+            color: AppColors.primary.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Text('$totalCount',
@@ -339,7 +338,7 @@ class _FileManagerPageState extends State<FileManagerPage> {
           label: const Text('My Files'),
           selected: _showMyFilesOnly,
           onSelected: (v) => setState(() => _showMyFilesOnly = v),
-          selectedColor: AppColors.primary.withOpacity(0.15),
+          selectedColor: AppColors.primary.withValues(alpha: 0.15),
           checkmarkColor: AppColors.primary,
           labelStyle: TextStyle(
             color: _showMyFilesOnly ? AppColors.primary : AppColors.textMedium,
@@ -400,7 +399,7 @@ class _FileManagerPageState extends State<FileManagerPage> {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: _getCategoryColor(category).withOpacity(0.12),
+              color: _getCategoryColor(category).withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(10),
             ),
             child: isImage && url.isNotEmpty
@@ -483,7 +482,7 @@ class _FileManagerPageState extends State<FileManagerPage> {
               if (canDelete)
                 IconButton(
                   icon: const Icon(Icons.delete_outline, size: 18),
-                  color: Colors.red.withOpacity(0.7),
+                  color: Colors.red.withValues(alpha: 0.7),
                   tooltip: 'Delete',
                   onPressed: () {
                     ds.deleteUploadedFile(file['fileId'] as String? ?? '');
@@ -514,7 +513,7 @@ class _FileManagerPageState extends State<FileManagerPage> {
       child: Column(
         children: [
           Icon(Icons.cloud_off, size: 64,
-              color: AppColors.textLight.withOpacity(0.5)),
+              color: AppColors.textLight.withValues(alpha: 0.5)),
           const SizedBox(height: 16),
           const Text('No files uploaded yet',
               style: TextStyle(
@@ -533,7 +532,7 @@ class _FileManagerPageState extends State<FileManagerPage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(text,
@@ -591,7 +590,7 @@ class _UploadCategoryCardState extends State<_UploadCategoryCard> {
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
         decoration: BoxDecoration(
           color: _isUploading
-              ? AppColors.primary.withOpacity(0.08)
+              ? AppColors.primary.withValues(alpha: 0.08)
               : AppColors.background,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: AppColors.border),

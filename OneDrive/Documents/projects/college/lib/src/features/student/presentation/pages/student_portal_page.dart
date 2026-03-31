@@ -195,14 +195,14 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
           onTap: () => context.go('/student/dashboard'),
           borderRadius: BorderRadius.circular(4),
           child: Row(mainAxisSize: MainAxisSize.min, children: [
-            Icon(Icons.home_rounded, size: 16, color: AppColors.primary.withOpacity(0.7)),
+            Icon(Icons.home_rounded, size: 16, color: AppColors.primary.withValues(alpha: 0.7)),
             const SizedBox(width: 4),
-            Text('Home', style: TextStyle(color: AppColors.primary.withOpacity(0.7), fontSize: 13, fontWeight: FontWeight.w500)),
+            Text('Home', style: TextStyle(color: AppColors.primary.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w500)),
           ]),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.textMuted.withOpacity(0.5)),
+          child: Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.textMuted.withValues(alpha: 0.5)),
         ),
         Row(mainAxisSize: MainAxisSize.min, children: [
           const Icon(Icons.apps_rounded, size: 16, color: AppColors.primary),
@@ -238,7 +238,7 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: Colors.white.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Icon(Icons.calendar_today_rounded, color: Colors.white, size: 22),
@@ -249,15 +249,15 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
               Text("Today's Day Order: $dayName",
                 style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w700, letterSpacing: -0.3)),
               const SizedBox(height: 3),
-              Text(dateStr, style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 12, fontWeight: FontWeight.w400)),
+              Text(dateStr, style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 12, fontWeight: FontWeight.w400)),
             ]),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.12),
+              color: Colors.white.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: Colors.white.withOpacity(0.08)),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
             ),
             child: Text('Day $dayOrder', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)),
           ),
@@ -297,7 +297,7 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(Icons.campaign_rounded, color: Colors.white, size: 20),
@@ -311,14 +311,14 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
                   if (unreadCount > 0) Container(
                     padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text('$unreadCount new', style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w600)),
                   ),
                 ]),
                 const SizedBox(height: 3),
-                Text(message, style: TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 12),
+                Text(message, style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 12),
                   maxLines: 1, overflow: TextOverflow.ellipsis),
               ]),
             ),
@@ -376,7 +376,7 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
             Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.06), borderRadius: BorderRadius.circular(20)),
+                decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.06), borderRadius: BorderRadius.circular(20)),
                 child: const Text('2025–26', style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w600)),
               ),
               const SizedBox(height: 6),
@@ -397,7 +397,7 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: AppColors.primary.withOpacity(0.2), width: 2),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2), width: 2),
       ),
       child: CircleAvatar(radius: radius, backgroundColor: AppColors.primary,
         child: Text(initials, style: TextStyle(color: Colors.white, fontSize: radius * 0.75, fontWeight: FontWeight.w700))),
@@ -408,9 +408,9 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.06),
+        color: color.withValues(alpha: 0.06),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(0.1)),
+        border: Border.all(color: color.withValues(alpha: 0.1)),
       ),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         Icon(icon, size: 13, color: color),
@@ -437,7 +437,7 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
           Container(
             padding: const EdgeInsets.all(7),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.08),
+              color: AppColors.primary.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Icon(Icons.view_timeline_rounded, color: AppColors.primary, size: 18),
@@ -449,13 +449,13 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.06),
+                color: AppColors.primary.withValues(alpha: 0.06),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Text('Full Timetable', style: TextStyle(color: AppColors.primary.withOpacity(0.8), fontSize: 11, fontWeight: FontWeight.w600)),
+                Text('Full Timetable', style: TextStyle(color: AppColors.primary.withValues(alpha: 0.8), fontSize: 11, fontWeight: FontWeight.w600)),
                 const SizedBox(width: 3),
-                Icon(Icons.arrow_forward_rounded, size: 12, color: AppColors.primary.withOpacity(0.7)),
+                Icon(Icons.arrow_forward_rounded, size: 12, color: AppColors.primary.withValues(alpha: 0.7)),
               ]),
             ),
           ),
@@ -465,7 +465,7 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Center(child: Column(children: [
-              Icon(Icons.beach_access_rounded, size: 32, color: AppColors.textMuted.withOpacity(0.4)),
+              Icon(Icons.beach_access_rounded, size: 32, color: AppColors.textMuted.withValues(alpha: 0.4)),
               const SizedBox(height: 8),
               const Text('No classes today', style: TextStyle(color: AppColors.textLight, fontSize: 13)),
             ])),
@@ -487,19 +487,19 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
                   margin: EdgeInsets.only(right: i < periods.length - 1 ? 10 : 0),
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: c.withOpacity(0.04),
+                    color: c.withValues(alpha: 0.04),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: c.withOpacity(0.12)),
+                    border: Border.all(color: c.withValues(alpha: 0.12)),
                   ),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Row(children: [
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(color: c.withOpacity(0.1), borderRadius: BorderRadius.circular(6)),
+                        decoration: BoxDecoration(color: c.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(6)),
                         child: Text('${p['startTime'] ?? ''}', style: TextStyle(color: c, fontSize: 10, fontWeight: FontWeight.w700)),
                       ),
                       const Spacer(),
-                      Text(p['room'] as String? ?? '', style: TextStyle(color: c.withOpacity(0.7), fontSize: 10, fontWeight: FontWeight.w500)),
+                      Text(p['room'] as String? ?? '', style: TextStyle(color: c.withValues(alpha: 0.7), fontSize: 10, fontWeight: FontWeight.w500)),
                     ]),
                     const SizedBox(height: 8),
                     Text(p['courseCode'] as String? ?? '', style: TextStyle(color: c, fontSize: 11, fontWeight: FontWeight.w700)),
@@ -628,15 +628,15 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
                   margin: const EdgeInsets.only(bottom: 8),
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFD946EF).withOpacity(0.03),
+                    color: const Color(0xFFD946EF).withValues(alpha: 0.03),
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: const Color(0xFFD946EF).withOpacity(0.08)),
+                    border: Border.all(color: const Color(0xFFD946EF).withValues(alpha: 0.08)),
                   ),
                   child: Row(children: [
                     Container(
                       width: 42, height: 42,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFD946EF).withOpacity(0.08),
+                        color: const Color(0xFFD946EF).withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -689,9 +689,9 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.04),
+          color: color.withValues(alpha: 0.04),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: color.withOpacity(0.1)),
+          border: Border.all(color: color.withValues(alpha: 0.1)),
         ),
         child: Row(children: [
           Icon(icon, size: 18, color: color),
@@ -699,7 +699,7 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
           Expanded(child: Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textDark))),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-            decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
             child: Text(count, style: TextStyle(color: color, fontSize: 13, fontWeight: FontWeight.w700)),
           ),
         ]),
@@ -727,7 +727,7 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
         ]),
         const SizedBox(height: 14),
         Row(children: [
-          CircleAvatar(radius: 22, backgroundColor: const Color(0xFF7C3AED).withOpacity(0.12),
+          CircleAvatar(radius: 22, backgroundColor: const Color(0xFF7C3AED).withValues(alpha: 0.12),
             child: Text(mentorInit, style: const TextStyle(color: Color(0xFF7C3AED), fontWeight: FontWeight.w700, fontSize: 14))),
           const SizedBox(width: 12),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -745,9 +745,9 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFF7C3AED).withOpacity(0.04),
+                color: const Color(0xFF7C3AED).withValues(alpha: 0.04),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFF7C3AED).withOpacity(0.1)),
+                border: Border.all(color: const Color(0xFF7C3AED).withValues(alpha: 0.1)),
               ),
               child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Icon(Icons.email_rounded, size: 14, color: Color(0xFF7C3AED)),
@@ -770,14 +770,14 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
       const SizedBox(width: 10),
       Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.textDark)),
       const Spacer(),
-      Icon(Icons.help_outline_rounded, size: 16, color: AppColors.textMuted.withOpacity(0.5)),
+      Icon(Icons.help_outline_rounded, size: 16, color: AppColors.textMuted.withValues(alpha: 0.5)),
     ]);
   }
 
   Widget _sectionIcon(IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(7),
-      decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
       child: Icon(icon, size: 16, color: color),
     );
   }
@@ -786,7 +786,7 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Icon(icon, size: 28, color: AppColors.textMuted.withOpacity(0.3)),
+        Icon(icon, size: 28, color: AppColors.textMuted.withValues(alpha: 0.3)),
         const SizedBox(height: 8),
         Text(message, style: const TextStyle(color: AppColors.textLight, fontSize: 12), textAlign: TextAlign.center),
       ])),
@@ -802,9 +802,9 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
-            color: link.color.withOpacity(0.03),
+            color: link.color.withValues(alpha: 0.03),
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: link.color.withOpacity(0.06)),
+            border: Border.all(color: link.color.withValues(alpha: 0.06)),
           ),
           child: Row(children: [
             Icon(link.icon, size: 18, color: link.color),
@@ -816,11 +816,11 @@ class _StudentPortalPageState extends State<StudentPortalPage> {
                 child: Icon(
                   _pinnedRoutes.contains(link.route) ? Icons.push_pin_rounded : Icons.push_pin_outlined,
                   size: 15,
-                  color: _pinnedRoutes.contains(link.route) ? const Color(0xFF10B981) : AppColors.textMuted.withOpacity(0.4),
+                  color: _pinnedRoutes.contains(link.route) ? const Color(0xFF10B981) : AppColors.textMuted.withValues(alpha: 0.4),
                 ),
               ),
             const SizedBox(width: 6),
-            Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.textMuted.withOpacity(0.4)),
+            Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.textMuted.withValues(alpha: 0.4)),
           ]),
         ),
       ),
@@ -887,13 +887,13 @@ class _ModuleCardState extends State<_ModuleCard> {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: _hovered ? link.color.withOpacity(0.08) : link.color.withOpacity(0.03),
+            color: _hovered ? link.color.withValues(alpha: 0.08) : link.color.withValues(alpha: 0.03),
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: _hovered ? link.color.withOpacity(0.25) : link.color.withOpacity(0.08),
+              color: _hovered ? link.color.withValues(alpha: 0.25) : link.color.withValues(alpha: 0.08),
               width: _hovered ? 1.5 : 1,
             ),
-            boxShadow: _hovered ? [BoxShadow(color: link.color.withOpacity(0.08), blurRadius: 12, offset: const Offset(0, 4))] : [],
+            boxShadow: _hovered ? [BoxShadow(color: link.color.withValues(alpha: 0.08), blurRadius: 12, offset: const Offset(0, 4))] : [],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -903,7 +903,7 @@ class _ModuleCardState extends State<_ModuleCard> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: link.color.withOpacity(_hovered ? 0.15 : 0.08),
+                    color: link.color.withValues(alpha: _hovered ? 0.15 : 0.08),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(link.icon, size: 20, color: link.color),
@@ -914,7 +914,7 @@ class _ModuleCardState extends State<_ModuleCard> {
                   child: Icon(
                     widget.isPinned ? Icons.push_pin_rounded : Icons.push_pin_outlined,
                     size: 14,
-                    color: widget.isPinned ? const Color(0xFF10B981) : AppColors.textMuted.withOpacity(0.3),
+                    color: widget.isPinned ? const Color(0xFF10B981) : AppColors.textMuted.withValues(alpha: 0.3),
                   ),
                 ),
               ]),

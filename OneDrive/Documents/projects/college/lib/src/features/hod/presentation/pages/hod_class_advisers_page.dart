@@ -45,7 +45,7 @@ class _HodClassAdvisersPageState extends State<HodClassAdvisersPage> {
                   decoration: AppCardStyles.elevated,
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Row(children: [
-                      Container(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6), decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.15), borderRadius: BorderRadius.circular(8)),
+                      Container(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6), decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
                         child: Text('Year ${cls['year']} - Section ${cls['section']}', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 14))),
                       const Spacer(),
                       Text('$studentCount students', style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
@@ -86,7 +86,7 @@ class _HodClassAdvisersPageState extends State<HodClassAdvisersPage> {
             children: facultyList.map((f) {
               final isCurrentAdviser = cls['classAdviserId'] == f['facultyId'];
               return ListTile(
-                leading: CircleAvatar(radius: 18, backgroundColor: isCurrentAdviser ? AppColors.secondary.withOpacity(0.2) : AppColors.primary.withOpacity(0.1),
+                leading: CircleAvatar(radius: 18, backgroundColor: isCurrentAdviser ? AppColors.secondary.withValues(alpha: 0.2) : AppColors.primary.withValues(alpha: 0.1),
                   child: Icon(Icons.person, size: 18, color: isCurrentAdviser ? AppColors.secondary : AppColors.primary)),
                 title: Text(f['name'] as String? ?? '', style: TextStyle(color: AppColors.textDark, fontWeight: isCurrentAdviser ? FontWeight.bold : FontWeight.normal, fontSize: 14)),
                 subtitle: Text(f['designation'] as String? ?? '', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),

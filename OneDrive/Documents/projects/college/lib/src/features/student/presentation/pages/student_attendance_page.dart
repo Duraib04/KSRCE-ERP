@@ -157,7 +157,7 @@ class StudentAttendancePage extends StatelessWidget {
                     Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text('${pct.toStringAsFixed(1)}%', style: TextStyle(color: statusColor, fontWeight: FontWeight.bold, fontSize: 13))),
                     Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(color: statusColor.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
+                      decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(4)),
                       child: Text(status, style: TextStyle(color: statusColor, fontSize: 11, fontWeight: FontWeight.bold)),
                     )),
                   ]);
@@ -174,8 +174,8 @@ class StudentAttendancePage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.orange.withOpacity(0.1), borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.orange.withOpacity(0.3)),
+        color: Colors.orange.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
       ),
       child: Row(children: const [
         Icon(Icons.info_outline, color: Colors.orange, size: 20),

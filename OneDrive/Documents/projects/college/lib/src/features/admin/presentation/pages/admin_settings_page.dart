@@ -105,7 +105,7 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
           Text(title, style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w500)),
           Text(subtitle, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
         ])),
-        Switch(value: value, onChanged: onChanged, activeColor: AppColors.primary),
+        Switch(value: value, onChanged: onChanged, activeThumbColor: AppColors.primary),
       ]),
     );
   }
@@ -146,7 +146,7 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
             Text(title, style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w500)),
             Text(subtitle, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
           ])),
-          Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.3)),
+          Icon(Icons.chevron_right, color: Colors.white.withValues(alpha: 0.3)),
         ]),
       ),
     );

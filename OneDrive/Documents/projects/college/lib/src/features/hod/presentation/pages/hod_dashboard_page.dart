@@ -69,21 +69,21 @@ class HodDashboardPage extends StatelessWidget {
       ),
       child: Stack(children: [
         Positioned(right: -20, top: -20, child: Container(width: 100, height: 100, decoration: BoxDecoration(
-          shape: BoxShape.circle, color: Colors.white.withOpacity(0.03)))),
+          shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.03)))),
         Positioned(right: 40, bottom: -30, child: Container(width: 60, height: 60, decoration: BoxDecoration(
-          shape: BoxShape.circle, color: Colors.white.withOpacity(0.02)))),
+          shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.02)))),
         isMobile
           ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
                 Container(
                   padding: const EdgeInsets.all(3),
-                  decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.white.withOpacity(0.2), width: 2)),
+                  decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 2)),
                   child: CircleAvatar(radius: 22, backgroundColor: const Color(0xFF10B981),
                     child: Text(initials, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700))),
                 ),
                 const SizedBox(width: 14),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('$greeting,', style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.7))),
+                  Text('$greeting,', style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.7))),
                   const SizedBox(height: 2),
                   Text(name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white, letterSpacing: -0.3)),
                 ])),
@@ -94,13 +94,13 @@ class HodDashboardPage extends StatelessWidget {
           : Row(children: [
               Container(
                 padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.white.withOpacity(0.15), width: 2)),
+                decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.white.withValues(alpha: 0.15), width: 2)),
                 child: CircleAvatar(radius: 30, backgroundColor: const Color(0xFF10B981),
                   child: Text(initials, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700))),
               ),
               const SizedBox(width: 22),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('$greeting,', style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.7))),
+                Text('$greeting,', style: TextStyle(fontSize: 14, color: Colors.white.withValues(alpha: 0.7))),
                 const SizedBox(height: 2),
                 Text(name, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w700, color: Colors.white, letterSpacing: -0.5)),
                 const SizedBox(height: 8),
@@ -109,7 +109,7 @@ class HodDashboardPage extends StatelessWidget {
               Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                  decoration: BoxDecoration(color: Colors.white.withOpacity(0.08), borderRadius: BorderRadius.circular(20)),
+                  decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(20)),
                   child: const Text('2025-26', style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w500)),
                 ),
                 const SizedBox(height: 8),
@@ -127,10 +127,10 @@ class HodDashboardPage extends StatelessWidget {
   Widget _infoPill(String text) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
     decoration: BoxDecoration(
-      color: Colors.white.withOpacity(0.08), borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: Colors.white.withOpacity(0.06)),
+      color: Colors.white.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
     ),
-    child: Text(text, style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 11, fontWeight: FontWeight.w500)),
+    child: Text(text, style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 11, fontWeight: FontWeight.w500)),
   );
 
   Widget _buildStatsRow(bool isMobile, int facultyCount, int studentCount, int classCount, int courseCount) {
@@ -159,7 +159,7 @@ class HodDashboardPage extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Container(
           padding: const EdgeInsets.all(9),
-          decoration: BoxDecoration(color: s.color.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(color: s.color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
           child: Icon(s.icon, color: s.color, size: 20),
         ),
         const SizedBox(height: 12),
@@ -178,7 +178,7 @@ class HodDashboardPage extends StatelessWidget {
         const SectionHeader(title: 'Classes & Advisers', icon: Icons.class_rounded),
         if (deptClasses.isEmpty)
           Padding(padding: const EdgeInsets.symmetric(vertical: 24), child: Center(child: Column(children: [
-            Icon(Icons.class_rounded, size: 40, color: AppColors.textMuted.withOpacity(0.3)),
+            Icon(Icons.class_rounded, size: 40, color: AppColors.textMuted.withValues(alpha: 0.3)),
             const SizedBox(height: 10),
             const Text('No classes found', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
           ])))
@@ -196,7 +196,7 @@ class HodDashboardPage extends StatelessWidget {
               child: Row(children: [
                 Container(
                   padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+                  decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
                   child: const Icon(Icons.class_rounded, color: AppColors.primary, size: 20),
                 ),
                 const SizedBox(width: 14),
@@ -215,7 +215,7 @@ class HodDashboardPage extends StatelessWidget {
                 ])),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(color: accentColor.withOpacity(0.08), borderRadius: BorderRadius.circular(20)),
+                  decoration: BoxDecoration(color: accentColor.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(20)),
                   child: Text(isAssigned ? 'Assigned' : 'Pending', style: TextStyle(color: accentColor, fontSize: 11, fontWeight: FontWeight.w600)),
                 ),
               ]),
@@ -233,7 +233,7 @@ class HodDashboardPage extends StatelessWidget {
         const SectionHeader(title: 'Mentor Assignments', icon: Icons.supervisor_account_rounded),
         if (mentorAssigns.isEmpty)
           Padding(padding: const EdgeInsets.symmetric(vertical: 24), child: Center(child: Column(children: [
-            Icon(Icons.supervisor_account_rounded, size: 40, color: AppColors.textMuted.withOpacity(0.3)),
+            Icon(Icons.supervisor_account_rounded, size: 40, color: AppColors.textMuted.withValues(alpha: 0.3)),
             const SizedBox(height: 10),
             const Text('No mentor assignments yet', style: TextStyle(color: AppColors.textLight, fontSize: 14)),
           ])))
@@ -249,15 +249,15 @@ class HodDashboardPage extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 8),
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: c.withOpacity(0.03),
+                color: c.withValues(alpha: 0.03),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: c.withOpacity(0.08)),
+                border: Border.all(color: c.withValues(alpha: 0.08)),
               ),
               child: Row(children: [
                 Container(
                   width: 38, height: 38,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [c.withOpacity(0.15), c.withOpacity(0.05)]),
+                    gradient: LinearGradient(colors: [c.withValues(alpha: 0.15), c.withValues(alpha: 0.05)]),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   alignment: Alignment.center,
@@ -279,7 +279,7 @@ class HodDashboardPage extends StatelessWidget {
                 ])),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(color: c.withOpacity(0.08), borderRadius: BorderRadius.circular(16)),
+                  decoration: BoxDecoration(color: c.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(16)),
                   child: Text('$menteeCount', style: TextStyle(color: c, fontSize: 12, fontWeight: FontWeight.w700)),
                 ),
               ]),

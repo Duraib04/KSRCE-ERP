@@ -84,11 +84,11 @@ class StudentEventsPage extends StatelessWidget {
             return Container(
               margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(10), border: Border.all(color: color.withOpacity(0.2))),
+              decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(10), border: Border.all(color: color.withValues(alpha: 0.2))),
               child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Container(
                   padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
                   child: Icon(_typeIcon(type), color: color, size: 24),
                 ),
                 const SizedBox(width: 14),
@@ -97,7 +97,7 @@ class StudentEventsPage extends StatelessWidget {
                     Expanded(child: Text(e['name'] ?? '', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 15))),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
+                      decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
                       child: Text(type, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold)),
                     ),
                   ]),
@@ -116,7 +116,7 @@ class StudentEventsPage extends StatelessWidget {
                     ElevatedButton(
                       onPressed: isReg ? null : () => ds.registerForEvent(uid, e['eventId'] ?? ''),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: isReg ? Colors.grey : color.withOpacity(0.2),
+                        backgroundColor: isReg ? Colors.grey : color.withValues(alpha: 0.2),
                         foregroundColor: isReg ? Colors.white : color,
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
@@ -160,7 +160,7 @@ class StudentEventsPage extends StatelessWidget {
               ])),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                decoration: BoxDecoration(color: Colors.green.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
+                decoration: BoxDecoration(color: Colors.green.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
                 child: const Text('Confirmed', style: TextStyle(color: Colors.green, fontSize: 11, fontWeight: FontWeight.bold)),
               ),
             ]),

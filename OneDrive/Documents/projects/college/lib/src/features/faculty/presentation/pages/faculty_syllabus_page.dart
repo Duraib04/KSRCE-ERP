@@ -1,11 +1,8 @@
-// ignore_for_file: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_card_styles.dart';
-import '../../../../core/services/file_upload_service.dart';
 import '../../../shared/widgets/file_upload_widget.dart';
 
 class FacultySyllabusPage extends StatefulWidget {
@@ -92,7 +89,7 @@ class _FacultySyllabusPageState extends State<FacultySyllabusPage> {
                     Expanded(child: Text('$cid - ${course['courseName'] ?? syl['courseName'] ?? ''}', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 16))),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
+                      decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
                       child: Text('${progress.toStringAsFixed(0)}%', style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.bold)),
                     ),
                   ]),

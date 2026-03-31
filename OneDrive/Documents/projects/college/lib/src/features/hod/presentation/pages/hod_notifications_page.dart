@@ -27,7 +27,7 @@ class HodNotificationsPage extends StatelessWidget {
                     margin: const EdgeInsets.only(bottom: 8), padding: const EdgeInsets.all(14),
                     decoration: AppCardStyles.raised,
                     child: ListTile(
-                      leading: CircleAvatar(backgroundColor: AppColors.primary.withOpacity(0.1), child: const Icon(Icons.notifications, color: AppColors.primary, size: 18)),
+                      leading: CircleAvatar(backgroundColor: AppColors.primary.withValues(alpha: 0.1), child: const Icon(Icons.notifications, color: AppColors.primary, size: 18)),
                       title: Text(n['title'] as String? ?? '', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w600, fontSize: 14)),
                       subtitle: Text(n['message'] as String? ?? '', style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
                     ),

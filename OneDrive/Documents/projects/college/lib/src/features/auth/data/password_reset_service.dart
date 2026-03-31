@@ -14,7 +14,6 @@ class ResetStepResult {
 
 class PasswordResetService {
   static const String _userDbKey = 'secure_user_db_v2';
-  static const String _resetAttemptsKey = 'password_reset_attempts';
 
   static Future<void> seedUserDatabase() async {
     final prefs = await SharedPreferences.getInstance();

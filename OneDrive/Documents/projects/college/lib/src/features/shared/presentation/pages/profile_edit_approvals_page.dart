@@ -51,7 +51,7 @@ class _ProfileEditApprovalsPageState extends State<ProfileEditApprovalsPage> {
                 ])),
                 if (pending.isNotEmpty) Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                  decoration: BoxDecoration(color: AppColors.accent.withOpacity(0.15), borderRadius: BorderRadius.circular(20)),
+                  decoration: BoxDecoration(color: AppColors.accent.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(20)),
                   child: Text('$pendingLen Pending', style: const TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold, fontSize: 14)),
                 ),
               ]),
@@ -67,7 +67,7 @@ class _ProfileEditApprovalsPageState extends State<ProfileEditApprovalsPage> {
                   width: double.infinity, padding: const EdgeInsets.all(40),
                   decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
                   child: Column(children: [
-                    Icon(Icons.check_circle_outline, size: 64, color: AppColors.secondary.withOpacity(0.5)),
+                    Icon(Icons.check_circle_outline, size: 64, color: AppColors.secondary.withValues(alpha: 0.5)),
                     const SizedBox(height: 16),
                     const Text('No pending requests', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
                     const SizedBox(height: 4),
@@ -102,8 +102,8 @@ class _ProfileEditApprovalsPageState extends State<ProfileEditApprovalsPage> {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16), padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.accent.withOpacity(0.4)),
-        boxShadow: [BoxShadow(color: AppColors.accent.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, 2))]),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.accent.withValues(alpha: 0.4)),
+        boxShadow: [BoxShadow(color: AppColors.accent.withValues(alpha: 0.05), blurRadius: 8, offset: const Offset(0, 2))]),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
           CircleAvatar(radius: 20, backgroundColor: roleColor,
@@ -133,20 +133,20 @@ class _ProfileEditApprovalsPageState extends State<ProfileEditApprovalsPage> {
                   Text(e.key, style: const TextStyle(color: AppColors.textMedium, fontSize: 13, fontWeight: FontWeight.w500)),
                   const SizedBox(height: 4),
                   Row(children: [
-                    Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3), decoration: BoxDecoration(color: Colors.red.withOpacity(0.08), borderRadius: BorderRadius.circular(4)),
+                    Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3), decoration: BoxDecoration(color: Colors.red.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(4)),
                       child: Text(oldVal, style: const TextStyle(color: Colors.red, fontSize: 12, decoration: TextDecoration.lineThrough))),
                     const Padding(padding: EdgeInsets.symmetric(horizontal: 6), child: Icon(Icons.arrow_forward, size: 14, color: AppColors.textLight)),
-                    Flexible(child: Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3), decoration: BoxDecoration(color: AppColors.secondary.withOpacity(0.08), borderRadius: BorderRadius.circular(4)),
+                    Flexible(child: Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3), decoration: BoxDecoration(color: AppColors.secondary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(4)),
                       child: Text(newVal, style: const TextStyle(color: AppColors.secondary, fontSize: 12, fontWeight: FontWeight.w600)))),
                   ]),
                 ])
               : Row(children: [
                   SizedBox(width: 120, child: Text(e.key, style: const TextStyle(color: AppColors.textMedium, fontSize: 13, fontWeight: FontWeight.w500))),
                   Expanded(child: Row(children: [
-                    Flexible(child: Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3), decoration: BoxDecoration(color: Colors.red.withOpacity(0.08), borderRadius: BorderRadius.circular(4)),
+                    Flexible(child: Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3), decoration: BoxDecoration(color: Colors.red.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(4)),
                       child: Text(oldVal, style: const TextStyle(color: Colors.red, fontSize: 12, decoration: TextDecoration.lineThrough)))),
                     const Padding(padding: EdgeInsets.symmetric(horizontal: 8), child: Icon(Icons.arrow_forward, size: 14, color: AppColors.textLight)),
-                    Flexible(child: Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3), decoration: BoxDecoration(color: AppColors.secondary.withOpacity(0.08), borderRadius: BorderRadius.circular(4)),
+                    Flexible(child: Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3), decoration: BoxDecoration(color: AppColors.secondary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(4)),
                       child: Text(newVal, style: const TextStyle(color: AppColors.secondary, fontSize: 12, fontWeight: FontWeight.w600)))),
                   ])),
                 ]));
@@ -169,7 +169,7 @@ class _ProfileEditApprovalsPageState extends State<ProfileEditApprovalsPage> {
             final stepName = step['approverName']?.toString() ?? '';
             return Chip(avatar: const Icon(Icons.check, size: 14, color: AppColors.secondary),
               label: Text('$stepRole: $stepName', style: const TextStyle(color: AppColors.secondary, fontSize: 11)),
-              backgroundColor: AppColors.secondary.withOpacity(0.08), side: BorderSide.none, padding: EdgeInsets.zero, visualDensity: VisualDensity.compact);
+              backgroundColor: AppColors.secondary.withValues(alpha: 0.08), side: BorderSide.none, padding: EdgeInsets.zero, visualDensity: VisualDensity.compact);
           }).toList()),
         ],
         const SizedBox(height: 16),
@@ -245,7 +245,7 @@ class _ProfileEditApprovalsPageState extends State<ProfileEditApprovalsPage> {
     final statusLabel = status == 'approved' ? 'Approved' : 'Rejected';
     return Container(
       margin: const EdgeInsets.only(bottom: 10), padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: color.withOpacity(0.04), borderRadius: BorderRadius.circular(10), border: Border.all(color: color.withOpacity(0.2))),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.04), borderRadius: BorderRadius.circular(10), border: Border.all(color: color.withValues(alpha: 0.2))),
       child: Row(children: [
         Icon(status == 'approved' ? Icons.check_circle : Icons.cancel, color: color, size: 22),
         const SizedBox(width: 12),
@@ -271,14 +271,14 @@ class _ProfileEditApprovalsPageState extends State<ProfileEditApprovalsPage> {
       Icon(icon, color: color, size: 20), const SizedBox(width: 8),
       Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color)),
       const SizedBox(width: 8),
-      Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), decoration: BoxDecoration(color: color.withOpacity(0.12), borderRadius: BorderRadius.circular(10)),
+      Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
         child: Text(countStr, style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12))),
     ]);
   }
 
   Widget _tag(String text, Color color) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-    decoration: BoxDecoration(color: color.withOpacity(0.12), borderRadius: BorderRadius.circular(4)),
+    decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(4)),
     child: Text(text, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold)));
 
   String _roleDescription(String role) {

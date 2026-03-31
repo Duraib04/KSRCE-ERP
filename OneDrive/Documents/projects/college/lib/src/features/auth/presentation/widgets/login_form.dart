@@ -136,7 +136,7 @@ class _LoginFormState extends State<LoginForm> {
     final isDisabled = _isSubmitting || isLocked;
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.secondary.withOpacity(0.3),
+      backgroundColor: theme.colorScheme.secondary.withValues(alpha: 0.3),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -193,7 +193,7 @@ class _LoginFormState extends State<LoginForm> {
             widget.subtitle,
             textAlign: TextAlign.center,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onPrimary.withOpacity(0.8),
+              color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
             ),
           ),
         ],
@@ -301,7 +301,7 @@ class _LoginFormState extends State<LoginForm> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceVariant.withOpacity(0.5),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -364,9 +364,9 @@ class _Alert extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [

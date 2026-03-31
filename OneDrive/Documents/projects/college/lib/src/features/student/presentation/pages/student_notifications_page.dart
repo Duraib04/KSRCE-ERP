@@ -89,12 +89,12 @@ class StudentNotificationsPage extends StatelessWidget {
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: AppColors.surface, borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: isRead ? AppColors.border : color.withOpacity(0.3)),
+                            border: Border.all(color: isRead ? AppColors.border : color.withValues(alpha: 0.3)),
                           ),
                           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                             Container(
                               padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(8)),
+                              decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
                               child: Icon(icon, color: color, size: 22),
                             ),
                             const SizedBox(width: 14),
@@ -104,7 +104,7 @@ class StudentNotificationsPage extends StatelessWidget {
                                 Expanded(child: Text(n['title'] as String? ?? '', style: TextStyle(color: AppColors.textDark, fontWeight: isRead ? FontWeight.normal : FontWeight.bold, fontSize: 14))),
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                  decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(4)),
+                                  decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
                                   child: Text(type, style: TextStyle(color: color, fontSize: 11)),
                                 ),
                               ]),

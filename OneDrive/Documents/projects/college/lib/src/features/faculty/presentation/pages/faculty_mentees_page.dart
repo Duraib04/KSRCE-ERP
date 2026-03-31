@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_card_styles.dart';
@@ -79,7 +78,7 @@ class FacultyMenteesPage extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.15),
+            color: Colors.white.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(14),
           ),
           child: const Icon(Icons.group_rounded, color: Colors.white, size: 28),
@@ -92,12 +91,12 @@ class FacultyMenteesPage extends StatelessWidget {
           )),
           const SizedBox(height: 4),
           Text('$count student${count != 1 ? 's' : ''} assigned to you as mentor',
-            style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 13)),
+            style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 13)),
         ])),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.15),
+            color: Colors.white.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Text('$count', style: const TextStyle(
@@ -137,7 +136,7 @@ class FacultyMenteesPage extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Container(
           padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: s.color.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(color: s.color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
           child: Icon(s.icon, color: s.color, size: 18),
         ),
         const SizedBox(height: 10),
@@ -152,7 +151,7 @@ class FacultyMenteesPage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 60),
       decoration: AppCardStyles.elevated,
       child: Center(child: Column(children: [
-        Icon(Icons.person_off_rounded, size: 56, color: AppColors.textMuted.withOpacity(0.3)),
+        Icon(Icons.person_off_rounded, size: 56, color: AppColors.textMuted.withValues(alpha: 0.3)),
         const SizedBox(height: 14),
         const Text('No mentees assigned yet', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textMedium)),
         const SizedBox(height: 6),
@@ -199,7 +198,7 @@ class FacultyMenteesPage extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.surface,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppColors.border.withOpacity(0.6)),
+              border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
             ),
             child: Theme(
               data: ThemeData(dividerColor: Colors.transparent),
@@ -207,7 +206,7 @@ class FacultyMenteesPage extends StatelessWidget {
                 tilePadding: EdgeInsets.symmetric(horizontal: isMobile ? 14 : 18, vertical: 4),
                 childrenPadding: EdgeInsets.fromLTRB(isMobile ? 14 : 18, 0, isMobile ? 14 : 18, 14),
                 leading: CircleAvatar(
-                  radius: 20, backgroundColor: accent.withOpacity(0.1),
+                  radius: 20, backgroundColor: accent.withValues(alpha: 0.1),
                   child: Text(initials, style: TextStyle(color: accent, fontSize: 14, fontWeight: FontWeight.w700)),
                 ),
                 title: Text(name, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textDark)),
@@ -261,7 +260,7 @@ class FacultyMenteesPage extends StatelessWidget {
   Widget _badge(String text, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
       child: Text(text, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.w600)),
     );
   }

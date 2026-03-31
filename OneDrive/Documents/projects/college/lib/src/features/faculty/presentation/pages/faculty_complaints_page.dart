@@ -82,7 +82,7 @@ class FacultyComplaintsPage extends StatelessWidget {
                 Expanded(child: Text(c['subject'] ?? c['category'] ?? 'Complaint', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold, fontSize: 14))),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
+                  decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(4)),
                   child: Text(status.toString().toUpperCase(), style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold)),
                 ),
               ]),

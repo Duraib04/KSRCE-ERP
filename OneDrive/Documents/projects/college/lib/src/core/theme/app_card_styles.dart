@@ -9,13 +9,13 @@ class AppCardStyles {
   // ── SHADOWS ──────────────────────────────────────────
   static List<BoxShadow> get subtleShadow => [
     BoxShadow(
-      color: const Color(0xFF1F2937).withOpacity(0.04),
+      color: const Color(0xFF1F2937).withValues(alpha: 0.04),
       offset: const Offset(0, 1),
       blurRadius: 3,
       spreadRadius: 0,
     ),
     BoxShadow(
-      color: const Color(0xFF1F2937).withOpacity(0.06),
+      color: const Color(0xFF1F2937).withValues(alpha: 0.06),
       offset: const Offset(0, 1),
       blurRadius: 2,
       spreadRadius: 0,
@@ -24,13 +24,13 @@ class AppCardStyles {
 
   static List<BoxShadow> get mediumShadow => [
     BoxShadow(
-      color: const Color(0xFF1F2937).withOpacity(0.05),
+      color: const Color(0xFF1F2937).withValues(alpha: 0.05),
       offset: const Offset(0, 4),
       blurRadius: 6,
       spreadRadius: -1,
     ),
     BoxShadow(
-      color: const Color(0xFF1F2937).withOpacity(0.06),
+      color: const Color(0xFF1F2937).withValues(alpha: 0.06),
       offset: const Offset(0, 2),
       blurRadius: 4,
       spreadRadius: -2,
@@ -39,13 +39,13 @@ class AppCardStyles {
 
   static List<BoxShadow> get elevatedShadow => [
     BoxShadow(
-      color: const Color(0xFF1F2937).withOpacity(0.06),
+      color: const Color(0xFF1F2937).withValues(alpha: 0.06),
       offset: const Offset(0, 10),
       blurRadius: 15,
       spreadRadius: -3,
     ),
     BoxShadow(
-      color: const Color(0xFF1F2937).withOpacity(0.05),
+      color: const Color(0xFF1F2937).withValues(alpha: 0.05),
       offset: const Offset(0, 4),
       blurRadius: 6,
       spreadRadius: -4,
@@ -54,13 +54,13 @@ class AppCardStyles {
 
   static List<BoxShadow> coloredShadow(Color color) => [
     BoxShadow(
-      color: color.withOpacity(0.2),
+      color: color.withValues(alpha: 0.2),
       offset: const Offset(0, 4),
       blurRadius: 12,
       spreadRadius: -2,
     ),
     BoxShadow(
-      color: color.withOpacity(0.08),
+      color: color.withValues(alpha: 0.08),
       offset: const Offset(0, 2),
       blurRadius: 4,
       spreadRadius: -1,
@@ -99,12 +99,12 @@ class AppCardStyles {
 
   /// Glass card — frosted glass effect
   static BoxDecoration glass({Color? tint}) => BoxDecoration(
-    color: (tint ?? Colors.white).withOpacity(0.75),
+    color: (tint ?? Colors.white).withValues(alpha: 0.75),
     borderRadius: BorderRadius.circular(16),
-    border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+    border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 1),
     boxShadow: [
       BoxShadow(
-        color: Colors.black.withOpacity(0.04),
+        color: Colors.black.withValues(alpha: 0.04),
         blurRadius: 16,
         offset: const Offset(0, 4),
       ),
@@ -150,9 +150,9 @@ class AppCardStyles {
 
   /// Soft tinted card  
   static BoxDecoration tinted(Color color) => BoxDecoration(
-    color: color.withOpacity(0.05),
+    color: color.withValues(alpha: 0.05),
     borderRadius: BorderRadius.circular(14),
-    border: Border.all(color: color.withOpacity(0.12), width: 1),
+    border: Border.all(color: color.withValues(alpha: 0.12), width: 1),
   );
 
   /// Interactive / hoverable card
@@ -161,7 +161,7 @@ class AppCardStyles {
     borderRadius: BorderRadius.circular(14),
     boxShadow: isHovered ? mediumShadow : subtleShadow,
     border: Border.all(
-      color: isHovered ? AppColors.primary.withOpacity(0.2) : const Color(0xFFF1F3F5),
+      color: isHovered ? AppColors.primary.withValues(alpha: 0.2) : const Color(0xFFF1F3F5),
       width: isHovered ? 1.5 : 1,
     ),
   );
@@ -212,7 +212,7 @@ class ProStatCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.08),
+                    color: color.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(icon, color: color, size: 22),
@@ -221,7 +221,7 @@ class ProStatCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: color.withOpacity(0.08),
+                      color: color.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -277,7 +277,7 @@ class SectionHeader extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.08),
+                color: AppColors.primary.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(icon, color: AppColors.primary, size: 18),
@@ -333,10 +333,10 @@ class _ProActionChipState extends State<ProActionChip> {
           duration: const Duration(milliseconds: 180),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            color: _hovered ? widget.color.withOpacity(0.12) : widget.color.withOpacity(0.06),
+            color: _hovered ? widget.color.withValues(alpha: 0.12) : widget.color.withValues(alpha: 0.06),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: _hovered ? widget.color.withOpacity(0.3) : widget.color.withOpacity(0.12),
+              color: _hovered ? widget.color.withValues(alpha: 0.3) : widget.color.withValues(alpha: 0.12),
             ),
           ),
           child: Row(

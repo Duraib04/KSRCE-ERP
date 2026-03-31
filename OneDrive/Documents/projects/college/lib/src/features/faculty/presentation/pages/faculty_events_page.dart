@@ -36,7 +36,7 @@ class _FacultyEventsPageState extends State<FacultyEventsPage> {
               Row(children: [
                 Container(
                   padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(12)),
+                  decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(12)),
                   child: const Icon(Icons.event_rounded, color: AppColors.primary, size: 24),
                 ),
                 const SizedBox(width: 14),
@@ -75,7 +75,7 @@ class _FacultyEventsPageState extends State<FacultyEventsPage> {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Container(
           padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
           child: Icon(icon, color: color, size: 18),
         ),
         const SizedBox(height: 10),
@@ -109,18 +109,18 @@ class _FacultyEventsPageState extends State<FacultyEventsPage> {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: AppColors.surface, borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: accent.withOpacity(0.1)),
+              border: Border.all(color: accent.withValues(alpha: 0.1)),
             ),
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(color: accent.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+                decoration: BoxDecoration(color: accent.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
                 child: Icon(Icons.event_rounded, color: accent, size: 22)),
               const SizedBox(width: 14),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(children: [
                   Expanded(child: Text(e['name'] ?? '', style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w600, fontSize: 15))),
                   Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(color: accent.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+                    decoration: BoxDecoration(color: accent.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
                     child: Text(type, style: TextStyle(color: accent, fontSize: 11, fontWeight: FontWeight.w700))),
                 ]),
                 const SizedBox(height: 6),
@@ -178,7 +178,7 @@ class _FacultyEventsPageState extends State<FacultyEventsPage> {
           title: Row(children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
               child: const Icon(Icons.event_rounded, color: AppColors.primary, size: 20),
             ),
             const SizedBox(width: 12),
@@ -192,7 +192,7 @@ class _FacultyEventsPageState extends State<FacultyEventsPage> {
               TextField(controller: descCtrl, style: const TextStyle(color: AppColors.textDark), maxLines: 3, decoration: _inputDeco('Description')),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
-                value: eventType,
+                initialValue: eventType,
                 decoration: _inputDeco('Type'),
                 dropdownColor: AppColors.surface,
                 style: const TextStyle(color: AppColors.textDark, fontSize: 14),

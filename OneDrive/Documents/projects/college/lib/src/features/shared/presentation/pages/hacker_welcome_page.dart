@@ -106,7 +106,7 @@ class _HackerWelcomePageState extends State<HackerWelcomePage>
                 child: Text(
                   drop.char,
                   style: TextStyle(
-                    color: Colors.green.withOpacity(drop.opacity * 0.4),
+                    color: Colors.green.withValues(alpha: drop.opacity * 0.4),
                     fontSize: drop.size,
                     fontFamily: 'monospace',
                     fontWeight: FontWeight.bold,
@@ -162,7 +162,7 @@ class _HackerWelcomePageState extends State<HackerWelcomePage>
                             border: Border.all(color: Colors.red, width: 3),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.red.withOpacity(0.5),
+                                color: Colors.red.withValues(alpha: 0.5),
                                 blurRadius: 30,
                                 spreadRadius: 10,
                               ),
@@ -192,7 +192,7 @@ class _HackerWelcomePageState extends State<HackerWelcomePage>
                             fontFamily: 'monospace',
                             shadows: [
                               Shadow(
-                                color: Colors.red.withOpacity(0.8),
+                                color: Colors.red.withValues(alpha: 0.8),
                                 blurRadius: 20,
                               ),
                             ],
@@ -211,7 +211,7 @@ class _HackerWelcomePageState extends State<HackerWelcomePage>
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.green.withOpacity(0.3),
+                              color: Colors.green.withValues(alpha: 0.3),
                               blurRadius: 20,
                               spreadRadius: 5,
                             ),
@@ -230,7 +230,7 @@ class _HackerWelcomePageState extends State<HackerWelcomePage>
                                 fontFamily: 'monospace',
                                 shadows: [
                                   Shadow(
-                                    color: Colors.greenAccent.withOpacity(0.8),
+                                    color: Colors.greenAccent.withValues(alpha: 0.8),
                                     blurRadius: 15,
                                   ),
                                 ],
@@ -260,7 +260,7 @@ class _HackerWelcomePageState extends State<HackerWelcomePage>
                                 fontFamily: 'monospace',
                                 shadows: [
                                   Shadow(
-                                    color: Colors.yellow.withOpacity(0.5),
+                                    color: Colors.yellow.withValues(alpha: 0.5),
                                     blurRadius: 10,
                                   ),
                                 ],
@@ -303,7 +303,7 @@ class _HackerWelcomePageState extends State<HackerWelcomePage>
                               horizontal: 20, vertical: 12),
                           decoration: BoxDecoration(
                             border: Border.all(
-                                color: Colors.red.withOpacity(0.5)),
+                                color: Colors.red.withValues(alpha: 0.5)),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
@@ -348,7 +348,7 @@ class _HackerWelcomePageState extends State<HackerWelcomePage>
                                 borderRadius: BorderRadius.circular(30),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.green.withOpacity(0.4),
+                                    color: Colors.green.withValues(alpha: 0.4),
                                     blurRadius: 15,
                                     spreadRadius: 2,
                                   ),
@@ -432,7 +432,7 @@ class _ScanlinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.green.withOpacity(0.03)
+      ..color = Colors.green.withValues(alpha: 0.03)
       ..style = PaintingStyle.fill;
 
     for (double y = 0; y < size.height; y += 4) {
@@ -445,7 +445,7 @@ class _ScanlinePainter extends CustomPainter {
     // Moving scanline
     final scanY = (animValue * size.height * 2) % size.height;
     final scanPaint = Paint()
-      ..color = Colors.green.withOpacity(0.08)
+      ..color = Colors.green.withValues(alpha: 0.08)
       ..style = PaintingStyle.fill;
     canvas.drawRect(
       Rect.fromLTWH(0, scanY, size.width, 3),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
+import '../../../../core/delete_confirmation.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class AdminDepartmentsPage extends StatefulWidget {
@@ -142,7 +143,7 @@ class _AdminDepartmentsPageState extends State<AdminDepartmentsPage> {
 
   void _confirmDeleteDepartment(BuildContext context, DataService ds, String deptId, String deptName) {
     final confirmC = TextEditingController();
-    final expectedText = '${deptName.toLowerCase()} i assure to remove';
+    final expectedText = buildDeleteConfirmationText(deptName);
     bool isValid = false;
 
     showDialog(context: context, builder: (ctx) => StatefulBuilder(builder: (ctx2, setS) {
@@ -164,7 +165,7 @@ class _AdminDepartmentsPageState extends State<AdminDepartmentsPage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(color: Colors.red.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.red.withValues(alpha: 0.3))),
-            child: Text('${deptName.toLowerCase()} i assure to remove', style: const TextStyle(fontFamily: 'monospace', fontSize: 13, fontWeight: FontWeight.bold, color: Colors.red)),
+            child: Text(expectedText, style: const TextStyle(fontFamily: 'monospace', fontSize: 13, fontWeight: FontWeight.bold, color: Colors.red)),
           ),
           const SizedBox(height: 16),
           TextField(
@@ -176,7 +177,7 @@ class _AdminDepartmentsPageState extends State<AdminDepartmentsPage> {
               enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: isValid ? Colors.green : AppColors.border)),
               focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: isValid ? Colors.green : AppColors.primary, width: 2)),
             ),
-            onChanged: (v) => setS(() => isValid = v.trim().toLowerCase() == expectedText),
+            onChanged: (v) => setS(() => isValid = isDeleteConfirmationValid(entityName: deptName, userInput: v)),
           ),
         ]),
         actions: [

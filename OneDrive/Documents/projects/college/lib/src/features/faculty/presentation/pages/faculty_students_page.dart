@@ -74,7 +74,7 @@ class FacultyStudentsPage extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(8)),
           child: Row(children: [
-            CircleAvatar(backgroundColor: AppColors.primary.withOpacity(0.15), radius: 18,
+            CircleAvatar(backgroundColor: AppColors.primary.withValues(alpha: 0.15), radius: 18,
               child: Text((s['name'] ?? '?')[0], style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold))),
             const SizedBox(width: 12),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

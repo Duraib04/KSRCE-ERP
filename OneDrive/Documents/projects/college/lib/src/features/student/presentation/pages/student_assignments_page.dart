@@ -1,11 +1,8 @@
-// ignore_for_file: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_card_styles.dart';
-import '../../../../core/services/file_upload_service.dart';
 import '../../../shared/widgets/file_upload_widget.dart';
 
 class StudentAssignmentsPage extends StatefulWidget {
@@ -145,7 +142,7 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> with Si
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: AppColors.surface, borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: status == 'pending' ? Colors.orange.withOpacity(0.3) : AppColors.border),
+          border: Border.all(color: status == 'pending' ? Colors.orange.withValues(alpha: 0.3) : AppColors.border),
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
@@ -158,7 +155,7 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> with Si
             ],
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(color: statusColor.withOpacity(0.15), borderRadius: BorderRadius.circular(20)),
+              decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(20)),
               child: Text(statusLabel, style: TextStyle(color: statusColor, fontSize: 12, fontWeight: FontWeight.bold)),
             ),
           ]),
@@ -227,7 +224,7 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> with Si
               const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(color: AppColors.secondary.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: AppColors.secondary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
                 child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   const Icon(Icons.comment, color: AppColors.secondary, size: 18),
                   const SizedBox(width: 8),
@@ -295,7 +292,7 @@ class _StudentAssignmentsPageState extends State<StudentAssignmentsPage> with Si
   Widget _detailChip(IconData icon, String text, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         Icon(icon, size: 14, color: color), const SizedBox(width: 4),
         Text(text, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500)),

@@ -71,7 +71,7 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> with Sing
                 Row(children: [
                   Container(
                     padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(12)),
+                    decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(12)),
                     child: const Icon(Icons.fact_check_rounded, color: AppColors.primary, size: 24),
                   ),
                   const SizedBox(width: 14),
@@ -83,7 +83,7 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> with Sing
                 // Tabs
                 Container(
                   decoration: BoxDecoration(
-                    color: AppColors.surfaceVariant.withOpacity(0.5),
+                    color: AppColors.surfaceVariant.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TabBar(
@@ -124,7 +124,7 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> with Sing
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
         color: AppColors.surface, borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border.withOpacity(0.6)),
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
       ),
       child: DropdownButton<String>(
         value: _selectedCourse, isExpanded: true, dropdownColor: AppColors.surface,
@@ -228,15 +228,15 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> with Sing
                   margin: const EdgeInsets.only(bottom: 8),
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   decoration: BoxDecoration(
-                    color: isPresent ? const Color(0xFF10B981).withOpacity(0.04) : const Color(0xFFF43F5E).withOpacity(0.04),
+                    color: isPresent ? const Color(0xFF10B981).withValues(alpha: 0.04) : const Color(0xFFF43F5E).withValues(alpha: 0.04),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: isPresent ? const Color(0xFF10B981).withOpacity(0.15) : const Color(0xFFF43F5E).withOpacity(0.15)),
+                    border: Border.all(color: isPresent ? const Color(0xFF10B981).withValues(alpha: 0.15) : const Color(0xFFF43F5E).withValues(alpha: 0.15)),
                   ),
                   child: Row(children: [
                     // Index
                     SizedBox(width: 28, child: Text('${i + 1}', style: const TextStyle(color: AppColors.textMuted, fontSize: 12, fontWeight: FontWeight.w600))),
                     // Avatar
-                    CircleAvatar(radius: 16, backgroundColor: isPresent ? const Color(0xFF10B981).withOpacity(0.12) : const Color(0xFFF43F5E).withOpacity(0.12),
+                    CircleAvatar(radius: 16, backgroundColor: isPresent ? const Color(0xFF10B981).withValues(alpha: 0.12) : const Color(0xFFF43F5E).withValues(alpha: 0.12),
                       child: Text(initials, style: TextStyle(color: isPresent ? const Color(0xFF10B981) : const Color(0xFFF43F5E), fontSize: 11, fontWeight: FontWeight.w700))),
                     const SizedBox(width: 12),
                     // Name + reg no
@@ -256,7 +256,7 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> with Sing
                         decoration: BoxDecoration(
                           color: isPresent ? const Color(0xFF10B981) : const Color(0xFFF43F5E),
                           borderRadius: BorderRadius.circular(20),
-                          boxShadow: [BoxShadow(color: (isPresent ? const Color(0xFF10B981) : const Color(0xFFF43F5E)).withOpacity(0.2), blurRadius: 6, offset: const Offset(0, 2))],
+                          boxShadow: [BoxShadow(color: (isPresent ? const Color(0xFF10B981) : const Color(0xFFF43F5E)).withValues(alpha: 0.2), blurRadius: 6, offset: const Offset(0, 2))],
                         ),
                         child: Row(mainAxisSize: MainAxisSize.min, children: [
                           Icon(isPresent ? Icons.check_rounded : Icons.close_rounded, color: Colors.white, size: 14),
@@ -358,7 +358,7 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> with Sing
   Widget _countBadge(String label, int count, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         Container(width: 7, height: 7, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
         const SizedBox(width: 6),
@@ -451,7 +451,7 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> with Sing
               // Header
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                decoration: BoxDecoration(color: AppColors.surfaceVariant.withOpacity(0.5), borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: AppColors.surfaceVariant.withValues(alpha: 0.5), borderRadius: BorderRadius.circular(8)),
                 child: Row(children: [
                   SizedBox(width: isMobile ? 60 : 90, child: const Text('ID', style: TextStyle(color: AppColors.textMedium, fontSize: 11, fontWeight: FontWeight.w600))),
                   const Expanded(child: Text('Name', style: TextStyle(color: AppColors.textMedium, fontSize: 11, fontWeight: FontWeight.w600))),
@@ -475,9 +475,9 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> with Sing
                 margin: const EdgeInsets.only(bottom: 6),
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                 decoration: BoxDecoration(
-                  color: pct < 75 ? const Color(0xFFF43F5E).withOpacity(0.03) : AppColors.surface,
+                  color: pct < 75 ? const Color(0xFFF43F5E).withValues(alpha: 0.03) : AppColors.surface,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: pct < 75 ? const Color(0xFFF43F5E).withOpacity(0.1) : AppColors.border.withOpacity(0.4)),
+                  border: Border.all(color: pct < 75 ? const Color(0xFFF43F5E).withValues(alpha: 0.1) : AppColors.border.withValues(alpha: 0.4)),
                 ),
                 child: Row(children: [
                   SizedBox(width: isMobile ? 60 : 90, child: Text(sid, style: const TextStyle(color: AppColors.textMedium, fontSize: 12))),
@@ -488,7 +488,7 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> with Sing
                     borderRadius: BorderRadius.circular(4),
                     child: LinearProgressIndicator(
                       value: pct / 100, minHeight: 6,
-                      backgroundColor: AppColors.border.withOpacity(0.3),
+                      backgroundColor: AppColors.border.withValues(alpha: 0.3),
                       valueColor: AlwaysStoppedAnimation(color),
                     ),
                   )),
@@ -508,7 +508,7 @@ class _FacultyAttendancePageState extends State<FacultyAttendancePage> with Sing
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Container(
           padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
           child: Icon(icon, color: color, size: 18),
         ),
         const SizedBox(height: 10),

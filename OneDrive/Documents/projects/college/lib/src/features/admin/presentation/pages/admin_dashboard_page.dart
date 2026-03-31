@@ -59,35 +59,35 @@ class AdminDashboardPage extends StatelessWidget {
         ),
         boxShadow: AppCardStyles.coloredShadow(const Color(0xFF3B82F6)),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFF3B82F6).withOpacity(0.15)),
+        border: Border.all(color: const Color(0xFF3B82F6).withValues(alpha: 0.15)),
       ),
       child: Stack(
         children: [
-          Positioned(right: -20, top: -20, child: Container(width: 90, height: 90, decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0xFF3B82F6).withOpacity(0.05)))),
+          Positioned(right: -20, top: -20, child: Container(width: 90, height: 90, decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0xFF3B82F6).withValues(alpha: 0.05)))),
           Row(children: [
             Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFF1E40AF).withOpacity(0.2), width: 2),
+                border: Border.all(color: const Color(0xFF1E40AF).withValues(alpha: 0.2), width: 2),
               ),
               child: CircleAvatar(radius: isMobile ? 22 : 30, backgroundColor: const Color(0xFF1E40AF),
                 child: Icon(Icons.admin_panel_settings_rounded, size: isMobile ? 22 : 28, color: Colors.white)),
             ),
             SizedBox(width: isMobile ? 14 : 22),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('$greeting,', style: TextStyle(fontSize: isMobile ? 13 : 14, color: const Color(0xFF1E40AF).withOpacity(0.7))),
+              Text('$greeting,', style: TextStyle(fontSize: isMobile ? 13 : 14, color: const Color(0xFF1E40AF).withValues(alpha: 0.7))),
               const SizedBox(height: 2),
               Text('Administrator', style: TextStyle(fontSize: isMobile ? 20 : 26, fontWeight: FontWeight.w700, color: const Color(0xFF1E3A5F), letterSpacing: -0.3)),
               const SizedBox(height: 6),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1E40AF).withOpacity(0.08),
+                  color: const Color(0xFF1E40AF).withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: const Color(0xFF1E40AF).withOpacity(0.12)),
+                  border: Border.all(color: const Color(0xFF1E40AF).withValues(alpha: 0.12)),
                 ),
-                child: Text('System Admin  •  KSRCE', style: TextStyle(color: const Color(0xFF1E40AF).withOpacity(0.8), fontSize: 11, fontWeight: FontWeight.w500)),
+                child: Text('System Admin  •  KSRCE', style: TextStyle(color: const Color(0xFF1E40AF).withValues(alpha: 0.8), fontSize: 11, fontWeight: FontWeight.w500)),
               ),
             ])),
           ]),
@@ -125,7 +125,7 @@ class AdminDashboardPage extends StatelessWidget {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Container(
             padding: const EdgeInsets.all(9),
-            decoration: BoxDecoration(color: s.color.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(color: s.color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
             child: Icon(s.icon, color: s.color, size: 20),
           ),
           const SizedBox(height: 12),
@@ -169,7 +169,7 @@ class AdminDashboardPage extends StatelessWidget {
         const SectionHeader(title: 'Recent Activity', icon: Icons.history_rounded),
         if (recent.isEmpty)
           Padding(padding: const EdgeInsets.symmetric(vertical: 24), child: Center(child: Column(children: [
-            Icon(Icons.inbox_rounded, size: 36, color: AppColors.textMuted.withOpacity(0.3)),
+            Icon(Icons.inbox_rounded, size: 36, color: AppColors.textMuted.withValues(alpha: 0.3)),
             const SizedBox(height: 8),
             const Text('No recent activity', style: TextStyle(color: AppColors.textLight, fontSize: 13)),
           ])))
@@ -185,14 +185,14 @@ class AdminDashboardPage extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: isRead ? AppColors.surfaceVariant.withOpacity(0.3) : c.withOpacity(0.03),
+                  color: isRead ? AppColors.surfaceVariant.withValues(alpha: 0.3) : c.withValues(alpha: 0.03),
                   borderRadius: BorderRadius.circular(10),
-                  border: isRead ? null : Border.all(color: c.withOpacity(0.1)),
+                  border: isRead ? null : Border.all(color: c.withValues(alpha: 0.1)),
                 ),
                 child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Container(
                     padding: const EdgeInsets.all(7),
-                    decoration: BoxDecoration(color: c.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+                    decoration: BoxDecoration(color: c.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
                     child: Icon(isRead ? Icons.check_circle_rounded : Icons.notifications_active_rounded, color: c, size: 16),
                   ),
                   const SizedBox(width: 12),
@@ -249,9 +249,9 @@ class _QuickActionTileState extends State<_QuickActionTile> {
           duration: const Duration(milliseconds: 180),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
-            color: _hovered ? a.color.withOpacity(0.1) : a.color.withOpacity(0.04),
+            color: _hovered ? a.color.withValues(alpha: 0.1) : a.color.withValues(alpha: 0.04),
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: _hovered ? a.color.withOpacity(0.25) : a.color.withOpacity(0.08)),
+            border: Border.all(color: _hovered ? a.color.withValues(alpha: 0.25) : a.color.withValues(alpha: 0.08)),
           ),
           child: Row(children: [
             Icon(a.icon, size: 18, color: a.color),

@@ -47,7 +47,7 @@ class _FacultyAssignmentsPageState extends State<FacultyAssignmentsPage> {
               Row(children: [
                 Container(
                   padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(12)),
+                  decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(12)),
                   child: const Icon(Icons.assignment_rounded, color: AppColors.primary, size: 24),
                 ),
                 const SizedBox(width: 14),
@@ -95,7 +95,7 @@ class _FacultyAssignmentsPageState extends State<FacultyAssignmentsPage> {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Container(
           padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
           child: Icon(icon, color: color, size: 18),
         ),
         const SizedBox(height: 10),
@@ -111,7 +111,7 @@ class _FacultyAssignmentsPageState extends State<FacultyAssignmentsPage> {
         padding: const EdgeInsets.symmetric(vertical: 60),
         decoration: AppCardStyles.elevated,
         child: Center(child: Column(children: [
-          Icon(Icons.assignment_outlined, size: 48, color: AppColors.textMuted.withOpacity(0.3)),
+          Icon(Icons.assignment_outlined, size: 48, color: AppColors.textMuted.withValues(alpha: 0.3)),
           const SizedBox(height: 12),
           const Text('No assignments yet', style: TextStyle(color: AppColors.textMedium, fontSize: 15, fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
@@ -146,7 +146,7 @@ class _FacultyAssignmentsPageState extends State<FacultyAssignmentsPage> {
             decoration: BoxDecoration(
               color: AppColors.surface,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: statusColor.withOpacity(0.15)),
+              border: Border.all(color: statusColor.withValues(alpha: 0.15)),
             ),
             child: InkWell(
               borderRadius: BorderRadius.circular(12),
@@ -156,7 +156,7 @@ class _FacultyAssignmentsPageState extends State<FacultyAssignmentsPage> {
                 child: Row(children: [
                   Container(
                     padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(color: statusColor.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+                    decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
                     child: Icon(Icons.assignment_rounded, color: statusColor, size: 18),
                   ),
                   const SizedBox(width: 14),
@@ -171,7 +171,7 @@ class _FacultyAssignmentsPageState extends State<FacultyAssignmentsPage> {
                   ])),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(color: statusColor.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+                    decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
                     child: Text(status.toUpperCase(), style: TextStyle(color: statusColor, fontSize: 10, fontWeight: FontWeight.w700)),
                   ),
                   const SizedBox(width: 8),
@@ -245,9 +245,9 @@ class _FacultyAssignmentsPageState extends State<FacultyAssignmentsPage> {
               width: double.infinity,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFF10B981).withOpacity(0.04),
+                color: const Color(0xFF10B981).withValues(alpha: 0.04),
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFF10B981).withOpacity(0.15)),
+                border: Border.all(color: const Color(0xFF10B981).withValues(alpha: 0.15)),
               ),
               child: Text(a['feedback'] as String, style: const TextStyle(color: AppColors.textDark, fontSize: 13)),
             ),
@@ -314,7 +314,7 @@ class _FacultyAssignmentsPageState extends State<FacultyAssignmentsPage> {
         title: Row(children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(color: const Color(0xFF10B981).withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(color: const Color(0xFF10B981).withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
             child: const Icon(Icons.grading_rounded, color: Color(0xFF10B981), size: 20),
           ),
           const SizedBox(width: 12),
@@ -404,7 +404,7 @@ class _FacultyAssignmentsPageState extends State<FacultyAssignmentsPage> {
   Widget _chip(String text, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
       child: Text(text, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500)),
     );
   }
@@ -426,7 +426,7 @@ class _FacultyAssignmentsPageState extends State<FacultyAssignmentsPage> {
           title: Row(children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
               child: const Icon(Icons.add_rounded, color: AppColors.primary, size: 20),
             ),
             const SizedBox(width: 12),
@@ -437,7 +437,7 @@ class _FacultyAssignmentsPageState extends State<FacultyAssignmentsPage> {
             child: SingleChildScrollView(
               child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
                 DropdownButtonFormField<String>(
-                  value: selectedCourseId,
+                  initialValue: selectedCourseId,
                   decoration: _inputDeco('Course'),
                   dropdownColor: AppColors.surface,
                   style: const TextStyle(color: AppColors.textDark, fontSize: 14),

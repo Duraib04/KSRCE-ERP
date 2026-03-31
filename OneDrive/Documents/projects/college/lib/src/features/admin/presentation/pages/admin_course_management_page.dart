@@ -43,7 +43,7 @@ class _AdminCourseManagementPageState extends State<AdminCourseManagementPage> {
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
                   child: Row(children: [
-                    Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6), decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.15), borderRadius: BorderRadius.circular(6)),
+                    Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6), decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(6)),
                       child: Text(c['courseCode'] as String? ?? '', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 13))),
                     const SizedBox(width: 12),
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -80,12 +80,12 @@ class _AdminCourseManagementPageState extends State<AdminCourseManagementPage> {
           const SizedBox(height: 10),
           TextField(controller: nameC, decoration: const InputDecoration(labelText: 'Course Name', border: OutlineInputBorder())),
           const SizedBox(height: 10),
-          DropdownButtonFormField<String>(value: selectedDeptId, isExpanded: true,
+          DropdownButtonFormField<String>(initialValue: selectedDeptId, isExpanded: true,
             decoration: const InputDecoration(labelText: 'Department', border: OutlineInputBorder()),
             items: ds.departments.map((d) => DropdownMenuItem(value: d['departmentId'] as String, child: Text('${d['departmentCode']}', style: const TextStyle(fontSize: 13)))).toList(),
             onChanged: (v) => setS(() { selectedDeptId = v; selectedFacultyId = null; })),
           const SizedBox(height: 10),
-          DropdownButtonFormField<String>(value: selectedFacultyId, isExpanded: true,
+          DropdownButtonFormField<String>(initialValue: selectedFacultyId, isExpanded: true,
             decoration: const InputDecoration(labelText: 'Faculty', border: OutlineInputBorder()),
             items: filteredFaculty.map((f) => DropdownMenuItem(value: f['facultyId'] as String, child: Text(f['name'] as String? ?? '', style: const TextStyle(fontSize: 13)))).toList(),
             onChanged: (v) => setS(() => selectedFacultyId = v)),

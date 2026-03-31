@@ -93,7 +93,7 @@ class _StudentSettingsPageState extends State<StudentSettingsPage> {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(children: [
         Expanded(child: Text(label, style: const TextStyle(color: AppColors.textDark, fontSize: 14))),
-        Switch(value: value, onChanged: onChanged, activeColor: AppColors.primary),
+        Switch(value: value, onChanged: onChanged, activeThumbColor: AppColors.primary),
       ]),
     );
   }

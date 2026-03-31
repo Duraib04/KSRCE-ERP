@@ -89,10 +89,6 @@ class DataService extends ChangeNotifier {
   Map<String, dynamic> get settings => _settings;
 
   // ─── ROLE-BASED COLLECTION PRIORITY ─────────────────────────────────
-  // Core collections needed by ALL roles (loaded first)
-  static const _coreCollections = [
-    'users', 'students', 'faculty', 'departments', 'notifications', 'settings',
-  ];
   // Collections per role (loaded eagerly after core)
   static const _roleCollections = <String, List<String>>{
     'student': ['courses', 'attendance', 'assignments', 'results', 'timetable',
@@ -520,11 +516,6 @@ class DataService extends ChangeNotifier {
       }
     }
     return 'User ID not found.';
-  }
-
-  int _getFailedCount(String userId) {
-    // Expose attempt tracking for UI
-    return SecurityService.getLockedOutSeconds(userId) > 0 ? SecurityService.maxAttempts : 0;
   }
 
   /// Legacy login fallback (kept for compatibility)
@@ -1561,6 +1552,30 @@ class DataService extends ChangeNotifier {
   }
 
   // ─── USER CRUD OPERATIONS ────────────────────────────
+  bool deleteUserById(String userId) {
+    final user = _users.firstWhere(
+      (u) => u['id'] == userId,
+      orElse: () => <String, dynamic>{},
+    );
+    if (user.isEmpty) return false;
+
+    final role = (user['role'] as String? ?? '').toLowerCase();
+    if (role == 'student' || userId.startsWith('STU')) {
+      deleteStudent(userId);
+      return true;
+    }
+    if (role == 'faculty' || role == 'hod' || userId.startsWith('FAC')) {
+      deleteFaculty(userId);
+      return true;
+    }
+
+    // Admin or unknown role: remove auth user record only.
+    _users.removeWhere((u) => u['id'] == userId);
+    if (_currentUserId == userId) logout();
+    notifyListeners();
+    return true;
+  }
+
   void deleteStudent(String studentId) {
     _students.removeWhere((s) => s['studentId'] == studentId);
     _users.removeWhere((u) => u['id'] == studentId);

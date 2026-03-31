@@ -80,7 +80,7 @@ class _StudentTimetablePageState extends State<StudentTimetablePage> with Single
     if (periods.isEmpty) {
       return Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Icon(Icons.weekend, color: AppColors.textLight.withOpacity(0.5), size: 48),
+          Icon(Icons.weekend, color: AppColors.textLight.withValues(alpha: 0.5), size: 48),
           const SizedBox(height: 12),
           Text('No classes on $day', style: const TextStyle(color: AppColors.textLight, fontSize: 16)),
         ]),
@@ -104,7 +104,7 @@ class _StudentTimetablePageState extends State<StudentTimetablePage> with Single
           decoration: BoxDecoration(
             color: AppColors.surface,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: isLab ? Colors.teal.withOpacity(0.4) : AppColors.border),
+            border: Border.all(color: isLab ? Colors.teal.withValues(alpha: 0.4) : AppColors.border),
           ),
           child: isMobile
               ? Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -116,7 +116,7 @@ class _StudentTimetablePageState extends State<StudentTimetablePage> with Single
                       const SizedBox(width: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(color: barColor.withOpacity(0.15), borderRadius: BorderRadius.circular(6)),
+                        decoration: BoxDecoration(color: barColor.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(6)),
                         child: Text(type, style: TextStyle(color: barColor, fontSize: 11)),
                       ),
                     ]),

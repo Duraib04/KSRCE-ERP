@@ -78,7 +78,7 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.15),
+                      color: AppColors.primary.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Icon(Icons.description,
@@ -204,9 +204,9 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.secondary.withOpacity(0.05),
+        color: AppColors.secondary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.secondary.withOpacity(0.3)),
+        border: Border.all(color: AppColors.secondary.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -406,7 +406,7 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppColors.secondary.withOpacity(0.15),
+                  color: AppColors.secondary.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -540,7 +540,7 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
                     height: 20,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: color.withOpacity(0.15),
+                      color: color.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(e.value,
@@ -580,7 +580,7 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
       decoration: BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -590,7 +590,7 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
             height: 48,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.15),
+              color: color.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
@@ -635,9 +635,9 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.05),
+        color: AppColors.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.primary.withOpacity(0.3)),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -793,7 +793,7 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
               children: [
                 TableRow(
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.08),
+                    color: AppColors.primary.withValues(alpha: 0.08),
                     borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(8)),
                   ),
@@ -888,7 +888,7 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
                 // Header row
                 TableRow(
                   decoration: BoxDecoration(
-                      color: Colors.deepPurple.withOpacity(0.08)),
+                      color: Colors.deepPurple.withValues(alpha: 0.08)),
                   children: [
                     const _TableHeader('CO \\ PO'),
                     ...sortedPOs.map((po) => _TableHeader(po)),
@@ -921,7 +921,7 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
                                     height: 24,
                                     decoration: BoxDecoration(
                                       color: Colors.deepPurple
-                                          .withOpacity(0.15),
+                                          .withValues(alpha: 0.15),
                                       borderRadius:
                                           BorderRadius.circular(4),
                                     ),
@@ -1052,7 +1052,7 @@ class _FacultyCourseDetailsPageState extends State<FacultyCourseDetailsPage>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
+        color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(text,

@@ -113,7 +113,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(12)),
                   child: Row(children: [
-                    Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.15), shape: BoxShape.circle),
+                    Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.15), shape: BoxShape.circle),
                       child: Icon(n['read'] == true ? Icons.mark_email_read : Icons.email, color: n['read'] == true ? Colors.white38 : const Color(0xFF42A5F5), size: 20)),
                     const SizedBox(width: 12),
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_web_libraries_in_flutter
+// ignore_for_file: avoid_web_libraries_in_flutter, deprecated_member_use
 import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import '../../../core/services/file_upload_service.dart';
@@ -87,12 +87,12 @@ class _FileUploadWidgetState extends State<FileUploadWidget> {
               padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
               decoration: BoxDecoration(
                 color: _isUploading
-                    ? AppColors.primary.withOpacity(0.05)
+                    ? AppColors.primary.withValues(alpha: 0.05)
                     : AppColors.background,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: _isUploading
-                      ? AppColors.primary.withOpacity(0.3)
+                      ? AppColors.primary.withValues(alpha: 0.3)
                       : AppColors.border,
                   style: BorderStyle.solid,
                 ),
@@ -110,9 +110,9 @@ class _FileUploadWidgetState extends State<FileUploadWidget> {
               margin: const EdgeInsets.all(12),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.08),
+                color: Colors.red.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.red.withOpacity(0.3)),
+                border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [
@@ -149,7 +149,7 @@ class _FileUploadWidgetState extends State<FileUploadWidget> {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.primary.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: const Icon(Icons.cloud_upload_outlined,
@@ -224,16 +224,16 @@ class _FileUploadWidgetState extends State<FileUploadWidget> {
       margin: const EdgeInsets.all(12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.secondary.withOpacity(0.06),
+        color: AppColors.secondary.withValues(alpha: 0.06),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.secondary.withOpacity(0.3)),
+        border: Border.all(color: AppColors.secondary.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppColors.secondary.withOpacity(0.12),
+              color: AppColors.secondary.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
@@ -337,9 +337,9 @@ class FileLink extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: AppColors.primary.withOpacity(0.06),
+          color: AppColors.primary.withValues(alpha: 0.06),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+          border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,

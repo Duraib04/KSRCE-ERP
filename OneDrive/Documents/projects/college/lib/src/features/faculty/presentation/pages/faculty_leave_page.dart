@@ -112,7 +112,7 @@ class _FacultyLeavePageState extends State<FacultyLeavePage> {
               ])),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
+                decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(4)),
                 child: Text(status.toString().toUpperCase(), style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold)),
               ),
             ]),
@@ -238,7 +238,7 @@ class _FacultyLeavePageState extends State<FacultyLeavePage> {
         Row(children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(color: const Color(0xFFF97316).withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(color: const Color(0xFFF97316).withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
             child: const Icon(Icons.pending_actions_rounded, color: Color(0xFFF97316), size: 18),
           ),
           const SizedBox(width: 10),
@@ -255,7 +255,7 @@ class _FacultyLeavePageState extends State<FacultyLeavePage> {
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               color: AppColors.background, borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: const Color(0xFFF97316).withOpacity(0.12)),
+              border: Border.all(color: const Color(0xFFF97316).withValues(alpha: 0.12)),
             ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
@@ -320,7 +320,7 @@ class _FacultyLeavePageState extends State<FacultyLeavePage> {
         title: Row(children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(color: const Color(0xFFF43F5E).withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(color: const Color(0xFFF43F5E).withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
             child: const Icon(Icons.close_rounded, color: Color(0xFFF43F5E), size: 20),
           ),
           const SizedBox(width: 12),

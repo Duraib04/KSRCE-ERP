@@ -48,7 +48,7 @@ class AppTheme {
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: AppColors.surfaceVariant.withOpacity(0.5),
+      fillColor: AppColors.surfaceVariant.withValues(alpha: 0.5),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide.none,
@@ -63,7 +63,7 @@ class AppTheme {
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: AppColors.error.withOpacity(0.5)),
+        borderSide: BorderSide(color: AppColors.error.withValues(alpha: 0.5)),
       ),
       labelStyle: AppTypography.textTheme.bodySmall?.copyWith(color: AppColors.textLight),
       hintStyle: AppTypography.textTheme.bodySmall?.copyWith(color: AppColors.textMuted),
@@ -85,7 +85,7 @@ class AppTheme {
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: AppColors.primary,
-        side: BorderSide(color: AppColors.primary.withOpacity(0.3)),
+        side: BorderSide(color: AppColors.primary.withValues(alpha: 0.3)),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         textStyle: AppTypography.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
@@ -105,10 +105,10 @@ class AppTheme {
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
     ),
-    dividerTheme: DividerThemeData(color: AppColors.border.withOpacity(0.6), space: 1),
+    dividerTheme: DividerThemeData(color: AppColors.border.withValues(alpha: 0.6), space: 1),
     chipTheme: ChipThemeData(
-      backgroundColor: AppColors.surfaceVariant.withOpacity(0.6),
-      selectedColor: AppColors.primary.withOpacity(0.1),
+      backgroundColor: AppColors.surfaceVariant.withValues(alpha: 0.6),
+      selectedColor: AppColors.primary.withValues(alpha: 0.1),
       labelStyle: AppTypography.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),

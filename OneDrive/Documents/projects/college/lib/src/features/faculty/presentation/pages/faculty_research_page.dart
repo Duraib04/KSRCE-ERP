@@ -38,7 +38,7 @@ class _FacultyResearchPageState extends State<FacultyResearchPage> {
               Row(children: [
                 Container(
                   padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(12)),
+                  decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(12)),
                   child: const Icon(Icons.science_rounded, color: AppColors.primary, size: 24),
                 ),
                 const SizedBox(width: 14),
@@ -91,7 +91,7 @@ class _FacultyResearchPageState extends State<FacultyResearchPage> {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Container(
           padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
           child: Icon(icon, color: color, size: 18),
         ),
         const SizedBox(height: 10),
@@ -124,7 +124,7 @@ class _FacultyResearchPageState extends State<FacultyResearchPage> {
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               color: AppColors.surface, borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: const Color(0xFF3B82F6).withOpacity(0.1)),
+              border: Border.all(color: const Color(0xFF3B82F6).withValues(alpha: 0.1)),
             ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
@@ -152,13 +152,13 @@ class _FacultyResearchPageState extends State<FacultyResearchPage> {
               Row(children: [
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(color: const Color(0xFF8B5CF6).withOpacity(0.08), borderRadius: BorderRadius.circular(6)),
+                  decoration: BoxDecoration(color: const Color(0xFF8B5CF6).withValues(alpha: 0.08), borderRadius: BorderRadius.circular(6)),
                   child: Text('Citations: ${p['citations'] ?? 0}', style: const TextStyle(color: Color(0xFF8B5CF6), fontSize: 11, fontWeight: FontWeight.w600)),
                 ),
                 const SizedBox(width: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(6)),
+                  decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(6)),
                   child: Text(p['type'] ?? '', style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.w600)),
                 ),
               ]),
@@ -194,7 +194,7 @@ class _FacultyResearchPageState extends State<FacultyResearchPage> {
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               color: AppColors.surface, borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: color.withOpacity(0.1)),
+              border: Border.all(color: color.withValues(alpha: 0.1)),
             ),
             child: Row(children: [
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -204,7 +204,7 @@ class _FacultyResearchPageState extends State<FacultyResearchPage> {
               ])),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
                 child: Text(status.toString().toUpperCase(), style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.w700)),
               ),
               PopupMenuButton<String>(
@@ -246,12 +246,12 @@ class _FacultyResearchPageState extends State<FacultyResearchPage> {
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             color: AppColors.surface, borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: const Color(0xFFF97316).withOpacity(0.1)),
+            border: Border.all(color: const Color(0xFFF97316).withValues(alpha: 0.1)),
           ),
           child: Row(children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: const Color(0xFFF97316).withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(color: const Color(0xFFF97316).withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
               child: const Icon(Icons.school_rounded, color: Color(0xFFF97316), size: 18),
             ),
             const SizedBox(width: 12),
@@ -262,7 +262,7 @@ class _FacultyResearchPageState extends State<FacultyResearchPage> {
             ])),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(color: const Color(0xFFF97316).withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: const Color(0xFFF97316).withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
               child: Text(s['status'] ?? '', style: const TextStyle(color: Color(0xFFF97316), fontSize: 11, fontWeight: FontWeight.w600)),
             ),
           ]),
@@ -292,7 +292,7 @@ class _FacultyResearchPageState extends State<FacultyResearchPage> {
           title: Row(children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
               child: const Icon(Icons.science_rounded, color: AppColors.primary, size: 20),
             ),
             const SizedBox(width: 12),
@@ -313,7 +313,7 @@ class _FacultyResearchPageState extends State<FacultyResearchPage> {
                       duration: const Duration(milliseconds: 200),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       decoration: BoxDecoration(
-                        color: isSelected ? AppColors.primary.withOpacity(0.08) : AppColors.background,
+                        color: isSelected ? AppColors.primary.withValues(alpha: 0.08) : AppColors.background,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: isSelected ? AppColors.primary : AppColors.border, width: isSelected ? 2 : 1),
                       ),
@@ -334,7 +334,7 @@ class _FacultyResearchPageState extends State<FacultyResearchPage> {
                 TextField(controller: journalCtrl, style: const TextStyle(color: AppColors.textDark), decoration: _inputDeco('Journal / Conference')),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<String>(
-                  value: researchType,
+                  initialValue: researchType,
                   decoration: _inputDeco('Type'),
                   dropdownColor: AppColors.surface,
                   style: const TextStyle(color: AppColors.textDark, fontSize: 14),

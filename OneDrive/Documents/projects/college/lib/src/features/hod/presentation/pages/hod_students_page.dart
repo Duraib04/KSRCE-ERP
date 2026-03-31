@@ -40,7 +40,7 @@ class HodStudentsPage extends StatelessWidget {
                 return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
+                    decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
                     child: Row(children: [
                       const Icon(Icons.class_, color: AppColors.primary, size: 18),
                       const SizedBox(width: 8),
@@ -58,7 +58,7 @@ class HodStudentsPage extends StatelessWidget {
                       padding: const EdgeInsets.all(14),
                       decoration: AppCardStyles.raised,
                       child: Row(children: [
-                        CircleAvatar(radius: 18, backgroundColor: AppColors.primary.withOpacity(0.1),
+                        CircleAvatar(radius: 18, backgroundColor: AppColors.primary.withValues(alpha: 0.1),
                           child: Text((s?['name'] as String? ?? '?')[0].toUpperCase(), style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 14))),
                         const SizedBox(width: 12),
                         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
