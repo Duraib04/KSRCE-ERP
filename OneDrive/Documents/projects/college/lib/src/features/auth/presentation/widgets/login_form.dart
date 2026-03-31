@@ -5,9 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ksrce_erp/src/core/api_error_handler.dart';
 import '../../data/auth_service.dart';
 import '../../domain/models.dart';
-
-// TODO: Create dedicated Alert widget
-// TODO: Create PasswordStrength widget
+import '../../../shared/presentation/widgets/alert.dart';
 
 class LoginForm extends StatefulWidget {
   final String title;
@@ -209,20 +207,20 @@ class _LoginFormState extends State<LoginForm> {
         children: [
           // Enhanced error messaging for API failures
           if (_error != null) ...[
-            _Alert(type: _AlertType.destructive, message: _error!),
+            Alert(type: AlertType.destructive, message: _error!),
             if (_error!.contains('404') || _error!.contains('not found') || _error!.contains('backend'))
               Padding(
                 padding: const EdgeInsets.only(top: 12.0),
-                child: _Alert(
-                  type: _AlertType.info,
+                child: Alert(
+                  type: AlertType.info,
                   message: 'Tip: ${ApiErrorHandler.error404Suggestion}',
                 ),
               ),
           ],
           if (isLocked)
-            _Alert(type: _AlertType.info, message: "Account locked. Try again in $_lockDuration seconds."),
+            Alert(type: AlertType.info, message: "Account locked. Try again in $_lockDuration seconds."),
           if (_remainingAttempts != null && _remainingAttempts! > 0 && _remainingAttempts! <= 2)
-            _Alert(type: _AlertType.warning, message: "Warning: $_remainingAttempts attempt${_remainingAttempts! != 1 ? 's' : ''} remaining before lockout."),
+            Alert(type: AlertType.warning, message: "Warning: $_remainingAttempts attempt${_remainingAttempts! != 1 ? 's' : ''} remaining before lockout."),
 
           const SizedBox(height: 16),
           TextFormField(
@@ -327,52 +325,6 @@ class _LoginFormState extends State<LoginForm> {
               ],
             )).toList(),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-// Placeholder Alert Widget
-enum _AlertType { destructive, warning, info }
-
-class _Alert extends StatelessWidget {
-  final _AlertType type;
-  final String message;
-  const _Alert({required this.type, required this.message});
-
-  IconData get icon {
-    switch (type) {
-      case _AlertType.destructive: return Icons.error_outline;
-      case _AlertType.warning: return Icons.warning_amber_outlined;
-      case _AlertType.info: return Icons.info_outline;
-    }
-  }
-
-  Color getColor(BuildContext context) {
-    final theme = Theme.of(context);
-    switch (type) {
-      case _AlertType.destructive: return theme.colorScheme.error;
-      case _AlertType.warning: return Colors.orange; // Or a color from your theme
-      case _AlertType.info: return theme.colorScheme.primary;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final color = getColor(context);
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: color, size: 20),
-          const SizedBox(width: 12),
-          Expanded(child: Text(message, style: TextStyle(color: color, fontSize: 13))),
         ],
       ),
     );
