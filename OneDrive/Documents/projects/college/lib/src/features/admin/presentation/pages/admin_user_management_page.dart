@@ -17,6 +17,9 @@ class AdminUserManagementPage extends StatefulWidget {
 }
 
 class _AdminUserManagementPageState extends State<AdminUserManagementPage> with SingleTickerProviderStateMixin {
+  static const List<String> _portalRoles = ['student', 'faculty', 'hod', 'admin'];
+  static const List<String> _baseRoles = ['student', 'faculty', 'hod', 'admin'];
+
   late TabController _tabController;
   // Upload data
   List<Map<String, String>> _uploadedRows = [];
@@ -44,10 +47,13 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
   void _loadUsers() {
     final ds = Provider.of<DataService>(context, listen: false);
     _allUsers = List<Map<String, dynamic>>.from(ds.users.map((u) {
+      final perms = ds.getEffectivePermissionsForUser(userId: (u['id'] ?? '').toString());
       return {
         'userId': u['id'] ?? '',
         'password': u['password'] ?? '',
         'role': u['role'] ?? 'student',
+        'portalRole': (u['portalRole'] ?? perms['portalRole'] ?? 'admin').toString(),
+        'permissions': Map<String, dynamic>.from(u['permissions'] is Map ? u['permissions'] as Map : perms),
         'name': u['label'] ?? u['id'] ?? '',
         'status': u['status'] ?? 'active',
       };
@@ -75,6 +81,20 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
       }
     }
     setState(() {});
+  }
+
+  List<String> _roleOptions(DataService ds) {
+    final raw = ds.getSetting('rolePermissionRules', {});
+    final customRoles = <String>[];
+    if (raw is Map) {
+      for (final key in raw.keys) {
+        final role = key.toString().trim().toLowerCase();
+        if (role.isNotEmpty) customRoles.add(role);
+      }
+    }
+    final merged = {..._baseRoles, ...customRoles};
+    final out = merged.toList()..sort();
+    return out;
   }
 
   @override
@@ -359,9 +379,13 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
   void _showUserDialog(int? editIndex) {
     final isEdit = editIndex != null;
     final user = isEdit ? _allUsers[editIndex] : <String, dynamic>{};
+    final ds = Provider.of<DataService>(context, listen: false);
+    final roleOptions = _roleOptions(ds);
+
     final idCtrl = TextEditingController(text: user['userId'] ?? '');
     final nameCtrl = TextEditingController(text: user['name'] ?? '');
     final passCtrl = TextEditingController();
+    final customRoleCtrl = TextEditingController();
     final deptCtrl = TextEditingController(text: user['department'] ?? '');
     final emailCtrl = TextEditingController(text: user['email'] ?? '');
     final phoneCtrl = TextEditingController(text: user['phone'] ?? '');
@@ -369,7 +393,86 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
     final yearCtrl = TextEditingController(text: user['year'] ?? '');
     final designationCtrl = TextEditingController(text: user['designation'] ?? '');
     final qualificationCtrl = TextEditingController(text: user['qualification'] ?? '');
-    String role = user['role'] ?? 'student';
+
+    final initialRole = (user['role'] ?? 'student').toString().toLowerCase();
+    String roleSelection = roleOptions.contains(initialRole) ? initialRole : 'custom';
+    if (roleSelection == 'custom') {
+      customRoleCtrl.text = initialRole;
+    }
+
+    final initialPolicy = ds.getRolePolicy(initialRole);
+    String portalRole = (user['portalRole'] ?? initialPolicy['portalRole'] ?? 'admin').toString().toLowerCase();
+    if (!_portalRoles.contains(portalRole)) {
+      portalRole = 'admin';
+    }
+
+    final userPerms = user['permissions'] is Map<String, dynamic>
+        ? Map<String, dynamic>.from(user['permissions'] as Map<String, dynamic>)
+        : <String, dynamic>{};
+    final seededView = (userPerms['view'] as List?)?.map((e) => e.toString().toLowerCase()).toSet() ??
+        (initialPolicy['view'] as List?)?.map((e) => e.toString().toLowerCase()).toSet() ??
+        ds.availableModulesForPortal(portalRole).toSet();
+    final seededEdit = (userPerms['edit'] as List?)?.map((e) => e.toString().toLowerCase()).toSet() ??
+        (initialPolicy['edit'] as List?)?.map((e) => e.toString().toLowerCase()).toSet() ??
+        <String>{};
+
+    Set<String> viewModules = Set<String>.from(seededView);
+    Set<String> editModules = Set<String>.from(seededEdit);
+    bool updateRoleTemplate = false;
+
+    void normalizeModuleSelections() {
+      final allowed = ds.availableModulesForPortal(portalRole).toSet();
+      viewModules = viewModules.where(allowed.contains).toSet();
+      editModules = editModules.where((m) => allowed.contains(m) && viewModules.contains(m)).toSet();
+      if (viewModules.isEmpty) {
+        viewModules = allowed;
+      }
+    }
+
+    normalizeModuleSelections();
+
+    String effectiveRole() {
+      final chosen = roleSelection == 'custom' ? customRoleCtrl.text.trim().toLowerCase() : roleSelection;
+      return chosen;
+    }
+
+    Widget permissionSection(StateSetter setDState, {required String title, required Set<String> selected, required bool editable}) {
+      final modules = ds.availableModulesForPortal(portalRole);
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 10),
+          Text(title, style: const TextStyle(color: AppColors.textMedium, fontSize: 12, fontWeight: FontWeight.w600)),
+          const SizedBox(height: 6),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: modules.map((module) {
+              final isOn = selected.contains(module);
+              return FilterChip(
+                label: Text(module, style: const TextStyle(fontSize: 11)),
+                selected: isOn,
+                onSelected: (val) {
+                  setDState(() {
+                    if (val) {
+                      selected.add(module);
+                    } else {
+                      selected.remove(module);
+                      if (editable) {
+                        editModules.remove(module);
+                      }
+                    }
+                    if (!editable) {
+                      editModules = editModules.where(selected.contains).toSet();
+                    }
+                  });
+                },
+              );
+            }).toList(),
+          ),
+        ],
+      );
+    }
 
     showDialog(context: context, builder: (ctx) => StatefulBuilder(builder: (ctx, setDState) {
       return AlertDialog(
@@ -388,36 +491,107 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
             _dialogField(isEdit ? 'New Password (leave blank to keep)' : 'Password', passCtrl, obscure: true),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              initialValue: role, dropdownColor: AppColors.background,
+              initialValue: roleSelection,
+              dropdownColor: AppColors.background,
               decoration: _inputDeco('Role'),
               style: const TextStyle(color: Colors.white),
-              items: ['student', 'faculty', 'admin'].map((r) => DropdownMenuItem(value: r, child: Text(r.toUpperCase()))).toList(),
-              onChanged: isEdit ? null : (v) => setDState(() => role = v!),
+              items: [
+                ...roleOptions.map((r) => DropdownMenuItem(value: r, child: Text(r.toUpperCase()))),
+                const DropdownMenuItem(value: 'custom', child: Text('CREATE NEW ROLE')),
+              ],
+              onChanged: (v) {
+                if (v == null) return;
+                setDState(() {
+                  roleSelection = v;
+                  final nextRole = effectiveRole();
+                  if (nextRole.isNotEmpty) {
+                    final policy = ds.getRolePolicy(nextRole);
+                    portalRole = (policy['portalRole'] ?? portalRole).toString().toLowerCase();
+                    viewModules = ((policy['view'] as List?)?.map((e) => e.toString().toLowerCase()).toSet() ??
+                        ds.availableModulesForPortal(portalRole).toSet());
+                    editModules = ((policy['edit'] as List?)?.map((e) => e.toString().toLowerCase()).toSet() ?? <String>{});
+                  }
+                  normalizeModuleSelections();
+                });
+              },
+            ),
+            if (roleSelection == 'custom') _dialogField('New Role Name', customRoleCtrl),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<String>(
+              initialValue: portalRole,
+              dropdownColor: AppColors.background,
+              decoration: _inputDeco('Portal Access'),
+              style: const TextStyle(color: Colors.white),
+              items: _portalRoles.map((r) => DropdownMenuItem(value: r, child: Text(r.toUpperCase()))).toList(),
+              onChanged: (v) {
+                if (v == null) return;
+                setDState(() {
+                  portalRole = v;
+                  normalizeModuleSelections();
+                });
+              },
             ),
             const SizedBox(height: 8),
             _dialogField('Department', deptCtrl),
             _dialogField('Email', emailCtrl),
             _dialogField('Phone', phoneCtrl),
-            if (role == 'student') ...[_dialogField('Year', yearCtrl), _dialogField('Section', sectionCtrl)],
-            if (role == 'faculty') ...[_dialogField('Designation', designationCtrl), _dialogField('Qualification', qualificationCtrl)],
+            if (portalRole == 'student') ...[_dialogField('Year', yearCtrl), _dialogField('Section', sectionCtrl)],
+            if (portalRole == 'faculty' || portalRole == 'hod') ...[_dialogField('Designation', designationCtrl), _dialogField('Qualification', qualificationCtrl)],
+            permissionSection(setDState, title: 'Can View', selected: viewModules, editable: false),
+            permissionSection(setDState, title: 'Can Edit', selected: editModules, editable: true),
+            CheckboxListTile(
+              value: updateRoleTemplate,
+              onChanged: (v) => setDState(() => updateRoleTemplate = v ?? false),
+              title: const Text('Save as role template for future users', style: TextStyle(fontSize: 12, color: AppColors.textMedium)),
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
           ]))),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel', style: TextStyle(color: AppColors.textLight))),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
             onPressed: () {
+              final role = effectiveRole();
               if (idCtrl.text.isEmpty || nameCtrl.text.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('User ID and Name are required'), backgroundColor: Colors.red));
                 return;
               }
-              final ds = Provider.of<DataService>(context, listen: false);
+              if (role.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Role is required'), backgroundColor: Colors.red));
+                return;
+              }
+              if (viewModules.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Select at least one module in Can View'), backgroundColor: Colors.red));
+                return;
+              }
+
               final uid = idCtrl.text.trim();
+              final normalizedViews = viewModules.map((e) => e.toLowerCase()).toSet().toList();
+              final normalizedEdits = editModules.map((e) => e.toLowerCase()).where((e) => viewModules.contains(e)).toSet().toList();
+
+              if (updateRoleTemplate) {
+                ds.upsertRolePolicy(
+                  roleName: role,
+                  portalRole: portalRole,
+                  viewModules: normalizedViews,
+                  editModules: normalizedEdits,
+                );
+              }
+
               if (isEdit) {
                 // Update user record
                 final uIdx = ds.users.indexWhere((u) => u['id'] == _allUsers[editIndex]['userId']);
                 if (uIdx >= 0) {
                   ds.users[uIdx]['label'] = nameCtrl.text;
                   ds.users[uIdx]['role'] = role;
+                  ds.users[uIdx]['portalRole'] = portalRole;
+                  ds.users[uIdx]['permissions'] = {
+                    'portalRole': portalRole,
+                    'view': normalizedViews,
+                    'edit': normalizedEdits,
+                  };
                   // Only re-hash if password field is non-empty
                   if (passCtrl.text.isNotEmpty) {
                     ds.users[uIdx]['password'] = SecurityService.hashPassword(passCtrl.text, uid);
@@ -425,7 +599,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
                 }
                 // Sync to student record
                 final sIdx = ds.students.indexWhere((s) => s['studentId'] == uid);
-                if (sIdx >= 0) {
+                if (portalRole == 'student' && sIdx >= 0) {
                   ds.students[sIdx].addAll({
                     'name': nameCtrl.text, 'department': deptCtrl.text, 'email': emailCtrl.text,
                     'phone': phoneCtrl.text, 'year': int.tryParse(yearCtrl.text) ?? ds.students[sIdx]['year'],
@@ -434,7 +608,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
                 }
                 // Sync to faculty record
                 final fIdx = ds.faculty.indexWhere((f) => f['facultyId'] == uid);
-                if (fIdx >= 0) {
+                if ((portalRole == 'faculty' || portalRole == 'hod') && fIdx >= 0) {
                   ds.faculty[fIdx].addAll({
                     'name': nameCtrl.text, 'email': emailCtrl.text, 'phone': phoneCtrl.text,
                     'designation': designationCtrl.text, 'qualification': qualificationCtrl.text,
@@ -451,21 +625,33 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
                 final rawPwd = passCtrl.text.isNotEmpty ? passCtrl.text : 'ksrce@${uid.toLowerCase()}';
                 final hashedPwd = SecurityService.hashPassword(rawPwd, uid);
                 // Create user account
-                ds.users.add({'id': uid, 'password': hashedPwd, 'role': role, 'label': nameCtrl.text, 'status': 'active'});
+                ds.users.add({
+                  'id': uid,
+                  'password': hashedPwd,
+                  'role': role,
+                  'portalRole': portalRole,
+                  'permissions': {
+                    'portalRole': portalRole,
+                    'view': normalizedViews,
+                    'edit': normalizedEdits,
+                  },
+                  'label': nameCtrl.text,
+                  'status': 'active'
+                });
                 // Create role-specific record
-                if (role == 'student') {
+                if (portalRole == 'student') {
                   ds.students.add({
                     'studentId': uid, 'name': nameCtrl.text, 'department': deptCtrl.text,
                     'departmentId': 'DEPT_${deptCtrl.text}', 'email': emailCtrl.text, 'phone': phoneCtrl.text,
                     'year': int.tryParse(yearCtrl.text) ?? 1, 'section': sectionCtrl.text.isNotEmpty ? sectionCtrl.text : 'A',
                     'enrolledCourses': <String>[], 'mentorId': null, 'classAdviserId': null,
                   });
-                } else if (role == 'faculty') {
+                } else if (portalRole == 'faculty' || portalRole == 'hod') {
                   ds.faculty.add({
                     'facultyId': uid, 'name': nameCtrl.text, 'email': emailCtrl.text, 'phone': phoneCtrl.text,
                     'department': deptCtrl.text, 'departmentId': 'DEPT_${deptCtrl.text}',
                     'designation': designationCtrl.text, 'qualification': qualificationCtrl.text,
-                    'isHOD': false, 'isClassAdviser': false, 'adviserFor': null,
+                    'isHOD': portalRole == 'hod', 'isClassAdviser': false, 'adviserFor': null,
                     'menteeIds': <String>[], 'courseIds': <String>[],
                   });
                 }
@@ -1000,6 +1186,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
   // ===== TAB 3: Manage Users =====
   Widget _buildManageTab() {
     final filtered = _filteredUsers;
+    final roleFilterItems = ['All', ..._allUsers.map((u) => (u['role'] ?? '').toString()).where((r) => r.isNotEmpty).toSet().toList()..sort()];
     return LayoutBuilder(builder: (context, constraints) {
       final isMobile = constraints.maxWidth < 700;
       return Column(children: [
@@ -1022,7 +1209,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
               ),
             ),
             _filterDropdown('Status', _statusFilter, ['All', 'Active', 'Suspended', 'Terminated'], (v) => setState(() => _statusFilter = v!)),
-            _filterDropdown('Role', _roleFilter, ['All', 'Student', 'Faculty', 'Admin'], (v) => setState(() => _roleFilter = v!)),
+            _filterDropdown('Role', _roleFilter, roleFilterItems, (v) => setState(() => _roleFilter = v!)),
             Text('${filtered.length} users', style: const TextStyle(color: AppColors.textLight, fontSize: 13)),
             const SizedBox(width: 4),
             PopupMenuButton<String>(
@@ -1099,7 +1286,16 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
   }
 
   Widget _roleBadge(String role) {
-    final color = role == 'admin' ? AppColors.accent : role == 'faculty' ? const Color(0xFF7E57C2) : AppColors.primary;
+    final normalized = role.toLowerCase();
+    final color = normalized == 'admin'
+      ? AppColors.accent
+      : normalized == 'hod'
+        ? const Color(0xFF8D6E63)
+        : normalized == 'faculty'
+          ? const Color(0xFF7E57C2)
+          : normalized == 'student'
+            ? AppColors.primary
+            : const Color(0xFF546E7A);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),

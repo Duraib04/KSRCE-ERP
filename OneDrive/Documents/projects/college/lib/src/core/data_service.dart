@@ -109,6 +109,44 @@ class DataService extends ChangeNotifier {
       'facultyTimetable', 'courseOutcomes', 'courseDiary', 'profileEditRequests'],
   };
 
+  static const _portalModules = <String, List<String>>{
+    'student': [
+      'dashboard', 'portal', 'profile', 'courses', 'timetable', 'syllabus',
+      'attendance', 'results', 'assignments', 'exams', 'fees', 'library',
+      'notifications', 'complaints', 'leave', 'certificates', 'placements',
+      'events', 'files', 'settings'
+    ],
+    'faculty': [
+      'dashboard', 'profile', 'courses', 'timetable', 'syllabus', 'attendance',
+      'assignments', 'grades', 'students', 'mentees', 'adviser', 'exams',
+      'leave', 'course-details', 'course-diary', 'research', 'notifications',
+      'profile-approvals', 'complaints', 'reports', 'events', 'files', 'settings'
+    ],
+    'hod': [
+      'dashboard', 'profile', 'faculty', 'students', 'courses', 'my-courses',
+      'timetable', 'syllabus', 'course-details', 'course-diary', 'attendance',
+      'assignments', 'grades', 'exams', 'class-advisers', 'mentors', 'leave',
+      'research', 'notifications', 'profile-approvals', 'reports', 'events',
+      'files', 'settings'
+    ],
+    'admin': [
+      'dashboard', 'departments', 'faculty', 'students', 'courses', 'classes',
+      'hod-assignment', 'users', 'reports', 'notifications',
+      'profile-approvals', 'files', 'settings'
+    ],
+  };
+
+  static const _defaultEditableModules = <String, List<String>>{
+    'student': ['profile', 'complaints', 'leave', 'files', 'settings'],
+    'faculty': ['profile', 'attendance', 'assignments', 'grades', 'leave', 'course-diary', 'files', 'settings'],
+    'hod': ['profile', 'attendance', 'assignments', 'grades', 'leave', 'course-diary', 'files', 'settings'],
+    'admin': [
+      'dashboard', 'departments', 'faculty', 'students', 'courses', 'classes',
+      'hod-assignment', 'users', 'reports', 'notifications',
+      'profile-approvals', 'files', 'settings'
+    ],
+  };
+
   /// All collection keys (for full seed / persist)
   static const _allKeys = [
     'students', 'users', 'courses', 'attendance', 'assignments', 'results',
@@ -479,27 +517,32 @@ class DataService extends ChangeNotifier {
         if (SecurityService.verifyPassword(password, userId, storedHash)) {
           SecurityService.resetAttempts(userId);
           _currentUserId = userId;
-          final role = user['role'] as String? ?? '';
-          if (userId.startsWith('STU')) {
+          final resolvedPortalRole = _resolvePortalRoleForUser(user);
+          if (resolvedPortalRole == 'student') {
             _currentRole = 'student';
             _currentStudent = _students.firstWhere(
               (s) => s['studentId'] == userId,
               orElse: () => <String, dynamic>{},
             );
-          } else if (role == 'hod') {
+            _currentFaculty = null;
+          } else if (resolvedPortalRole == 'hod') {
             _currentRole = 'hod';
             _currentFaculty = _faculty.firstWhere(
               (f) => f['facultyId'] == userId,
               orElse: () => <String, dynamic>{},
             );
-          } else if (userId.startsWith('FAC')) {
+            _currentStudent = null;
+          } else if (resolvedPortalRole == 'faculty') {
             _currentRole = 'faculty';
             _currentFaculty = _faculty.firstWhere(
               (f) => f['facultyId'] == userId,
               orElse: () => <String, dynamic>{},
             );
-          } else if (userId.startsWith('ADM')) {
+            _currentStudent = null;
+          } else {
             _currentRole = 'admin';
+            _currentStudent = null;
+            _currentFaculty = null;
           }
           // Lazy-load role-specific collections from cloud (background)
           if (_currentRole != null) {
@@ -2585,6 +2628,165 @@ class DataService extends ChangeNotifier {
   void updateUserSettings(String userId, Map<String, dynamic> userSettings) {
     _settings[userId] = userSettings;
     notifyListeners();
+  }
+
+  // ─── DYNAMIC ROLES & PERMISSIONS ─────────────────────
+  String _normalizePortalRole(String value) {
+    const allowed = {'student', 'faculty', 'hod', 'admin'};
+    final normalized = value.trim().toLowerCase();
+    return allowed.contains(normalized) ? normalized : 'admin';
+  }
+
+  List<String> _normalizedStringList(dynamic raw) {
+    if (raw is! List) return <String>[];
+    return raw
+        .map((e) => e.toString().trim().toLowerCase())
+        .where((e) => e.isNotEmpty)
+        .toSet()
+        .toList();
+  }
+
+  Map<String, dynamic> _getRolePermissionsStore() {
+    final raw = getSetting('rolePermissionRules', {});
+    if (raw is Map) {
+      return Map<String, dynamic>.from(raw);
+    }
+    return <String, dynamic>{};
+  }
+
+  List<String> availableModulesForPortal(String portalRole) {
+    final role = _normalizePortalRole(portalRole);
+    return List<String>.from(_portalModules[role] ?? const <String>[]);
+  }
+
+  Map<String, dynamic> getRolePolicy(String roleName) {
+    final key = roleName.trim().toLowerCase();
+    final store = _getRolePermissionsStore();
+    final dynamic existing = store[key];
+    if (existing is Map) {
+      return Map<String, dynamic>.from(existing);
+    }
+
+    final defaultPortalRole = _normalizePortalRole(key);
+    return {
+      'portalRole': defaultPortalRole,
+      'view': List<String>.from(_portalModules[defaultPortalRole] ?? const <String>[]),
+      'edit': List<String>.from(_defaultEditableModules[defaultPortalRole] ?? const <String>[]),
+    };
+  }
+
+  void upsertRolePolicy({
+    required String roleName,
+    required String portalRole,
+    required List<String> viewModules,
+    required List<String> editModules,
+  }) {
+    final key = roleName.trim().toLowerCase();
+    if (key.isEmpty) return;
+
+    final normalizedPortalRole = _normalizePortalRole(portalRole);
+    final store = _getRolePermissionsStore();
+    store[key] = {
+      'portalRole': normalizedPortalRole,
+      'view': viewModules.map((e) => e.trim().toLowerCase()).where((e) => e.isNotEmpty).toSet().toList(),
+      'edit': editModules.map((e) => e.trim().toLowerCase()).where((e) => e.isNotEmpty).toSet().toList(),
+    };
+    updateSetting('rolePermissionRules', store);
+  }
+
+  String _resolvePortalRoleForUser(Map<String, dynamic> user) {
+    final explicitPortal = (user['portalRole'] as String?) ?? '';
+    if (explicitPortal.trim().isNotEmpty) {
+      return _normalizePortalRole(explicitPortal);
+    }
+
+    final role = (user['role'] as String? ?? '').toLowerCase();
+    if (role == 'student' || role == 'faculty' || role == 'hod' || role == 'admin') {
+      return role;
+    }
+
+    final rolePolicy = getRolePolicy(role);
+    final policyPortal = rolePolicy['portalRole']?.toString() ?? '';
+    if (policyPortal.isNotEmpty) {
+      return _normalizePortalRole(policyPortal);
+    }
+
+    final userId = (user['id'] as String? ?? '').toUpperCase();
+    if (userId.startsWith('STU')) return 'student';
+    if (userId.startsWith('FAC')) return 'faculty';
+    if (userId.startsWith('HOD')) return 'hod';
+    return 'admin';
+  }
+
+  Map<String, dynamic> getEffectivePermissionsForUser({String? userId}) {
+    final targetUserId = userId ?? _currentUserId;
+    if (targetUserId == null) {
+      return {'portalRole': 'admin', 'view': <String>[], 'edit': <String>[]};
+    }
+
+    final user = _users.firstWhere(
+      (u) => u['id'] == targetUserId,
+      orElse: () => <String, dynamic>{},
+    );
+    if (user.isEmpty) {
+      return {'portalRole': 'admin', 'view': <String>[], 'edit': <String>[]};
+    }
+
+    final role = (user['role'] as String? ?? 'admin').toLowerCase();
+    final portalRole = _resolvePortalRoleForUser(user);
+    final rolePolicy = getRolePolicy(role);
+    final userPermissions = user['permissions'];
+    final userPermissionsMap = userPermissions is Map
+        ? Map<String, dynamic>.from(userPermissions)
+        : <String, dynamic>{};
+
+    final roleView = _normalizedStringList(rolePolicy['view']);
+    final roleEdit = _normalizedStringList(rolePolicy['edit']);
+    final userView = _normalizedStringList(userPermissionsMap['view']);
+    final userEdit = _normalizedStringList(userPermissionsMap['edit']);
+    final defaultView = List<String>.from(_portalModules[portalRole] ?? const <String>[]);
+    final defaultEdit = List<String>.from(_defaultEditableModules[portalRole] ?? const <String>[]);
+
+    return {
+      'portalRole': portalRole,
+      'view': userView.isNotEmpty ? userView : (roleView.isNotEmpty ? roleView : defaultView),
+      'edit': userEdit.isNotEmpty ? userEdit : (roleEdit.isNotEmpty ? roleEdit : defaultEdit),
+    };
+  }
+
+  bool canViewRoute(String route, {String? userId}) {
+    final clean = Uri.tryParse(route)?.path ?? route;
+    final segments = clean.split('/').where((s) => s.isNotEmpty).toList();
+    if (segments.isEmpty) return false;
+    if (segments.first == 'login' || segments.first == 'hacker-welcome') return true;
+
+    final permissions = getEffectivePermissionsForUser(userId: userId);
+    final allowed = _normalizedStringList(permissions['view']);
+    if (allowed.contains('*')) return true;
+    if (segments.length == 1) return true;
+    final module = segments[1].toLowerCase();
+    return allowed.contains(module);
+  }
+
+  bool canEditModule(String module, {String? userId}) {
+    final permissions = getEffectivePermissionsForUser(userId: userId);
+    final editable = _normalizedStringList(permissions['edit']);
+    if (editable.contains('*')) return true;
+    return editable.contains(module.trim().toLowerCase());
+  }
+
+  String getHomeRouteForCurrentUser() {
+    if (_currentUserId == null) return '/login';
+    final permissions = getEffectivePermissionsForUser();
+    final portalRole = _normalizePortalRole(permissions['portalRole']?.toString() ?? 'admin');
+    final allowedViews = _normalizedStringList(permissions['view']);
+    if (allowedViews.contains('*') || allowedViews.contains('dashboard')) {
+      return '/$portalRole/dashboard';
+    }
+    if (allowedViews.isNotEmpty) {
+      return '/$portalRole/${allowedViews.first}';
+    }
+    return '/$portalRole/dashboard';
   }
 
   // ─── CHANGE PASSWORD ─────────────────────────────────

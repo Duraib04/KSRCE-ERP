@@ -130,12 +130,34 @@ bool _isSuspiciousUri(Uri uri) {
   return false;
 }
 
+String? _portalFromPath(String path) {
+  final segments = path.split('/').where((s) => s.isNotEmpty).toList();
+  if (segments.isEmpty) return null;
+  const protected = {'student', 'faculty', 'admin', 'hod'};
+  return protected.contains(segments.first) ? segments.first : null;
+}
+
 final GoRouter _router = GoRouter(
   initialLocation: '/',
   redirect: (context, state) {
     if (_isSuspiciousUri(state.uri)) {
       return '/hacker-welcome';
     }
+
+    final portal = _portalFromPath(state.uri.path);
+    if (portal != null) {
+      final ds = Provider.of<DataService>(context, listen: false);
+      if (ds.currentUserId == null) {
+        return '/login';
+      }
+      if (ds.currentRole != portal) {
+        return ds.getHomeRouteForCurrentUser();
+      }
+      if (!ds.canViewRoute(state.uri.path)) {
+        return ds.getHomeRouteForCurrentUser();
+      }
+    }
+
     return null;
   },
   routes: [

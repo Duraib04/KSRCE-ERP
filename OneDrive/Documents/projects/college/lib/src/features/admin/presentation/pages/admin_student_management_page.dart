@@ -14,6 +14,7 @@ class _AdminStudentManagementPageState extends State<AdminStudentManagementPage>
   String _searchQuery = '';
   String? _filterDept;
   String? _filterYear;
+  static const List<String> _defaultCommunities = ['OC', 'BC', 'MBC', 'SC', 'ST'];
 
   @override
   Widget build(BuildContext context) {
@@ -120,6 +121,17 @@ class _AdminStudentManagementPageState extends State<AdminStudentManagementPage>
     final nationalityC = TextEditingController(text: _s('nationality').isEmpty ? 'Indian' : _s('nationality'));
     final religionC = TextEditingController(text: _s('religion'));
     final communityC = TextEditingController(text: _s('community'));
+    final List<String> communityOptions = [
+      ..._defaultCommunities,
+      ...(((ds.getSetting('communityOptions', _defaultCommunities) as List?) ?? const [])
+        .map((e) => e.toString().trim().toUpperCase())
+        .where((e) => e.isNotEmpty)),
+    ].toSet().toList();
+    communityOptions.sort();
+    final existingCommunity = _s('community').trim().toUpperCase();
+    String selectedCommunity = existingCommunity.isEmpty
+      ? (communityOptions.isNotEmpty ? communityOptions.first : 'OC')
+      : (communityOptions.contains(existingCommunity) ? existingCommunity : 'Others');
     final motherTongueC = TextEditingController(text: _s('motherTongue'));
     final idMark1C = TextEditingController(text: _s('identificationMark1'));
     final idMark2C = TextEditingController(text: _s('identificationMark2'));
@@ -210,7 +222,34 @@ class _AdminStudentManagementPageState extends State<AdminStudentManagementPage>
           _field(dobC, 'Date of Birth (YYYY-MM-DD)', icon: Icons.cake_outlined),
         ]),
         _row([_field(bloodC, 'Blood Group', icon: Icons.bloodtype_outlined), _field(nationalityC, 'Nationality')]),
-        _row([_field(religionC, 'Religion'), _field(communityC, 'Community (OC/BC/MBC/SC/ST)')]),
+        _row([
+          _field(religionC, 'Religion'),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: DropdownButtonFormField<String>(
+              initialValue: selectedCommunity,
+              isDense: true,
+              decoration: InputDecoration(
+                labelText: 'Community',
+                isDense: true,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              items: [
+                ...communityOptions.map((c) => DropdownMenuItem(value: c, child: Text(c))),
+                const DropdownMenuItem(value: 'Others', child: Text('Others')),
+              ],
+              onChanged: (v) => setS(() {
+                selectedCommunity = v ?? selectedCommunity;
+                if (selectedCommunity != 'Others') {
+                  communityC.text = selectedCommunity;
+                }
+              }),
+            ),
+          ),
+        ]),
+        if (selectedCommunity == 'Others')
+          _field(communityC, 'Type Community Name', required: true),
         _row([_field(motherTongueC, 'Mother Tongue'), Padding(padding: const EdgeInsets.only(bottom: 10), child: CheckboxListTile(
           title: const Text('First Graduate', style: TextStyle(fontSize: 13)), value: firstGraduate, dense: true, contentPadding: EdgeInsets.zero,
           controlAffinity: ListTileControlAffinity.leading, onChanged: (v) => setS(() => firstGraduate = v!)))]),
@@ -318,14 +357,54 @@ class _AdminStudentManagementPageState extends State<AdminStudentManagementPage>
                   icon: Icon(isEdit ? Icons.save : Icons.person_add, size: 18),
                   label: Text(isEdit ? 'Save Changes' : 'Enroll Student'),
                   style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12)),
-                  onPressed: () {
+                  onPressed: () async {
                     if (nameC.text.isEmpty || selectedDeptId == null || yearC.text.isEmpty || sectionC.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please fill required fields: Name, Department, Year, Section'), backgroundColor: Colors.red));
                       return;
                     }
+                    final manualCommunity = communityC.text.trim().toUpperCase();
+                    final resolvedCommunity = selectedCommunity == 'Others' ? manualCommunity : selectedCommunity;
+                    if (resolvedCommunity.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please choose or enter a community'), backgroundColor: Colors.red));
+                      return;
+                    }
+
+                    final isNewCommunity = !communityOptions.contains(resolvedCommunity);
+                    if (isNewCommunity) {
+                      final addNew = await showDialog<bool>(
+                        context: ctx,
+                        builder: (dCtx) => AlertDialog(
+                          title: const Text('New Community Found'),
+                          content: Text('"$resolvedCommunity" is not in the community dropdown. Add it for future students?'),
+                          actions: [
+                            TextButton(onPressed: () => Navigator.pop(dCtx, false), child: const Text('Not Now')),
+                            ElevatedButton(onPressed: () => Navigator.pop(dCtx, true), child: const Text('Add Community')),
+                          ],
+                        ),
+                      );
+
+                      if (addNew == true) {
+                        final updated = [...communityOptions, resolvedCommunity].toSet().toList()..sort();
+                        ds.updateSetting('communityOptions', updated);
+                        ds.addNotification({
+                          'title': 'Community Master Updated',
+                          'message': 'New community "$resolvedCommunity" was added to the student form dropdown.',
+                          'recipientRole': 'admin',
+                          'type': 'config_update',
+                        });
+                      } else {
+                        ds.addNotification({
+                          'title': 'Community Review Needed',
+                          'message': 'Student "${nameC.text}" used new community "$resolvedCommunity". Review and add to dropdown if needed.',
+                          'recipientRole': 'admin',
+                          'type': 'config_review',
+                        });
+                      }
+                    }
+
                     final data = <String, dynamic>{
                       'name': nameC.text, 'gender': gender, 'dateOfBirth': dobC.text, 'bloodGroup': bloodC.text,
-                      'nationality': nationalityC.text, 'religion': religionC.text, 'community': communityC.text,
+                      'nationality': nationalityC.text, 'religion': religionC.text, 'community': resolvedCommunity,
                       'motherTongue': motherTongueC.text, 'identificationMark1': idMark1C.text, 'identificationMark2': idMark2C.text,
                       'firstGraduate': firstGraduate,
                       'email': emailC.text, 'personalEmail': personalEmailC.text, 'phone': phoneC.text,

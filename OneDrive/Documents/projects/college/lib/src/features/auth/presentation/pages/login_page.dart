@@ -58,16 +58,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
 
     if (ds.login(userId, password)) {
       if (!mounted) return;
-      final role = ds.currentRole;
-      if (role == 'student') {
-        context.go('/student/dashboard');
-      } else if (role == 'admin') {
-        context.go('/admin/dashboard');
-      } else if (role == 'hod') {
-        context.go('/hod/dashboard');
-      } else {
-        context.go('/faculty/dashboard');
-      }
+      context.go(ds.getHomeRouteForCurrentUser());
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

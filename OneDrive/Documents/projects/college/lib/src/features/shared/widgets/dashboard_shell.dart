@@ -144,6 +144,32 @@ class _DashboardShellState extends State<DashboardShell> {
     }
   }
 
+  List<NavItem> get _visibleNavItems {
+    final ds = Provider.of<DataService>(context, listen: false);
+    return _navItems
+        .map((item) {
+          if (item.children != null && item.children!.isNotEmpty) {
+            final children = item.children!
+                .where((child) => child.route.isNotEmpty && ds.canViewRoute(child.route))
+                .toList();
+            if (children.isEmpty) return null;
+            return NavItem(
+              title: item.title,
+              icon: item.icon,
+              route: item.route,
+              children: children,
+            );
+          }
+
+          if (item.route.isEmpty || ds.canViewRoute(item.route)) {
+            return item;
+          }
+          return null;
+        })
+        .whereType<NavItem>()
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -351,7 +377,7 @@ class _DashboardShellState extends State<DashboardShell> {
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-              children: _navItems.map((item) => _buildDrawerItem(item)).toList(),
+              children: _visibleNavItems.map((item) => _buildDrawerItem(item)).toList(),
             ),
           ),
           Container(
@@ -553,7 +579,7 @@ class _DashboardShellState extends State<DashboardShell> {
                       letterSpacing: 1.2,
                     )),
                   ),
-                ..._navItems.map((item) => _buildSidebarItem(item)),
+                ..._visibleNavItems.map((item) => _buildSidebarItem(item)),
               ],
             ),
           ),
