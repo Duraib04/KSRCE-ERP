@@ -1333,46 +1333,17 @@ class DataService extends ChangeNotifier {
   }
 
   /// Get pending requests where this user is the current approver
-  /// For mentor: status == 'pending_mentor' && mentorId matches
-  /// For classAdviser: status == 'pending_classAdviser' && classAdviserId matches
-  /// For hod: status == 'pending_hod' && hod of same dept
-  /// For admin: status == 'pending_admin'
+  /// Uses the first pending step in approvalChain and matches approverId.
   List<Map<String, dynamic>> getPendingApprovals(String userId, String role) {
     return _profileEditRequests.where((r) {
-      if (role == 'admin') return r['status'] == 'pending_admin';
-      if (role == 'hod') {
-        final hodDept = _faculty.firstWhere(
-          (f) => f['facultyId'] == userId,
-          orElse: () => <String, dynamic>{},
-        )['departmentId'];
-        // HOD approves faculty requests in their dept
-        if (r['status'] == 'pending_hod' &&
-            r['requesterRole'] == 'faculty' &&
-            r['departmentId'] == hodDept) {
-          return true;
-        }
-        // HOD can also be a mentor or class adviser for student requests
-        if (r['requesterRole'] == 'student') {
-          final chain = (r['approvalChain'] as List<dynamic>?) ?? [];
-          for (final step in chain) {
-            final s = step as Map<String, dynamic>;
-            if (s['approverId'] == userId && s['status'] == 'pending') {
-              if (s['role'] == 'mentor' && r['status'] == 'pending_mentor') return true;
-              if (s['role'] == 'classAdviser' && r['status'] == 'pending_classAdviser') return true;
-            }
-          }
-        }
-        return false;
-      }
-      // Faculty as mentor or class adviser for student requests
-      if (r['requesterRole'] != 'student') return false;
       final chain = (r['approvalChain'] as List<dynamic>?) ?? [];
       for (final step in chain) {
         final s = step as Map<String, dynamic>;
-        if (s['approverId'] == userId && s['status'] == 'pending') {
-          if (s['role'] == 'mentor' && r['status'] == 'pending_mentor') return true;
-          if (s['role'] == 'classAdviser' && r['status'] == 'pending_classAdviser') return true;
-        }
+        if (s['status'] != 'pending') continue;
+        final approverId = (s['approverId'] as String?) ?? '';
+        // Legacy admin placeholder support.
+        if (approverId == 'ADMIN' && role == 'admin') return true;
+        return approverId == userId;
       }
       return false;
     }).toList()
@@ -1393,6 +1364,293 @@ class DataService extends ChangeNotifier {
     notifyListeners();
   }
 
+  Map<String, String> _resolveUserContact(String userId) {
+    final uid = userId.trim().toUpperCase();
+    if (uid.isEmpty) return const {'name': '', 'email': '', 'phone': '', 'role': ''};
+
+    final student = _students.firstWhere(
+      (s) => (s['studentId'] as String? ?? '').toUpperCase() == uid,
+      orElse: () => <String, dynamic>{},
+    );
+    if (student.isNotEmpty) {
+      return {
+        'name': (student['name'] as String?) ?? uid,
+        'email': (student['email'] as String?) ?? '',
+        'phone': (student['phone'] as String?) ?? '',
+        'role': 'student',
+      };
+    }
+
+    final faculty = _faculty.firstWhere(
+      (f) => (f['facultyId'] as String? ?? '').toUpperCase() == uid,
+      orElse: () => <String, dynamic>{},
+    );
+    if (faculty.isNotEmpty) {
+      final role = faculty['isHOD'] == true ? 'hod' : 'faculty';
+      return {
+        'name': (faculty['name'] as String?) ?? uid,
+        'email': (faculty['email'] as String?) ?? '',
+        'phone': (faculty['phone'] as String?) ?? '',
+        'role': role,
+      };
+    }
+
+    final user = _users.firstWhere(
+      (u) => (u['id'] as String? ?? '').toUpperCase() == uid,
+      orElse: () => <String, dynamic>{},
+    );
+    return {
+      'name': (user['label'] as String?) ?? uid,
+      'email': '',
+      'phone': '',
+      'role': (user['role'] as String?) ?? '',
+    };
+  }
+
+  void _addWorkflowNotification({
+    required String title,
+    required String message,
+    String recipientId = 'all',
+    String recipientRole = 'all',
+    String type = 'workflow',
+    Map<String, dynamic>? metadata,
+  }) {
+    _notifications.insert(0, {
+      'notificationId': 'NTF${(_notifications.length + 1).toString().padLeft(3, '0')}',
+      'title': title,
+      'message': message,
+      'type': type,
+      'recipientId': recipientId,
+      'recipientRole': recipientRole,
+      'metadata': metadata ?? <String, dynamic>{},
+      'timestamp': DateTime.now().toIso8601String(),
+      'isRead': false,
+    });
+  }
+
+  void _sendEmailStub({
+    required String toUserId,
+    required String event,
+    required String subject,
+    required String body,
+    Map<String, dynamic>? payload,
+  }) {
+    final contact = _resolveUserContact(toUserId);
+    debugPrint(
+      '[EMAIL_STUB] event=$event toUserId=$toUserId toEmail=${contact['email']} '
+      'subject="$subject" payload=${payload ?? <String, dynamic>{}} body="$body"',
+    );
+  }
+
+  void _sendSmsStub({
+    required String toUserId,
+    required String event,
+    required String message,
+    Map<String, dynamic>? payload,
+  }) {
+    final contact = _resolveUserContact(toUserId);
+    debugPrint(
+      '[SMS_STUB] event=$event toUserId=$toUserId toPhone=${contact['phone']} '
+      'payload=${payload ?? <String, dynamic>{}} message="$message"',
+    );
+  }
+
+  String _displayNameForUser(String userId) {
+    return _resolveUserContact(userId)['name'] ?? userId;
+  }
+
+  /// Submit a forgot-password request that follows role-based approvals:
+  /// student -> mentor(if assigned) -> HOD
+  /// faculty -> HOD
+  /// hod -> admin
+  /// Returns null on success or an error message on failure.
+  String? submitPasswordResetRequest(String userId, {String reason = ''}) {
+    final uid = userId.trim().toUpperCase();
+    if (uid.isEmpty) return 'Please enter your User ID.';
+
+    final user = _users.firstWhere(
+      (u) => (u['id'] as String? ?? '').toUpperCase() == uid,
+      orElse: () => <String, dynamic>{},
+    );
+    if (user.isEmpty) return 'User ID "$uid" not found.';
+
+    final role = (user['role'] as String? ?? '').toLowerCase();
+
+    final hasPending = _profileEditRequests.any((r) {
+      final isPasswordReset = (r['requestType'] as String? ?? '') == 'password_reset';
+      final sameUser = (r['requesterId'] as String? ?? '') == uid;
+      final status = (r['status'] as String? ?? '');
+      final isClosed = status == 'approved' || status == 'rejected';
+      return isPasswordReset && sameUser && !isClosed;
+    });
+    if (hasPending) {
+      return 'A password reset request is already pending for $uid.';
+    }
+
+    final requesterName = _resolveRequesterName(uid, role);
+    final departmentId = _resolveDepartmentId(uid, role);
+    final approvalChain = <Map<String, dynamic>>[];
+    String initialApprover = '';
+
+    if (role == 'student') {
+      final student = _students.firstWhere(
+        (s) => s['studentId'] == uid,
+        orElse: () => <String, dynamic>{},
+      );
+      if (student.isEmpty) return 'Student profile not found for $uid.';
+
+      final mentorId = (student['mentorId'] as String? ?? '').trim();
+      final hod = _findHodByDepartment((student['departmentId'] as String? ?? '').trim());
+      final hodId = (hod['facultyId'] as String? ?? '').trim();
+      if (hodId.isEmpty) return 'No HOD is assigned for this student department.';
+
+      if (mentorId.isNotEmpty) {
+        final mentor = _faculty.firstWhere(
+          (f) => f['facultyId'] == mentorId,
+          orElse: () => <String, dynamic>{},
+        );
+        approvalChain.add({
+          'role': 'mentor',
+          'approverId': mentorId,
+          'approverName': (mentor['name'] as String?) ?? mentorId,
+          'status': 'pending',
+          'date': '',
+          'remarks': '',
+        });
+        initialApprover = 'mentor';
+      }
+
+      approvalChain.add({
+        'role': 'hod',
+        'approverId': hodId,
+        'approverName': (hod['name'] as String?) ?? hodId,
+        'status': mentorId.isEmpty ? 'pending' : 'waiting',
+        'date': '',
+        'remarks': '',
+      });
+
+      if (initialApprover.isEmpty) initialApprover = 'hod';
+    } else if (role == 'faculty') {
+      final fac = _faculty.firstWhere(
+        (f) => f['facultyId'] == uid,
+        orElse: () => <String, dynamic>{},
+      );
+      if (fac.isEmpty) return 'Faculty profile not found for $uid.';
+      final hod = _findHodByDepartment((fac['departmentId'] as String? ?? '').trim());
+      final hodId = (hod['facultyId'] as String? ?? '').trim();
+      if (hodId.isEmpty) return 'No HOD is assigned for this faculty department.';
+
+      approvalChain.add({
+        'role': 'hod',
+        'approverId': hodId,
+        'approverName': (hod['name'] as String?) ?? hodId,
+        'status': 'pending',
+        'date': '',
+        'remarks': '',
+      });
+      initialApprover = 'hod';
+    } else if (role == 'hod') {
+      final adminUser = _users.firstWhere(
+        (u) {
+          final r = (u['role'] as String? ?? '').toLowerCase();
+          final id = (u['id'] as String? ?? '').toUpperCase();
+          return r == 'admin' || id.startsWith('ADM');
+        },
+        orElse: () => <String, dynamic>{},
+      );
+      if (adminUser.isEmpty) return 'No admin user available to approve this request.';
+      final adminId = (adminUser['id'] as String?) ?? 'ADMIN';
+      final adminName = (adminUser['label'] as String?) ?? 'Admin';
+
+      approvalChain.add({
+        'role': 'admin',
+        'approverId': adminId,
+        'approverName': adminName,
+        'status': 'pending',
+        'date': '',
+        'remarks': '',
+      });
+      initialApprover = 'admin';
+    } else {
+      return 'Forgot password workflow is supported only for student, faculty, and HOD users.';
+    }
+
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+    _profileEditRequests.add({
+      'requestId': 'PER${(_profileEditRequests.length + 1).toString().padLeft(3, '0')}',
+      'requestType': 'password_reset',
+      'requesterId': uid,
+      'requesterName': requesterName,
+      'requesterRole': role,
+      'departmentId': departmentId,
+      'changes': {
+        'password': {'old': '********', 'new': 'Reset to default password'}
+      },
+      'reason': reason.isEmpty ? 'Forgot password request' : reason,
+      'status': 'pending_$initialApprover',
+      'currentApprover': initialApprover,
+      'approvalChain': approvalChain,
+      'submittedDate': today,
+      'lastUpdated': today,
+    });
+
+    final requestId = 'PER${_profileEditRequests.length.toString().padLeft(3, '0')}';
+    final firstApprover = approvalChain.first as Map<String, dynamic>;
+    final approverId = (firstApprover['approverId'] as String?) ?? '';
+    final approverName = (firstApprover['approverName'] as String?) ?? approverId;
+
+    _addWorkflowNotification(
+      title: 'Password Reset Requested',
+      message: '$requesterName ($uid) raised password reset request $requestId.',
+      recipientId: uid,
+      recipientRole: role,
+      type: 'password_reset',
+      metadata: {'requestId': requestId, 'event': 'submitted'},
+    );
+    if (approverId.isNotEmpty) {
+      _addWorkflowNotification(
+        title: 'Approval Required',
+        message: 'Password reset request $requestId from $requesterName is assigned to you.',
+        recipientId: approverId,
+        recipientRole: firstApprover['role'] as String? ?? 'faculty',
+        type: 'password_reset',
+        metadata: {'requestId': requestId, 'event': 'approval_assigned'},
+      );
+    }
+
+    _sendEmailStub(
+      toUserId: uid,
+      event: 'password_reset_submitted',
+      subject: 'Password reset request submitted',
+      body: 'Your password reset request ($requestId) was submitted and routed to $approverName.',
+      payload: {'requestId': requestId, 'nextApprover': approverName},
+    );
+    _sendSmsStub(
+      toUserId: uid,
+      event: 'password_reset_submitted',
+      message: 'KSRCE ERP: Password reset request $requestId submitted. Next approver: $approverName.',
+      payload: {'requestId': requestId},
+    );
+    if (approverId.isNotEmpty) {
+      _sendEmailStub(
+        toUserId: approverId,
+        event: 'password_reset_approval_needed',
+        subject: 'Password reset approval required',
+        body: 'Request $requestId from $requesterName ($uid) needs your approval.',
+        payload: {'requestId': requestId, 'requesterId': uid},
+      );
+      _sendSmsStub(
+        toUserId: approverId,
+        event: 'password_reset_approval_needed',
+        message: 'KSRCE ERP: Approval needed for password reset request $requestId from $requesterName.',
+        payload: {'requestId': requestId},
+      );
+    }
+
+    notifyListeners();
+    return null;
+  }
+
   /// Approve a step in the chain and advance to next or finalize
   void approveEditRequest(String requestId, String approverId, String remarks) {
     final idx = _profileEditRequests.indexWhere((r) => r['requestId'] == requestId);
@@ -1405,6 +1663,13 @@ class DataService extends ChangeNotifier {
     for (int i = 0; i < chain.length; i++) {
       final step = chain[i] as Map<String, dynamic>;
       if (step['status'] == 'pending') {
+        final configuredApprover = (step['approverId'] as String?) ?? '';
+        final stepRole = (step['role'] as String?) ?? '';
+        final allowAdminPlaceholder = stepRole == 'admin' && configuredApprover == 'ADMIN';
+        if (configuredApprover.isNotEmpty && configuredApprover != approverId && !allowAdminPlaceholder) {
+          continue;
+        }
+
         step['status'] = 'approved';
         step['date'] = today;
         step['remarks'] = remarks;
@@ -1415,14 +1680,69 @@ class DataService extends ChangeNotifier {
           (f) => f['facultyId'] == approverId,
           orElse: () => <String, dynamic>{},
         );
-        step['approverName'] = approver['name'] ?? approverId;
+        step['approverName'] = approver['name'] ?? _displayNameForUser(approverId);
 
         // Check if there's a next step
         if (i + 1 < chain.length) {
           final nextStep = chain[i + 1] as Map<String, dynamic>;
           final nextRole = nextStep['role'] as String? ?? '';
+          nextStep['status'] = 'pending';
           req['status'] = 'pending_$nextRole';
           req['currentApprover'] = nextRole;
+
+          final requestIdValue = req['requestId'] as String? ?? '';
+          final requesterId = req['requesterId'] as String? ?? '';
+          final requesterName = req['requesterName'] as String? ?? requesterId;
+          final nextApproverId = (nextStep['approverId'] as String?) ?? '';
+          final nextApproverName = (nextStep['approverName'] as String?) ?? _displayNameForUser(nextApproverId);
+
+          _addWorkflowNotification(
+            title: 'Request Forwarded',
+            message: 'Request $requestIdValue from $requesterName moved to $nextApproverName ($nextRole).',
+            recipientId: requesterId,
+            recipientRole: req['requesterRole'] as String? ?? 'all',
+            type: 'workflow',
+            metadata: {'requestId': requestIdValue, 'event': 'forwarded', 'toRole': nextRole},
+          );
+          if (nextApproverId.isNotEmpty) {
+            _addWorkflowNotification(
+              title: 'Approval Required',
+              message: 'Request $requestIdValue from $requesterName is now assigned to you.',
+              recipientId: nextApproverId,
+              recipientRole: nextRole,
+              type: 'workflow',
+              metadata: {'requestId': requestIdValue, 'event': 'approval_assigned'},
+            );
+          }
+
+          _sendEmailStub(
+            toUserId: requesterId,
+            event: 'request_forwarded',
+            subject: 'Your request moved to next approver',
+            body: 'Request $requestIdValue has been forwarded to $nextApproverName ($nextRole).',
+            payload: {'requestId': requestIdValue, 'toRole': nextRole},
+          );
+          _sendSmsStub(
+            toUserId: requesterId,
+            event: 'request_forwarded',
+            message: 'KSRCE ERP: Request $requestIdValue forwarded to $nextApproverName ($nextRole).',
+            payload: {'requestId': requestIdValue},
+          );
+          if (nextApproverId.isNotEmpty) {
+            _sendEmailStub(
+              toUserId: nextApproverId,
+              event: 'request_approval_needed',
+              subject: 'Approval required for request $requestIdValue',
+              body: 'Request $requestIdValue from $requesterName needs your approval.',
+              payload: {'requestId': requestIdValue, 'requesterId': requesterId},
+            );
+            _sendSmsStub(
+              toUserId: nextApproverId,
+              event: 'request_approval_needed',
+              message: 'KSRCE ERP: Approval required for request $requestIdValue from $requesterName.',
+              payload: {'requestId': requestIdValue},
+            );
+          }
 
           // Auto-fill next approver for student requests
           if (nextRole == 'classAdviser' && req['requesterRole'] == 'student') {
@@ -1440,9 +1760,39 @@ class DataService extends ChangeNotifier {
             nextStep['approverName'] = ca['name'] ?? caId;
           }
         } else {
-          // Final approval — apply changes
-          _applyProfileChanges(req);
+          // Final approval — apply request effect
+          _applyApprovedRequest(req);
           req['status'] = 'approved';
+
+          final requestIdValue = req['requestId'] as String? ?? '';
+          final requesterId = req['requesterId'] as String? ?? '';
+          final requestType = req['requestType'] as String? ?? 'profile_edit';
+          final isPwd = requestType == 'password_reset';
+          final successMessage = isPwd
+              ? 'Request $requestIdValue approved. Password has been reset to the default format.'
+              : 'Request $requestIdValue approved and changes are applied.';
+
+          _addWorkflowNotification(
+            title: isPwd ? 'Password Reset Approved' : 'Request Approved',
+            message: successMessage,
+            recipientId: requesterId,
+            recipientRole: req['requesterRole'] as String? ?? 'all',
+            type: isPwd ? 'password_reset' : 'workflow',
+            metadata: {'requestId': requestIdValue, 'event': 'approved'},
+          );
+          _sendEmailStub(
+            toUserId: requesterId,
+            event: isPwd ? 'password_reset_approved' : 'request_approved',
+            subject: isPwd ? 'Password reset approved' : 'Request approved',
+            body: successMessage,
+            payload: {'requestId': requestIdValue},
+          );
+          _sendSmsStub(
+            toUserId: requesterId,
+            event: isPwd ? 'password_reset_approved' : 'request_approved',
+            message: 'KSRCE ERP: $successMessage',
+            payload: {'requestId': requestIdValue},
+          );
         }
         break;
       }
@@ -1471,17 +1821,58 @@ class DataService extends ChangeNotifier {
           (f) => f['facultyId'] == approverId,
           orElse: () => <String, dynamic>{},
         );
-        s['approverName'] = approver['name'] ?? approverId;
+        s['approverName'] = approver['name'] ?? _displayNameForUser(approverId);
         break;
       }
     }
     req['status'] = 'rejected';
     req['lastUpdated'] = today;
     _profileEditRequests[idx] = req;
+
+    final requestIdValue = req['requestId'] as String? ?? '';
+    final requesterId = req['requesterId'] as String? ?? '';
+    final requestType = req['requestType'] as String? ?? 'profile_edit';
+    final isPwd = requestType == 'password_reset';
+    final rejectionMessage = isPwd
+        ? 'Password reset request $requestIdValue was rejected. Please contact your approver.'
+        : 'Request $requestIdValue was rejected. Please review remarks and resubmit.';
+
+    _addWorkflowNotification(
+      title: isPwd ? 'Password Reset Rejected' : 'Request Rejected',
+      message: rejectionMessage,
+      recipientId: requesterId,
+      recipientRole: req['requesterRole'] as String? ?? 'all',
+      type: isPwd ? 'password_reset' : 'workflow',
+      metadata: {'requestId': requestIdValue, 'event': 'rejected'},
+    );
+    _sendEmailStub(
+      toUserId: requesterId,
+      event: isPwd ? 'password_reset_rejected' : 'request_rejected',
+      subject: isPwd ? 'Password reset rejected' : 'Request rejected',
+      body: rejectionMessage,
+      payload: {'requestId': requestIdValue},
+    );
+    _sendSmsStub(
+      toUserId: requesterId,
+      event: isPwd ? 'password_reset_rejected' : 'request_rejected',
+      message: 'KSRCE ERP: $rejectionMessage',
+      payload: {'requestId': requestIdValue},
+    );
+
     notifyListeners();
   }
 
-  /// Apply approved changes to the actual student/faculty record
+  /// Apply approved request effect.
+  void _applyApprovedRequest(Map<String, dynamic> req) {
+    final requestType = (req['requestType'] as String? ?? 'profile_edit').toLowerCase();
+    if (requestType == 'password_reset') {
+      _applyPasswordReset(req['requesterId'] as String? ?? '');
+      return;
+    }
+    _applyProfileChanges(req);
+  }
+
+  /// Apply approved profile changes to the actual student/faculty record.
   void _applyProfileChanges(Map<String, dynamic> req) {
     final changes = (req['changes'] as Map<String, dynamic>?) ?? {};
     if (req['requesterRole'] == 'student') {
@@ -1508,6 +1899,63 @@ class DataService extends ChangeNotifier {
         }
       }
     }
+  }
+
+  void _applyPasswordReset(String userId) {
+    final uid = userId.trim().toUpperCase();
+    if (uid.isEmpty) return;
+    final idx = _users.indexWhere((u) => (u['id'] as String? ?? '').toUpperCase() == uid);
+    if (idx == -1) return;
+    final defaultPassword = 'ksrce@${uid.toLowerCase()}';
+    _users[idx]['password'] = SecurityService.hashPassword(defaultPassword, uid);
+  }
+
+  String _resolveRequesterName(String userId, String role) {
+    if (role == 'student') {
+      final s = _students.firstWhere(
+        (x) => x['studentId'] == userId,
+        orElse: () => <String, dynamic>{},
+      );
+      if (s.isNotEmpty) return (s['name'] as String?) ?? userId;
+    }
+    if (role == 'faculty' || role == 'hod') {
+      final f = _faculty.firstWhere(
+        (x) => x['facultyId'] == userId,
+        orElse: () => <String, dynamic>{},
+      );
+      if (f.isNotEmpty) return (f['name'] as String?) ?? userId;
+    }
+    final u = _users.firstWhere(
+      (x) => x['id'] == userId,
+      orElse: () => <String, dynamic>{},
+    );
+    return (u['label'] as String?) ?? userId;
+  }
+
+  String _resolveDepartmentId(String userId, String role) {
+    if (role == 'student') {
+      final s = _students.firstWhere(
+        (x) => x['studentId'] == userId,
+        orElse: () => <String, dynamic>{},
+      );
+      return (s['departmentId'] as String?) ?? '';
+    }
+    if (role == 'faculty' || role == 'hod') {
+      final f = _faculty.firstWhere(
+        (x) => x['facultyId'] == userId,
+        orElse: () => <String, dynamic>{},
+      );
+      return (f['departmentId'] as String?) ?? '';
+    }
+    return '';
+  }
+
+  Map<String, dynamic> _findHodByDepartment(String departmentId) {
+    if (departmentId.isEmpty) return <String, dynamic>{};
+    return _faculty.firstWhere(
+      (f) => f['departmentId'] == departmentId && f['isHOD'] == true,
+      orElse: () => <String, dynamic>{},
+    );
   }
 
   /// Get the mentor and class adviser for a student
