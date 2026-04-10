@@ -478,6 +478,7 @@ class _LoginFormCard extends StatelessWidget {
 
   void _showForgotPasswordDialog(BuildContext context) {
     final resetController = TextEditingController();
+    final reasonController = TextEditingController();
     String? message;
     bool isSuccess = false;
     showDialog(
@@ -499,12 +500,12 @@ class _LoginFormCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Enter your User ID to reset your password to the default.',
+                    'Enter your User ID to raise a password reset request.',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Default password: ksrce@{your_userid}',
+                    'Approval flow: Student -> Mentor (if assigned) -> HOD, Faculty -> HOD, HOD -> Admin.',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       fontStyle: FontStyle.italic,
                       color: AppColors.textLight,
@@ -517,6 +518,18 @@ class _LoginFormCard extends StatelessWidget {
                       labelText: 'User ID',
                       hintText: 'Eg. STU001 or FAC001',
                       prefixIcon: const Icon(Icons.person_outline),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: reasonController,
+                    minLines: 2,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      labelText: 'Reason (optional)',
+                      hintText: 'Example: Forgot my password and cannot log in',
+                      prefixIcon: const Icon(Icons.notes_outlined),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                     ),
                   ),
@@ -556,18 +569,21 @@ class _LoginFormCard extends StatelessWidget {
                       return;
                     }
                     final ds = Provider.of<DataService>(ctx, listen: false);
-                    final ok = ds.resetPasswordToDefault(uid);
+                    final error = ds.submitPasswordResetRequest(
+                      uid,
+                      reason: reasonController.text.trim(),
+                    );
                     setDialogState(() {
-                      if (ok) {
-                        message = 'Password reset to ksrce@${uid.toLowerCase()}. You can now log in.';
+                      if (error == null) {
+                        message = 'Request submitted. You can log in after it is approved.';
                         isSuccess = true;
                       } else {
-                        message = 'User ID "$uid" not found. Please check and try again.';
+                        message = error;
                         isSuccess = false;
                       }
                     });
                   },
-                  child: const Text('Reset Password'),
+                  child: const Text('Submit Request'),
                 ),
               ],
             );

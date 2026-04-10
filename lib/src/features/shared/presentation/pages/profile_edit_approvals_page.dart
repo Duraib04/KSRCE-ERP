@@ -91,6 +91,7 @@ class _ProfileEditApprovalsPageState extends State<ProfileEditApprovalsPage> {
     final reqName = req['requesterName'] as String? ?? '';
     final reqId = req['requesterId'] as String? ?? '';
     final reqRole = req['requesterRole'] as String? ?? '';
+    final requestType = req['requestType'] as String? ?? 'profile_edit';
     final changes = (req['changes'] as Map<String, dynamic>?) ?? {};
     final reason = req['reason'] as String? ?? '';
     final submitted = req['submittedDate'] as String? ?? '';
@@ -122,6 +123,12 @@ class _ProfileEditApprovalsPageState extends State<ProfileEditApprovalsPage> {
         const SizedBox(height: 16),
         const Divider(height: 1, color: AppColors.border),
         const SizedBox(height: 16),
+        Row(children: [
+          _tag(requestType == 'password_reset' ? 'Password Reset' : 'Profile Edit', const Color(0xFF0EA5E9)),
+          const SizedBox(width: 8),
+          _tag('Approver: ${req['currentApprover'] ?? '-'}', AppColors.textMedium),
+        ]),
+        const SizedBox(height: 10),
         const Text('Requested Changes:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.textDark)),
         const SizedBox(height: 8),
         ...changes.entries.map((e) {
@@ -283,10 +290,10 @@ class _ProfileEditApprovalsPageState extends State<ProfileEditApprovalsPage> {
 
   String _roleDescription(String role) {
     switch (role) {
-      case 'faculty': return 'Review student profile edit requests as Mentor / Class Adviser';
-      case 'hod': return 'Review faculty profile edit requests for your department';
-      case 'admin': return 'Final approval for all profile edit requests';
-      default: return 'Review profile edit requests';
+      case 'faculty': return 'Review student requests as Mentor / Class Adviser (profile edit and password reset)';
+      case 'hod': return 'Review department requests (profile edit and password reset)';
+      case 'admin': return 'Final approval for admin-routed requests';
+      default: return 'Review profile edit and password reset requests';
     }
   }
 }
