@@ -43,6 +43,35 @@ class DataService extends ChangeNotifier {
   List<Map<String, dynamic>> _courseDiary = [];
   List<Map<String, dynamic>> _profileEditRequests = [];
 
+  // Keys that are expected to be string-like across UI/auth layers.
+  // Legacy/cloud data may store some of these as numbers, so normalize early.
+  static const Set<String> _stringLikeExactKeys = {
+    'id',
+    'role',
+    'name',
+    'label',
+    'email',
+    'phone',
+    'password',
+    'department',
+    'departmentCode',
+    'departmentName',
+    'section',
+    'year',
+    'semester',
+    'batch',
+    'room',
+    'schedule',
+    'status',
+    'date',
+    'day',
+    'time',
+    'title',
+    'description',
+    'message',
+    'remarks',
+  };
+
   // Logged in user info
   String? _currentUserId;
   String? _currentRole;
@@ -450,7 +479,7 @@ class DataService extends ChangeNotifier {
     if (value == null) return [];
     if (value is List) {
       return value
-          .map((e) => e is Map ? Map<String, dynamic>.from(e) : <String, dynamic>{})
+          .map((e) => e is Map ? _normalizeRecord(Map<String, dynamic>.from(e)) : <String, dynamic>{})
           .where((m) => m.isNotEmpty)
           .toList();
     }
@@ -461,11 +490,61 @@ class DataService extends ChangeNotifier {
     try {
       final jsonString = await rootBundle.loadString(path);
       final List<dynamic> data = json.decode(jsonString);
-      return data.cast<Map<String, dynamic>>();
+      return data
+          .whereType<Map>()
+          .map((e) => _normalizeRecord(Map<String, dynamic>.from(e)))
+          .toList();
     } catch (e) {
       debugPrint('Error loading $path: $e');
       return [];
     }
+  }
+
+  bool _isStringLikeKey(String key) {
+    final k = key.toLowerCase();
+    if (_stringLikeExactKeys.contains(k)) return true;
+    return k.endsWith('id') ||
+        k.endsWith('name') ||
+        k.endsWith('code') ||
+        k.endsWith('role') ||
+        k.endsWith('type');
+  }
+
+  dynamic _normalizeDynamic(String key, dynamic value) {
+    if (value == null) return null;
+
+    if (value is Map) {
+      return _normalizeRecord(Map<String, dynamic>.from(value));
+    }
+
+    if (value is List) {
+      return value
+          .map((item) => item is Map
+              ? _normalizeRecord(Map<String, dynamic>.from(item))
+              : item)
+          .toList();
+    }
+
+    // Normalize string-like fields that may come as int/double/bool.
+    if ((value is num || value is bool) && _isStringLikeKey(key)) {
+      return value.toString();
+    }
+
+    return value;
+  }
+
+  Map<String, dynamic> _normalizeRecord(Map<String, dynamic> source) {
+    final normalized = <String, dynamic>{};
+    source.forEach((key, value) {
+      normalized[key] = _normalizeDynamic(key, value);
+    });
+    return normalized;
+  }
+
+  String _safeString(dynamic value, {String fallback = ''}) {
+    if (value == null) return fallback;
+    if (value is String) return value;
+    return value.toString();
   }
 
   // ─── AUTH (Z++ Security — SHA-256 hashed passwords + brute-force protection) ───
@@ -479,11 +558,11 @@ class DataService extends ChangeNotifier {
 
     for (final user in _users) {
       if (user['id'] == userId) {
-        final storedHash = user['password'] as String? ?? '';
+        final storedHash = _safeString(user['password']);
         if (SecurityService.verifyPassword(password, userId, storedHash)) {
           SecurityService.resetAttempts(userId);
           _currentUserId = userId;
-          final role = user['role'] as String? ?? '';
+          final role = _safeString(user['role']).toLowerCase();
           if (userId.startsWith('STU')) {
             _currentRole = 'student';
             _currentStudent = _students.firstWhere(
